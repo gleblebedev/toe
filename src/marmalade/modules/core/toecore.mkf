@@ -1,0 +1,20 @@
+# mkf file for module iwanim
+display_name "'Tiny Open Engine'/core"
+
+includepath h
+
+files
+{
+	(h)
+}
+
+options
+{
+    strict
+}
+
+subprojects
+{
+    iwgx
+}
+
