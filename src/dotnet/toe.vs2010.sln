@@ -15,11 +15,24 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "vsext", "vsext", "{5A08D1E7
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToeVisualStudioExtension.net40.vs2010", "ToeVisualStudioExtension\ToeVisualStudioExtension.net40.vs2010.csproj", "{29717F16-3219-4AE5-A7F4-618E65908DA7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toe.Editors", "Toe.Editors\Toe.Editors.csproj", "{5FA4A978-FB68-4CB0-B693-FB534C76F2C9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toe.Editors.net40.vs2010", "Toe.Editors\Toe.Editors.net40.vs2010.csproj", "{5FA4A978-FB68-4CB0-B693-FB534C76F2C9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toe.Editors.Geometry", "Toe.Editors.Geometry\Toe.Editors.Geometry.csproj", "{77A71F90-B773-4C3B-871C-BB140BFEAAEC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toe.Editors.Geometry.net40.vs2010", "Toe.Editors.Geometry\Toe.Editors.Geometry.net40.vs2010.csproj", "{77A71F90-B773-4C3B-871C-BB140BFEAAEC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toe.Editors.Interfaces", "Toe.Editors.Interfaces\Toe.Editors.Interfaces.csproj", "{2B25523C-AA51-43C7-B5F2-41D3F8FBA0AE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toe.Editors.Interfaces.net40.vs2010", "Toe.Editors.Interfaces\Toe.Editors.Interfaces.net40.vs2010.csproj", "{2B25523C-AA51-43C7-B5F2-41D3F8FBA0AE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "utils", "utils", "{D36F28DF-62D4-43AA-9D30-496CB5A6D6C1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toe.Utils.Mesh.net40.vs2010", "Toe.Utils.Mesh\Toe.Utils.Mesh.net40.vs2010.csproj", "{1AB2E074-5CE6-4CD6-A379-3D6A58116319}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toe.Utils.Mesh.Marmalade.net40.vs2010", "Toe.Utils.Mesh.Marmalade\Toe.Utils.Mesh.Marmalade.net40.vs2010.csproj", "{914A4563-0A6F-42D3-8BDA-240AA07DA76E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toe.Utils.Mesh.Marmalade.Tests", "Toe.Utils.Mesh.Marmalade.Tests\Toe.Utils.Mesh.Marmalade.Tests.csproj", "{A9495108-549B-449D-BD92-C615FAA15205}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{92C292EA-2BE3-466E-858F-362042E8A972}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\packages.config = .nuget\packages.config
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -101,6 +114,36 @@ Global
 		{2B25523C-AA51-43C7-B5F2-41D3F8FBA0AE}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{2B25523C-AA51-43C7-B5F2-41D3F8FBA0AE}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{2B25523C-AA51-43C7-B5F2-41D3F8FBA0AE}.Release|x86.ActiveCfg = Release|Any CPU
+		{1AB2E074-5CE6-4CD6-A379-3D6A58116319}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1AB2E074-5CE6-4CD6-A379-3D6A58116319}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1AB2E074-5CE6-4CD6-A379-3D6A58116319}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{1AB2E074-5CE6-4CD6-A379-3D6A58116319}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{1AB2E074-5CE6-4CD6-A379-3D6A58116319}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1AB2E074-5CE6-4CD6-A379-3D6A58116319}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1AB2E074-5CE6-4CD6-A379-3D6A58116319}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1AB2E074-5CE6-4CD6-A379-3D6A58116319}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{1AB2E074-5CE6-4CD6-A379-3D6A58116319}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{1AB2E074-5CE6-4CD6-A379-3D6A58116319}.Release|x86.ActiveCfg = Release|Any CPU
+		{914A4563-0A6F-42D3-8BDA-240AA07DA76E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{914A4563-0A6F-42D3-8BDA-240AA07DA76E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{914A4563-0A6F-42D3-8BDA-240AA07DA76E}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{914A4563-0A6F-42D3-8BDA-240AA07DA76E}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{914A4563-0A6F-42D3-8BDA-240AA07DA76E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{914A4563-0A6F-42D3-8BDA-240AA07DA76E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{914A4563-0A6F-42D3-8BDA-240AA07DA76E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{914A4563-0A6F-42D3-8BDA-240AA07DA76E}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{914A4563-0A6F-42D3-8BDA-240AA07DA76E}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{914A4563-0A6F-42D3-8BDA-240AA07DA76E}.Release|x86.ActiveCfg = Release|Any CPU
+		{A9495108-549B-449D-BD92-C615FAA15205}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{A9495108-549B-449D-BD92-C615FAA15205}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{A9495108-549B-449D-BD92-C615FAA15205}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{A9495108-549B-449D-BD92-C615FAA15205}.Debug|x86.ActiveCfg = Debug|x86
+		{A9495108-549B-449D-BD92-C615FAA15205}.Debug|x86.Build.0 = Debug|x86
+		{A9495108-549B-449D-BD92-C615FAA15205}.Release|Any CPU.ActiveCfg = Release|x86
+		{A9495108-549B-449D-BD92-C615FAA15205}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{A9495108-549B-449D-BD92-C615FAA15205}.Release|Mixed Platforms.Build.0 = Release|x86
+		{A9495108-549B-449D-BD92-C615FAA15205}.Release|x86.ActiveCfg = Release|x86
+		{A9495108-549B-449D-BD92-C615FAA15205}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -113,5 +156,8 @@ Global
 		{77A71F90-B773-4C3B-871C-BB140BFEAAEC} = {121C5FE1-22B0-4936-A5D8-D759AEDC6437}
 		{2B25523C-AA51-43C7-B5F2-41D3F8FBA0AE} = {121C5FE1-22B0-4936-A5D8-D759AEDC6437}
 		{29717F16-3219-4AE5-A7F4-618E65908DA7} = {5A08D1E7-3775-4AE4-8D30-56A7EB1700F5}
+		{1AB2E074-5CE6-4CD6-A379-3D6A58116319} = {D36F28DF-62D4-43AA-9D30-496CB5A6D6C1}
+		{914A4563-0A6F-42D3-8BDA-240AA07DA76E} = {D36F28DF-62D4-43AA-9D30-496CB5A6D6C1}
+		{A9495108-549B-449D-BD92-C615FAA15205} = {D36F28DF-62D4-43AA-9D30-496CB5A6D6C1}
 	EndGlobalSection
 EndGlobal

@@ -77,17 +77,17 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Toe.Editors.Geometry\Toe.Editors.Geometry.csproj">
+    <ProjectReference Include="..\Toe.Editors.Geometry\Toe.Editors.Geometry.net40.vs2010.csproj">
       <Project>{77A71F90-B773-4C3B-871C-BB140BFEAAEC}</Project>
-      <Name>Toe.Editors.Geometry</Name>
+      <Name>Toe.Editors.Geometry.net40.vs2010</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Toe.Editors.Interfaces\Toe.Editors.Interfaces.csproj">
+    <ProjectReference Include="..\Toe.Editors.Interfaces\Toe.Editors.Interfaces.net40.vs2010.csproj">
       <Project>{2B25523C-AA51-43C7-B5F2-41D3F8FBA0AE}</Project>
-      <Name>Toe.Editors.Interfaces</Name>
+      <Name>Toe.Editors.Interfaces.net40.vs2010</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Toe.Editors\Toe.Editors.csproj">
+    <ProjectReference Include="..\Toe.Editors\Toe.Editors.net40.vs2010.csproj">
       <Project>{5FA4A978-FB68-4CB0-B693-FB534C76F2C9}</Project>
-      <Name>Toe.Editors</Name>
+      <Name>Toe.Editors.net40.vs2010</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

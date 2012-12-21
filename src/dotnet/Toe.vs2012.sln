@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toe.WinPhone.net40.vs2012.L
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toe.WinPhone.net40.vs2012.LibContent", "Toe.WinPhone\Toe.WinPhone.LibContent\Toe.WinPhone.net40.vs2012.LibContent.contentproj", "{D506A161-6E9A-49E7-9E8F-2B58FF3D04A9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toe.Utils.Mesh.wpxna.net40.vs2012", "Toe.Utils.Mesh\Toe.Utils.Mesh.wpxna.net40.vs2012.csproj", "{337F2D2D-E524-4EC2-A3CE-57DAFE1F2FC4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +49,16 @@ Global
 		{D506A161-6E9A-49E7-9E8F-2B58FF3D04A9}.Release|Any CPU.ActiveCfg = Debug|Any CPU
 		{D506A161-6E9A-49E7-9E8F-2B58FF3D04A9}.Release|Mixed Platforms.ActiveCfg = Debug|Any CPU
 		{D506A161-6E9A-49E7-9E8F-2B58FF3D04A9}.Release|Windows Phone.ActiveCfg = Debug|Any CPU
+		{337F2D2D-E524-4EC2-A3CE-57DAFE1F2FC4}.Debug|Any CPU.ActiveCfg = Debug|Windows Phone
+		{337F2D2D-E524-4EC2-A3CE-57DAFE1F2FC4}.Debug|Mixed Platforms.ActiveCfg = Debug|Windows Phone
+		{337F2D2D-E524-4EC2-A3CE-57DAFE1F2FC4}.Debug|Mixed Platforms.Build.0 = Debug|Windows Phone
+		{337F2D2D-E524-4EC2-A3CE-57DAFE1F2FC4}.Debug|Windows Phone.ActiveCfg = Debug|Windows Phone
+		{337F2D2D-E524-4EC2-A3CE-57DAFE1F2FC4}.Debug|Windows Phone.Build.0 = Debug|Windows Phone
+		{337F2D2D-E524-4EC2-A3CE-57DAFE1F2FC4}.Release|Any CPU.ActiveCfg = Release|Windows Phone
+		{337F2D2D-E524-4EC2-A3CE-57DAFE1F2FC4}.Release|Mixed Platforms.ActiveCfg = Release|Windows Phone
+		{337F2D2D-E524-4EC2-A3CE-57DAFE1F2FC4}.Release|Mixed Platforms.Build.0 = Release|Windows Phone
+		{337F2D2D-E524-4EC2-A3CE-57DAFE1F2FC4}.Release|Windows Phone.ActiveCfg = Release|Windows Phone
+		{337F2D2D-E524-4EC2-A3CE-57DAFE1F2FC4}.Release|Windows Phone.Build.0 = Release|Windows Phone
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

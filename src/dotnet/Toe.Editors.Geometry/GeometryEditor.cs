@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
@@ -11,16 +12,19 @@ using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Platform;
 using Toe.Editors.Interfaces;
+using Toe.Utils.Mesh;
 
 namespace Toe.Editors.Geometry
 {
 	public partial class GeometryEditor : UserControl, IResourceEditor
 	{
+		private readonly IMeshReader _meshReader;
 		private GLControl gl;
 		private bool loaded;
 
-		public GeometryEditor()
+		public GeometryEditor(IMeshReader meshReader)
 		{
+			_meshReader = meshReader;
 			InitializeComponent();
 
 			gl = new GLControl(GraphicsMode.Default,1,0, GraphicsContextFlags.Default);
@@ -85,6 +89,10 @@ namespace Toe.Editors.Geometry
 
 		public void LoadFile(string filename)
 		{
+			using (var stream = File.OpenRead(filename))
+			{
+				_meshReader.Load(stream);
+			}
 		}
 	}
 }

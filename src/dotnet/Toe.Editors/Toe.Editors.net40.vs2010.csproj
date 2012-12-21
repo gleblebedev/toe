@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{77A71F90-B773-4C3B-871C-BB140BFEAAEC}</ProjectGuid>
+    <ProjectGuid>{5FA4A978-FB68-4CB0-B693-FB534C76F2C9}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Toe.Editors.Geometry</RootNamespace>
-    <AssemblyName>Toe.Editors.Geometry</AssemblyName>
+    <RootNamespace>Toe.Editors</RootNamespace>
+    <AssemblyName>Toe.Editors</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -37,12 +37,6 @@
     <AssemblyOriginatorKeyFile>Toe.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="OpenTK">
-      <HintPath>..\packages\OpenTK\OpenTK.dll</HintPath>
-    </Reference>
-    <Reference Include="OpenTK.GLControl">
-      <HintPath>..\packages\OpenTK\OpenTK.GLControl.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -54,23 +48,31 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GeometryEditor.cs">
+    <Compile Include="DefaultEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="GeometryEditor.Designer.cs">
-      <DependentUpon>GeometryEditor.cs</DependentUpon>
+    <Compile Include="DefaultEditor.Designer.cs">
+      <DependentUpon>DefaultEditor.cs</DependentUpon>
     </Compile>
+    <Compile Include="EditorFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="GeometryEditor.resx">
-      <DependentUpon>GeometryEditor.cs</DependentUpon>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Toe.Editors.Interfaces\Toe.Editors.Interfaces.csproj">
+    <ProjectReference Include="..\Toe.Editors.Geometry\Toe.Editors.Geometry.net40.vs2010.csproj">
+      <Project>{77A71F90-B773-4C3B-871C-BB140BFEAAEC}</Project>
+      <Name>Toe.Editors.Geometry.net40.vs2010</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Toe.Editors.Interfaces\Toe.Editors.Interfaces.net40.vs2010.csproj">
       <Project>{2B25523C-AA51-43C7-B5F2-41D3F8FBA0AE}</Project>
-      <Name>Toe.Editors.Interfaces</Name>
+      <Name>Toe.Editors.Interfaces.net40.vs2010</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Toe.Utils.Mesh.Marmalade\Toe.Utils.Mesh.Marmalade.net40.vs2010.csproj">
+      <Project>{914A4563-0A6F-42D3-8BDA-240AA07DA76E}</Project>
+      <Name>Toe.Utils.Mesh.Marmalade.net40.vs2010</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Toe.Utils.Mesh\Toe.Utils.Mesh.net40.vs2010.csproj">
+      <Project>{1AB2E074-5CE6-4CD6-A379-3D6A58116319}</Project>
+      <Name>Toe.Utils.Mesh.net40.vs2010</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
