@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Toe.Utils.Mesh
 {
 	/// <summary>
@@ -5,5 +7,11 @@ namespace Toe.Utils.Mesh
 	/// </summary>
 	public interface IMesh
 	{
+		IList<ISubMesh> Submeshes { get; }
+
+#if WINDOWS_PHONE
+#else
+		void RenderOpenGL();
+#endif
 	}
 }

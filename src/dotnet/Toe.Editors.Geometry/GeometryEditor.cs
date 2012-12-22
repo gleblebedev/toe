@@ -1,98 +1,105 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
+﻿using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
-using OpenTK;
-using OpenTK.Graphics;
+
 using OpenTK.Graphics.OpenGL;
-using OpenTK.Platform;
+
 using Toe.Editors.Interfaces;
 using Toe.Utils.Mesh;
 
 namespace Toe.Editors.Geometry
 {
-	public partial class GeometryEditor : UserControl, IResourceEditor
+	public class GeometryEditor : Base3DEditor, IResourceEditor
 	{
+		#region Constants and Fields
+
 		private readonly IMeshReader _meshReader;
-		private GLControl gl;
-		private bool loaded;
 
-		public GeometryEditor(IMeshReader meshReader)
+		private readonly IMeshWriter meshWriter;
+
+		private IMesh mesh;
+
+		private uint vbo;
+
+		#endregion
+
+		#region Constructors and Destructors
+
+		public GeometryEditor(IMeshReader meshReader, IMeshWriter meshWriter)
 		{
-			_meshReader = meshReader;
-			InitializeComponent();
-
-			gl = new GLControl(GraphicsMode.Default,1,0, GraphicsContextFlags.Default);
-			gl.Dock = DockStyle.Fill;
-			gl.Load += GLControlLoad;
-			gl.Paint += GLControlPaint;
-			gl.Resize += GLControlResize;
-			this.Controls.Add(gl);
+			this._meshReader = meshReader;
+			this.meshWriter = meshWriter;
 		}
 
-		private void GLControlResize(object sender, EventArgs e)
-		{
-			if (!loaded)
-				return;
-			gl.MakeCurrent();
-			SetupViewport();
-		}
+		#endregion
 
-		private void GLControlPaint(object sender, PaintEventArgs e)
-		{
-			if (!loaded) // Play nice
-				return;
-			gl.MakeCurrent();
-			GL.ClearColor(Color.SkyBlue);
-			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-			gl.SwapBuffers();
-		}
-
-		private void GLControlLoad(object sender, EventArgs e)
-		{
-			loaded = true;
-			gl.MakeCurrent();
-			SetupViewport();
-		}
-
-
-		public void StopRecorder()
-		{
-		}
-		private void SetupViewport()
-		{
-			int w = gl.Width;
-			int h = gl.Height;
-			GL.MatrixMode(MatrixMode.Projection);
-			GL.LoadIdentity();
-			GL.Ortho(0, w, 0, h, -1, 1); // Bottom-left corner pixel has coordinate (0, 0)
-			GL.Viewport(0, 0, w, h); // Use all of the glControl painting area
-		}
+		#region Public Properties
 
 		public Control Control
 		{
-			get { return this; }
+			get
+			{
+				return this;
+			}
+		}
+
+		#endregion
+
+		#region Public Methods and Operators
+
+		public void LoadFile(string filename)
+		{
+			using (var stream = File.OpenRead(filename))
+			{
+				this.mesh = this._meshReader.Load(stream);
+			}
 		}
 
 		public void RecordCommand(string command)
 		{
 		}
 
-		public void SaveFile(string fileName)
+		public void SaveFile(string filename)
+		{
+			if (this.meshWriter != null)
+			{
+				using (var stream = File.Create(filename))
+				{
+					this.meshWriter.Save(this.mesh, stream);
+				}
+			}
+		}
+
+		public void StopRecorder()
 		{
 		}
 
-		public void LoadFile(string filename)
+		#endregion
+
+		#region Methods
+
+		protected override void Dispose(bool disposing)
 		{
-			using (var stream = File.OpenRead(filename))
+			base.Dispose(disposing);
+
+			//if (vbo > 0)
+			//{
+			//    GL.DeleteBuffers(1, ref vbo);
+			//    vbo = 0;
+			//}
+		}
+
+		protected override void RenderScene()
+		{
+			GL.ClearColor(Color.SkyBlue);
+			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+
+			if (this.mesh != null)
 			{
-				_meshReader.Load(stream);
+				this.mesh.RenderOpenGL();
 			}
 		}
+
+		#endregion
 	}
 }

@@ -122,11 +122,17 @@
     </Compile>
     <Compile Include="NativeMethods.cs" />
     <Compile Include="VSMacroRecorder.cs" />
+    <Content Include="Templates\Group.vsdir">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="Templates\Geometry.geo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <Content Include="Templates\Group.group">
       <IncludeInVSIX>true</IncludeInVSIX>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Templates\ToeVisualStudioExtension.vsdir">
+    <Content Include="Templates\Geometry.vsdir">
       <IncludeInVSIX>true</IncludeInVSIX>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -186,6 +192,14 @@
     <ProjectReference Include="..\Toe.Editors\Toe.Editors.net40.vs2010.csproj">
       <Project>{5FA4A978-FB68-4CB0-B693-FB534C76F2C9}</Project>
       <Name>Toe.Editors.net40.vs2010</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Toe.Utils.Mesh.Marmalade\Toe.Utils.Mesh.Marmalade.net40.vs2010.csproj">
+      <Project>{914A4563-0A6F-42D3-8BDA-240AA07DA76E}</Project>
+      <Name>Toe.Utils.Mesh.Marmalade.net40.vs2010</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Toe.Utils.Mesh\Toe.Utils.Mesh.net40.vs2010.csproj">
+      <Project>{1AB2E074-5CE6-4CD6-A379-3D6A58116319}</Project>
+      <Name>Toe.Utils.Mesh.net40.vs2010</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

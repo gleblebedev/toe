@@ -3,18 +3,54 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toe.mono", "Toe.mono\Toe.mono.csproj", "{28D6B12E-0E9B-4740-8225-740E37F797B9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toe.Editor.mono", "Toe.Editor\Toe.Editor.mono.csproj", "{84832595-B318-4C2B-A3D1-AD8DFD8AB566}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toe.Editors.net40.vs2010", "Toe.Editors\Toe.Editors.net40.vs2010.csproj", "{5FA4A978-FB68-4CB0-B693-FB534C76F2C9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toe.Editors.Interfaces.net40.vs2010", "Toe.Editors.Interfaces\Toe.Editors.Interfaces.net40.vs2010.csproj", "{2B25523C-AA51-43C7-B5F2-41D3F8FBA0AE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toe.Editors.Geometry.net40.vs2010", "Toe.Editors.Geometry\Toe.Editors.Geometry.net40.vs2010.csproj", "{77A71F90-B773-4C3B-871C-BB140BFEAAEC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toe.Utils.Mesh.net40.vs2010", "Toe.Utils.Mesh\Toe.Utils.Mesh.net40.vs2010.csproj", "{1AB2E074-5CE6-4CD6-A379-3D6A58116319}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toe.Utils.Mesh.Marmalade.net40.vs2010", "Toe.Utils.Mesh.Marmalade\Toe.Utils.Mesh.Marmalade.net40.vs2010.csproj", "{914A4563-0A6F-42D3-8BDA-240AA07DA76E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1AB2E074-5CE6-4CD6-A379-3D6A58116319}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1AB2E074-5CE6-4CD6-A379-3D6A58116319}.Debug|x86.Build.0 = Debug|Any CPU
+		{1AB2E074-5CE6-4CD6-A379-3D6A58116319}.Release|x86.ActiveCfg = Release|Any CPU
+		{1AB2E074-5CE6-4CD6-A379-3D6A58116319}.Release|x86.Build.0 = Release|Any CPU
 		{28D6B12E-0E9B-4740-8225-740E37F797B9}.Debug|x86.ActiveCfg = Debug|x86
 		{28D6B12E-0E9B-4740-8225-740E37F797B9}.Debug|x86.Build.0 = Debug|x86
 		{28D6B12E-0E9B-4740-8225-740E37F797B9}.Release|x86.ActiveCfg = Release|x86
 		{28D6B12E-0E9B-4740-8225-740E37F797B9}.Release|x86.Build.0 = Release|x86
+		{2B25523C-AA51-43C7-B5F2-41D3F8FBA0AE}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{2B25523C-AA51-43C7-B5F2-41D3F8FBA0AE}.Debug|x86.Build.0 = Debug|Any CPU
+		{2B25523C-AA51-43C7-B5F2-41D3F8FBA0AE}.Release|x86.ActiveCfg = Release|Any CPU
+		{2B25523C-AA51-43C7-B5F2-41D3F8FBA0AE}.Release|x86.Build.0 = Release|Any CPU
+		{5FA4A978-FB68-4CB0-B693-FB534C76F2C9}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5FA4A978-FB68-4CB0-B693-FB534C76F2C9}.Debug|x86.Build.0 = Debug|Any CPU
+		{5FA4A978-FB68-4CB0-B693-FB534C76F2C9}.Release|x86.ActiveCfg = Release|Any CPU
+		{5FA4A978-FB68-4CB0-B693-FB534C76F2C9}.Release|x86.Build.0 = Release|Any CPU
+		{77A71F90-B773-4C3B-871C-BB140BFEAAEC}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{77A71F90-B773-4C3B-871C-BB140BFEAAEC}.Debug|x86.Build.0 = Debug|Any CPU
+		{77A71F90-B773-4C3B-871C-BB140BFEAAEC}.Release|x86.ActiveCfg = Release|Any CPU
+		{77A71F90-B773-4C3B-871C-BB140BFEAAEC}.Release|x86.Build.0 = Release|Any CPU
+		{84832595-B318-4C2B-A3D1-AD8DFD8AB566}.Debug|x86.ActiveCfg = Debug|x86
+		{84832595-B318-4C2B-A3D1-AD8DFD8AB566}.Debug|x86.Build.0 = Debug|x86
+		{84832595-B318-4C2B-A3D1-AD8DFD8AB566}.Release|x86.ActiveCfg = Release|x86
+		{84832595-B318-4C2B-A3D1-AD8DFD8AB566}.Release|x86.Build.0 = Release|x86
+		{914A4563-0A6F-42D3-8BDA-240AA07DA76E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{914A4563-0A6F-42D3-8BDA-240AA07DA76E}.Debug|x86.Build.0 = Debug|Any CPU
+		{914A4563-0A6F-42D3-8BDA-240AA07DA76E}.Release|x86.ActiveCfg = Release|Any CPU
+		{914A4563-0A6F-42D3-8BDA-240AA07DA76E}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = Toe.mono\Toe.mono.csproj
+		StartupItem = Toe.Editor\Toe.Editor.mono.csproj
 	EndGlobalSection
 EndGlobal

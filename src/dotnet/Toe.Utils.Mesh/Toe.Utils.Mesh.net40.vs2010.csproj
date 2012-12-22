@@ -10,13 +10,12 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Toe.Utils.Mesh</RootNamespace>
     <AssemblyName>Toe.Utils.Mesh</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
+    <DebugSymbols>True</DebugSymbols>
     <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
+    <Optimize>False</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -24,14 +23,14 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
+    <Optimize>True</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>True</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>Toe.snk</AssemblyOriginatorKeyFile>
@@ -42,6 +41,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -53,13 +53,17 @@
     <Compile Include="IMeshReader.cs" />
     <Compile Include="IMeshWriter.cs" />
     <Compile Include="ISubMesh.cs" />
+    <Compile Include="MeshBone.cs" />
     <Compile Include="OptimizedList.cs" />
     <Compile Include="StreamsMesh.cs" />
     <Compile Include="StreamSubmesh.cs" />
+    <Compile Include="StreamSubmeshTiangle.cs" />
+    <Compile Include="StreamSubmeshTiangleIndexes.cs" />
     <Compile Include="Vertex.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VertexBufferMesh.cs" />
     <Compile Include="VertexWeight.cs" />
+    <Compile Include="VertexWeights.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Toe.snk" />

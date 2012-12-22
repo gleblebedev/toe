@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
+
 using Toe.Editors;
 using Toe.Editors.Interfaces;
 
@@ -13,16 +7,26 @@ namespace Toe.Editor
 {
 	public partial class MainEditorWindow : Form
 	{
-		private EditorFactory factory;
-		private IResourceEditor resourceEditor;
+		#region Constants and Fields
+
+		private readonly EditorFactory factory;
+
+		private readonly IResourceEditor resourceEditor;
+
+		#endregion
+
+		#region Constructors and Destructors
 
 		public MainEditorWindow()
 		{
-			InitializeComponent();
-			factory = new EditorFactory();
-			resourceEditor = factory.CreateEditor(".group");
-			resourceEditor.Control.Dock = DockStyle.Fill;
-			this.Controls.Add(resourceEditor.Control);
+			this.InitializeComponent();
+			this.factory = new EditorFactory();
+			this.resourceEditor = this.factory.CreateEditor(".geo");
+			this.resourceEditor.Control.Dock = DockStyle.Fill;
+			this.resourceEditor.LoadFile("male_legs_trousers0_lod0.geo");
+			this.Controls.Add(this.resourceEditor.Control);
 		}
+
+		#endregion
 	}
 }

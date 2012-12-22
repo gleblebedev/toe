@@ -1,15 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Toe.Utils.Mesh.Marmalade.Tests
+﻿namespace Toe.Utils.Mesh.Marmalade.Tests
 {
-	class Program
+	internal class Program
 	{
-		static void Main(string[] args)
+		#region Methods
+
+		private static void Main(string[] args)
 		{
 			(new TestGeo()).TestLegs();
+			(new TestSkin()).TestLegs();
+			(new TestSkel()).TestLegs();
 		}
+
+		#endregion
 	}
 }

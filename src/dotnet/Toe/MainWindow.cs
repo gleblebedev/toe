@@ -1,62 +1,82 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
+
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
+#if WINDOWS_PHONE
+#else
+
+#endif
 
 namespace Toe
 {
 	public partial class MainWindow : Form
 	{
-		GLControl gl;
-		bool loaded;
-		public MainWindow (): base ()
+		#region Constants and Fields
+
+		private readonly GLControl gl;
+
+		private bool loaded;
+
+		#endregion
+
+		#region Constructors and Destructors
+
+		public MainWindow()
 		{
-			gl = new GLControl(GraphicsMode.Default,1,0, GraphicsContextFlags.Default);
-			gl.Dock = DockStyle.Fill;
-			gl.Load += GLControlLoad;
-			gl.Paint += GLControlPaint;
-			gl.Resize += GLControlResize;
-			this.Controls.Add(gl);
+			this.gl = new GLControl(GraphicsMode.Default, 1, 0, GraphicsContextFlags.Default);
+			this.gl.Dock = DockStyle.Fill;
+			this.gl.Load += this.GLControlLoad;
+			this.gl.Paint += this.GLControlPaint;
+			this.gl.Resize += this.GLControlResize;
+			this.Controls.Add(this.gl);
 		}
-		private void GLControlResize(object sender, EventArgs e)
-		{
-			if (!loaded)
-				return;
-			gl.MakeCurrent();
-			SetupViewport();
-		}
-		
-		private void GLControlPaint(object sender, PaintEventArgs e)
-		{
-			if (!loaded) // Play nice
-				return;
-			gl.MakeCurrent();
-			GL.ClearColor(Color.SkyBlue);
-			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-			gl.SwapBuffers();
-		}
-		
+
+		#endregion
+
+		#region Methods
+
 		private void GLControlLoad(object sender, EventArgs e)
 		{
-			loaded = true;
-			gl.MakeCurrent();
-			SetupViewport();
+			this.loaded = true;
+			this.gl.MakeCurrent();
+			this.SetupViewport();
 		}
-		
-		
+
+		private void GLControlPaint(object sender, PaintEventArgs e)
+		{
+			if (!this.loaded) // Play nice
+			{
+				return;
+			}
+			this.gl.MakeCurrent();
+			GL.ClearColor(Color.SkyBlue);
+			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+			this.gl.SwapBuffers();
+		}
+
+		private void GLControlResize(object sender, EventArgs e)
+		{
+			if (!this.loaded)
+			{
+				return;
+			}
+			this.gl.MakeCurrent();
+			this.SetupViewport();
+		}
+
 		private void SetupViewport()
 		{
-			int w = gl.Width;
-			int h = gl.Height;
+			int w = this.gl.Width;
+			int h = this.gl.Height;
 			GL.MatrixMode(MatrixMode.Projection);
 			GL.LoadIdentity();
 			GL.Ortho(0, w, 0, h, -1, 1); // Bottom-left corner pixel has coordinate (0, 0)
 			GL.Viewport(0, 0, w, h); // Use all of the glControl painting area
 		}
+
+		#endregion
 	}
 }

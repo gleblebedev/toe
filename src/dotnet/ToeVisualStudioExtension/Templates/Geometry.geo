@@ -1,0 +1,6 @@
+CIwModel
+{
+	CMesh
+	{
+	}
+}

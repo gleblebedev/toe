@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>10.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{84832595-B318-4C2B-A3D1-AD8DFD8AB566}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>Toe.Editor.mono</RootNamespace>
+    <AssemblyName>Toe.Editor.mono</AssemblyName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>False</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>False</ConsolePause>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <DebugType>none</DebugType>
+    <Optimize>True</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>False</ConsolePause>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="Mono.Posix, Version=2.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <Compile Include="MainEditorWindow.cs" />
+    <Compile Include="MainEditorWindow.Designer.cs" />
+    <Compile Include="Program.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Toe.Utils.Mesh\Toe.Utils.Mesh.net40.vs2010.csproj">
+      <Project>{1AB2E074-5CE6-4CD6-A379-3D6A58116319}</Project>
+      <Name>Toe.Utils.Mesh.net40.vs2010</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Toe.Utils.Mesh.Marmalade\Toe.Utils.Mesh.Marmalade.net40.vs2010.csproj">
+      <Project>{914A4563-0A6F-42D3-8BDA-240AA07DA76E}</Project>
+      <Name>Toe.Utils.Mesh.Marmalade.net40.vs2010</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Toe.Editors\Toe.Editors.net40.vs2010.csproj">
+      <Project>{5FA4A978-FB68-4CB0-B693-FB534C76F2C9}</Project>
+      <Name>Toe.Editors.net40.vs2010</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Toe.Editors.Interfaces\Toe.Editors.Interfaces.net40.vs2010.csproj">
+      <Project>{2B25523C-AA51-43C7-B5F2-41D3F8FBA0AE}</Project>
+      <Name>Toe.Editors.Interfaces.net40.vs2010</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Toe.Editors.Geometry\Toe.Editors.Geometry.net40.vs2010.csproj">
+      <Project>{77A71F90-B773-4C3B-871C-BB140BFEAAEC}</Project>
+      <Name>Toe.Editors.Geometry.net40.vs2010</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\testcontent\male_legs_trousers0_lod0.geo">
+      <Link>male_legs_trousers0_lod0.geo</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\..\..\testcontent\male_legs_trousers0_lod0.skin">
+      <Link>male_legs_trousers0_lod0.skin</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\..\..\testcontent\male_skel_lod0.skel">
+      <Link>male_skel_lod0.skel</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+</Project>

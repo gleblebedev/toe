@@ -2,11 +2,26 @@ using System;
 
 namespace Toe.Utils.Mesh.Marmalade
 {
-	public class TextParserException:Exception
+	[Serializable]
+	public class TextParserException : Exception
 	{
-		public TextParserException(string message):base(message)
+		#region Constructors and Destructors
+
+		public TextParserException()
+			: base()
 		{
-			
 		}
+
+		public TextParserException(string message)
+			: base(message)
+		{
+		}
+
+		public TextParserException(string message,Exception ex)
+			: base(message,ex)
+		{
+		}
+
+		#endregion
 	}
 }

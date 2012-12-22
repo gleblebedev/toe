@@ -1,17 +1,26 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace Toe.Editors.Interfaces
 {
-	public interface IResourceEditor: IDisposable
+	public interface IResourceEditor : IDisposable
 	{
-		void StopRecorder();
+		#region Public Properties
+
 		Control Control { get; }
-		void RecordCommand(string command);
-		void SaveFile(string fileName);
+
+		#endregion
+
+		#region Public Methods and Operators
+
 		void LoadFile(string filename);
+
+		void RecordCommand(string command);
+
+		void SaveFile(string filename);
+
+		void StopRecorder();
+
+		#endregion
 	}
 }
