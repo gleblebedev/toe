@@ -25,9 +25,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "utils", "utils", "{D36F28DF
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toe.Utils.Mesh.net40.vs2010", "Toe.Utils.Mesh\Toe.Utils.Mesh.net40.vs2010.csproj", "{1AB2E074-5CE6-4CD6-A379-3D6A58116319}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toe.Utils.Mesh.Marmalade.net40.vs2010", "Toe.Utils.Mesh.Marmalade\Toe.Utils.Mesh.Marmalade.net40.vs2010.csproj", "{914A4563-0A6F-42D3-8BDA-240AA07DA76E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toe.Utils.Marmalade.net40.vs2010", "Toe.Utils.Marmalade\Toe.Utils.Marmalade.net40.vs2010.csproj", "{914A4563-0A6F-42D3-8BDA-240AA07DA76E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toe.Utils.Mesh.Marmalade.Tests", "Toe.Utils.Mesh.Marmalade.Tests\Toe.Utils.Mesh.Marmalade.Tests.csproj", "{A9495108-549B-449D-BD92-C615FAA15205}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toe.Utils.Marmalade.Tests", "Toe.Utils.Marmalade.Tests\Toe.Utils.Mesh.Marmalade.Tests.csproj", "{A9495108-549B-449D-BD92-C615FAA15205}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{92C292EA-2BE3-466E-858F-362042E8A972}"
 	ProjectSection(SolutionItems) = preProject

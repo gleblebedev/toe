@@ -1,7 +1,7 @@
 using System.Globalization;
 using System.IO;
 
-namespace Toe.Utils.Mesh.Marmalade
+namespace Toe.Utils.Mesh.Marmalade.IwAnim
 {
 	public class SkelReader : IMeshReader
 	{
@@ -45,7 +45,7 @@ namespace Toe.Utils.Mesh.Marmalade
 						ParseBone(parser, mesh);
 						continue;
 					}
-					throw new TextParserException(string.Format(CultureInfo.InvariantCulture, "Unknown attribute {0}", attribute));
+					parser.UnknownLexem();
 				}
 			}
 
@@ -92,7 +92,7 @@ namespace Toe.Utils.Mesh.Marmalade
 					bone.Rot = parser.ConsumeQuaternion();
 					continue;
 				}
-				throw new TextParserException(string.Format(CultureInfo.InvariantCulture, "Unknown attribute {0}", attribute));
+				parser.UnknownLexem();
 			}
 		}
 

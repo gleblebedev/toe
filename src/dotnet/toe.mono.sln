@@ -13,7 +13,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toe.Editors.Geometry.net40.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toe.Utils.Mesh.net40.vs2010", "Toe.Utils.Mesh\Toe.Utils.Mesh.net40.vs2010.csproj", "{1AB2E074-5CE6-4CD6-A379-3D6A58116319}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toe.Utils.Mesh.Marmalade.net40.vs2010", "Toe.Utils.Mesh.Marmalade\Toe.Utils.Mesh.Marmalade.net40.vs2010.csproj", "{914A4563-0A6F-42D3-8BDA-240AA07DA76E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toe.Utils.Marmalade.net40.vs2010", "Toe.Utils.Marmalade\Toe.Utils.Mesh.Marmalade.net40.vs2010.csproj", "{914A4563-0A6F-42D3-8BDA-240AA07DA76E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

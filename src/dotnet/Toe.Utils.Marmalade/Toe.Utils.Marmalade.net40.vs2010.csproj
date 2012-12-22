@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{1AB2E074-5CE6-4CD6-A379-3D6A58116319}</ProjectGuid>
+    <ProjectGuid>{914A4563-0A6F-42D3-8BDA-240AA07DA76E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Toe.Utils.Mesh</RootNamespace>
-    <AssemblyName>Toe.Utils.Mesh</AssemblyName>
+    <RootNamespace>Toe.Utils.Mesh.Marmalade</RootNamespace>
+    <AssemblyName>Toe.Utils.Mesh.Marmalade</AssemblyName>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -36,9 +36,6 @@
     <AssemblyOriginatorKeyFile>Toe.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="OpenTK">
-      <HintPath>..\packages\OpenTK\OpenTK.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -47,29 +44,39 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="OpenTK">
+      <HintPath>..\packages\OpenTK\OpenTK.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IMesh.cs" />
-    <Compile Include="IMeshReader.cs" />
-    <Compile Include="IMeshWriter.cs" />
-    <Compile Include="ISubMesh.cs" />
-    <Compile Include="MeshBone.cs" />
-    <Compile Include="MeshStream.cs" />
-    <Compile Include="OptimizedList.cs" />
-    <Compile Include="StreamsMesh.cs" />
-    <Compile Include="StreamSubmesh.cs" />
-    <Compile Include="StreamSubmeshQuad.cs" />
-    <Compile Include="StreamSubmeshTiangle.cs" />
-    <Compile Include="StreamSubmeshTiangleIndexes.cs" />
-    <Compile Include="Vertex.cs" />
+    <Compile Include="IwGraphics\ModelExtSelSetFace.cs" />
+    <Compile Include="IwGraphics\ModelReader.cs" />
+    <Compile Include="IwGraphics\GeoReader.cs" />
+    <Compile Include="IwGraphics\GeoWriter.cs" />
+    <Compile Include="IwGraphics\Model.cs" />
+    <Compile Include="IwGx\Material.cs" />
+    <Compile Include="IwGx\MtlReader.cs" />
+    <Compile Include="IwResManager\GroupReader.cs" />
+    <Compile Include="IwResManager\ResGroup.cs" />
+    <Compile Include="Managed.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="VertexBufferMesh.cs" />
-    <Compile Include="VertexWeight.cs" />
-    <Compile Include="VertexWeights.cs" />
+    <Compile Include="IwAnim\SkelReader.cs" />
+    <Compile Include="IwAnim\SkelWriter.cs" />
+    <Compile Include="IwAnim\SkinReader.cs" />
+    <Compile Include="TextParser.cs" />
+    <Compile Include="TextParserException.cs" />
+    <Compile Include="TextResourceReader.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Toe.Utils.Mesh\Toe.Utils.Mesh.net40.vs2010.csproj">
+      <Project>{1AB2E074-5CE6-4CD6-A379-3D6A58116319}</Project>
+      <Name>Toe.Utils.Mesh.net40.vs2010</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="Toe.snk" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -1,30 +1,14 @@
 using System.Collections.Generic;
-using System.Drawing;
 
-using OpenTK;
 #if WINDOWS_PHONE
 using Microsoft.Xna.Framework;
 #else
-
+using System.Drawing;
+using OpenTK;
 #endif
 
 namespace Toe.Utils.Mesh
 {
-	public class MeshStream<T> : List<T>
-	{
-		#region Public Methods and Operators
-
-		public void EnsureAt(int index)
-		{
-			while (this.Count <= index)
-			{
-				this.Add(default(T));
-			}
-		}
-
-		#endregion
-	}
-
 	public class StreamMesh : IMesh
 	{
 		#region Constants and Fields
@@ -42,6 +26,8 @@ namespace Toe.Utils.Mesh
 		private readonly List<MeshStream<Vector2>> uv = new List<MeshStream<Vector2>>();
 
 		private readonly MeshStream<Vector3> vertices = new MeshStream<Vector3>();
+
+		public string useGroup { get; set; }
 
 		#endregion
 
@@ -64,6 +50,8 @@ namespace Toe.Utils.Mesh
 		}
 
 		public string Name { get; set; }
+
+		public string BaseName { get; set; }
 
 		public MeshStream<Vector3> Normals
 		{
@@ -111,6 +99,8 @@ namespace Toe.Utils.Mesh
 			}
 		}
 
+		public string useGeo { get; set; }
+
 		#endregion
 
 		#region Public Methods and Operators
@@ -145,7 +135,8 @@ namespace Toe.Utils.Mesh
 			}
 			return this.UV[setId];
 		}
-
+#if WINDOWS_PHONE
+#else
 		public void RenderOpenGL()
 		{
 			var subMeshes = this.submeshes;
@@ -154,7 +145,7 @@ namespace Toe.Utils.Mesh
 				subMesh.RenderOpenGL();
 			}
 		}
-
+#endif
 		#endregion
 	}
 }

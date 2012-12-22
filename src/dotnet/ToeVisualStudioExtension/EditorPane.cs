@@ -89,8 +89,6 @@ namespace Toe.ToeVsExt
 
 		private readonly string _getExtension;
 
-		private readonly Editors.EditorFactory _toeEditorFactory;
-
 		private Timer FNFStatusbarTrigger = new Timer();
 
 		private Timer FileChangeTrigger = new Timer();
@@ -148,11 +146,11 @@ namespace Toe.ToeVsExt
 		/// </summary>
 		/// <param name="package">Our Package instance.</param>
 		public EditorPane(
-			ToeVisualStudioExtensionPackage package, string getExtension, Editors.EditorFactory toeEditorFactory)
+			ToeVisualStudioExtensionPackage package, string getExtension, IResourceEditor editor)
 			: base(null)
 		{
 			this._getExtension = getExtension;
-			this._toeEditorFactory = toeEditorFactory;
+			this.editorControl = editor;
 			this.PrivateInit(package);
 		}
 
@@ -1568,7 +1566,6 @@ namespace Toe.ToeVsExt
 			// Create and initialize the editor
 
 			ComponentResourceManager resources = new ComponentResourceManager(typeof(EditorPane));
-			this.editorControl = this._toeEditorFactory.CreateEditor(this._getExtension);
 
 			resources.ApplyResources(this.editorControl, "editorControl", CultureInfo.CurrentUICulture);
 			// Event handlers for macro recording.

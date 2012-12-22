@@ -7,12 +7,12 @@ using Microsoft.Xna.Framework;
 using OpenTK;
 #endif
 
-namespace Toe.Utils.Mesh.Marmalade
+namespace Toe.Utils.Mesh.Marmalade.IwGraphics
 {
 	/// <summary>
 	/// Marmalade SDK .geo file parser.
 	/// </summary>
-	public class GeoReader : IMeshReader
+	public class ModelReader
 	{
 		#region Public Methods and Operators
 
@@ -21,14 +21,19 @@ namespace Toe.Utils.Mesh.Marmalade
 		/// </summary>
 		/// <param name="stream">Stream to read from.</param>
 		/// <returns>Complete parsed mesh.</returns>
-		public IMesh Load(Stream stream)
+		public Model Load(Stream stream)
 		{
-			var mesh = new StreamMesh();
+			var mesh = new Model();
 
 			using (var source = new StreamReader(stream))
 			{
 				var parser = new TextParser(source);
 
+				if (parser.GetLexem() == "CMesh")
+				{
+					ParseMesh(parser, mesh);
+					return mesh;
+				}
 				parser.Consume("CIwModel");
 				parser.Consume("{");
 
@@ -48,12 +53,10 @@ namespace Toe.Utils.Mesh.Marmalade
 					}
 					if (attribute == "CMesh")
 					{
-						parser.Consume();
-						parser.Consume("{");
 						this.ParseMesh(parser, mesh);
 						continue;
 					}
-					throw new TextParserException(string.Format(CultureInfo.InvariantCulture, "Unknown attribute {0}", attribute));
+					parser.UnknownLexem();
 				}
 			}
 
@@ -64,8 +67,12 @@ namespace Toe.Utils.Mesh.Marmalade
 
 		#region Methods
 
-		private void ParseMesh(TextParser parser, StreamMesh mesh)
+		private void ParseMesh(TextParser parser, Model model)
 		{
+			parser.Consume("CMesh");
+			parser.Consume("{");
+			var mesh = new StreamMesh();
+			model.Meshes.Add(mesh);
 			for (;;)
 			{
 				var attribute = parser.GetLexem();
@@ -78,6 +85,24 @@ namespace Toe.Utils.Mesh.Marmalade
 				{
 					parser.Consume();
 					mesh.Name = parser.ConsumeString();
+					continue;
+				}
+				if (attribute == "baseName")
+				{
+					parser.Consume();
+					mesh.BaseName = parser.ConsumeString();
+					continue;
+				}
+				if (attribute == "useGeo")
+				{
+					parser.Consume();
+					mesh.useGeo = parser.ConsumeString();
+					continue;
+				}
+				if (attribute == "useGroup")
+				{
+					parser.Consume();
+					mesh.useGroup = parser.ConsumeString();
 					continue;
 				}
 				if (attribute == "scale")
@@ -121,8 +146,50 @@ namespace Toe.Utils.Mesh.Marmalade
 					this.ParseSurface(parser, mesh.CreateSubmesh());
 					continue;
 				}
-				throw new TextParserException(string.Format(CultureInfo.InvariantCulture, "Unknown attribute {0}", attribute));
+				if (attribute == "CIwModelExtSelSetFace")
+				{
+					this.ParseModelExtSelSetFace(parser, mesh);
+					continue;
+				}
+				
+				parser.UnknownLexem();
 			}
+		}
+
+		private ModelExtSelSetFace ParseModelExtSelSetFace(TextParser parser, StreamMesh mesh)
+		{
+			ModelExtSelSetFace sel = new ModelExtSelSetFace();
+			parser.Consume("CIwModelExtSelSetFace");
+			parser.Consume("{");
+			for (; ; )
+			{
+				var attribute = parser.GetLexem();
+				if (attribute == "}")
+				{
+					parser.Consume();
+					break;
+				}
+				if (attribute == "name")
+				{
+					parser.Consume();
+					sel.Name = parser.ConsumeString();
+					continue;
+				}
+				if (attribute == "otzOfs")
+				{
+					parser.Consume();
+					sel.otzOfs = parser.ConsumeFloat();
+					continue;
+				}
+				if (attribute == "f")
+				{
+					parser.Consume();
+					sel.F.Add(parser.ConsumeInt());
+					continue;
+				}
+				parser.UnknownLexem();
+			}
+			return sel;
 		}
 
 		private void ParseSurface(TextParser parser, ISubMesh submesh)
@@ -148,7 +215,14 @@ namespace Toe.Utils.Mesh.Marmalade
 					this.ParseTris(parser,  (StreamSubmesh)submesh);
 					continue;
 				}
-				throw new TextParserException(string.Format(CultureInfo.InvariantCulture, "Unknown attribute {0}", attribute));
+				if (attribute == "CQuads")
+				{
+					parser.Consume();
+					parser.Consume("{");
+					this.ParseQuads(parser, (StreamSubmesh)submesh);
+					continue;
+				}
+				parser.UnknownLexem();
 			}
 		}
 
@@ -160,7 +234,15 @@ namespace Toe.Utils.Mesh.Marmalade
 			t.C = ParseTrisIndexes(parser);
 			return t;
 		}
-
+		private static StreamSubmeshQuad ParseQuad(TextParser parser)
+		{
+			StreamSubmeshQuad t;
+			t.A = ParseTrisIndexes(parser);
+			t.B = ParseTrisIndexes(parser);
+			t.C = ParseTrisIndexes(parser);
+			t.D = ParseTrisIndexes(parser);
+			return t;
+		}
 		private void ParseTris(TextParser parser, StreamSubmesh submesh)
 		{
 			for (;;)
@@ -174,7 +256,7 @@ namespace Toe.Utils.Mesh.Marmalade
 				if (attribute == "numTris")
 				{
 					parser.Consume();
-					submesh.Tris.Capacity = parser.ConsumeInt();
+					submesh.Tris.Capacity = submesh.Tris.Count + parser.ConsumeInt();
 					continue;
 				}
 				if (attribute == "t")
@@ -183,23 +265,77 @@ namespace Toe.Utils.Mesh.Marmalade
 					submesh.Tris.Add(ParseTriangle(parser));
 					continue;
 				}
-				throw new TextParserException(string.Format(CultureInfo.InvariantCulture, "Unknown attribute {0}", attribute));
+				parser.UnknownLexem();
 			}
 		}
-
+		private void ParseQuads(TextParser parser, StreamSubmesh submesh)
+		{
+			for (; ; )
+			{
+				var attribute = parser.GetLexem();
+				if (attribute == "}")
+				{
+					parser.Consume();
+					break;
+				}
+				if (attribute == "numQuads")
+				{
+					parser.Consume();
+					submesh.Tris.Capacity = submesh.Tris.Count + parser.ConsumeInt()*2;
+					continue;
+				}
+				if (attribute == "q")
+				{
+					parser.Consume();
+					var streamSubmeshQuad = ParseQuad(parser);
+					submesh.Tris.Add(new StreamSubmeshTiangle { A = streamSubmeshQuad.A, B = streamSubmeshQuad.B, C = streamSubmeshQuad.C});
+					submesh.Tris.Add(new StreamSubmeshTiangle { A = streamSubmeshQuad.A, B = streamSubmeshQuad.C, C = streamSubmeshQuad.D });
+					continue;
+				}
+				parser.UnknownLexem();
+			}
+		}
 		private static StreamSubmeshTiangleIndexes ParseTrisIndexes(TextParser parser)
 		{
 			parser.Consume("{");
 			StreamSubmeshTiangleIndexes i;
 			i.Vertex = parser.ConsumeInt();
 			parser.Skip(",");
-			i.Normal = parser.ConsumeInt();
-			parser.Skip(",");
-			i.UV0 = parser.ConsumeInt();
-			parser.Skip(",");
-			i.UV1 = parser.ConsumeInt();
-			parser.Skip(",");
-			i.Color = parser.ConsumeInt();
+			if (parser.GetLexem() == "}")
+			{
+				i.Normal = -1;
+			}
+			else
+			{
+				i.Normal = parser.ConsumeInt();
+				parser.Skip(",");
+			}
+			if (parser.GetLexem() == "}")
+			{
+					i.UV0 = -1;
+			}
+			else
+			{
+				i.UV0 = parser.ConsumeInt();
+				parser.Skip(",");
+			}
+			if (parser.GetLexem() == "}")
+			{
+						i.UV1 = -1;
+			}
+			else
+			{
+				i.UV1 = parser.ConsumeInt();
+				parser.Skip(",");
+			}
+			if (parser.GetLexem() == "}")
+			{
+				i.Color = -1;
+			}
+			else
+			{
+				i.Color = parser.ConsumeInt();
+			}
 			parser.Consume("}");
 			return i;
 		}
@@ -243,7 +379,7 @@ namespace Toe.Utils.Mesh.Marmalade
 					uvs.Add(parser.ConsumeVector2());
 					continue;
 				}
-				throw new TextParserException(string.Format(CultureInfo.InvariantCulture, "Unknown attribute {0}", attribute));
+				parser.UnknownLexem();
 			}
 		}
 
@@ -269,7 +405,7 @@ namespace Toe.Utils.Mesh.Marmalade
 					mesh.Colors.Add(parser.ConsumeColor());
 					continue;
 				}
-				throw new TextParserException(string.Format(CultureInfo.InvariantCulture, "Unknown attribute {0}", attribute));
+				parser.UnknownLexem();
 			}
 		}
 
@@ -295,7 +431,7 @@ namespace Toe.Utils.Mesh.Marmalade
 					vertices.Add(parser.ConsumeVector3());
 					continue;
 				}
-				throw new TextParserException(string.Format(CultureInfo.InvariantCulture, "Unknown attribute {0}", attribute));
+				parser.UnknownLexem();
 			}
 		}
 
@@ -321,7 +457,7 @@ namespace Toe.Utils.Mesh.Marmalade
 					vertices.Add(parser.ConsumeVector3());
 					continue;
 				}
-				throw new TextParserException(string.Format(CultureInfo.InvariantCulture, "Unknown attribute {0}", attribute));
+				parser.UnknownLexem();
 			}
 		}
 

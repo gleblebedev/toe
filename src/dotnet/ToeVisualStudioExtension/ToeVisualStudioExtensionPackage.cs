@@ -30,6 +30,16 @@ namespace TinyOpenEngine.ToeVisualStudioExtension
 		TemplateDir = "Templates", NameResourceID = 105, DefaultName = "Group")]
 	[ProvideEditorExtension(typeof(EditorFactory), ".geo", 50, ProjectGuid = "{A2FE74E1-B743-11d0-AE1A-00A0C90FFFC3}",
 		TemplateDir = "Templates", NameResourceID = 105, DefaultName = "Geometry")]
+	[ProvideEditorExtension(typeof(EditorFactory), ".anim", 50, ProjectGuid = "{A2FE74E1-B743-11d0-AE1A-00A0C90FFFC3}",
+		TemplateDir = "Templates", NameResourceID = 105, DefaultName = "Animation")]
+	[ProvideEditorExtension(typeof(EditorFactory), ".skin", 50, ProjectGuid = "{A2FE74E1-B743-11d0-AE1A-00A0C90FFFC3}",
+		TemplateDir = "Templates", NameResourceID = 105, DefaultName = "Skin")]
+	[ProvideEditorExtension(typeof(EditorFactory), ".skel", 50, ProjectGuid = "{A2FE74E1-B743-11d0-AE1A-00A0C90FFFC3}",
+		TemplateDir = "Templates", NameResourceID = 105, DefaultName = "Skeleton")]
+	[ProvideEditorExtension(typeof(EditorFactory), ".mtl", 50, ProjectGuid = "{A2FE74E1-B743-11d0-AE1A-00A0C90FFFC3}",
+		TemplateDir = "Templates", NameResourceID = 105, DefaultName = "Material")]
+	[ProvideEditorExtension(typeof(EditorFactory), ".bin", 1000, ProjectGuid = "{A2FE74E1-B743-11d0-AE1A-00A0C90FFFC3}",
+		NameResourceID = 105)]
 	[ProvideKeyBindingTable(GuidList.guidToeVisualStudioExtensionEditorFactoryString, 102)]
 	[ProvideEditorLogicalView(typeof(EditorFactory), "{7651a703-06e5-11d1-8ebd-00a0c90f26ea}")]
 	[Guid(GuidList.guidToeVisualStudioExtensionPkgString)]

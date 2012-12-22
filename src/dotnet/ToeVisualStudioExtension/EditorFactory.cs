@@ -104,6 +104,13 @@ namespace Toe.ToeVsExt
 			pgrfCDW = 0;
 			pbstrEditorCaption = null;
 
+			var e = this.toeEditorFactory.CreateEditor(pszMkDocument);
+			if (e == null)
+			{
+				return VSConstants.VS_E_UNSUPPORTEDFORMAT;
+				//return VSConstants.VS_E_INCOMPATIBLEDOCDATA;
+			}
+
 			// Validate inputs
 			if ((grfCreateDoc & (VSConstants.CEF_OPENFILE | VSConstants.CEF_SILENT)) == 0)
 			{
@@ -115,7 +122,7 @@ namespace Toe.ToeVsExt
 			}
 
 			// Create the Document (editor)
-			EditorPane NewEditor = new EditorPane(this.editorPackage, Path.GetExtension(pszMkDocument), this.toeEditorFactory);
+			EditorPane NewEditor = new EditorPane(this.editorPackage, Path.GetExtension(pszMkDocument), e);
 			ppunkDocView = Marshal.GetIUnknownForObject(NewEditor);
 			ppunkDocData = Marshal.GetIUnknownForObject(NewEditor);
 			pbstrEditorCaption = "";

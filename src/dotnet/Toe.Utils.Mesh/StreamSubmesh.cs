@@ -1,6 +1,10 @@
 using System.Collections.Generic;
 
+#if WINDOWS_PHONE
+using Microsoft.Xna.Framework;
+#else
 using OpenTK.Graphics.OpenGL;
+#endif
 
 namespace Toe.Utils.Mesh
 {

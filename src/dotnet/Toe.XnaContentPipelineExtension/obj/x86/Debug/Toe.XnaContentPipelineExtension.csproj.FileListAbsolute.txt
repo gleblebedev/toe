@@ -1,0 +1,9 @@
+C:\GitHub\toe\src\dotnet\Toe.XnaContentPipelineExtension\bin\x86\Debug\Toe.XnaContentPipelineExtension.dll
+C:\GitHub\toe\src\dotnet\Toe.XnaContentPipelineExtension\bin\x86\Debug\Toe.XnaContentPipelineExtension.pdb
+C:\GitHub\toe\src\dotnet\Toe.XnaContentPipelineExtension\obj\x86\Debug\Toe.XnaContentPipelineExtension.csprojResolveAssemblyReference.cache
+C:\GitHub\toe\src\dotnet\Toe.XnaContentPipelineExtension\obj\x86\Debug\Toe.XnaContentPipelineExtension.dll
+C:\GitHub\toe\src\dotnet\Toe.XnaContentPipelineExtension\obj\x86\Debug\Toe.XnaContentPipelineExtension.pdb
+C:\GitHub\toe\src\dotnet\Toe.XnaContentPipelineExtension\bin\x86\Debug\Toe.Utils.Mesh.dll
+C:\GitHub\toe\src\dotnet\Toe.XnaContentPipelineExtension\bin\x86\Debug\Toe.Utils.Mesh.Marmalade.dll
+C:\GitHub\toe\src\dotnet\Toe.XnaContentPipelineExtension\bin\x86\Debug\Toe.Utils.Mesh.Marmalade.pdb
+C:\GitHub\toe\src\dotnet\Toe.XnaContentPipelineExtension\bin\x86\Debug\Toe.Utils.Mesh.pdb

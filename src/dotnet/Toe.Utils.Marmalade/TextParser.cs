@@ -1,14 +1,13 @@
 using System;
-using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Text;
 
-using OpenTK;
 #if WINDOWS_PHONE
 using Microsoft.Xna.Framework;
 #else
-
+using System.Drawing;
+using OpenTK;
 #endif
 
 namespace Toe.Utils.Mesh.Marmalade
@@ -75,6 +74,24 @@ namespace Toe.Utils.Mesh.Marmalade
 		{
 			int maxItems = 4;
 			maxItems = this.ConsumeVector(maxItems);
+#if WINDOWS_PHONE
+			if (maxItems == 4)
+			{
+				return new Color(
+					this.floatBuf[0], //r
+					this.floatBuf[1], //g
+					this.floatBuf[2], //b
+					this.floatBuf[3]); //a
+			}
+			if (maxItems == 3)
+			{
+				return new Color(
+					this.floatBuf[0], //r
+					this.floatBuf[1], //g
+					this.floatBuf[2] //b
+					); 
+			}
+#else
 			if (maxItems == 4)
 			{
 				return Color.FromArgb(
@@ -83,6 +100,15 @@ namespace Toe.Utils.Mesh.Marmalade
 					ClampColor(this.floatBuf[2]),
 					ClampColor(this.floatBuf[3]));
 			}
+			if (maxItems == 3)
+			{
+				return Color.FromArgb(
+					255,
+					ClampColor(this.floatBuf[0]),
+					ClampColor(this.floatBuf[1]),
+					ClampColor(this.floatBuf[2]));
+			}
+#endif
 			throw new NotImplementedException();
 		}
 
@@ -195,9 +221,45 @@ namespace Toe.Utils.Mesh.Marmalade
 
 		private void ReadLexem()
 		{
+			retryToReadLexem:
 			while (this.nextChar >= 0 && char.IsWhiteSpace((char)this.nextChar))
 			{
 				this.nextChar = this.reader.Read();
+			}
+			if (nextChar == '/')
+			{
+				this.nextChar = this.reader.Read();
+				if (this.nextChar != '/' && this.nextChar != '*')
+				{
+					this.lexem = "/";
+					this.lexemReady = true;
+					return;
+				}
+
+				if (this.nextChar == '*')
+				{
+					for (;;)
+					{
+						this.nextChar = this.reader.Read();
+						if (this.nextChar == '*')
+						{
+							this.nextChar = this.reader.Read();
+							if (this.nextChar == '/')
+							{
+								this.nextChar = this.reader.Read();
+								break;
+							}
+						}
+					}
+				}
+				else
+				{
+					while (this.nextChar >= 0 && this.nextChar != '\n' && this.nextChar != '\r')
+					{
+						this.nextChar = this.reader.Read();
+					}
+				}
+				goto retryToReadLexem;
 			}
 			switch (this.nextChar)
 			{
@@ -266,7 +328,7 @@ namespace Toe.Utils.Mesh.Marmalade
 					this.nextChar = this.reader.Read();
 				}
 			}
-			if (this.nextChar == 'E')
+			if (this.nextChar == 'E' || this.nextChar == 'e')
 			{
 				this.sb.Append((char)this.nextChar);
 				this.nextChar = this.reader.Read();
@@ -312,5 +374,33 @@ namespace Toe.Utils.Mesh.Marmalade
 		}
 
 		#endregion
+
+		public void UnknownLexem()
+		{
+			var where = "input stream";
+			var textReader = this.reader;
+			if (textReader is StreamReader)
+			{
+				var baseStream = ((StreamReader)textReader).BaseStream;
+				if (baseStream is FileStream) where = ((FileStream)baseStream).Name;
+			}
+			throw new TextParserException(string.Format(CultureInfo.InvariantCulture, "Unknown element \"{0}\" in {1}", lexem, where));
+		}
+
+		public bool ConsumeBool()
+		{
+			var lexem = this.GetLexem();
+			if (0==string.Compare(lexem, "true",StringComparison.InvariantCultureIgnoreCase))
+			{
+				this.Consume();
+				return true;
+			}
+			if (0 == string.Compare(lexem, "false", StringComparison.InvariantCultureIgnoreCase))
+			{
+				this.Consume();
+				return false;
+			}
+			return this.ConsumeInt() != 0;
+		}
 	}
 }

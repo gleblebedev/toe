@@ -1,9 +1,9 @@
 using System;
 using System.IO;
 
-namespace Toe.Utils.Mesh.Marmalade
+namespace Toe.Utils.Mesh.Marmalade.IwAnim
 {
-	public class GeoWriter : IMeshWriter
+	public class SkelWriter : IMeshWriter
 	{
 		#region Public Methods and Operators
 

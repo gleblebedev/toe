@@ -1,6 +1,7 @@
 ﻿using Toe.Editors.Geometry;
 using Toe.Editors.Interfaces;
 using Toe.Utils.Mesh.Marmalade;
+using Toe.Utils.Mesh.Marmalade.IwGraphics;
 
 namespace Toe.Editors
 {
@@ -8,16 +9,18 @@ namespace Toe.Editors
 	{
 		#region Public Methods and Operators
 
-		public IResourceEditor CreateEditor(string getExtension)
+		public IResourceEditor CreateEditor(string fileName)
 		{
-			var e = getExtension.ToLower();
-			switch (e)
+			var e = fileName.ToLower();
+			if (e.EndsWith(".geo"))
 			{
-				case ".geo":
-					return new GeometryEditor(new GeoReader(), null);
-				default:
-					return new DefaultEditor();
+				return new GeometryEditor(new GeoReader(), null);
 			}
+			if (e.EndsWith(".group.bin"))
+			{
+				return new DefaultEditor();
+			}
+			return null;
 		}
 
 		#endregion
