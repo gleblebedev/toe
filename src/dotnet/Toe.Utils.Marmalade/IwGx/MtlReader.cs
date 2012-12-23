@@ -67,7 +67,7 @@ namespace Toe.Utils.Mesh.Marmalade.IwGx
 				if (attribute == "specularPower")
 				{
 					parser.Consume();
-					material.specularPower = parser.ConsumeFloat();
+					material.specularPower = parser.ConsumeInt();
 					continue;
 				}
 					if (attribute == "celNum")
@@ -124,13 +124,13 @@ namespace Toe.Utils.Mesh.Marmalade.IwGx
 				if (attribute == "texture0" || attribute == "mapDiffuse")
 					{
 						parser.Consume();
-						material.texture0 = parser.ConsumeString();
+						material.Texture0 = parser.ConsumeString();
 						continue;
 					}
 					if (attribute == "texture1")
 					{
 						parser.Consume();
-						material.texture1 = parser.ConsumeString();
+						material.Texture1 = parser.ConsumeString();
 						continue;
 					}
 					if (attribute == "texture2")

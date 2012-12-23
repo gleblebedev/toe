@@ -38,6 +38,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -46,12 +47,52 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Bindings\DataContextBinding.cs" />
+    <Compile Include="Bindings\DataContextChangedEventArgs.cs" />
+    <Compile Include="Bindings\DataContextContainer.cs" />
+    <Compile Include="Bindings\IBinding.cs" />
+    <Compile Include="Bindings\IView.cs" />
+    <Compile Include="Bindings\PropertyBinding.cs" />
     <Compile Include="IResourceEditor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Views\ColorPickerDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\ColorPickerDialog.Designer.cs">
+      <DependentUpon>ColorPickerDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ColorView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\EditColorView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\EditEnumView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\EditIntegerView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\EditStringView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Panels\Panel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\SingleControlView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Panels\StackPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\StringView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Toe.snk" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

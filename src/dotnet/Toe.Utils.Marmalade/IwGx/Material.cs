@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.Drawing;
 
 namespace Toe.Utils.Mesh.Marmalade.IwGx
@@ -36,16 +37,52 @@ namespace Toe.Utils.Mesh.Marmalade.IwGx
 
 		public string shaderTechnique { get; set; }
 
-		public float specularPower { get; set; }
+		public int specularPower { get; set; }
 
-		public string texture0 { get; set; }
+		private string texture0;
 
-		public string texture1 { get; set; }
+		public string Texture0
+		{
+			get
+			{
+				return this.texture0;
+			}
+			set
+			{
+				if (this.texture0 != value)
+				{
+					this.texture0 = value;
+					this.RaisePropertyChanged("Texture1");
+				}
+			}
+		}
+
+		private string texture1;
+
+		public string Texture1
+		{
+			get
+			{
+				return this.texture1;
+			}
+			set
+			{
+				if (this.texture1 != value)
+				{
+					this.texture1 = value;
+					this.RaisePropertyChanged("Texture1");
+				}
+			}
+		}
 
 		public string texture2 { get; set; }
 
 		public string vertexShader { get; set; }
 
+		public ShadeMode shadeMode { get; set; }
+
 		#endregion
+
+		
 	}
 }

@@ -2,17 +2,18 @@
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{5FA4A978-FB68-4CB0-B693-FB534C76F2C9}</ProjectGuid>
+    <ProjectGuid>{0FBCDE4F-9E57-4D14-BA36-5028C2498A07}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Toe.Editors</RootNamespace>
-    <AssemblyName>Toe.Editors</AssemblyName>
+    <RootNamespace>Toe.Editors.Marmalade</RootNamespace>
+    <AssemblyName>Toe.Editors.Marmalade</AssemblyName>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>True</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>False</Optimize>
@@ -21,7 +22,8 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>True</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -47,14 +49,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DefaultEditor.cs">
+    <Compile Include="MaterialEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="DefaultEditor.Designer.cs">
-      <DependentUpon>DefaultEditor.cs</DependentUpon>
-    </Compile>
-    <Compile Include="EditorFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Toe.Editors.Interfaces\Toe.Editors.Interfaces.net40.vs2010.csproj">
+      <Project>{2B25523C-AA51-43C7-B5F2-41D3F8FBA0AE}</Project>
+      <Name>Toe.Editors.Interfaces.net40.vs2010</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Toe.Utils.Marmalade\Toe.Utils.Marmalade.net40.vs2010.csproj">
+      <Project>{914A4563-0A6F-42D3-8BDA-240AA07DA76E}</Project>
+      <Name>Toe.Utils.Marmalade.net40.vs2010</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="Toe.snk" />
@@ -67,26 +75,4 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <ItemGroup>
-    <ProjectReference Include="..\Toe.Editors.Interfaces\Toe.Editors.Interfaces.net40.vs2010.csproj">
-      <Project>{2B25523C-AA51-43C7-B5F2-41D3F8FBA0AE}</Project>
-      <Name>Toe.Editors.Interfaces.net40.vs2010</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Toe.Editors.Geometry\Toe.Editors.Geometry.net40.vs2010.csproj">
-      <Project>{77A71F90-B773-4C3B-871C-BB140BFEAAEC}</Project>
-      <Name>Toe.Editors.Geometry.net40.vs2010</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Toe.Editors.Marmalade\Toe.Editors.Marmalade.net40.vs2010.csproj">
-      <Project>{0FBCDE4F-9E57-4D14-BA36-5028C2498A07}</Project>
-      <Name>Toe.Editors.Marmalade.net40.vs2010</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Toe.Utils.Mesh\Toe.Utils.Mesh.net40.vs2010.csproj">
-      <Project>{1AB2E074-5CE6-4CD6-A379-3D6A58116319}</Project>
-      <Name>Toe.Utils.Mesh.net40.vs2010</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Toe.Utils.Marmalade\Toe.Utils.Marmalade.net40.vs2010.csproj">
-      <Project>{914A4563-0A6F-42D3-8BDA-240AA07DA76E}</Project>
-      <Name>Toe.Utils.Marmalade.net40.vs2010</Name>
-    </ProjectReference>
-  </ItemGroup>
 </Project>

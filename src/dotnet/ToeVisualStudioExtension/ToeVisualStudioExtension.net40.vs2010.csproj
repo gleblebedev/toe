@@ -189,6 +189,10 @@
       <Project>{2B25523C-AA51-43C7-B5F2-41D3F8FBA0AE}</Project>
       <Name>Toe.Editors.Interfaces.net40.vs2010</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Toe.Editors.Marmalade\Toe.Editors.Marmalade.net40.vs2010.csproj">
+      <Project>{0FBCDE4F-9E57-4D14-BA36-5028C2498A07}</Project>
+      <Name>Toe.Editors.Marmalade.net40.vs2010</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Toe.Editors\Toe.Editors.net40.vs2010.csproj">
       <Project>{5FA4A978-FB68-4CB0-B693-FB534C76F2C9}</Project>
       <Name>Toe.Editors.net40.vs2010</Name>

@@ -56,6 +56,7 @@
     <Compile Include="IwGraphics\Model.cs" />
     <Compile Include="IwGx\Material.cs" />
     <Compile Include="IwGx\MtlReader.cs" />
+    <Compile Include="IwGx\ShadeMode.cs" />
     <Compile Include="IwResManager\GroupReader.cs" />
     <Compile Include="IwResManager\ResGroup.cs" />
     <Compile Include="Managed.cs" />

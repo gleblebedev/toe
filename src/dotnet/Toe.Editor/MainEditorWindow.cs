@@ -21,7 +21,7 @@ namespace Toe.Editor
 		{
 			this.InitializeComponent();
 			this.factory = new EditorFactory();
-			var filename = "male_legs_trousers0_lod0.geo";
+			var filename = "track_01.mtl";
 			this.resourceEditor = this.factory.CreateEditor(filename);
 			this.resourceEditor.Control.Dock = DockStyle.Fill;
 			this.resourceEditor.LoadFile(filename);

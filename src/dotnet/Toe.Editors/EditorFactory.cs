@@ -1,5 +1,6 @@
 ﻿using Toe.Editors.Geometry;
 using Toe.Editors.Interfaces;
+using Toe.Editors.Marmalade;
 using Toe.Utils.Mesh.Marmalade;
 using Toe.Utils.Mesh.Marmalade.IwGraphics;
 
@@ -16,6 +17,11 @@ namespace Toe.Editors
 			{
 				return new GeometryEditor(new GeoReader(), null);
 			}
+			if (e.EndsWith(".mtl"))
+			{
+				return new MaterialEditor();
+			}
+			
 			if (e.EndsWith(".group.bin"))
 			{
 				return new DefaultEditor();

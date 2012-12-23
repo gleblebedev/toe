@@ -27,12 +27,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toe.Utils.Mesh.net40.vs2010
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toe.Utils.Marmalade.net40.vs2010", "Toe.Utils.Marmalade\Toe.Utils.Marmalade.net40.vs2010.csproj", "{914A4563-0A6F-42D3-8BDA-240AA07DA76E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toe.Utils.Marmalade.Tests", "Toe.Utils.Marmalade.Tests\Toe.Utils.Mesh.Marmalade.Tests.csproj", "{A9495108-549B-449D-BD92-C615FAA15205}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toe.Utils.Mesh.Marmalade.Tests", "Toe.Utils.Marmalade.Tests\Toe.Utils.Mesh.Marmalade.Tests.csproj", "{A9495108-549B-449D-BD92-C615FAA15205}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{92C292EA-2BE3-466E-858F-362042E8A972}"
 	ProjectSection(SolutionItems) = preProject
 		.nuget\packages.config = .nuget\packages.config
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toe.Editors.Marmalade.net40.vs2010", "Toe.Editors.Marmalade\Toe.Editors.Marmalade.net40.vs2010.csproj", "{0FBCDE4F-9E57-4D14-BA36-5028C2498A07}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -144,6 +146,16 @@ Global
 		{A9495108-549B-449D-BD92-C615FAA15205}.Release|Mixed Platforms.Build.0 = Release|x86
 		{A9495108-549B-449D-BD92-C615FAA15205}.Release|x86.ActiveCfg = Release|x86
 		{A9495108-549B-449D-BD92-C615FAA15205}.Release|x86.Build.0 = Release|x86
+		{0FBCDE4F-9E57-4D14-BA36-5028C2498A07}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{0FBCDE4F-9E57-4D14-BA36-5028C2498A07}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{0FBCDE4F-9E57-4D14-BA36-5028C2498A07}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{0FBCDE4F-9E57-4D14-BA36-5028C2498A07}.Debug|x86.ActiveCfg = Debug|x86
+		{0FBCDE4F-9E57-4D14-BA36-5028C2498A07}.Debug|x86.Build.0 = Debug|x86
+		{0FBCDE4F-9E57-4D14-BA36-5028C2498A07}.Release|Any CPU.ActiveCfg = Release|x86
+		{0FBCDE4F-9E57-4D14-BA36-5028C2498A07}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{0FBCDE4F-9E57-4D14-BA36-5028C2498A07}.Release|Mixed Platforms.Build.0 = Release|x86
+		{0FBCDE4F-9E57-4D14-BA36-5028C2498A07}.Release|x86.ActiveCfg = Release|x86
+		{0FBCDE4F-9E57-4D14-BA36-5028C2498A07}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -155,6 +167,7 @@ Global
 		{5FA4A978-FB68-4CB0-B693-FB534C76F2C9} = {121C5FE1-22B0-4936-A5D8-D759AEDC6437}
 		{77A71F90-B773-4C3B-871C-BB140BFEAAEC} = {121C5FE1-22B0-4936-A5D8-D759AEDC6437}
 		{2B25523C-AA51-43C7-B5F2-41D3F8FBA0AE} = {121C5FE1-22B0-4936-A5D8-D759AEDC6437}
+		{0FBCDE4F-9E57-4D14-BA36-5028C2498A07} = {121C5FE1-22B0-4936-A5D8-D759AEDC6437}
 		{29717F16-3219-4AE5-A7F4-618E65908DA7} = {5A08D1E7-3775-4AE4-8D30-56A7EB1700F5}
 		{1AB2E074-5CE6-4CD6-A379-3D6A58116319} = {D36F28DF-62D4-43AA-9D30-496CB5A6D6C1}
 		{914A4563-0A6F-42D3-8BDA-240AA07DA76E} = {D36F28DF-62D4-43AA-9D30-496CB5A6D6C1}
