@@ -13,7 +13,7 @@ namespace Toe.Utils.Mesh.Marmalade.IwGx
 			IList<Material> materials = new List<Material>();
 			using (var source = new StreamReader(stream))
 			{
-				var parser = new TextParser(source);
+				var parser = new TextParser(source, Directory.GetCurrentDirectory());
 				materials.Add((Material)Parse(parser));
 			}
 			return materials;
@@ -42,82 +42,94 @@ namespace Toe.Utils.Mesh.Marmalade.IwGx
 				if (attribute == "celW")
 				{
 					parser.Consume();
-					material.CelW = parser.ConsumeFloat();
+					EnsureAnim(material).CelW = parser.ConsumeByte();
 					continue;
 				}
 				if (attribute == "celH")
 				{
 					parser.Consume();
-					material.CelH = parser.ConsumeFloat();
+
+					EnsureAnim(material).CelH = parser.ConsumeByte();
 					continue;
 				}
 				if (attribute == "celNumU")
 				{
 					parser.Consume();
-					material.celNumU = parser.ConsumeFloat();
+					EnsureAnim(material).CelNumU = parser.ConsumeByte();
 					continue;
 				}
 
 				if (attribute == "clampUV")
 				{
 					parser.Consume();
-					material.clampUV = parser.ConsumeBool();
+					material.ClampUV = parser.ConsumeBool();
 					continue;
 				}
 				if (attribute == "specularPower")
 				{
 					parser.Consume();
-					material.specularPower = parser.ConsumeInt();
+					material.SpecularPower = parser.ConsumeInt();
 					continue;
 				}
 					if (attribute == "celNum")
 				{
 					parser.Consume();
-					material.celNum = parser.ConsumeFloat();
+					EnsureAnim(material).CelNum = parser.ConsumeByte();
 					continue;
 				}
 					if (attribute == "celPeriod")
 				{
 					parser.Consume();
-					material.celPeriod = parser.ConsumeFloat();
+					EnsureAnim(material).CelPeriod = parser.ConsumeByte();
 					continue;
 				}
-				
+					if (attribute == "zDepthOfs")
+				{
+					parser.Consume();
+					material.ZDepthOfs = parser.ConsumeShort();
+					continue;
+				}
+					if (attribute == "modulateMode")
+					{
+						parser.Consume();
+						material.ModulateMode = parser.ConsumeEnum<ModulateMode>();
+						continue;
+					}
 					if (attribute == "alphaMode")
 					{
 						parser.Consume();
-						material.alphaMode = parser.ConsumeString();
+						material.AlphaMode = parser.ConsumeEnum <AlphaMode>();
 						continue;
 					}
 					if (attribute == "cullMode")
 					{
 						parser.Consume();
-						material.cullMode = parser.ConsumeString();
+						material.CullMode = parser.ConsumeEnum<CullMode>();
 						continue;
 					}
 			
 					if (attribute == "colAmbient")
 					{
 						parser.Consume();
-						material.colAmbient = parser.ConsumeColor();
+						material.ColAmbient = parser.ConsumeColor();
 						continue;
 					}
 				if (attribute == "colEmissive")
 					{
 						parser.Consume();
-						material.colEmissive = parser.ConsumeColor();
+						material.ColEmissive = parser.ConsumeColor();
 						continue;
 					}
 				if (attribute == "colDiffuse")
 					{
 						parser.Consume();
-						material.colDiffuse = parser.ConsumeColor();
+						material.ColDiffuse = parser.ConsumeColor();
 						continue;
 					}
 				if (attribute == "colSpecular")
 					{
 						parser.Consume();
-						material.colSpecular = parser.ConsumeColor();
+						material.ColSpecular = parser.ConsumeColor();
 						continue;
 					}
 				
@@ -136,25 +148,50 @@ namespace Toe.Utils.Mesh.Marmalade.IwGx
 					if (attribute == "texture2")
 					{
 						parser.Consume();
-						material.texture2 = parser.ConsumeString();
+						material.Texture2 = parser.ConsumeString();
 						continue;
 					}
 					if (attribute == "effectPreset")
 					{
 						parser.Consume();
-						material.effectPreset = parser.ConsumeString();
+						material.EffectPreset = parser.ConsumeEnum<EffectPreset>();
 						continue;
 					}
 					if (attribute == "blendMode")
 					{
 						parser.Consume();
-						material.blendMode = parser.ConsumeString();
+						switch (parser.ConsumeString())
+						{
+							case "ADD":
+								material.BlendMode = BlendMode.BLEND_ADD;
+								break;
+							case "BLEND":
+								material.BlendMode = BlendMode.BLEND_BLEND;
+								break;
+							case "DECAL":
+								material.BlendMode = BlendMode.BLEND_DECAL;
+								break;
+							case "MODULATE":
+								material.BlendMode = BlendMode.BLEND_MODULATE;
+								break;
+							case "BLEND_MODULATE_2X":
+								material.BlendMode = BlendMode.BLEND_MODULATE_2X;
+								break;
+							case "BLEND_MODULATE_4X":
+								material.BlendMode = BlendMode.BLEND_MODULATE_4X;
+								break;
+							case "BLEND_REPLACE":
+								material.BlendMode = BlendMode.BLEND_REPLACE;
+								break;
+							default:
+								throw new TextParserException("Unknown blendMode");
+						}
 						continue;
 					}
 					if (attribute == "shaderTechnique")
 					{
 						parser.Consume();
-						material.shaderTechnique = parser.ConsumeString();
+						material.ShaderTechnique = parser.ConsumeString();
 						continue;
 					}
 					if (attribute == "vertexShader")
@@ -167,6 +204,13 @@ namespace Toe.Utils.Mesh.Marmalade.IwGx
 					parser.UnknownLexem();
 			}
 			return material;
+		}
+
+		private MatAnim EnsureAnim(Material material)
+		{
+			if (material.MatAnim == null)
+				material.MatAnim = new MatAnim();
+			return material.MatAnim;
 		}
 	}
 }

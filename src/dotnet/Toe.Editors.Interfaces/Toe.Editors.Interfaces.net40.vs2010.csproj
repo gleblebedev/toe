@@ -54,7 +54,24 @@
     <Compile Include="Bindings\IView.cs" />
     <Compile Include="Bindings\PropertyBinding.cs" />
     <Compile Include="IResourceEditor.cs" />
+    <Compile Include="Panels\DelayedLayout.cs" />
+    <Compile Include="Panels\FormPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Panels\FormRowPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Panels\HorisontalStackPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Panels\VerticalStackPanelLayout.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Views\ButtonView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\CollectionView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Views\ColorPickerDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -62,6 +79,12 @@
       <DependentUpon>ColorPickerDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\ColorView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\EditBoolView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\EditByteView.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Views\EditColorView.cs">
@@ -73,17 +96,23 @@
     <Compile Include="Views\EditIntegerView.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Views\EditShortView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Views\EditStringView.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Panels\Panel.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Views\EditTextureView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Views\SingleControlView.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Panels\StackPanel.cs">
-      <SubType>UserControl</SubType>
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Views\StringView.cs">
       <SubType>UserControl</SubType>

@@ -21,7 +21,8 @@ namespace Toe.Editor
 		{
 			this.InitializeComponent();
 			this.factory = new EditorFactory();
-			var filename = "track_01.mtl";
+			var filename = @"C:\Marmalade\6.2\examples\games\kartz\data\environment\track_01\track_01.group";
+			//var filename = "track_01.geo";
 			this.resourceEditor = this.factory.CreateEditor(filename);
 			this.resourceEditor.Control.Dock = DockStyle.Fill;
 			this.resourceEditor.LoadFile(filename);

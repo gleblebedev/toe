@@ -1,9 +1,14 @@
+using System.Collections.Generic;
 using System.Windows.Forms;
 
 using Toe.Editors.Interfaces.Bindings;
 
 namespace Toe.Editors.Interfaces.Views
 {
+	public class EnumWellKnownValues:Dictionary<object,string>
+	{
+		
+	}
 	public class EditEnumView : UserControl, IView
 	{
 		readonly DataContextContainer dataContext = new DataContextContainer();
@@ -32,6 +37,8 @@ namespace Toe.Editors.Interfaces.Views
 				return this.dataContext;
 			}
 		}
+
+		public EnumWellKnownValues WellKnownValues { get; set; }
 
 		#endregion
 	}

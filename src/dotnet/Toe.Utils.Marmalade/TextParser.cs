@@ -20,6 +20,8 @@ namespace Toe.Utils.Mesh.Marmalade
 
 		private readonly TextReader reader;
 
+		private readonly string basePath;
+
 		private readonly StringBuilder sb = new StringBuilder(32);
 
 		private string lexem;
@@ -32,10 +34,19 @@ namespace Toe.Utils.Mesh.Marmalade
 
 		#region Constructors and Destructors
 
-		public TextParser(TextReader reader)
+		public TextParser(TextReader reader, string basePath)
 		{
 			this.reader = reader;
+			this.basePath = basePath;
 			this.nextChar = reader.Read();
+		}
+
+		public string BasePath
+		{
+			get
+			{
+				return this.basePath;
+			}
 		}
 
 		#endregion
@@ -354,17 +365,17 @@ namespace Toe.Utils.Mesh.Marmalade
 			this.sb.Clear();
 			while (this.nextChar >= 0 && this.nextChar != term)
 			{
-				if (this.nextChar == '\\')
-				{
-					this.nextChar = this.reader.Read();
-					switch (this.nextChar)
-					{
-						default:
-							this.sb.Append((char)this.nextChar);
-							break;
-					}
-				}
-				else
+				//if (this.nextChar == '\\')
+				//{
+				//    this.nextChar = this.reader.Read();
+				//    switch (this.nextChar)
+				//    {
+				//        default:
+				//            this.sb.Append((char)this.nextChar);
+				//            break;
+				//    }
+				//}
+				//else
 				{
 					this.sb.Append((char)this.nextChar);
 				}
@@ -401,6 +412,24 @@ namespace Toe.Utils.Mesh.Marmalade
 				return false;
 			}
 			return this.ConsumeInt() != 0;
+		}
+
+		public byte ConsumeByte()
+		{
+			var f = byte.Parse(this.GetLexem(), CultureInfo.InvariantCulture);
+			this.Consume();
+			return f;
+		}
+
+		public short ConsumeShort()
+		{
+			var f = short.Parse(this.GetLexem(), CultureInfo.InvariantCulture);
+			this.Consume();
+			return f;
+		}
+		public T ConsumeEnum<T>()
+		{
+			return (T)Enum.Parse(typeof(T), this.ConsumeString());
 		}
 	}
 }

@@ -16,20 +16,23 @@ namespace Toe.Editors.Interfaces.Views
 		public SingleControlView()
 		{
 			this.Controls.Add(this.viewControl);
-			this.Height = this.viewControl.Height;
+			if (this.Height != this.viewControl.Height)
+				this.Height = this.viewControl.Height;
 			this.viewControl.SizeChanged += this.ResizeControlByTextBox;
 		}
 		private void ResizeControlByTextBox(object sender, EventArgs e)
 		{
-			this.Height = this.viewControl.Height;
+			if (this.Height != this.viewControl.Height)
+				this.Height = this.viewControl.Height;
 		}
 
 	
 
 		protected override void OnSizeChanged(EventArgs e)
 		{
-			this.viewControl.Width = this.Width;
 			base.OnSizeChanged(e);
+			if (this.viewControl.Width != this.Width)
+				this.viewControl.Width = this.Width;
 		}
 	}
 }

@@ -50,6 +50,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestGeo.cs" />
+    <Compile Include="TestGroup.cs" />
     <Compile Include="TestMtl.cs" />
     <Compile Include="TestSkel.cs" />
     <Compile Include="TestSkin.cs" />

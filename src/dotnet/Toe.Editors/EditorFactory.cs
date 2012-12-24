@@ -1,4 +1,6 @@
-﻿using Toe.Editors.Geometry;
+﻿using System;
+
+using Toe.Editors.Geometry;
 using Toe.Editors.Interfaces;
 using Toe.Editors.Marmalade;
 using Toe.Utils.Mesh.Marmalade;
@@ -13,13 +15,15 @@ namespace Toe.Editors
 		public IResourceEditor CreateEditor(string fileName)
 		{
 			var e = fileName.ToLower();
-			if (e.EndsWith(".geo"))
+
+			if (e.EndsWith(".mtl", StringComparison.InvariantCultureIgnoreCase) ||
+				e.EndsWith(".geo", StringComparison.InvariantCultureIgnoreCase) ||
+				e.EndsWith(".skin", StringComparison.InvariantCultureIgnoreCase) ||
+				e.EndsWith(".skel", StringComparison.InvariantCultureIgnoreCase) ||
+				e.EndsWith(".anim", StringComparison.InvariantCultureIgnoreCase) ||
+				e.EndsWith(".group", StringComparison.InvariantCultureIgnoreCase))
 			{
-				return new GeometryEditor(new GeoReader(), null);
-			}
-			if (e.EndsWith(".mtl"))
-			{
-				return new MaterialEditor();
+				return new ResourceFileEditor();
 			}
 			
 			if (e.EndsWith(".group.bin"))

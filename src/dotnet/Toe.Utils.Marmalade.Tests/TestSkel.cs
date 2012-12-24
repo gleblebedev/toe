@@ -15,17 +15,18 @@ namespace Toe.Utils.Mesh.Marmalade.Tests
 		[Test]
 		public void TestLegs()
 		{
-			var r = new SkelReader();
-			using (var fileStream = File.OpenRead("male_skel_lod0.skel"))
+			var r = new TextResourceReader();
+			var fileName = "male_skel_lod0.skel";
+			using (var fileStream = File.OpenRead(fileName))
 			{
-				r.Load(fileStream);
+				r.Load(fileStream, Path.GetDirectoryName(Path.GetFullPath(fileName)));
 			}
 		}
 
 		[Test]
 		public void TestMarmaladeFolder()
 		{
-			var r = new SkelReader();
+			var r = new TextResourceReader();
 
 			var s = new FolderTreeSearch(@"C:\Marmalade\6.2\examples\", "*.skel");
 			foreach (var file in s)
@@ -33,7 +34,7 @@ namespace Toe.Utils.Mesh.Marmalade.Tests
 				Console.WriteLine(file);
 				using (var fileStream = File.OpenRead(file))
 				{
-					r.Load(fileStream);
+					r.Load(fileStream, Path.GetDirectoryName(Path.GetFullPath(file)));
 				}
 			}
 		}

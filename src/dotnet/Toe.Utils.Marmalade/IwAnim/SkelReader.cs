@@ -3,52 +3,47 @@ using System.IO;
 
 namespace Toe.Utils.Mesh.Marmalade.IwAnim
 {
-	public class SkelReader : IMeshReader
+	public class SkelReader 
 	{
 		#region Public Methods and Operators
 
-		public IMesh Load(Stream stream)
+	
+
+		public IMesh Parse(TextParser parser)
 		{
-			var mesh = new StreamMesh();
+			StreamMesh mesh = new StreamMesh();
+			parser.Consume("CIwAnimSkel");
+			parser.Consume("{");
 
-			using (var source = new StreamReader(stream))
+			for (;;)
 			{
-				var parser = new TextParser(source);
-
-				parser.Consume("CIwAnimSkel");
-				parser.Consume("{");
-
-				for (;;)
+				var attribute = parser.GetLexem();
+				if (attribute == "}")
 				{
-					var attribute = parser.GetLexem();
-					if (attribute == "}")
-					{
-						parser.Consume();
-						break;
-					}
-					if (attribute == "name")
-					{
-						parser.Consume();
-						mesh.Name = parser.ConsumeString();
-						continue;
-					}
-					if (attribute == "numBones")
-					{
-						parser.Consume();
-						mesh.Bones.Capacity = parser.ConsumeInt();
-						continue;
-					}
-
-					if (attribute == "CIwAnimBone")
-					{
-						parser.Consume();
-						ParseBone(parser, mesh);
-						continue;
-					}
-					parser.UnknownLexem();
+					parser.Consume();
+					break;
 				}
-			}
+				if (attribute == "name")
+				{
+					parser.Consume();
+					mesh.Name = parser.ConsumeString();
+					continue;
+				}
+				if (attribute == "numBones")
+				{
+					parser.Consume();
+					mesh.Bones.Capacity = parser.ConsumeInt();
+					continue;
+				}
 
+				if (attribute == "CIwAnimBone")
+				{
+					parser.Consume();
+					ParseBone(parser, mesh);
+					continue;
+				}
+				parser.UnknownLexem();
+			}
 			return mesh;
 		}
 

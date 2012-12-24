@@ -1,76 +1,46 @@
-using System.Linq;
 using System.Windows.Forms;
 
 namespace Toe.Editors.Interfaces.Views
 {
-	public class FormPanel : StackPanel
+	public class StackPanel : Panel //FlowLayoutPanel
 	{
-	}
-	public class FormRowPanel : Panel
-	{
-		protected override void OnControlAdded(ControlEventArgs e)
+		public StackPanel()
 		{
-			base.OnControlAdded(e);
-			UpdateHeight();
+			AutoScroll = true;
+			
+			//this.FlowDirection = FlowDirection.TopDown;
+			//this.WrapContents = false;
 		}
-		private void UpdateHeight()
+		public override System.Windows.Forms.Layout.LayoutEngine LayoutEngine
 		{
-			int maxH = (this.Controls.Count == 0) ? 0:(from Control control in this.Controls select control.Height).Max();
-			this.Height = maxH;
-		}
-
-		protected override void ReorderControls()
-		{
-			var fp = this.Parent as FormPanel;
-			if (fp != null)
+			get
 			{
-				if (this.Controls.Count == 1)
-				{
-					var control = this.Controls[0];
-					control.Width = this.Width-control.Margin.Left-control.Margin.Right;
-					control.Left = control.Margin.Left;
-				}
-				else if (this.Controls.Count == 2)
-				{
-					var label = this.Controls[0];
-					var control = this.Controls[1];
-					var l = this.Width / 2;
-					var v = this.Width - l;
-					label.Width = l - control.Margin.Left - control.Margin.Right;
-					label.Left = label.Margin.Left;
-					control.Width = v - control.Margin.Left - control.Margin.Right;
-					control.Left = l + control.Margin.Left;
-				}
-			}
-			UpdateHeight();
-		}
-	}
-	public class HorisontalStackPanel : Panel
-	{
-		protected override void ReorderControls()
-		{
-			int x = 0;
-			foreach (Control control in Controls)
-			{
-				control.Left = x + control.Margin.Left;
-				control.Top = control.Margin.Top;
-				//control.Height = this.Height - (control.Margin.Left + control.Margin.Right);
-				x += control.Width + control.Margin.Left + control.Margin.Right;
+				return VerticalStackPanelLayout.Instance;
 			}
 		}
 	}
-	public class StackPanel : Panel
-	{
-		protected override void ReorderControls()
-		{
-			int y = 0;
-			foreach (Control control in Controls)
-			{
-				control.Top = y + control.Margin.Top;
-				control.Left = control.Margin.Left;
-				control.Width = this.Width - (control.Margin.Left + control.Margin.Right);
-				y += control.Height + control.Margin.Top + control.Margin.Bottom;
-			}
-		}
-	}
+	//public class StackPanel : Panel
+	//{
+	//    protected override void ReorderControls()
+	//    {
+	//        int y = 0;
+	//        foreach (Control control in Controls)
+	//        {
+	//            var top = y + control.Margin.Top;
+	//            if (top != control.Top)
+	//                control.Top = top;
+	//            if (control.Left != control.Margin.Left)
+	//                control.Left = control.Margin.Left;
+	//            var width = this.Width - (control.Margin.Left + control.Margin.Right);
+	//            if (width != control.Width)
+	//                control.Width = width;
+	//            y += control.Height + control.Margin.Top + control.Margin.Bottom;
+	//        }
+	//        if (this.Dock != DockStyle.Fill)
+	//        {
+	//            if (this.Height != y)
+	//                this.Height = y;
+	//        }
+	//    }
+	//}
 }

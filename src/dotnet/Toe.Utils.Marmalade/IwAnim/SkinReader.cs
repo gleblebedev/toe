@@ -4,58 +4,52 @@ using System.IO;
 
 namespace Toe.Utils.Mesh.Marmalade.IwAnim
 {
-	public class SkinReader : IMeshReader
+	public class SkinReader 
 	{
 		#region Public Methods and Operators
 
-		public IMesh Load(Stream stream)
+
+		public IMesh Parse(TextParser parser)
 		{
-			var mesh = new StreamMesh();
+			StreamMesh mesh = new StreamMesh();
+			parser.Consume("CIwAnimSkin");
+			parser.Consume("{");
 
-			using (var source = new StreamReader(stream))
+			for (;;)
 			{
-				var parser = new TextParser(source);
-
-				parser.Consume("CIwAnimSkin");
-				parser.Consume("{");
-
-				for (;;)
+				var attribute = parser.GetLexem();
+				if (attribute == "}")
 				{
-					var attribute = parser.GetLexem();
-					if (attribute == "}")
-					{
-						parser.Consume();
-						break;
-					}
-					if (attribute == "name")
-					{
-						parser.Consume();
-						mesh.Name = parser.ConsumeString();
-						continue;
-					}
-					if (attribute == "skeleton")
-					{
-						parser.Consume();
-						mesh.Skeleton = parser.ConsumeString();
-						continue;
-					}
-					if (attribute == "model")
-					{
-						parser.Consume();
-						mesh.SkeletonModel = parser.ConsumeString();
-						continue;
-					}
-					if (attribute == "CIwAnimSkinSet")
-					{
-						parser.Consume();
-						ParseAnimSkinSet(parser, mesh);
-						continue;
-					}
-
-					parser.UnknownLexem();
+					parser.Consume();
+					break;
 				}
-			}
+				if (attribute == "name")
+				{
+					parser.Consume();
+					mesh.Name = parser.ConsumeString();
+					continue;
+				}
+				if (attribute == "skeleton")
+				{
+					parser.Consume();
+					mesh.Skeleton = parser.ConsumeString();
+					continue;
+				}
+				if (attribute == "model")
+				{
+					parser.Consume();
+					mesh.SkeletonModel = parser.ConsumeString();
+					continue;
+				}
+				if (attribute == "CIwAnimSkinSet")
+				{
+					parser.Consume();
+					ParseAnimSkinSet(parser, mesh);
+					continue;
+				}
 
+				parser.UnknownLexem();
+			}
 			return mesh;
 		}
 

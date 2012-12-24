@@ -54,7 +54,15 @@
     <Compile Include="IwGraphics\GeoReader.cs" />
     <Compile Include="IwGraphics\GeoWriter.cs" />
     <Compile Include="IwGraphics\Model.cs" />
+    <Compile Include="IwGx\AlphaMode.cs" />
+    <Compile Include="IwGx\AlphaTestMode.cs" />
+    <Compile Include="IwGx\BlendMode.cs" />
+    <Compile Include="IwGx\CullMode.cs" />
+    <Compile Include="IwGx\DepthWriteMode.cs" />
+    <Compile Include="IwGx\EffectPreset.cs" />
+    <Compile Include="IwGx\MatAnim.cs" />
     <Compile Include="IwGx\Material.cs" />
+    <Compile Include="IwGx\ModulateMode.cs" />
     <Compile Include="IwGx\MtlReader.cs" />
     <Compile Include="IwGx\ShadeMode.cs" />
     <Compile Include="IwResManager\GroupReader.cs" />
@@ -67,6 +75,7 @@
     <Compile Include="TextParser.cs" />
     <Compile Include="TextParserException.cs" />
     <Compile Include="TextResourceReader.cs" />
+    <Compile Include="TextResourceWriter.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Toe.Utils.Mesh\Toe.Utils.Mesh.net40.vs2010.csproj">

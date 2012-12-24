@@ -6,11 +6,7 @@ using Toe.Editors.Interfaces.Bindings;
 
 namespace Toe.Editors.Interfaces.Views
 {
-
-
-
-
-public class EditIntegerView: SingleControlView<TextBox>, IView
+	public class EditIntegerView: SingleControlView<TextBox>, IView
 	{
 		readonly DataContextContainer dataContext = new DataContextContainer();
 

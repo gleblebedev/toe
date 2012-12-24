@@ -1,5 +1,7 @@
 // Include the single header file for the IwGx module
 #include "IwGx.h"
+#include "IwMaterial.h"
+#include "IwTexture.h"
 
 // Standard C-style entry point. This can take args if required.
 int main()
@@ -9,6 +11,15 @@ int main()
 
     // Set the background colour to (opaque) blue
     IwGxSetColClear(0, 0, 0xff, 0xff);
+
+	CIwMaterial* m = new CIwMaterial();
+
+	auto a1 = m->GetBlendMode();
+	auto a2 = m->GetAnimCelH();
+	auto a3 = m->GetAnimCelID();
+	auto a4 = m->GetAnimCelNum();
+	auto a5 = m->GetAnimCelNumU();
+	auto a6 = m->GetAnimCelPeriod();
 
     // Loop forever, until the user or the OS performs some action to quit the app
     while (!s3eDeviceCheckQuitRequest())

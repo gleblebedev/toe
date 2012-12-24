@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Toe.Utils.Mesh.Marmalade.IwResManager
 {
-	public class ResGroup
+	public class ResGroup:Managed
 	{
 	}
 }

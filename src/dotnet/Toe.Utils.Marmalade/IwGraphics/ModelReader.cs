@@ -16,48 +16,55 @@ namespace Toe.Utils.Mesh.Marmalade.IwGraphics
 	{
 		#region Public Methods and Operators
 
-		/// <summary>
-		/// Load mesh from stream.
-		/// </summary>
-		/// <param name="stream">Stream to read from.</param>
-		/// <returns>Complete parsed mesh.</returns>
-		public Model Load(Stream stream)
+		///// <summary>
+		///// Load mesh from stream.
+		///// </summary>
+		///// <param name="stream">Stream to read from.</param>
+		///// <returns>Complete parsed mesh.</returns>
+		//public Model Load(Stream stream)
+		//{
+			
+
+		//    using (var source = new StreamReader(stream))
+		//    {
+		//        var parser = new TextParser(source, TODO);
+
+		//        if (parser.GetLexem() == "CMesh")
+		//        {
+		//            var model = new Model();
+		//            model.Meshes.Add(ParseMesh(parser));
+		//            return model;
+		//        }
+		//        return this.Parse(parser);
+		//    }
+		//}
+
+		public Model Parse(TextParser parser)
 		{
 			var mesh = new Model();
+			parser.Consume("CIwModel");
+			parser.Consume("{");
 
-			using (var source = new StreamReader(stream))
+			for (;;)
 			{
-				var parser = new TextParser(source);
-
-				if (parser.GetLexem() == "CMesh")
+				var attribute = parser.GetLexem();
+				if (attribute == "}")
 				{
-					ParseMesh(parser, mesh);
-					return mesh;
+					parser.Consume();
+					break;
 				}
-				parser.Consume("CIwModel");
-				parser.Consume("{");
-
-				for (;;)
+				if (attribute == "name")
 				{
-					var attribute = parser.GetLexem();
-					if (attribute == "}")
-					{
-						parser.Consume();
-						break;
-					}
-					if (attribute == "name")
-					{
-						parser.Consume();
-						mesh.Name = parser.ConsumeString();
-						continue;
-					}
-					if (attribute == "CMesh")
-					{
-						this.ParseMesh(parser, mesh);
-						continue;
-					}
-					parser.UnknownLexem();
+					parser.Consume();
+					mesh.Name = parser.ConsumeString();
+					continue;
 				}
+				if (attribute == "CMesh")
+				{
+					mesh.Meshes.Add(this.ParseMesh(parser));
+					continue;
+				}
+				parser.UnknownLexem();
 			}
 
 			return mesh;
@@ -67,12 +74,11 @@ namespace Toe.Utils.Mesh.Marmalade.IwGraphics
 
 		#region Methods
 
-		private void ParseMesh(TextParser parser, Model model)
+		public StreamMesh ParseMesh(TextParser parser)
 		{
 			parser.Consume("CMesh");
 			parser.Consume("{");
 			var mesh = new StreamMesh();
-			model.Meshes.Add(mesh);
 			for (;;)
 			{
 				var attribute = parser.GetLexem();
@@ -154,6 +160,7 @@ namespace Toe.Utils.Mesh.Marmalade.IwGraphics
 				
 				parser.UnknownLexem();
 			}
+			return mesh;
 		}
 
 		private ModelExtSelSetFace ParseModelExtSelSetFace(TextParser parser, StreamMesh mesh)
