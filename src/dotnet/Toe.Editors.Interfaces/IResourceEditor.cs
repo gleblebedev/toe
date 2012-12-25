@@ -3,6 +3,10 @@ using System.Windows.Forms;
 
 namespace Toe.Editors.Interfaces
 {
+	public interface IResourceEditorFactory
+	{
+		IResourceEditor CreateEditor(string filename);
+	}
 	public interface IResourceEditor : IDisposable
 	{
 		#region Public Properties

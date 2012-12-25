@@ -5,7 +5,7 @@ using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 
-namespace Toe.Editors.Geometry
+namespace Toe.Editors
 {
 	public abstract class Base3DEditor : UserControl
 	{

@@ -6,10 +6,13 @@ namespace Toe.Editors
 {
 	public partial class DefaultEditor : UserControl, IResourceEditor
 	{
+		private readonly IEditorEnvironment editorEnvironment;
+
 		#region Constructors and Destructors
 
-		public DefaultEditor()
+		public DefaultEditor(IEditorEnvironment editorEnvironment)
 		{
+			this.editorEnvironment = editorEnvironment;
 			this.InitializeComponent();
 			this.Controls.Add(new Label { Text = "File format is not supported" });
 		}

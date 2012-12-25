@@ -19,6 +19,8 @@ namespace Toe.Editors.Marmalade
 {
 	public class MaterialEditor : System.Windows.Forms.UserControl, IView
 	{
+		private readonly IEditorEnvironment editorEnvironment;
+
 		#region Implementation of IView
 
 		public Material Material
@@ -50,234 +52,216 @@ namespace Toe.Editors.Marmalade
 			//return base.GetPreferredSize(proposedSize);
 		}
 		
-		public MaterialEditor()
+		public MaterialEditor(IEditorEnvironment editorEnvironment)
 		{
-			//this.AutoScroll = true;
-			//this.VScroll = true;
+			this.editorEnvironment = editorEnvironment;
+			this.InitializeComponent();
 
-			//BackColor = Color.Red;
+			this.InitializeEditor();
+		}
+
+		private void InitializeEditor()
+		{
+			this.SuspendLayout();
+
 			this.AutoSize = true;
 			this.Padding = new Padding(10);
+			formPreviewSplit.Panel1MinSize = 200;
 
-			//, Font = new Font(FontFamily.GenericSansSerif, 14)
-			var materialGroup = new GroupBox { Text="Material", Dock = DockStyle.Fill, AutoSize = true,Padding = new Padding(10)};
-			this.Controls.Add(materialGroup);
 
-			var panel = new TableLayoutPanel { ColumnCount = 2, Dock = DockStyle.Fill, AutoSize = true };
-			materialGroup.Controls.Add(panel);
+			this.stackPanel = new TableLayoutPanel() { ColumnCount = 2, Dock = DockStyle.Fill, AutoSize = true, AutoScroll = true};
+			formPreviewSplit.Panel1.Controls.Add(this.stackPanel);
 
-			stackPanel = new TableLayoutPanel() { ColumnCount = 2, Dock = DockStyle.Fill, AutoSize = true };
-			panel.Controls.Add(stackPanel);
-
-			panel.Controls.Add(new PictureBox { Image = Resources.material, Dock = DockStyle.Fill, AutoSize = true });
+			//var preview = new PictureBox { Image = Resources.material, Dock = DockStyle.Fill, AutoSize = true };
+			var preview = new MaterialPreview { Dock = DockStyle.Fill};
+			formPreviewSplit.Panel2.Controls.Add(preview);
 
 			{
-				stackPanel.Controls.Add(new PictureBox { Image = Resources.material, AutoSize = true });
-				stackPanel.Controls.Add(new Label());
-			}
-			{
-				stackPanel.Controls.Add(new StringView { Text = "Material name" });
+				this.stackPanel.Controls.Add(new StringView { Text = "Material name" });
 				var valueCtrl = new EditStringView { Margin = new Padding(4) };
-				stackPanel.Controls.Add(valueCtrl);
-				new PropertyBinding<Material, string>(valueCtrl, dataContext, mtl => mtl.Name, (mtl, value) => mtl.Name = value);
+				this.stackPanel.Controls.Add(valueCtrl);
+				new PropertyBinding<Material, string>(valueCtrl, this.dataContext, mtl => mtl.Name, (mtl, value) => mtl.Name = value);
 			}
 			{
-				
-				
-				stackPanel.Controls.Add(new StringView { Text = "Specify texture for stage 0 (diffuse map)" });
+				this.stackPanel.Controls.Add(new StringView { Text = "Specify texture for stage 0 (diffuse map)" });
 				var valueCtrl = new EditTextureView { Margin = new Padding(4) };
-				stackPanel.Controls.Add(valueCtrl);
-				new PropertyBinding<Material, string>(valueCtrl, dataContext, mtl => mtl.Texture0, (mtl, value) => mtl.Texture0 = value);
+				this.stackPanel.Controls.Add(valueCtrl);
+				new PropertyBinding<Material, string>(
+					valueCtrl, this.dataContext, mtl => mtl.Texture0, (mtl, value) => mtl.Texture0 = value);
 			}
 
 			{
-				
-				
-				stackPanel.Controls.Add(new StringView { Text = "Specify texture for stage 1" });
+				this.stackPanel.Controls.Add(new StringView { Text = "Specify texture for stage 1" });
 				var valueCtrl = new EditTextureView { Margin = new Padding(4) };
-				stackPanel.Controls.Add(valueCtrl);
-				new PropertyBinding<Material, string>(valueCtrl, dataContext, mtl => mtl.Texture1, (mtl, value) => mtl.Texture1 = value);
+				this.stackPanel.Controls.Add(valueCtrl);
+				new PropertyBinding<Material, string>(
+					valueCtrl, this.dataContext, mtl => mtl.Texture1, (mtl, value) => mtl.Texture1 = value);
 			}
 
 			{
-				
-				
-				stackPanel.Controls.Add(new StringView { Text = "Specify vertex shader to use" });
+				this.stackPanel.Controls.Add(new StringView { Text = "Specify vertex shader to use" });
 				var valueCtrl = new EditStringView { Margin = new Padding(4) };
-				stackPanel.Controls.Add(valueCtrl);
-				new PropertyBinding<Material, string>(valueCtrl, dataContext, mtl => mtl.vertexShader, (mtl, value) => mtl.vertexShader = value);
+				this.stackPanel.Controls.Add(valueCtrl);
+				new PropertyBinding<Material, string>(
+					valueCtrl, this.dataContext, mtl => mtl.vertexShader, (mtl, value) => mtl.vertexShader = value);
 			}
 
 			{
-				
-				
-				stackPanel.Controls.Add(new StringView { Text = "Emissive colour" });
+				this.stackPanel.Controls.Add(new StringView { Text = "Emissive colour" });
 				var valueCtrl = new EditColorView { Margin = new Padding(4) };
-				stackPanel.Controls.Add(valueCtrl);
+				this.stackPanel.Controls.Add(valueCtrl);
 				new PropertyBinding<Material, Color>(
-					valueCtrl, dataContext, mtl => mtl.ColEmissive, (mtl, value) => mtl.ColEmissive = value);
+					valueCtrl, this.dataContext, mtl => mtl.ColEmissive, (mtl, value) => mtl.ColEmissive = value);
 			}
 
 			{
-				
-				
-				stackPanel.Controls.Add(new StringView { Text = "Ambient colour" });
+				this.stackPanel.Controls.Add(new StringView { Text = "Ambient colour" });
 				var valueCtrl = new EditColorView { Margin = new Padding(4) };
-				stackPanel.Controls.Add(valueCtrl);
-				new PropertyBinding<Material, Color>(valueCtrl, dataContext, mtl => mtl.ColAmbient, (mtl, value) => mtl.ColAmbient = value);
+				this.stackPanel.Controls.Add(valueCtrl);
+				new PropertyBinding<Material, Color>(
+					valueCtrl, this.dataContext, mtl => mtl.ColAmbient, (mtl, value) => mtl.ColAmbient = value);
 			}
 
 			{
-				
-				
-				stackPanel.Controls.Add(new StringView { Text = "Diffuse colour" });
+				this.stackPanel.Controls.Add(new StringView { Text = "Diffuse colour" });
 				var valueCtrl = new EditColorView { Margin = new Padding(4) };
-				stackPanel.Controls.Add(valueCtrl);
-				new PropertyBinding<Material, Color>(valueCtrl, dataContext, mtl => mtl.ColDiffuse, (mtl, value) => mtl.ColDiffuse = value);
+				this.stackPanel.Controls.Add(valueCtrl);
+				new PropertyBinding<Material, Color>(
+					valueCtrl, this.dataContext, mtl => mtl.ColDiffuse, (mtl, value) => mtl.ColDiffuse = value);
 			}
 
 			{
-				
-				
-				stackPanel.Controls.Add(new StringView { Text = "Specular colour" });
+				this.stackPanel.Controls.Add(new StringView { Text = "Specular colour" });
 				var valueCtrl = new EditColorView { Margin = new Padding(4) };
-				stackPanel.Controls.Add(valueCtrl);
-				new PropertyBinding<Material, Color>(valueCtrl, dataContext, mtl => mtl.ColSpecular, (mtl, value) => mtl.ColSpecular = value);
+				this.stackPanel.Controls.Add(valueCtrl);
+				new PropertyBinding<Material, Color>(
+					valueCtrl, this.dataContext, mtl => mtl.ColSpecular, (mtl, value) => mtl.ColSpecular = value);
 			}
 
 			{
-				
-				
-				stackPanel.Controls.Add(new StringView { Text = "The specular cosine power" });
+				this.stackPanel.Controls.Add(new StringView { Text = "The specular cosine power" });
 				var valueCtrl = new EditIntegerView { Margin = new Padding(4) };
-				stackPanel.Controls.Add(valueCtrl);
-				new PropertyBinding<Material, int>(valueCtrl, dataContext, mtl => mtl.SpecularPower, (mtl, value) => mtl.SpecularPower = value);
+				this.stackPanel.Controls.Add(valueCtrl);
+				new PropertyBinding<Material, int>(
+					valueCtrl, this.dataContext, mtl => mtl.SpecularPower, (mtl, value) => mtl.SpecularPower = value);
 			}
 
 			{
-				
-				
-				stackPanel.Controls.Add(new StringView { Text = "Shading mode" });
-				var valueCtrl = new EditEnumView { Margin = new Padding(4), WellKnownValues = new EnumWellKnownValues { { ShadeMode.SHADE_FLAT, "Flat" }, { ShadeMode.SHADE_GOURAUD, "Gouraud" } } };
-				stackPanel.Controls.Add(valueCtrl);
-				new PropertyBinding<Material, ShadeMode>(valueCtrl, dataContext, mtl => mtl.ShadeMode, (mtl, value) => mtl.ShadeMode = value);
+				this.stackPanel.Controls.Add(new StringView { Text = "Shading mode" });
+				var valueCtrl = new EditEnumView
+					{
+						Margin = new Padding(4),
+						WellKnownValues =
+							new EnumWellKnownValues { { ShadeMode.SHADE_FLAT, "Flat" }, { ShadeMode.SHADE_GOURAUD, "Gouraud" } }
+					};
+				this.stackPanel.Controls.Add(valueCtrl);
+				new PropertyBinding<Material, ShadeMode>(
+					valueCtrl, this.dataContext, mtl => mtl.ShadeMode, (mtl, value) => mtl.ShadeMode = value);
 			}
 
 			{
-				
-				
-				stackPanel.Controls.Add(new StringView { Text = "Modulation mode (of texel by vertex colour)" });
+				this.stackPanel.Controls.Add(new StringView { Text = "Modulation mode (of texel by vertex colour)" });
 				var valueCtrl = new EditEnumView { Margin = new Padding(4) };
-				stackPanel.Controls.Add(valueCtrl);
-				new PropertyBinding<Material, ModulateMode>(valueCtrl, dataContext, mtl => mtl.ModulateMode, (mtl, value) => mtl.ModulateMode = value);
+				this.stackPanel.Controls.Add(valueCtrl);
+				new PropertyBinding<Material, ModulateMode>(
+					valueCtrl, this.dataContext, mtl => mtl.ModulateMode, (mtl, value) => mtl.ModulateMode = value);
 			}
 
 			{
-				
-				
-				stackPanel.Controls.Add(new StringView { Text = "Backface culling mode" });
+				this.stackPanel.Controls.Add(new StringView { Text = "Backface culling mode" });
 				var valueCtrl = new EditEnumView { Margin = new Padding(4) };
-				stackPanel.Controls.Add(valueCtrl);
-				new PropertyBinding<Material, CullMode>(valueCtrl, dataContext, mtl => mtl.CullMode, (mtl, value) => mtl.CullMode = value);
+				this.stackPanel.Controls.Add(valueCtrl);
+				new PropertyBinding<Material, CullMode>(
+					valueCtrl, this.dataContext, mtl => mtl.CullMode, (mtl, value) => mtl.CullMode = value);
 			}
 
 			{
-				
-				
-				stackPanel.Controls.Add(new StringView { Text = "Transparency (alpha) mode" });
+				this.stackPanel.Controls.Add(new StringView { Text = "Transparency (alpha) mode" });
 				var valueCtrl = new EditEnumView { Margin = new Padding(4) };
-				stackPanel.Controls.Add(valueCtrl);
-				new PropertyBinding<Material, AlphaMode>(valueCtrl, dataContext, mtl => mtl.AlphaMode, (mtl, value) => mtl.AlphaMode = value);
+				this.stackPanel.Controls.Add(valueCtrl);
+				new PropertyBinding<Material, AlphaMode>(
+					valueCtrl, this.dataContext, mtl => mtl.AlphaMode, (mtl, value) => mtl.AlphaMode = value);
 			}
 
 			{
-				
-				
-				stackPanel.Controls.Add(new StringView { Text = "Blend mode between texture stages 0 and 1" });
+				this.stackPanel.Controls.Add(new StringView { Text = "Blend mode between texture stages 0 and 1" });
 				var valueCtrl = new EditEnumView { Margin = new Padding(4) };
-				stackPanel.Controls.Add(valueCtrl);
-				new PropertyBinding<Material, BlendMode>(valueCtrl, dataContext, mtl => mtl.BlendMode, (mtl, value) => mtl.BlendMode = value);
+				this.stackPanel.Controls.Add(valueCtrl);
+				new PropertyBinding<Material, BlendMode>(
+					valueCtrl, this.dataContext, mtl => mtl.BlendMode, (mtl, value) => mtl.BlendMode = value);
 			}
 
 			{
-				
-				
-				stackPanel.Controls.Add(new StringView { Text = "Preset multi-texturing effect" });
+				this.stackPanel.Controls.Add(new StringView { Text = "Preset multi-texturing effect" });
 				var valueCtrl = new EditEnumView { Margin = new Padding(4) };
-				stackPanel.Controls.Add(valueCtrl);
-				new PropertyBinding<Material, EffectPreset>(valueCtrl, dataContext, mtl => mtl.EffectPreset, (mtl, value) => mtl.EffectPreset = value);
+				this.stackPanel.Controls.Add(valueCtrl);
+				new PropertyBinding<Material, EffectPreset>(
+					valueCtrl, this.dataContext, mtl => mtl.EffectPreset, (mtl, value) => mtl.EffectPreset = value);
 			}
 
 			{
-				
-				
-				stackPanel.Controls.Add(new StringView { Text = "Specify the alpha test function" });
+				this.stackPanel.Controls.Add(new StringView { Text = "Specify the alpha test function" });
 				var valueCtrl = new EditEnumView { Margin = new Padding(4) };
-				stackPanel.Controls.Add(valueCtrl);
-				new PropertyBinding<Material, AlphaTestMode>(valueCtrl, dataContext, mtl => mtl.AlphaTestMode, (mtl, value) => mtl.AlphaTestMode = value);
+				this.stackPanel.Controls.Add(valueCtrl);
+				new PropertyBinding<Material, AlphaTestMode>(
+					valueCtrl, this.dataContext, mtl => mtl.AlphaTestMode, (mtl, value) => mtl.AlphaTestMode = value);
 			}
 
 			{
-				
-				
-				stackPanel.Controls.Add(new StringView { Text = "Specify the alpha test reference value" });
+				this.stackPanel.Controls.Add(new StringView { Text = "Specify the alpha test reference value" });
 				var valueCtrl = new EditByteView { Margin = new Padding(4) };
-				stackPanel.Controls.Add(valueCtrl);
-				new PropertyBinding<Material, byte>(valueCtrl, dataContext, mtl => mtl.AlphaTestValue, (mtl, value) => mtl.AlphaTestValue = value);
+				this.stackPanel.Controls.Add(valueCtrl);
+				new PropertyBinding<Material, byte>(
+					valueCtrl, this.dataContext, mtl => mtl.AlphaTestValue, (mtl, value) => mtl.AlphaTestValue = value);
 			}
 
 			{
-				
-				
-				stackPanel.Controls.Add(new StringView { Text = "Depth offset to apply when using SW rasterisation" });
+				this.stackPanel.Controls.Add(new StringView { Text = "Depth offset to apply when using SW rasterisation" });
 				var valueCtrl = new EditShortView { Margin = new Padding(4) };
-				stackPanel.Controls.Add(valueCtrl);
-				new PropertyBinding<Material, short>(valueCtrl, dataContext, mtl => mtl.ZDepthOfs, (mtl, value) => mtl.ZDepthOfs = value);
+				this.stackPanel.Controls.Add(valueCtrl);
+				new PropertyBinding<Material, short>(
+					valueCtrl, this.dataContext, mtl => mtl.ZDepthOfs, (mtl, value) => mtl.ZDepthOfs = value);
 			}
 
 			{
-				
-				
-				stackPanel.Controls.Add(new StringView { Text = "Depth offset to apply when using HW rasterisation" });
+				this.stackPanel.Controls.Add(new StringView { Text = "Depth offset to apply when using HW rasterisation" });
 				var valueCtrl = new EditShortView { Margin = new Padding(4) };
-				stackPanel.Controls.Add(valueCtrl);
-				new PropertyBinding<Material, short>(valueCtrl, dataContext, mtl => mtl.ZDepthOfsHW, (mtl, value) => mtl.ZDepthOfsHW = value);
+				this.stackPanel.Controls.Add(valueCtrl);
+				new PropertyBinding<Material, short>(
+					valueCtrl, this.dataContext, mtl => mtl.ZDepthOfsHW, (mtl, value) => mtl.ZDepthOfsHW = value);
 			}
 
 			{
-				
-				
-				stackPanel.Controls.Add(new StringView { Text = "Checked only if the material should not be rendered" });
+				this.stackPanel.Controls.Add(new StringView { Text = "Checked only if the material should not be rendered" });
 				var valueCtrl = new EditBoolView { Margin = new Padding(4) };
-				stackPanel.Controls.Add(valueCtrl);
-				new PropertyBinding<Material, bool>(valueCtrl, dataContext, mtl => mtl.Invisible, (mtl, value) => mtl.Invisible = value);
+				this.stackPanel.Controls.Add(valueCtrl);
+				new PropertyBinding<Material, bool>(
+					valueCtrl, this.dataContext, mtl => mtl.Invisible, (mtl, value) => mtl.Invisible = value);
 			}
 
 			{
-				
-				
-				stackPanel.Controls.Add(new StringView { Text = "Checked only if the material's textures should use bilinear filtering" });
+				this.stackPanel.Controls.Add(
+					new StringView { Text = "Checked only if the material's textures should use bilinear filtering" });
 				var valueCtrl = new EditBoolView { Margin = new Padding(4) };
-				stackPanel.Controls.Add(valueCtrl);
-				new PropertyBinding<Material, bool>(valueCtrl, dataContext, mtl => mtl.Filtering, (mtl, value) => mtl.Filtering = value);
+				this.stackPanel.Controls.Add(valueCtrl);
+				new PropertyBinding<Material, bool>(
+					valueCtrl, this.dataContext, mtl => mtl.Filtering, (mtl, value) => mtl.Filtering = value);
 			}
 
 			{
-				
-				
-				stackPanel.Controls.Add(new StringView { Text = " Enable writing to depth buffer. Only affects HW rasterisation" });
+				this.stackPanel.Controls.Add(new StringView { Text = " Enable writing to depth buffer. Only affects HW rasterisation" });
 				var valueCtrl = new EditBoolView { Margin = new Padding(4) };
-				stackPanel.Controls.Add(valueCtrl);
-				new PropertyBinding<Material, bool>(valueCtrl, dataContext, mtl => mtl.DepthWriteEnable, (mtl, value) => mtl.DepthWriteEnable = value);
+				this.stackPanel.Controls.Add(valueCtrl);
+				new PropertyBinding<Material, bool>(
+					valueCtrl, this.dataContext, mtl => mtl.DepthWriteEnable, (mtl, value) => mtl.DepthWriteEnable = value);
 			}
 
 			{
-				
-				
-				stackPanel.Controls.Add(new StringView { Text = "Enable geometry merging for this material" });
+				this.stackPanel.Controls.Add(new StringView { Text = "Enable geometry merging for this material" });
 				var valueCtrl = new EditBoolView { Margin = new Padding(4) };
-				stackPanel.Controls.Add(valueCtrl);
-				new PropertyBinding<Material, bool>(valueCtrl, dataContext, mtl => mtl.MergeGeom, (mtl, value) => mtl.MergeGeom = value);
+				this.stackPanel.Controls.Add(valueCtrl);
+				new PropertyBinding<Material, bool>(
+					valueCtrl, this.dataContext, mtl => mtl.MergeGeom, (mtl, value) => mtl.MergeGeom = value);
 			}
 			/*
 			celW  0 .. 255  UV animation: width of cel (U delta to apply at each update).  celW 4 
@@ -292,61 +276,57 @@ namespace Toe.Editors.Marmalade
 			 */
 
 			{
-				
-				
-				stackPanel.Controls.Add(new StringView { Text = "Specify a format to convert the image to, before uploading for SW rasterisation" });
+				this.stackPanel.Controls.Add(
+					new StringView { Text = "Specify a format to convert the image to, before uploading for SW rasterisation" });
 				var valueCtrl = new EditEnumView() { Margin = new Padding(4) };
-				stackPanel.Controls.Add(valueCtrl);
-				new PropertyBinding<Material, ImageFormat>(valueCtrl, dataContext, mtl => mtl.FormatSW, (mtl, value) => mtl.FormatSW = value);
+				this.stackPanel.Controls.Add(valueCtrl);
+				new PropertyBinding<Material, ImageFormat>(
+					valueCtrl, this.dataContext, mtl => mtl.FormatSW, (mtl, value) => mtl.FormatSW = value);
 			}
 
 			{
-				
-				
-				stackPanel.Controls.Add(new StringView { Text = "Specify a format to convert the image to, before uploading for HW rasterisation" });
+				this.stackPanel.Controls.Add(
+					new StringView { Text = "Specify a format to convert the image to, before uploading for HW rasterisation" });
 				var valueCtrl = new EditEnumView() { Margin = new Padding(4) };
-				stackPanel.Controls.Add(valueCtrl);
-				new PropertyBinding<Material, ImageFormat>(valueCtrl, dataContext, mtl => mtl.FormatHW, (mtl, value) => mtl.FormatHW = value);
+				this.stackPanel.Controls.Add(valueCtrl);
+				new PropertyBinding<Material, ImageFormat>(
+					valueCtrl, this.dataContext, mtl => mtl.FormatHW, (mtl, value) => mtl.FormatHW = value);
 			}
 
 			{
-				
-				
-				stackPanel.Controls.Add(new StringView { Text = "Keep the contents of the texture after upload" });
+				this.stackPanel.Controls.Add(new StringView { Text = "Keep the contents of the texture after upload" });
 				var valueCtrl = new EditBoolView { Margin = new Padding(4) };
-				stackPanel.Controls.Add(valueCtrl);
-				new PropertyBinding<Material, bool>(valueCtrl, dataContext, mtl => mtl.KeepAfterUpload, (mtl, value) => mtl.KeepAfterUpload = value);
+				this.stackPanel.Controls.Add(valueCtrl);
+				new PropertyBinding<Material, bool>(
+					valueCtrl, this.dataContext, mtl => mtl.KeepAfterUpload, (mtl, value) => mtl.KeepAfterUpload = value);
 			}
 
 			{
-				
-				
-				stackPanel.Controls.Add(new StringView { Text = "If true the texture UV coordinates are clamped" });
+				this.stackPanel.Controls.Add(new StringView { Text = "If true the texture UV coordinates are clamped" });
 				var valueCtrl = new EditBoolView { Margin = new Padding(4) };
-				stackPanel.Controls.Add(valueCtrl);
-				new PropertyBinding<Material, bool>(valueCtrl, dataContext, mtl => mtl.ClampUV, (mtl, value) => mtl.ClampUV = value);
+				this.stackPanel.Controls.Add(valueCtrl);
+				new PropertyBinding<Material, bool>(valueCtrl, this.dataContext, mtl => mtl.ClampUV, (mtl, value) => mtl.ClampUV = value);
 			}
 
 			{
-				
-				
-				stackPanel.Controls.Add(new StringView { Text = "Disable fogging for this material" });
+				this.stackPanel.Controls.Add(new StringView { Text = "Disable fogging for this material" });
 				var valueCtrl = new EditBoolView { Margin = new Padding(4) };
-				stackPanel.Controls.Add(valueCtrl);
-				new PropertyBinding<Material, bool>(valueCtrl, dataContext, mtl => mtl.NoFog, (mtl, value) => mtl.NoFog = value);
+				this.stackPanel.Controls.Add(valueCtrl);
+				new PropertyBinding<Material, bool>(valueCtrl, this.dataContext, mtl => mtl.NoFog, (mtl, value) => mtl.NoFog = value);
 			}
 
 			{
-				
-				
-				stackPanel.Controls.Add(new StringView { Text = "Attach the specified shader to this material" });
+				this.stackPanel.Controls.Add(new StringView { Text = "Attach the specified shader to this material" });
 				var valueCtrl = new EditStringView { Margin = new Padding(4) };
-				stackPanel.Controls.Add(valueCtrl);
-				new PropertyBinding<Material, string>(valueCtrl, dataContext, mtl => mtl.ShaderTechnique, (mtl, value) => mtl.ShaderTechnique = value);
+				this.stackPanel.Controls.Add(valueCtrl);
+				new PropertyBinding<Material, string>(
+					valueCtrl, this.dataContext, mtl => mtl.ShaderTechnique, (mtl, value) => mtl.ShaderTechnique = value);
 			}
+			this.ResumeLayout();
 		}
 
 		private DataContextContainer dataContext = new DataContextContainer();
+		private SplitContainer formPreviewSplit;
 
 		private Panel stackPanel;
 
@@ -355,6 +335,33 @@ namespace Toe.Editors.Marmalade
 			base.OnSizeChanged(e);
 			//if (stackPanel.Width != ClientRectangle.Width)
 			//    stackPanel.Width = ClientRectangle.Width;
+		}
+
+		private void InitializeComponent()
+		{
+			this.formPreviewSplit = new System.Windows.Forms.SplitContainer();
+			((System.ComponentModel.ISupportInitialize)(this.formPreviewSplit)).BeginInit();
+			this.formPreviewSplit.SuspendLayout();
+			this.SuspendLayout();
+			// 
+			// formPreviewSplit
+			// 
+			this.formPreviewSplit.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.formPreviewSplit.Location = new System.Drawing.Point(0, 0);
+			this.formPreviewSplit.Name = "formPreviewSplit";
+			this.formPreviewSplit.Size = new System.Drawing.Size(400, 150);
+			this.formPreviewSplit.SplitterDistance = 133;
+			this.formPreviewSplit.TabIndex = 0;
+			// 
+			// MaterialEditor
+			// 
+			this.Controls.Add(this.formPreviewSplit);
+			this.Name = "MaterialEditor";
+			this.Size = new System.Drawing.Size(400, 150);
+			((System.ComponentModel.ISupportInitialize)(this.formPreviewSplit)).EndInit();
+			this.formPreviewSplit.ResumeLayout(false);
+			this.ResumeLayout(false);
+
 		}
 
 		

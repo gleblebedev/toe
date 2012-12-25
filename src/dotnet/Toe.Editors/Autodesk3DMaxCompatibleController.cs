@@ -3,7 +3,7 @@ using System.Windows.Forms;
 
 using OpenTK;
 
-namespace Toe.Editors.Geometry
+namespace Toe.Editors
 {
 	public class Autodesk3DMaxCompatibleController : ICameraController
 	{

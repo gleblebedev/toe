@@ -53,6 +53,7 @@
     <Compile Include="Bindings\IBinding.cs" />
     <Compile Include="Bindings\IView.cs" />
     <Compile Include="Bindings\PropertyBinding.cs" />
+    <Compile Include="IEditorEnvironment.cs" />
     <Compile Include="IResourceEditor.cs" />
     <Compile Include="Panels\DelayedLayout.cs" />
     <Compile Include="Panels\FormPanel.cs">

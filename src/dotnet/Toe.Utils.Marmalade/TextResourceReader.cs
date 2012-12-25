@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
 
 using Toe.Utils.Mesh.Marmalade.IwAnim;
@@ -13,7 +14,7 @@ namespace Toe.Utils.Mesh.Marmalade
 	{
 		public IList<Managed> Load(Stream stream, string basePath)
 		{
-			IList<Managed> items = new ObservableCollection<Managed>();
+			IList<Managed> items = new BindingList<Managed>();
 
 			using (var source = new StreamReader(stream))
 			{

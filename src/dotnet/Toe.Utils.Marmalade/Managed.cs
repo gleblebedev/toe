@@ -36,5 +36,10 @@ namespace Toe.Utils.Mesh.Marmalade
 		public event PropertyChangedEventHandler PropertyChanged;
 
 		#endregion
+
+		public override string ToString()
+		{
+			return Name+" ("+this.GetType().Name+")";
+		}
 	}
 }

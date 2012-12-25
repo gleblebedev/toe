@@ -41,6 +41,15 @@
     <AssemblyOriginatorKeyFile>Toe.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac">
+      <HintPath>..\packages\Autofac.2.6.3.862\lib\NET40\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="Autofac.Configuration">
+      <HintPath>..\packages\Autofac.2.6.3.862\lib\NET40\Autofac.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -53,6 +62,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EditorEnvironment.cs" />
     <Compile Include="MainEditorWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -61,6 +71,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="MainEditorWindow.resx">
+      <DependentUpon>MainEditorWindow.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -84,6 +97,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="app.config" />
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -110,9 +124,17 @@
       <Project>{2B25523C-AA51-43C7-B5F2-41D3F8FBA0AE}</Project>
       <Name>Toe.Editors.Interfaces.net40.vs2010</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Toe.Editors.Marmalade\Toe.Editors.Marmalade.net40.vs2010.csproj">
+      <Project>{0FBCDE4F-9E57-4D14-BA36-5028C2498A07}</Project>
+      <Name>Toe.Editors.Marmalade.net40.vs2010</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Toe.Editors\Toe.Editors.net40.vs2010.csproj">
       <Project>{5FA4A978-FB68-4CB0-B693-FB534C76F2C9}</Project>
       <Name>Toe.Editors.net40.vs2010</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Toe.Utils.Marmalade\Toe.Utils.Marmalade.net40.vs2010.csproj">
+      <Project>{914A4563-0A6F-42D3-8BDA-240AA07DA76E}</Project>
+      <Name>Toe.Utils.Marmalade.net40.vs2010</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

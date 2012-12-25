@@ -1,10 +1,18 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.InteropServices;
 
-using Microsoft.VisualStudio.Shell;
+using Autofac;
 
+using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
+
+using Toe.Editors.Geometry;
+using Toe.Editors.Interfaces;
+using Toe.Editors.Marmalade;
 using Toe.ToeVsExt;
+using Toe.Utils.Mesh.Marmalade.IwGraphics;
 
 namespace TinyOpenEngine.ToeVisualStudioExtension
 {
@@ -75,10 +83,42 @@ namespace TinyOpenEngine.ToeVisualStudioExtension
 			Trace.WriteLine(string.Format(CultureInfo.CurrentCulture, "Entering Initialize() of: {0}", this));
 			base.Initialize();
 
-			//Create Editor Factory. Note that the base Package class will call Dispose on it.
-			base.RegisterEditorFactory(new EditorFactory(this));
+			var cb = new Autofac.ContainerBuilder();
+
+			cb.RegisterModule<AutofacModule>();
+			cb.RegisterType<EditorFactory>().As<IVsEditorFactory>().SingleInstance();
+			cb.RegisterType<VsEditorEnvironment>().As<IEditorEnvironment>().SingleInstance();
+			cb.RegisterInstance(this).As<Package>().ExternallyOwned();
+
+			container = cb.Build();
+
+			foreach (var f in container.Resolve<IEnumerable<IVsEditorFactory>>())
+			{
+				//Create Editor Factory. Note that the base Package class will call Dispose on it.
+				base.RegisterEditorFactory(f);
+			}
 		}
 
 		#endregion
+
+		private static IContainer container;
+
+		protected override void Dispose(bool disposing)
+		{
+			base.Dispose(disposing);
+			if (disposing)
+			{
+				if (container != null)
+				{
+					container.Dispose();
+					container = null;
+				}
+			}
+		}
+
+		public IEditorEnvironment CreateEditorEnvironmentProxy()
+		{
+			return new VsEditorEnvironment(this);
+		}
 	}
 }

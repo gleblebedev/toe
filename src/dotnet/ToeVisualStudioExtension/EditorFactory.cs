@@ -1,15 +1,21 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Security.Permissions;
 
+using Autofac;
+
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 
 using TinyOpenEngine.ToeVisualStudioExtension;
+
+using Toe.Editors;
+using Toe.Editors.Interfaces;
 
 using IServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 
@@ -23,9 +29,9 @@ namespace Toe.ToeVsExt
 	{
 		#region Constants and Fields
 
-		private readonly ToeVisualStudioExtensionPackage editorPackage;
+		private readonly Package editorPackage;
 
-		private readonly Editors.EditorFactory toeEditorFactory;
+		private readonly IComponentContext context;
 
 		private ServiceProvider vsServiceProvider;
 
@@ -33,13 +39,12 @@ namespace Toe.ToeVsExt
 
 		#region Constructors and Destructors
 
-		public EditorFactory(ToeVisualStudioExtensionPackage package)
+		public EditorFactory(Package package, IComponentContext context)
 		{
 			Trace.WriteLine(string.Format(CultureInfo.CurrentCulture, "Entering {0} constructor", this));
 
 			this.editorPackage = package;
-
-			this.toeEditorFactory = new Editors.EditorFactory();
+			this.context = context;
 		}
 
 		#endregion
@@ -104,7 +109,8 @@ namespace Toe.ToeVsExt
 			pgrfCDW = 0;
 			pbstrEditorCaption = null;
 
-			var e = this.toeEditorFactory.CreateEditor(pszMkDocument);
+			
+			var e = this.CreateEditor(pszMkDocument);
 			if (e == null)
 			{
 				return VSConstants.VS_E_UNSUPPORTEDFORMAT;
@@ -127,6 +133,19 @@ namespace Toe.ToeVsExt
 			ppunkDocData = Marshal.GetIUnknownForObject(NewEditor);
 			pbstrEditorCaption = "";
 			return VSConstants.S_OK;
+		}
+
+		private IResourceEditor CreateEditor(string filename)
+		{
+			foreach (var ef in this.context.Resolve<IEnumerable<IResourceEditorFactory>>())
+			{
+				var e = ef.CreateEditor(filename);
+				if (e != null)
+				{
+					return e;
+				}
+			}
+			return new DefaultEditor(context.Resolve<IEditorEnvironment>());
 		}
 
 		/// <summary>

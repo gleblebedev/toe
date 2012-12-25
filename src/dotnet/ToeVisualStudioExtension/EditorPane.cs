@@ -119,7 +119,7 @@ namespace Toe.ToeVsExt
 
 		private bool lockImage;
 
-		private ToeVisualStudioExtensionPackage myPackage;
+		private Package myPackage;
 
 		// This flag is true when we are asking the QueryEditQuerySave service if we can edit the
 		// file. It is used to avoid to have more than one request queued.
@@ -146,7 +146,7 @@ namespace Toe.ToeVsExt
 		/// </summary>
 		/// <param name="package">Our Package instance.</param>
 		public EditorPane(
-			ToeVisualStudioExtensionPackage package, string getExtension, IResourceEditor editor)
+			Package package, string getExtension, IResourceEditor editor)
 			: base(null)
 		{
 			this._getExtension = getExtension;
@@ -1542,7 +1542,7 @@ namespace Toe.ToeVsExt
 		/// which will show up in the properties window 
 		/// </summary>
 		/// <param name="package"></param>
-		private void PrivateInit(ToeVisualStudioExtensionPackage package)
+		private void PrivateInit(Package package)
 		{
 			this.myPackage = package;
 			this.loading = false;

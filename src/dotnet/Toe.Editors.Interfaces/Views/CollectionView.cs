@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Drawing;
 using System.Windows.Forms;
 
 using Toe.Editors.Interfaces.Bindings;
@@ -20,10 +21,8 @@ namespace Toe.Editors.Interfaces.Views
 
 		public CollectionView(Func<T,IView> viewFabric)
 		{
-			stackPanel = new StackPanel() { 
-				Dock = DockStyle.Fill
-			                              };
-			
+			stackPanel = new StackPanel() { Dock = DockStyle.Fill };
+
 			this.Controls.Add(stackPanel);
 			this.viewFabric = viewFabric;
 			dataContext.DataContextChanged += this.OnDataContextChanged;
@@ -63,7 +62,7 @@ namespace Toe.Editors.Interfaces.Views
 
 		DataContextContainer dataContext = new DataContextContainer();
 
-		private StackPanel stackPanel;
+		private Control stackPanel;
 
 		#region Implementation of IView
 		public IEnumerable<T> Items

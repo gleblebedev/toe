@@ -53,14 +53,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Base3DEditor.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Autodesk3DMaxCompatibleController.cs" />
     <Compile Include="EditorCamera.cs" />
-    <Compile Include="GeometryEditor.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="GeometryEditor.cs" />
     <Compile Include="ICameraController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -68,6 +62,10 @@
     <ProjectReference Include="..\Toe.Editors.Interfaces\Toe.Editors.Interfaces.net40.vs2010.csproj">
       <Project>{2B25523C-AA51-43C7-B5F2-41D3F8FBA0AE}</Project>
       <Name>Toe.Editors.Interfaces.net40.vs2010</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Toe.Editors\Toe.Editors.net40.vs2010.csproj">
+      <Project>{5FA4A978-FB68-4CB0-B693-FB534C76F2C9}</Project>
+      <Name>Toe.Editors.net40.vs2010</Name>
     </ProjectReference>
     <ProjectReference Include="..\Toe.Utils.Mesh\Toe.Utils.Mesh.net40.vs2010.csproj">
       <Project>{1AB2E074-5CE6-4CD6-A379-3D6A58116319}</Project>
