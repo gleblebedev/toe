@@ -54,7 +54,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EditorCamera.cs" />
-    <Compile Include="GeometryEditor.cs" />
+    <Compile Include="GeometryEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="ICameraController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

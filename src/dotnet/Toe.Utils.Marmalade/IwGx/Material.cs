@@ -22,7 +22,7 @@ namespace Toe.Utils.Mesh.Marmalade.IwGx
 			}
 		}
 
-		private AlphaTestMode alphaTestMode = AlphaTestMode.ALPHATEST_DISABLED;
+		private AlphaTestMode alphaTestMode = AlphaTestMode.DISABLED;
 
 		public AlphaTestMode AlphaTestMode
 		{
@@ -51,7 +51,7 @@ namespace Toe.Utils.Mesh.Marmalade.IwGx
 			}
 		}
 
-		private BlendMode blendMode = BlendMode.BLEND_BLEND;
+		private BlendMode blendMode = BlendMode.BLEND;
 
 		public BlendMode BlendMode
 		{

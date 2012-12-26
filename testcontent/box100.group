@@ -1,0 +1,9 @@
+// Source file: C:\GitHub\toe\testcontent\box100.dae
+// Exported By: glebedev on 10:57:52 AM 12/26/2012
+
+CIwResGroup
+{
+	name "box100"
+	".\models\Box100.geo"
+	".\box100.world"
+}

@@ -12,7 +12,6 @@ namespace Toe.Editors.Interfaces.Views
 
 		public EditColorView()
 		{
-			
 			this.dataContext.DataContextChanged += this.UpdateTextBox;
 			this.Height = 16;
 			this.Cursor = Cursors.Hand;

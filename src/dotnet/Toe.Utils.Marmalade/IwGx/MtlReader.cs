@@ -163,25 +163,25 @@ namespace Toe.Utils.Mesh.Marmalade.IwGx
 						switch (parser.ConsumeString())
 						{
 							case "ADD":
-								material.BlendMode = BlendMode.BLEND_ADD;
+								material.BlendMode = BlendMode.ADD;
 								break;
 							case "BLEND":
-								material.BlendMode = BlendMode.BLEND_BLEND;
+								material.BlendMode = BlendMode.BLEND;
 								break;
 							case "DECAL":
-								material.BlendMode = BlendMode.BLEND_DECAL;
+								material.BlendMode = BlendMode.DECAL;
 								break;
 							case "MODULATE":
-								material.BlendMode = BlendMode.BLEND_MODULATE;
+								material.BlendMode = BlendMode.MODULATE;
 								break;
 							case "BLEND_MODULATE_2X":
-								material.BlendMode = BlendMode.BLEND_MODULATE_2X;
+								material.BlendMode = BlendMode.MODULATE_2X;
 								break;
 							case "BLEND_MODULATE_4X":
-								material.BlendMode = BlendMode.BLEND_MODULATE_4X;
+								material.BlendMode = BlendMode.MODULATE_4X;
 								break;
 							case "BLEND_REPLACE":
-								material.BlendMode = BlendMode.BLEND_REPLACE;
+								material.BlendMode = BlendMode.REPLACE;
 								break;
 							default:
 								throw new TextParserException("Unknown blendMode");

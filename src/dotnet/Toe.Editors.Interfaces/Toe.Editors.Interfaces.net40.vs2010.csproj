@@ -109,6 +109,8 @@
     <Compile Include="Views\EditTextureView.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Views\EnumValueOptions.cs" />
+    <Compile Include="Views\EnumWellKnownValues.cs" />
     <Compile Include="Views\SingleControlView.cs">
       <SubType>UserControl</SubType>
     </Compile>

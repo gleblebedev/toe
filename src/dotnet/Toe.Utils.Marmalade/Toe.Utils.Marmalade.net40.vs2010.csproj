@@ -60,6 +60,7 @@
     <Compile Include="IwGx\CullMode.cs" />
     <Compile Include="IwGx\DepthWriteMode.cs" />
     <Compile Include="IwGx\EffectPreset.cs" />
+    <Compile Include="IwGx\ImageFormat.cs" />
     <Compile Include="IwGx\MatAnim.cs" />
     <Compile Include="IwGx\Material.cs" />
     <Compile Include="IwGx\ModulateMode.cs" />
@@ -79,6 +80,10 @@
     <Compile Include="TextResourceWriter.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Toe.Editors.Interfaces\Toe.Editors.Interfaces.net40.vs2010.csproj">
+      <Project>{2B25523C-AA51-43C7-B5F2-41D3F8FBA0AE}</Project>
+      <Name>Toe.Editors.Interfaces.net40.vs2010</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Toe.Utils.Mesh\Toe.Utils.Mesh.net40.vs2010.csproj">
       <Project>{1AB2E074-5CE6-4CD6-A379-3D6A58116319}</Project>
       <Name>Toe.Utils.Mesh.net40.vs2010</Name>

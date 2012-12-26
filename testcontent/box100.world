@@ -1,0 +1,10 @@
+// Source file: C:\GitHub\toe\testcontent\box100.dae
+
+CStatic
+{
+	name "Box100"
+	pos  { 0 0 0 }
+	rot  { 0.707107 -0.707107 0 0 }
+	model "Box100"
+
+}

@@ -68,6 +68,7 @@
     <Compile Include="MaterialEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="MaterialEnumsValues.cs" />
     <Compile Include="MaterialPreview.cs">
       <SubType>UserControl</SubType>
     </Compile>

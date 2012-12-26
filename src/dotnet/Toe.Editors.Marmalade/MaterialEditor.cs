@@ -151,8 +151,8 @@ namespace Toe.Editors.Marmalade
 				var valueCtrl = new EditEnumView
 					{
 						Margin = new Padding(4),
-						WellKnownValues =
-							new EnumWellKnownValues { { ShadeMode.SHADE_FLAT, "Flat" }, { ShadeMode.SHADE_GOURAUD, "Gouraud" } }
+						WellKnownValues =MaterialEnumsValues.ShadeModeValues
+							
 					};
 				this.stackPanel.Controls.Add(valueCtrl);
 				new PropertyBinding<Material, ShadeMode>(
@@ -161,7 +161,7 @@ namespace Toe.Editors.Marmalade
 
 			{
 				this.stackPanel.Controls.Add(new StringView { Text = "Modulation mode (of texel by vertex colour)" });
-				var valueCtrl = new EditEnumView { Margin = new Padding(4) };
+				var valueCtrl = new EditEnumView { Margin = new Padding(4), WellKnownValues = MaterialEnumsValues.ModulateModeValues };
 				this.stackPanel.Controls.Add(valueCtrl);
 				new PropertyBinding<Material, ModulateMode>(
 					valueCtrl, this.dataContext, mtl => mtl.ModulateMode, (mtl, value) => mtl.ModulateMode = value);
@@ -169,7 +169,7 @@ namespace Toe.Editors.Marmalade
 
 			{
 				this.stackPanel.Controls.Add(new StringView { Text = "Backface culling mode" });
-				var valueCtrl = new EditEnumView { Margin = new Padding(4) };
+				var valueCtrl = new EditEnumView { Margin = new Padding(4), WellKnownValues = MaterialEnumsValues.CullModeValues };
 				this.stackPanel.Controls.Add(valueCtrl);
 				new PropertyBinding<Material, CullMode>(
 					valueCtrl, this.dataContext, mtl => mtl.CullMode, (mtl, value) => mtl.CullMode = value);
@@ -177,7 +177,7 @@ namespace Toe.Editors.Marmalade
 
 			{
 				this.stackPanel.Controls.Add(new StringView { Text = "Transparency (alpha) mode" });
-				var valueCtrl = new EditEnumView { Margin = new Padding(4) };
+				var valueCtrl = new EditEnumView { Margin = new Padding(4), WellKnownValues = MaterialEnumsValues.AlphaModeValues };
 				this.stackPanel.Controls.Add(valueCtrl);
 				new PropertyBinding<Material, AlphaMode>(
 					valueCtrl, this.dataContext, mtl => mtl.AlphaMode, (mtl, value) => mtl.AlphaMode = value);
@@ -185,7 +185,7 @@ namespace Toe.Editors.Marmalade
 
 			{
 				this.stackPanel.Controls.Add(new StringView { Text = "Blend mode between texture stages 0 and 1" });
-				var valueCtrl = new EditEnumView { Margin = new Padding(4) };
+				var valueCtrl = new EditEnumView { Margin = new Padding(4), WellKnownValues = MaterialEnumsValues.BlendModeValues };
 				this.stackPanel.Controls.Add(valueCtrl);
 				new PropertyBinding<Material, BlendMode>(
 					valueCtrl, this.dataContext, mtl => mtl.BlendMode, (mtl, value) => mtl.BlendMode = value);
@@ -193,7 +193,7 @@ namespace Toe.Editors.Marmalade
 
 			{
 				this.stackPanel.Controls.Add(new StringView { Text = "Preset multi-texturing effect" });
-				var valueCtrl = new EditEnumView { Margin = new Padding(4) };
+				var valueCtrl = new EditEnumView { Margin = new Padding(4), WellKnownValues = MaterialEnumsValues.EffectPresetValues };
 				this.stackPanel.Controls.Add(valueCtrl);
 				new PropertyBinding<Material, EffectPreset>(
 					valueCtrl, this.dataContext, mtl => mtl.EffectPreset, (mtl, value) => mtl.EffectPreset = value);
@@ -201,7 +201,7 @@ namespace Toe.Editors.Marmalade
 
 			{
 				this.stackPanel.Controls.Add(new StringView { Text = "Specify the alpha test function" });
-				var valueCtrl = new EditEnumView { Margin = new Padding(4) };
+				var valueCtrl = new EditEnumView { Margin = new Padding(4), WellKnownValues = MaterialEnumsValues.AlphaTestModeValues };
 				this.stackPanel.Controls.Add(valueCtrl);
 				new PropertyBinding<Material, AlphaTestMode>(
 					valueCtrl, this.dataContext, mtl => mtl.AlphaTestMode, (mtl, value) => mtl.AlphaTestMode = value);
@@ -278,7 +278,7 @@ namespace Toe.Editors.Marmalade
 			{
 				this.stackPanel.Controls.Add(
 					new StringView { Text = "Specify a format to convert the image to, before uploading for SW rasterisation" });
-				var valueCtrl = new EditEnumView() { Margin = new Padding(4) };
+				var valueCtrl = new EditEnumView() { Margin = new Padding(4), WellKnownValues = MaterialEnumsValues.ImageFormatValues };
 				this.stackPanel.Controls.Add(valueCtrl);
 				new PropertyBinding<Material, ImageFormat>(
 					valueCtrl, this.dataContext, mtl => mtl.FormatSW, (mtl, value) => mtl.FormatSW = value);
@@ -287,7 +287,7 @@ namespace Toe.Editors.Marmalade
 			{
 				this.stackPanel.Controls.Add(
 					new StringView { Text = "Specify a format to convert the image to, before uploading for HW rasterisation" });
-				var valueCtrl = new EditEnumView() { Margin = new Padding(4) };
+				var valueCtrl = new EditEnumView() { Margin = new Padding(4), WellKnownValues = MaterialEnumsValues.ImageFormatValues };
 				this.stackPanel.Controls.Add(valueCtrl);
 				new PropertyBinding<Material, ImageFormat>(
 					valueCtrl, this.dataContext, mtl => mtl.FormatHW, (mtl, value) => mtl.FormatHW = value);
