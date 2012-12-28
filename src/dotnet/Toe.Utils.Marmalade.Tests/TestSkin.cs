@@ -1,40 +1,45 @@
 using System;
 using System.IO;
 
+using Autofac;
+
 using NUnit.Framework;
 
+using Toe.Resources;
 using Toe.Utils.Mesh.Marmalade.IwAnim;
 
 namespace Toe.Utils.Mesh.Marmalade.Tests
 {
 	[TestFixture]
-	public class TestSkin
+	public class TestSkin : BaseTest
 	{
 		#region Public Methods and Operators
 
 		[Test]
 		public void TestLegs()
 		{
-			var r = new TextResourceReader();
-			var fileName = "male_legs_trousers0_lod0.skin";
-			using (var fileStream = File.OpenRead(fileName))
+			using (IResourceManager rm = Container.Resolve<IResourceManager>())
 			{
-				r.Load(fileStream, Path.GetDirectoryName(Path.GetFullPath(fileName)));
+				var fileName = "male_legs_trousers0_lod0.skin";
+				var f = rm.EnsureFile(fileName);
+				f.Open();
+				Assert.Greater(f.Items.Count, 0);
+				f.Close();
 			}
 		}
 
 		[Test]
 		public void TestMarmaladeFolder()
 		{
-			var r = new TextResourceReader();
-
-			var s = new FolderTreeSearch(@"C:\Marmalade\6.2\examples\", "*.skin");
-			foreach (var file in s)
+			using (IResourceManager rm = Container.Resolve<IResourceManager>())
 			{
-				Console.WriteLine(file);
-				using (var fileStream = File.OpenRead(file))
+				var s = new FolderTreeSearch(@"C:\Marmalade\6.2\examples\", "*.skin");
+				foreach (var file in s)
 				{
-					r.Load(fileStream, Path.GetDirectoryName(Path.GetFullPath(file)));
+					Console.WriteLine(file);
+					var f = rm.EnsureFile(file);
+					f.Open();
+					f.Close();
 				}
 			}
 		}

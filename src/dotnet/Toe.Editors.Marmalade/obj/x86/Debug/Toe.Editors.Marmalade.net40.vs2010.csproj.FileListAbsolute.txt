@@ -20,3 +20,5 @@ C:\GitHub\toe\src\dotnet\Toe.Editors.Marmalade\bin\Debug\Toe.Editors.dll
 C:\GitHub\toe\src\dotnet\Toe.Editors.Marmalade\bin\Debug\OpenTK.GLControl.dll
 C:\GitHub\toe\src\dotnet\Toe.Editors.Marmalade\bin\Debug\Toe.Editors.pdb
 C:\GitHub\toe\src\dotnet\Toe.Editors.Marmalade\bin\Debug\OpenTK.dll
+C:\GitHub\toe\src\dotnet\Toe.Editors.Marmalade\bin\Debug\Toe.Resources.dll
+C:\GitHub\toe\src\dotnet\Toe.Editors.Marmalade\bin\Debug\Toe.Resources.pdb

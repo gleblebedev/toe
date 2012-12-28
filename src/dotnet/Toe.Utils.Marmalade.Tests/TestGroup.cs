@@ -3,6 +3,7 @@ using System.IO;
 
 using NUnit.Framework;
 
+using Toe.Resources;
 using Toe.Utils.Mesh.Marmalade.IwGx;
 
 namespace Toe.Utils.Mesh.Marmalade.Tests
@@ -12,21 +13,24 @@ namespace Toe.Utils.Mesh.Marmalade.Tests
 	{
 		#region Public Methods and Operators
 
-		[Test]
-		public void TestMarmaladeFolder()
-		{
-			var r = new TextResourceReader();
+		//[Test]
+		//public void TestMarmaladeFolder()
+		//{
+		//    using (IResourceManager rm = new Toe.Resources.ResourceManager())
+		//    {
+		//        var r = new TextResourceReader(rm);
 
-			var s = new FolderTreeSearch(@"C:\Marmalade\6.2\examples\", "*.group");
-			foreach (var file in s)
-			{
-				Console.WriteLine(file);
-				using (var fileStream = File.OpenRead(file))
-				{
-					r.Load(fileStream, Path.GetDirectoryName(Path.GetFullPath(file)));
-				}
-			}
-		}
+		//        var s = new FolderTreeSearch(@"C:\Marmalade\6.2\examples\", "*.group");
+		//        foreach (var file in s)
+		//        {
+		//            Console.WriteLine(file);
+		//            using (var fileStream = File.OpenRead(file))
+		//            {
+		//                r.Load(fileStream, Path.GetDirectoryName(Path.GetFullPath(file)));
+		//            }
+		//        }
+		//    }
+		//}
 
 		#endregion
 	}

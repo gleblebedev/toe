@@ -4,10 +4,19 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
+using Toe.Resources;
+
 namespace Toe.Utils.Mesh.Marmalade.IwGx
 {
 	public class MtlReader
 	{
+		private readonly IResourceManager resourceManager;
+
+		public MtlReader(IResourceManager resourceManager)
+		{
+			this.resourceManager = resourceManager;
+		}
+
 		public IList<Material> Load(Stream stream)
 		{
 			IList<Material> materials = new List<Material>();
@@ -21,7 +30,8 @@ namespace Toe.Utils.Mesh.Marmalade.IwGx
 
 		public Managed Parse(TextParser parser)
 		{
-			Material material = new Material();
+			Material material = new Material(resourceManager);
+			material.BasePath = parser.BasePath;
 			parser.Consume("CIwMaterial");
 			parser.Consume("{");
 			for (; ; )
@@ -136,19 +146,19 @@ namespace Toe.Utils.Mesh.Marmalade.IwGx
 				if (attribute == "texture0" || attribute == "mapDiffuse")
 					{
 						parser.Consume();
-						material.Texture0 = parser.ConsumeString();
+						material.Texture0.FileReference = parser.ConsumeString();
 						continue;
 					}
 					if (attribute == "texture1")
 					{
 						parser.Consume();
-						material.Texture1 = parser.ConsumeString();
+						material.Texture1.FileReference = parser.ConsumeString();
 						continue;
 					}
 					if (attribute == "texture2")
 					{
 						parser.Consume();
-						material.Texture2 = parser.ConsumeString();
+						material.Texture2.FileReference = parser.ConsumeString();
 						continue;
 					}
 					if (attribute == "effectPreset")
@@ -191,13 +201,13 @@ namespace Toe.Utils.Mesh.Marmalade.IwGx
 					if (attribute == "shaderTechnique")
 					{
 						parser.Consume();
-						material.ShaderTechnique = parser.ConsumeString();
+						material.ShaderTechnique.FileReference = parser.ConsumeString();
 						continue;
 					}
 					if (attribute == "vertexShader")
 					{
 						parser.Consume();
-						material.vertexShader = parser.ConsumeString();
+						material.VertexShader = parser.ConsumeString();
 						continue;
 					}
 

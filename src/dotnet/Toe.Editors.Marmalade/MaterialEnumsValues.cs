@@ -5,7 +5,7 @@ namespace Toe.Editors.Marmalade
 {
 	public static class MaterialEnumsValues
 	{
-		static public EnumWellKnownValues ShadeModeValues = new EnumWellKnownValues { { ShadeMode.SHADE_FLAT, new EnumValueOptions("Flat") }, { ShadeMode.SHADE_GOURAUD, new EnumValueOptions("Gouraud") } };
+		static public EnumWellKnownValues ShadeModeValues = new EnumWellKnownValues { { ShadeMode.FLAT, new EnumValueOptions("Flat") }, { ShadeMode.GOURAUD, new EnumValueOptions("Gouraud") } };
 
 		public static EnumWellKnownValues ModulateModeValues = new EnumWellKnownValues { { ModulateMode.NONE, new EnumValueOptions("None") }, { ModulateMode.R, new EnumValueOptions("R") }, { ModulateMode.RGB, new EnumValueOptions("RGB") } };
 

@@ -1,0 +1,99 @@
+CIwGxShaderTechnique
+{
+	name "FunkyShader"
+
+	//A simple refraction shader for IwGx.
+
+	//'param' exposes a uniform to the code
+	//the format is [name] [type] [number of components] [default value]
+	//this parameter can be retrieved in code using GetShaderParam() on the CIwGxShaderTechnique object
+	param "refractiveIndex" float 1 0.5
+
+	//'shader' blocks are blocks of standard GLSL code
+	shader "vertex"
+	{
+		//the shader has access to the standard IwGx streams
+		//the input here will be fixed point by default, and the matrices passes in by the framework 
+		//will include the fixed point multipier down to float.
+		attribute highp vec4	inVert; //vertex stream
+		attribute mediump vec2	inUV0; //UV 0 stream
+		attribute mediump vec4	inNorm; //normal stream
+		attribute lowp vec4		inCol; //colour stream
+
+		//IwGx exposes a number of useful matrices to shaders.
+		uniform highp mat4		inPMVMat; //transform to projected space
+		uniform highp mat4		inMVMat; //transform to view space
+		uniform mediump mat3	inMVRotMat; //rotation to view space
+
+		//IwGx exposes various other standard parameters to allow shaders to interact correctly with
+		//all IwGx features. 
+		uniform mediump vec2	inUVOffset; //offset for UVs (allow support for IwGx texture animation)
+		uniform mediump vec2	inUVScale;	//scale for UVs (allow support for IwGx np2 textures)
+
+		//output of the vertex shader
+		varying mediump vec3	outToVert; //direction to vertex from eye
+		varying mediump vec2	outUV0; //final UV0 
+		varying mediump vec3	outNorm; //view space normal 
+		varying lowp vec4		outCol; //final colour
+		
+		void main(void)
+		{
+			//set vertex position in projected space
+			gl_Position = inPMVMat * inVert;
+			
+			//normalised direction to vertex from eye
+			outToVert = normalize((inMVMat * inVert).xyz);
+			
+			//uv0 scaled and offset
+			outUV0 = inUV0 * inUVScale + inUVOffset;
+			
+			//normal in view space
+			outNorm = inMVRotMat * inNorm.xyz;
+			
+			//pass through colour unmodified (example only, colour is not used in this case)
+			outCol = inCol;
+		}
+	}
+
+	shader "fragment"
+	{
+		//input to the fragment shader (matches vertex shader output above)
+		varying mediump vec3	outToVert;
+		varying mediump vec2	outUV0;
+		varying lowp vec4		outCol;
+		varying mediump vec3	outNorm;
+		
+		//IwGx texture stages are accessible using inSamplerx
+		uniform sampler2D		inSampler0;
+		uniform sampler2D		inSampler1;
+
+		//refractiveIndex is exposed to code by the param line above
+		uniform mediump float	refractiveIndex;
+
+		//more standard IwGx shader uniforms
+		uniform mediump mat3	inDisplayRotScaleMat; //transform from gl_FragCoord space to 'display' space
+		uniform mediump vec2	inUV1Scale; //the scale of texture stage 1 - allow np2 texture in this stage
+
+		void main(void)
+		{
+			//get the position of the vertex in screenspace
+			mediump vec2 screenCoord = gl_FragCoord.xy;
+			// and convert to a fraction for uv coords
+			screenCoord = (vec3(screenCoord, 1.0) * inDisplayRotScaleMat).xy;
+			//screenCoord now matches the UV of the backdrop
+			
+			//now generate a refractive offset based on the vertex and its normal
+			mediump vec3 refr = refract(outToVert, outNorm, refractiveIndex);
+			//apply to the screenCoord
+			screenCoord.xy += refr.xy * 0.1;
+
+
+			//generate opacity based on 'facing' of refracted normal
+			mediump float opacity = clamp((refr.z-0.25), 0.2, 0.8);
+			
+			//mix refracted second stage (which matches backdrop) and the first stage (which is the normal texture)
+			gl_FragColor = mix(texture2D(inSampler1, clamp(screenCoord, 0.0, 1.0) * (inUV1Scale * vec2(1.0))),
+				texture2D(inSampler0, outUV0), opacity);
+		}
+	}
+}

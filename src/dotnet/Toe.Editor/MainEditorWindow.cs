@@ -28,9 +28,9 @@ namespace Toe.Editor
 			base.OnLoad(e);
 
 			//var filename = @"C:\Marmalade\6.2\examples\games\kartz\data\environment\track_01\track_01.group";
-			var filename = "track_01.mtl";
-
-			OpenFile(filename);
+			//var filename = @"C:\GitHub\toe\testcontent\GLES2.group";
+			//OpenFile(@"C:\GitHub\toe\testcontent\FunkyShader.itx");
+			OpenFile(@"C:\GitHub\toe\testcontent\FunkyVicGLES2.mtl");
 		}
 
 		public void OpenFile(string filename)

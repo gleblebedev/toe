@@ -1,43 +1,97 @@
+using System;
 using System.ComponentModel;
 using System.Drawing;
+
+using OpenTK.Graphics.OpenGL;
+
+using Toe.Resources;
 
 namespace Toe.Utils.Mesh.Marmalade.IwGx
 {
 	public class Material : Managed
 	{
-		#region Public Properties
+		#region Constants and Fields
 
+		public static readonly uint TypeHash = Hash.Get("CIwMaterial");
 
-		private MatAnim matAnim;
+		private readonly IResourceManager resourceManager;
 
-		public MatAnim MatAnim
-		{
-			get
-			{
-				return this.matAnim;
-			}
-			set
-			{
-				this.matAnim = value;
-			}
-		}
+		private readonly ResourceReference texture0;
+
+		private AlphaMode alphaMode = AlphaMode.DEFAULT;
 
 		private AlphaTestMode alphaTestMode = AlphaTestMode.DISABLED;
 
-		public AlphaTestMode AlphaTestMode
+		private byte alphaTestValue;
+
+		private BlendMode blendMode = BlendMode.BLEND;
+
+		private Color colAmbient = Color.FromArgb(255, 255, 255, 255);
+
+		private Color colDiffuse = Color.FromArgb(255, 255, 255, 255);
+
+		private Color colEmissive = Color.FromArgb(0, 0, 0, 0);
+
+		private Color colSpecular = Color.FromArgb(10, 0, 0, 0);
+
+		private bool depthWriteEnable = true;
+
+		private EffectPreset effectPreset = EffectPreset.DEFAULT;
+
+		private bool filtering;
+
+		private ImageFormat formatHw;
+
+		private ImageFormat formatSw;
+
+		private bool invisible;
+
+		private bool keepAfterUpload;
+
+		private bool mergeGeom;
+
+		private ModulateMode modulateMode = ModulateMode.RGB;
+
+		private bool noFog;
+
+		private ShadeMode shadeMode = ShadeMode.GOURAUD;
+
+		private ResourceReference texture1;
+
+		private ResourceReference texture2;
+
+		private ResourceReference texture3;
+
+		private short zDepthOfs;
+
+		private short zDepthOfsHw;
+
+		#endregion
+
+		#region Constructors and Destructors
+
+		public Material(IResourceManager resourceManager)
 		{
-			get
-			{
-				return this.alphaTestMode;
-			}
-			set
-			{
-				this.alphaTestMode = value;
-			}
+			this.resourceManager = resourceManager;
+			this.texture0 = new ResourceReference(Texture.TypeHash, resourceManager, this);
+			this.texture0.ReferenceChanged += (s, a) => this.RaisePropertyChanged("Texture0");
+
+			this.texture1 = new ResourceReference(Texture.TypeHash, resourceManager, this);
+			this.texture1.ReferenceChanged += (s, a) => this.RaisePropertyChanged("Texture1");
+
+			this.texture2 = new ResourceReference(Texture.TypeHash, resourceManager, this);
+			this.texture2.ReferenceChanged += (s, a) => this.RaisePropertyChanged("Texture2");
+
+			this.texture3 = new ResourceReference(Texture.TypeHash, resourceManager, this);
+			this.texture3.ReferenceChanged += (s, a) => this.RaisePropertyChanged("Texture3");
+
+			this.shaderTechnique = new ResourceReference(Toe.Utils.Mesh.Marmalade.IwGx.ShaderTechnique.TypeHash, resourceManager, this);
+			this.shaderTechnique.ReferenceChanged += (s, a) => this.RaisePropertyChanged("ShaderTechnique");
 		}
 
+		#endregion
 
-		private AlphaMode alphaMode = AlphaMode.DEFAULT;
+		#region Public Properties
 
 		public AlphaMode AlphaMode
 		{
@@ -47,11 +101,45 @@ namespace Toe.Utils.Mesh.Marmalade.IwGx
 			}
 			set
 			{
-				this.alphaMode = value;
+				if (this.alphaMode != value)
+				{
+					this.alphaMode = value;
+					this.RaisePropertyChanged("AlphaMode");
+				}
 			}
 		}
 
-		private BlendMode blendMode = BlendMode.BLEND;
+		public AlphaTestMode AlphaTestMode
+		{
+			get
+			{
+				return this.alphaTestMode;
+			}
+			set
+			{
+				if (this.alphaTestMode != value)
+				{
+					this.alphaTestMode = value;
+					this.RaisePropertyChanged("AlphaTestMode");
+				}
+			}
+		}
+
+		public byte AlphaTestValue
+		{
+			get
+			{
+				return this.alphaTestValue;
+			}
+			set
+			{
+				if (this.alphaTestValue != value)
+				{
+					this.alphaTestValue = value;
+					this.RaisePropertyChanged("AlphaTestValue");
+				}
+			}
+		}
 
 		public BlendMode BlendMode
 		{
@@ -61,15 +149,31 @@ namespace Toe.Utils.Mesh.Marmalade.IwGx
 			}
 			set
 			{
-				this.blendMode = value;
+				if (this.blendMode != value)
+				{
+					this.blendMode = value;
+					this.RaisePropertyChanged("BlendMode");
+				}
 			}
 		}
 
-		
+		private bool clampUV;
 
-		public bool ClampUV { get; set; }
-
-		private Color colAmbient = Color.FromArgb(255,255,255,255);
+		public bool ClampUV
+		{
+			get
+			{
+				return this.clampUV;
+			}
+			set
+			{
+				if (this.clampUV != value)
+				{
+					this.clampUV = value;
+					this.RaisePropertyChanged("ClampUV");
+				}
+			}
+		}
 
 		public Color ColAmbient
 		{
@@ -79,11 +183,13 @@ namespace Toe.Utils.Mesh.Marmalade.IwGx
 			}
 			set
 			{
-				this.colAmbient = value;
+				if (this.colAmbient != value)
+				{
+					this.colAmbient = value;
+					this.RaisePropertyChanged("ColAmbient");
+				}
 			}
 		}
-
-		private Color colDiffuse = Color.FromArgb(255, 255, 255, 255);
 
 		public Color ColDiffuse
 		{
@@ -93,11 +199,13 @@ namespace Toe.Utils.Mesh.Marmalade.IwGx
 			}
 			set
 			{
-				this.colDiffuse = value;
+				if (this.colDiffuse != value)
+				{
+					this.colDiffuse = value;
+					this.RaisePropertyChanged("ColDiffuse");
+				}
 			}
 		}
-
-		private Color colEmissive = Color.FromArgb(0, 0, 0, 0);
 
 		public Color ColEmissive
 		{
@@ -107,11 +215,13 @@ namespace Toe.Utils.Mesh.Marmalade.IwGx
 			}
 			set
 			{
-				this.colEmissive = value;
+				if (this.colEmissive != value)
+				{
+					this.colEmissive = value;
+					this.RaisePropertyChanged("ColEmissive");
+				}
 			}
 		}
-
-		private Color colSpecular = Color.FromArgb(10, 0, 0, 0);
 
 		public Color ColSpecular
 		{
@@ -121,7 +231,11 @@ namespace Toe.Utils.Mesh.Marmalade.IwGx
 			}
 			set
 			{
-				this.colSpecular = value;
+				if (this.colSpecular != value)
+				{
+					this.colSpecular = value;
+					this.RaisePropertyChanged("ColSpecular");
+				}
 			}
 		}
 
@@ -135,11 +249,29 @@ namespace Toe.Utils.Mesh.Marmalade.IwGx
 			}
 			set
 			{
-				this.cullMode = value;
+				if (this.cullMode != value)
+				{
+					this.cullMode = value;
+					this.RaisePropertyChanged("CullMode");
+				}
 			}
 		}
 
-		private EffectPreset effectPreset = EffectPreset.DEFAULT;
+		public bool DepthWriteEnable
+		{
+			get
+			{
+				return this.depthWriteEnable;
+			}
+			set
+			{
+				if (this.depthWriteEnable != value)
+				{
+					this.depthWriteEnable = value;
+					this.RaisePropertyChanged("DepthWriteEnable");
+				}
+			}
+		}
 
 		public EffectPreset EffectPreset
 		{
@@ -149,181 +281,59 @@ namespace Toe.Utils.Mesh.Marmalade.IwGx
 			}
 			set
 			{
-				this.effectPreset = value;
-			}
-		}
-
-		public string ShaderTechnique { get; set; }
-
-		private int specularPower;
-
-		public int SpecularPower
-		{
-			get
-			{
-				return specularPower;
-			}
-			set
-			{
-				specularPower = value;
-			}
-		}
-
-		private string texture0;
-
-		public string Texture0
-		{
-			get
-			{
-				return this.texture0;
-			}
-			set
-			{
-				if (this.texture0 != value)
+				if (this.effectPreset != value)
 				{
-					this.texture0 = value;
-					this.RaisePropertyChanged("Texture1");
+					this.effectPreset = value;
+					this.RaisePropertyChanged("EffectPreset");
 				}
 			}
 		}
 
-		private string texture1;
-
-		public string Texture1
+		public bool Filtering
 		{
 			get
 			{
-				return this.texture1;
+				return this.filtering;
 			}
 			set
 			{
-				if (this.texture1 != value)
+				if (this.filtering != value)
 				{
-					this.texture1 = value;
-					this.RaisePropertyChanged("Texture1");
+					this.filtering = value;
+					this.RaisePropertyChanged("Filtering");
 				}
 			}
 		}
 
-		private string texture2;
-
-		public string Texture2
+		public ImageFormat FormatHW
 		{
 			get
 			{
-				return this.texture2;
+				return this.formatHw;
 			}
 			set
 			{
-				if (this.texture2 != value)
+				if (this.formatHw != value)
 				{
-					this.texture2 = value;
-					this.RaisePropertyChanged("Texture2");
+					this.formatHw = value;
+					this.RaisePropertyChanged("FormatHW");
 				}
 			}
 		}
 
-		private string texture3;
-
-		public string Texture3
+		public ImageFormat FormatSW
 		{
 			get
 			{
-				return this.texture3;
+				return this.formatSw;
 			}
 			set
 			{
-				if (this.texture3 != value)
+				if (this.formatSw != value)
 				{
-					this.texture3 = value;
-					this.RaisePropertyChanged("Texture3");
+					this.formatSw = value;
+					this.RaisePropertyChanged("FormatSW");
 				}
-			}
-		}
-
-		public string vertexShader { get; set; }
-
-		private ShadeMode shadeMode = ShadeMode.SHADE_GOURAUD;
-
-		private ModulateMode modulateMode = ModulateMode.RGB;
-
-		private byte alphaTestValue;
-
-		private short zDepthOfsHw;
-
-		private bool invisible;
-
-		private bool filtering;
-
-		public ShadeMode ShadeMode
-		{
-			get
-			{
-				return this.shadeMode;
-			}
-			set
-			{
-				this.shadeMode = value;
-			}
-		}
-
-		public ModulateMode ModulateMode
-		{
-			get
-			{
-				return modulateMode;
-			}
-			set
-			{
-				modulateMode = value;
-			}
-		}
-
-		public byte AlphaTestValue
-		{
-			get
-			{
-				return alphaTestValue;
-			}
-			set
-			{
-				alphaTestValue = value;
-			}
-		}
-
-		private short zDepthOfs;
-
-		private bool depthWriteEnable = true;
-
-		private bool mergeGeom;
-
-		private ImageFormat formatHw;
-
-		private ImageFormat formatSw;
-
-		private bool keepAfterUpload;
-
-		public short ZDepthOfs
-		{
-			get
-			{
-				return zDepthOfs;
-			}
-			set
-			{
-				zDepthOfs = value;
-			}
-		}
-
-		public short ZDepthOfsHW
-		{
-			get
-			{
-				return zDepthOfsHw;
-			}
-			set
-			{
-				zDepthOfsHw = value;
 			}
 		}
 
@@ -335,67 +345,11 @@ namespace Toe.Utils.Mesh.Marmalade.IwGx
 			}
 			set
 			{
-				this.invisible = value;
-			}
-		}
-
-		public bool Filtering
-		{
-			get
-			{
-				return filtering;
-			}
-			set
-			{
-				filtering = value;
-			}
-		}
-
-		public bool DepthWriteEnable
-		{
-			get
-			{
-				return depthWriteEnable;
-			}
-			set
-			{
-				depthWriteEnable = value;
-			}
-		}
-
-		public bool MergeGeom
-		{
-			get
-			{
-				return mergeGeom;
-			}
-			set
-			{
-				mergeGeom = value;
-			}
-		}
-
-		public ImageFormat FormatHW
-		{
-			get
-			{
-				return formatHw;
-			}
-			set
-			{
-				formatHw = value;
-			}
-		}
-
-		public ImageFormat FormatSW
-		{
-			get
-			{
-				return formatSw;
-			}
-			set
-			{
-				formatSw = value;
+				if (this.invisible != value)
+				{
+					this.invisible = value;
+					this.RaisePropertyChanged("Invisible");
+				}
 			}
 		}
 
@@ -403,15 +357,80 @@ namespace Toe.Utils.Mesh.Marmalade.IwGx
 		{
 			get
 			{
-				return keepAfterUpload;
+				return this.keepAfterUpload;
 			}
 			set
 			{
-				keepAfterUpload = value;
+				if (this.keepAfterUpload != value)
+				{
+					this.keepAfterUpload = value;
+					this.RaisePropertyChanged("KeepAfterUpload");
+				}
 			}
 		}
 
-		private bool noFog;
+		private MatAnim matAnim;
+
+		public MatAnim MatAnim
+		{
+			get
+			{
+				return this.matAnim;
+			}
+			set
+			{
+				if (this.matAnim != value)
+				{
+					if (this.matAnim != null)
+					{
+						this.matAnim.PropertyChanged -= MatAnimPropertyChanged;
+					}
+					this.matAnim = value;
+					if (this.matAnim != null)
+					{
+						this.matAnim.PropertyChanged += MatAnimPropertyChanged;
+					}
+					this.RaisePropertyChanged("MatAnim");
+				}
+			}
+		}
+
+		private void MatAnimPropertyChanged(object sender, PropertyChangedEventArgs e)
+		{
+			this.RaisePropertyChanged("MatAnim");
+		}
+
+		public bool MergeGeom
+		{
+			get
+			{
+				return this.mergeGeom;
+			}
+			set
+			{
+				if (this.mergeGeom != value)
+				{
+					this.mergeGeom = value;
+					this.RaisePropertyChanged("MergeGeom");
+				}
+			}
+		}
+
+		public ModulateMode ModulateMode
+		{
+			get
+			{
+				return this.modulateMode;
+			}
+			set
+			{
+				if (this.modulateMode != value)
+				{
+					this.modulateMode = value;
+					this.RaisePropertyChanged("ModulateMode");
+				}
+			}
+		}
 
 		public bool NoFog
 		{
@@ -421,12 +440,336 @@ namespace Toe.Utils.Mesh.Marmalade.IwGx
 			}
 			set
 			{
-				this.noFog = value;
+				if (this.noFog != value)
+				{
+					this.noFog = value;
+					this.RaisePropertyChanged("NoFog");
+				}
+			}
+		}
+
+		public ShadeMode ShadeMode
+		{
+			get
+			{
+				return this.shadeMode;
+			}
+			set
+			{
+				if (this.shadeMode != value)
+				{
+					this.shadeMode = value;
+					this.RaisePropertyChanged("ShadeMode");
+				}
+			}
+		}
+
+		private ResourceReference shaderTechnique;
+
+		public ResourceReference ShaderTechnique
+		{
+			get
+			{
+				return this.shaderTechnique;
+			}
+		}
+
+		private int specularPower;
+
+		public int SpecularPower
+		{
+			get
+			{
+				return this.specularPower;
+			}
+			set
+			{
+				if (this.specularPower != value)
+				{
+					this.specularPower = value;
+					this.RaisePropertyChanged("SpecularPower");
+				}
+			}
+		}
+
+		public ResourceReference Texture0
+		{
+			get
+			{
+				return this.texture0;
+			}
+		}
+
+		public ResourceReference Texture1
+		{
+			get
+			{
+				return this.texture1;
+			}
+		}
+
+		public ResourceReference Texture2
+		{
+			get
+			{
+				return this.texture2;
+			}
+		}
+
+		public ResourceReference Texture3
+		{
+			get
+			{
+				return this.texture3;
+			}
+		}
+
+		public short ZDepthOfs
+		{
+			get
+			{
+				return this.zDepthOfs;
+			}
+			set
+			{
+				if (this.zDepthOfs != value)
+				{
+					this.zDepthOfs = value;
+					this.RaisePropertyChanged("ZDepthOfs");
+				}
+			}
+		}
+
+		public short ZDepthOfsHW
+		{
+			get
+			{
+				return this.zDepthOfsHw;
+			}
+			set
+			{
+				if (this.zDepthOfsHw != value)
+				{
+					this.zDepthOfsHw = value;
+					this.RaisePropertyChanged("ZDepthOfsHW");
+				}
+			}
+		}
+
+		private string vertexShader;
+
+		public string VertexShader
+		{
+			get
+			{
+				return this.vertexShader;
+			}
+			set
+			{
+				if (this.vertexShader != value)
+				{
+					this.vertexShader = value;
+					this.RaisePropertyChanged("VertexShader");
+				}
 			}
 		}
 
 		#endregion
 
-		
+		#region Public Methods and Operators
+
+		public void ApplyOpenGL()
+		{
+			GL.Color3(1.0f, 1.0f, 1.0f);
+
+			switch (this.CullMode)
+			{
+				case CullMode.FRONT:
+					GL.CullFace(CullFaceMode.Front);
+					GL.Enable(EnableCap.CullFace);
+					break;
+				case CullMode.BACK:
+					GL.CullFace(CullFaceMode.Back);
+					GL.Enable(EnableCap.CullFace);
+					break;
+				case CullMode.NONE:
+					GL.CullFace(CullFaceMode.FrontAndBack);
+					GL.Disable(EnableCap.CullFace);
+					break;
+				default:
+					throw new ArgumentOutOfRangeException();
+			}
+			switch (this.ShadeMode)
+			{
+				case ShadeMode.FLAT:
+					GL.ShadeModel(ShadingModel.Flat);
+					break;
+				case ShadeMode.GOURAUD:
+					GL.ShadeModel(ShadingModel.Smooth);
+					break;
+				default:
+					throw new ArgumentOutOfRangeException();
+			}
+			switch (this.AlphaMode)
+			{
+				case AlphaMode.NONE:
+					GL.Disable(EnableCap.Blend);
+					break;
+				case AlphaMode.HALF:
+					break;
+				case AlphaMode.ADD:
+					GL.Enable(EnableCap.Blend);
+					GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.One);
+					break;
+				case AlphaMode.SUB:
+					break;
+				case AlphaMode.BLEND:
+					GL.Enable(EnableCap.Blend);
+					GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+					break;
+				case AlphaMode.DEFAULT:
+					GL.Disable(EnableCap.Blend);
+					break;
+				default:
+					throw new ArgumentOutOfRangeException();
+			}
+			switch (this.AlphaTestMode)
+			{
+				case AlphaTestMode.DISABLED:
+					GL.Disable(EnableCap.AlphaTest);
+					break;
+				case AlphaTestMode.NEVER:
+					GL.Enable(EnableCap.AlphaTest);
+					GL.AlphaFunc(AlphaFunction.Never, alphaTestValue/255.0f);
+					break;
+				case AlphaTestMode.LESS:
+					GL.Enable(EnableCap.AlphaTest);
+					GL.AlphaFunc(AlphaFunction.Less, alphaTestValue/255.0f);
+					break;
+				case AlphaTestMode.EQUAL:
+					GL.Enable(EnableCap.AlphaTest);
+					GL.AlphaFunc(AlphaFunction.Equal, alphaTestValue/255.0f);
+					break;
+				case AlphaTestMode.LEQUAL:
+					GL.Enable(EnableCap.AlphaTest);
+					GL.AlphaFunc(AlphaFunction.Lequal, alphaTestValue/255.0f);
+					break;
+				case AlphaTestMode.GREATER:
+					GL.Enable(EnableCap.AlphaTest);
+					GL.AlphaFunc(AlphaFunction.Greater, alphaTestValue/255.0f);
+					break;
+				case AlphaTestMode.NOTEQUAL:
+					GL.Enable(EnableCap.AlphaTest);
+					GL.AlphaFunc(AlphaFunction.Notequal, alphaTestValue/255.0f);
+					break;
+				case AlphaTestMode.GEQUAL:
+					GL.Enable(EnableCap.AlphaTest);
+					GL.AlphaFunc(AlphaFunction.Gequal, alphaTestValue/255.0f);
+					break;
+				case AlphaTestMode.ALWAYS:
+					GL.Enable(EnableCap.AlphaTest);
+					GL.AlphaFunc(AlphaFunction.Always, alphaTestValue/255.0f);
+					break;
+				default:
+					throw new ArgumentOutOfRangeException();
+			}
+			GL.DepthMask(this.DepthWriteEnable);
+
+			GL.Enable(EnableCap.ColorMaterial);
+
+			//GL.Material(MaterialFace.Front, MaterialParameter.Specular, mat_specular);
+			//GL.Material(MaterialFace.Front, MaterialParameter.Shininess, mat_shininess);
+			GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Diffuse, this.ColDiffuse);
+			GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Emission, this.ColEmissive);
+			GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Specular, this.ColSpecular);
+
+			var resource = this.texture0.Resource as Texture;
+			if (resource != null)
+			{
+				resource.ApplyOpenGL(0);
+			}
+			else
+			{
+				GL.ActiveTexture(TextureUnit.Texture0);
+				GL.Disable(EnableCap.Texture2D);
+			}
+
+			resource = this.texture1.Resource as Texture;
+			if (resource != null)
+			{
+				resource.ApplyOpenGL(1);
+				switch (EffectPreset)
+				{
+					case EffectPreset.DEFAULT:
+						GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvMode, (float)TextureEnvMode.Modulate);
+						break;
+					case EffectPreset.NORMAL_MAPPING:
+						break;
+					case EffectPreset.REFLECTION_MAPPING:
+						break;
+					case EffectPreset.ENVIRONMENT_MAPPING:
+						break;
+					case EffectPreset.CONSTANT_COLOUR_CHANNEL:
+						break;
+					case EffectPreset.LIGHTMAP_POST_PROCESS:
+						break;
+					case EffectPreset.NORMAL_MAPPING_SPECULAR:
+						break;
+					case EffectPreset.TEXTURE0_ONLY:
+						GL.Disable(EnableCap.Texture2D);
+						break;
+					default:
+						throw new ArgumentOutOfRangeException();
+				}
+				
+			}
+			else
+			{
+				GL.ActiveTexture(TextureUnit.Texture1);
+				GL.Disable(EnableCap.Texture2D);
+			}
+
+			resource = this.texture2.Resource as Texture;
+			if (resource != null)
+			{
+				resource.ApplyOpenGL(2);
+			}
+			else
+			{
+				GL.ActiveTexture(TextureUnit.Texture2);
+				GL.Disable(EnableCap.Texture2D);
+			}
+
+			resource = this.texture3.Resource as Texture;
+			if (resource != null)
+			{
+				resource.ApplyOpenGL(3);
+			}
+			else
+			{
+				GL.ActiveTexture(TextureUnit.Texture3);
+				GL.Disable(EnableCap.Texture2D);
+			}
+		}
+
+		public override uint GetClassHashCode()
+		{
+			return TypeHash;
+		}
+
+		#endregion
+
+		#region Methods
+
+		protected override void Dispose(bool disposing)
+		{
+			base.Dispose(disposing);
+			if (disposing)
+			{
+				this.texture0.Dispose();
+			}
+		}
+
+		#endregion
 	}
 }

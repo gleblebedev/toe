@@ -13,7 +13,7 @@ namespace Toe.Editors
 
 		private float fovy = (float)Math.PI / 2.0f;
 
-		private bool ortho = true;
+		private bool ortho = false;
 
 		private Vector3 pos = new Vector3(0, 0, 1024);
 
@@ -21,7 +21,7 @@ namespace Toe.Editors
 
 		private float zFar = 2048.0f;
 
-		private float zNear = 0.1f;
+		private float zNear = 1.0f;
 
 		#endregion
 

@@ -73,8 +73,10 @@ namespace Toe.Editors.Marmalade
 			formPreviewSplit.Panel1.Controls.Add(this.stackPanel);
 
 			//var preview = new PictureBox { Image = Resources.material, Dock = DockStyle.Fill, AutoSize = true };
-			var preview = new MaterialPreview { Dock = DockStyle.Fill};
+			var preview = new MaterialPreview(this) { Dock = DockStyle.Fill};
 			formPreviewSplit.Panel2.Controls.Add(preview);
+			this.dataContext.DataContextChanged += (s, a) => preview.Refresh();
+			this.dataContext.PropertyChanged += (s, a) => preview.Refresh();
 
 			{
 				this.stackPanel.Controls.Add(new StringView { Text = "Material name" });
@@ -86,16 +88,16 @@ namespace Toe.Editors.Marmalade
 				this.stackPanel.Controls.Add(new StringView { Text = "Specify texture for stage 0 (diffuse map)" });
 				var valueCtrl = new EditTextureView { Margin = new Padding(4) };
 				this.stackPanel.Controls.Add(valueCtrl);
-				new PropertyBinding<Material, string>(
-					valueCtrl, this.dataContext, mtl => mtl.Texture0, (mtl, value) => mtl.Texture0 = value);
+				new PropertyBinding<Material, ResourceReference>(
+					valueCtrl, this.dataContext, mtl => mtl.Texture0, null);
 			}
 
 			{
 				this.stackPanel.Controls.Add(new StringView { Text = "Specify texture for stage 1" });
 				var valueCtrl = new EditTextureView { Margin = new Padding(4) };
 				this.stackPanel.Controls.Add(valueCtrl);
-				new PropertyBinding<Material, string>(
-					valueCtrl, this.dataContext, mtl => mtl.Texture1, (mtl, value) => mtl.Texture1 = value);
+				new PropertyBinding<Material, ResourceReference>(
+					valueCtrl, this.dataContext, mtl => mtl.Texture1, null);
 			}
 
 			{
@@ -103,7 +105,7 @@ namespace Toe.Editors.Marmalade
 				var valueCtrl = new EditStringView { Margin = new Padding(4) };
 				this.stackPanel.Controls.Add(valueCtrl);
 				new PropertyBinding<Material, string>(
-					valueCtrl, this.dataContext, mtl => mtl.vertexShader, (mtl, value) => mtl.vertexShader = value);
+					valueCtrl, this.dataContext, mtl => mtl.VertexShader, (mtl, value) => mtl.VertexShader = value);
 			}
 
 			{
@@ -317,10 +319,10 @@ namespace Toe.Editors.Marmalade
 
 			{
 				this.stackPanel.Controls.Add(new StringView { Text = "Attach the specified shader to this material" });
-				var valueCtrl = new EditStringView { Margin = new Padding(4) };
+				var valueCtrl = new EditShaderView { Margin = new Padding(4) };
 				this.stackPanel.Controls.Add(valueCtrl);
-				new PropertyBinding<Material, string>(
-					valueCtrl, this.dataContext, mtl => mtl.ShaderTechnique, (mtl, value) => mtl.ShaderTechnique = value);
+				new PropertyBinding<Material, ResourceReference>(
+					valueCtrl, this.dataContext, mtl => mtl.ShaderTechnique, null);
 			}
 			this.ResumeLayout();
 		}

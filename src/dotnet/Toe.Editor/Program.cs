@@ -1,10 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Windows.Forms;
 
 using Autofac;
 
 using Toe.Editors.Interfaces;
 using Toe.Editors.Marmalade;
+using Toe.Resources;
+using Toe.Utils.Mesh.Marmalade;
+
+using IContainer = Autofac.IContainer;
 
 namespace Toe.Editor
 {
@@ -20,10 +27,19 @@ namespace Toe.Editor
 		[STAThread]
 		private static void Main()
 		{
+			AppDomain.CurrentDomain.UnhandledException += OnException;
 			var cb = new Autofac.ContainerBuilder();
 
 			cb.RegisterModule<AutofacModule>();
+			cb.RegisterGeneric(typeof(BindingList<>)).UsingConstructor(new Type[]{}).As(typeof(IList<>));
 			cb.RegisterType<EditorEnvironment>().As<IEditorEnvironment>().SingleInstance();
+			cb.RegisterType<ResourceManager>().As<IResourceManager>().SingleInstance();
+			cb.RegisterType<ResourceFile>().As<IResourceFile>().InstancePerDependency();
+			cb.RegisterType<ResourceFileItem>().As<IResourceFileItem>().InstancePerDependency();
+			cb.RegisterType<ResourceEditorFactory>().As<IResourceEditorFactory>().SingleInstance();
+			cb.RegisterType<TextResourceFormat>().As<IResourceFileFormat>().SingleInstance();
+			cb.RegisterType<TextureResourceFormat>().As<IResourceFileFormat>().SingleInstance();
+			cb.RegisterType<EditorResourceErrorHandler>().As<IResourceErrorHandler>().SingleInstance();
 			cb.RegisterType<MainEditorWindow>().SingleInstance();
 
 			using (container = cb.Build())
@@ -32,6 +48,11 @@ namespace Toe.Editor
 				Application.SetCompatibleTextRenderingDefault(false);
 				Application.Run(container.Resolve<MainEditorWindow>());
 			}
+		}
+
+		private static void OnException(object sender, UnhandledExceptionEventArgs e)
+		{
+			Trace.WriteLine(e.ExceptionObject);
 		}
 
 		#endregion

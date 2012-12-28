@@ -1,0 +1,8 @@
+C:\GitHub\toe\src\dotnet\Toe.Resources\bin\Debug\Toe.Resources.dll
+C:\GitHub\toe\src\dotnet\Toe.Resources\bin\Debug\Toe.Resources.pdb
+C:\GitHub\toe\src\dotnet\Toe.Resources\obj\Debug\Toe.Resources.dll
+C:\GitHub\toe\src\dotnet\Toe.Resources\obj\Debug\Toe.Resources.pdb
+C:\GitHub\toe\src\dotnet\Toe.Resources\bin\Debug\Autofac.Configuration.dll
+C:\GitHub\toe\src\dotnet\Toe.Resources\bin\Debug\Autofac.dll
+C:\GitHub\toe\src\dotnet\Toe.Resources\bin\Debug\Autofac.xml
+C:\GitHub\toe\src\dotnet\Toe.Resources\obj\Debug\Toe.Resources.net40.vs2010.csprojResolveAssemblyReference.cache

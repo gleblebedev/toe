@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using Toe.Editors.Interfaces;
 using Toe.Editors.Interfaces.Bindings;
 using Toe.Editors.Interfaces.Views;
+using Toe.Resources;
 using Toe.Utils.Mesh.Marmalade;
 using Toe.Utils.Mesh.Marmalade.IwResManager;
 
@@ -24,8 +25,8 @@ namespace Toe.Editors.Marmalade
 			var resourceGroup = new GroupBox { Text = "Resource Group", Dock = DockStyle.Fill, AutoSize = true, Padding = new Padding(10) };
 			this.Controls.Add(resourceGroup);
 
-			var collectionView = new CollectionView<Managed>(a=>editorEnvironment.EditorFor(a)) { Dock = DockStyle.Fill };
-			new PropertyBinding<ResGroup,IList<Managed>>(collectionView, dataContext, m=>m.EmbeddedResources, null);
+			var collectionView = new CollectionView<IResourceFile>(a=>editorEnvironment.EditorFor(a)) { Dock = DockStyle.Fill };
+			new PropertyBinding<ResGroup, IList<IResourceFile>>(collectionView, dataContext, m => m.ExternalResources, null);
 		}
 
 		#region Implementation of IView

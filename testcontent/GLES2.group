@@ -1,0 +1,8 @@
+CIwResGroup
+{
+	name	"Example"
+
+	"./FunkyShader.itx"
+	"./FunkyVicGLES2.mtl"
+	"./FunkyVicGLES2.geo"
+}

@@ -34,11 +34,16 @@ namespace Toe.Editors
 			this.gl.MouseMove += this.OnSceneMouseMove;
 			this.gl.MouseEnter += this.OnSceneMouseEnter;
 			this.gl.MouseLeave += this.OnSceneMouseLeave;
-			this.camera.LookAt(new Vector3(512, 64, 1024), new Vector3(0, 0, 0), new Vector3(0, 0, 1));
-			this.CameraController = new Autodesk3DMaxCompatibleController { Camera = this.camera };
+			this.Camera.LookAt(new Vector3(512, 64, 1024), new Vector3(0, 0, 0), new Vector3(0, 0, 1));
+			this.CameraController = new Autodesk3DMaxCompatibleController { Camera = this.Camera };
 		}
 
 		#endregion
+
+		public void Refresh()
+		{
+			gl.Invalidate();
+		}
 
 		#region Public Properties
 
@@ -65,6 +70,14 @@ namespace Toe.Editors
 			}
 		}
 
+		public EditorCamera Camera
+		{
+			get
+			{
+				return this.camera;
+			}
+		}
+
 		#endregion
 
 		#region Methods
@@ -87,7 +100,7 @@ namespace Toe.Editors
 			this.gl.MakeCurrent();
 			GL.Enable(EnableCap.DepthTest);
 
-			this.camera.SetProjection();
+			this.Camera.SetProjection();
 			this.RenderScene();
 
 			GL.Disable(EnableCap.DepthTest);
@@ -147,7 +160,7 @@ namespace Toe.Editors
 			// Use all of the glControl painting area
 			GL.Viewport(0, 0, w, h);
 
-			this.camera.AspectRation = w / (float)h;
+			this.Camera.AspectRation = w / (float)h;
 		}
 
 		#endregion

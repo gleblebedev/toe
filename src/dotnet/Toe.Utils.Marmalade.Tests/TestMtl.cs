@@ -1,30 +1,33 @@
 using System;
 using System.IO;
 
+using Autofac;
+
 using NUnit.Framework;
 
+using Toe.Resources;
 using Toe.Utils.Mesh.Marmalade.IwGx;
 using Toe.Utils.Mesh.Marmalade.IwResManager;
 
 namespace Toe.Utils.Mesh.Marmalade.Tests
 {
 	[TestFixture]
-	public class TestMtl
+	public class TestMtl:BaseTest
 	{
 		#region Public Methods and Operators
 
 		[Test]
 		public void TestMarmaladeFolder()
 		{
-			var r = new TextResourceReader();
-
-			var s = new FolderTreeSearch(@"C:\Marmalade\6.2\examples\", "*.mtl");
-			foreach (var file in s)
+			using (IResourceManager rm = Container.Resolve<IResourceManager>())
 			{
-				Console.WriteLine(file);
-				using (var fileStream = File.OpenRead(file))
+				var s = new FolderTreeSearch(@"C:\Marmalade\6.2\examples\", "*.mtl");
+				foreach (var file in s)
 				{
-					r.Load(fileStream, Path.GetDirectoryName(Path.GetFullPath(file)));
+					Console.WriteLine(file);
+					var f = rm.EnsureFile(file);
+					f.Open();
+					f.Close();
 				}
 			}
 		}

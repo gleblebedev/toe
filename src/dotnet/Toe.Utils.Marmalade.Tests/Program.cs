@@ -6,9 +6,9 @@
 
 		private static void Main(string[] args)
 		{
-			(new TestGeo()).TestLegs();
-			(new TestSkin()).TestLegs();
-			(new TestSkel()).TestLegs();
+			//(new TestGeo()).TestLegs();
+			//(new TestSkin()).TestLegs();
+			//(new TestSkel()).TestLegs();
 		}
 
 		#endregion

@@ -6,6 +6,9 @@ using System.IO;
 using Microsoft.Xna.Framework;
 #else
 using OpenTK;
+
+using Toe.Resources;
+
 #endif
 
 namespace Toe.Utils.Mesh.Marmalade.IwGraphics
@@ -15,6 +18,12 @@ namespace Toe.Utils.Mesh.Marmalade.IwGraphics
 	/// </summary>
 	public class GeoReader : IMeshReader
 	{
+		private readonly IResourceManager resourceManager;
+
+		public GeoReader(IResourceManager resourceManager)
+		{
+			this.resourceManager = resourceManager;
+		}
 
 		/// <summary>
 		/// Load mesh from stream.
@@ -23,12 +32,12 @@ namespace Toe.Utils.Mesh.Marmalade.IwGraphics
 		/// <returns>Complete parsed mesh.</returns>
 		public IMesh Load(Stream stream)
 		{
-			var m = new TextResourceReader();
-			var model = m.Load(stream, Directory.GetCurrentDirectory());
-			if (model.Count == 0) return null;
-			var model1 = ((Model)model[0]);
-			if (model1.Meshes.Count == 0) return null;
-			if (model1.Meshes.Count == 1) return model1.Meshes[0];
+			//var m = new TextResourceFormat(resourceManager);
+			//var model = m.Load(stream, Directory.GetCurrentDirectory());
+			//if (model.Count == 0) return null;
+			//var model1 = ((Model)model[0]);
+			//if (model1.Meshes.Count == 0) return null;
+			//if (model1.Meshes.Count == 1) return model1.Meshes[0];
 
 			throw new NotImplementedException();
 		}

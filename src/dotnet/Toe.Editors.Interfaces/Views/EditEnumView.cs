@@ -12,6 +12,9 @@ namespace Toe.Editors.Interfaces.Views
 		private ComboBox comboBox;
 
 		private EnumWellKnownValues wellKnownValues;
+
+		private bool suppressValueChangeEvent;
+
 		public override System.Drawing.Size GetPreferredSize(System.Drawing.Size proposedSize)
 		{
 			return comboBox.GetPreferredSize(proposedSize);
@@ -30,28 +33,59 @@ namespace Toe.Editors.Interfaces.Views
 
 		private void UpdateDataContext(object sender, EventArgs e)
 		{
-			
+			if (suppressValueChangeEvent)
+				return;
+			suppressValueChangeEvent = true;
+			try
+			{
+				var item = comboBox.SelectedItem;
+				dataContext.Value = item;
+			}
+			finally
+			{
+				suppressValueChangeEvent = false;
+			}
 		}
 
 		private void BindKnownValues()
 		{
 			var v = comboBox.SelectedItem;
-			this.comboBox.Items.Clear();
-			if (wellKnownValues != null)
+
+			suppressValueChangeEvent = true;
+			try
 			{
-				foreach (var enumWellKnownValue in wellKnownValues)
+
+				this.comboBox.Items.Clear();
+				if (wellKnownValues != null)
 				{
-					this.comboBox.Items.Add(enumWellKnownValue.Key);
+					foreach (var enumWellKnownValue in wellKnownValues)
+					{
+						this.comboBox.Items.Add(enumWellKnownValue.Key);
+					}
 				}
+				comboBox.SelectedItem = v;
 			}
-			comboBox.SelectedItem = v;
+			finally
+			{
+				suppressValueChangeEvent = false;
+			}
 		}
 
 		private void UpdateTextBox(object sender, DataContextChangedEventArgs e)
 		{
+			if (suppressValueChangeEvent)
+				return;
 			if (this.dataContext.Value != null)
 			{
-				comboBox.SelectedItem = this.dataContext.Value;
+				suppressValueChangeEvent = true;
+				try
+				{
+					comboBox.SelectedItem = this.dataContext.Value;
+				}
+				finally
+				{
+					suppressValueChangeEvent = false;
+				}
 			}
 		}
 

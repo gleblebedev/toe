@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using Toe.Editors.Interfaces;
 using Toe.Editors.Interfaces.Bindings;
 using Toe.Editors.Interfaces.Views;
+using Toe.Resources;
 using Toe.Utils.Mesh.Marmalade;
 using Toe.Utils.Mesh.Marmalade.IwGx;
 
@@ -15,31 +16,34 @@ namespace Toe.Editors.Marmalade
 	public class ResourceFileEditor : System.Windows.Forms.UserControl, IResourceEditor
 	{
 		private readonly IEditorEnvironment editorEnvironment;
+
+		private readonly IResourceManager resourceManager;
+
 		private SplitContainer itemsPropertiesSplitter;
 
 		private DataContextContainer dataContext = new DataContextContainer();
 
-		public ResourceFileEditor(IEditorEnvironment editorEnvironment)
+		private IResourceFile resourceFile;
+
+		public ResourceFileEditor(IEditorEnvironment editorEnvironment, IResourceManager resourceManager)
 		{
 			this.editorEnvironment = editorEnvironment;
+			this.resourceManager = resourceManager;
 			this.Dock = DockStyle.Fill;
 
 			this.InitializeComponent();
 			this.InitializeEditor();
-
-
-		
 		}
 
 		private void InitializeEditor()
 		{
 			var collectionView = new ListBox() { Dock = DockStyle.Fill };
-			collectionView.DisplayMember = "Name";
+			collectionView.DisplayMember = "Resource";
 			//collectionView.DataBindings.Add(new Binding("Text", Me._listOfItems, "SelectedItem.Comment", True, DataSourceUpdateMode.OnPropertyChanged))
 
 			this.dataContext.DataContextChanged += (s, a) => collectionView.DataSource = this.dataContext.Value;
 			
-			collectionView.SelectedIndexChanged += (s, a) => this.ShowEditorFor(collectionView.SelectedItem);
+			collectionView.SelectedIndexChanged += (s, a) => this.ShowEditorFor((IResourceFileItem)collectionView.SelectedItem);
 			
 			//var collectionView = new CollectionView<Managed>(PreviewFor) { Dock = DockStyle.Fill };
 			//new DataContextBinding(collectionView, dataContext, true);
@@ -47,15 +51,8 @@ namespace Toe.Editors.Marmalade
 			//itemsPropertiesSplitter.Panel2Collapsed = true;
 		}
 
-		private IView PreviewFor(Managed arg)
-		{
-			var managedPreview = new ManagedPreview();
-			managedPreview.MouseUp += (s, a) => { ShowEditorFor(((ManagedPreview)s).Managed); };
 
-			return managedPreview;
-		}
-
-		private void ShowEditorFor(object managed)
+		private void ShowEditorFor(IResourceFileItem managed)
 		{
 			var controlCollection = itemsPropertiesSplitter.Panel2.Controls;
 			if (managed == null)
@@ -78,9 +75,9 @@ namespace Toe.Editors.Marmalade
 				{
 					var existingValue = existingView.DataContext.Value;
 					if (existingValue != null)
-						if (managed.GetType() == existingValue.GetType())
+						if (managed.Resource.GetType() == existingValue.GetType())
 						{
-							existingView.DataContext.Value = managed;
+							existingView.DataContext.Value = managed.Resource;
 							return;
 						}
 				}
@@ -92,8 +89,8 @@ namespace Toe.Editors.Marmalade
 				c.Dispose();
 			}
 
-			var view = this.editorEnvironment.EditorFor(managed);
-			view.DataContext.Value = managed;
+			var view = this.editorEnvironment.EditorFor(managed.Resource);
+			view.DataContext.Value = managed.Resource;
 			var v = view as Control;
 			v.Dock = DockStyle.Fill;
 			controlCollection.Add((Control)v);
@@ -110,22 +107,34 @@ namespace Toe.Editors.Marmalade
 				return this;
 			}
 		}
-
-		public void LoadFile(string filename)
+		protected override void Dispose(bool disposing)
 		{
-			if (filename.EndsWith(".group.bin"))
+			if (disposing)
 			{
-
+				CloseFile();
 			}
-			else
+			base.Dispose(disposing);
+		}
+
+		public void CloseFile()
+		{
+			if (this.resourceFile != null)
 			{
-				using (var fileStream = File.OpenRead(filename))
-				{
-					var r = new TextResourceReader();
-					this.dataContext.Value = r.Load(fileStream, Path.GetDirectoryName(Path.GetFullPath(filename)));
-				}
+				this.resourceFile.Close();
+				this.dataContext.Value = null;
+				this.resourceFile = null;
 			}
 		}
+		public void LoadFile(string filename)
+		{
+			CloseFile();
+			this.resourceFile = resourceManager.EnsureFile(filename);
+			this.resourceFile.Open();
+
+			this.dataContext.Value = this.resourceFile.Items;
+		}
+
+		
 
 		public void RecordCommand(string command)
 		{
@@ -133,18 +142,19 @@ namespace Toe.Editors.Marmalade
 
 		public void SaveFile(string filename)
 		{
-			if (filename.EndsWith(".group.bin"))
-			{
-				throw new NotImplementedException();
-			}
-			else
-			{
-				using (var stream = new MemoryStream())
-				{
-					var w = new TextResourceWriter();
-					w.Save(stream, (IEnumerable<Managed>)this.dataContext.Value);
-				}
-			}
+			//throw new NotImplementedException();
+			//if (filename.EndsWith(".group.bin"))
+			//{
+			//    throw new NotImplementedException();
+			//}
+			//else
+			//{
+			//    using (var stream = new MemoryStream())
+			//    {
+			//        var w = new TextResourceWriter();
+			//        w.Save(stream, (IEnumerable<Managed>)this.dataContext.Value);
+			//    }
+			//}
 		}
 
 		public void StopRecorder()

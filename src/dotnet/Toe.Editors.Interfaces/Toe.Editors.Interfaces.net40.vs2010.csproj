@@ -82,6 +82,9 @@
     <Compile Include="Views\ColorView.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Views\EditShaderView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Views\EditBoolView.cs">
       <SubType>UserControl</SubType>
     </Compile>
