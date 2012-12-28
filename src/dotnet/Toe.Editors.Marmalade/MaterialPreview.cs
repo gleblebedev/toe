@@ -23,6 +23,12 @@ namespace Toe.Editors.Marmalade
 		{
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
+
+			if (editor.Material == null)
+				return;
+			if (editor.Material.Invisible)
+				return;
+
 			GL.PushAttrib(AttribMask.AllAttribBits);
 
 			GL.Enable(EnableCap.Lighting);
@@ -30,8 +36,6 @@ namespace Toe.Editors.Marmalade
 			GL.Light(LightName.Light0, LightParameter.Position, new float[]{Camera.Pos.X,Camera.Pos.Y,Camera.Pos.Z});
 
 
-			if (editor.Material == null)
-				return;
 
 			editor.Material.ApplyOpenGL();
 			RenderBox(250);

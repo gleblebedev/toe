@@ -687,6 +687,8 @@ namespace Toe.Utils.Mesh.Marmalade.IwGx
 			if (resource != null)
 			{
 				resource.ApplyOpenGL(0);
+				SetFiltering(0);
+				
 			}
 			else
 			{
@@ -698,6 +700,7 @@ namespace Toe.Utils.Mesh.Marmalade.IwGx
 			if (resource != null)
 			{
 				resource.ApplyOpenGL(1);
+				SetFiltering(1);
 				switch (EffectPreset)
 				{
 					case EffectPreset.DEFAULT:
@@ -733,6 +736,7 @@ namespace Toe.Utils.Mesh.Marmalade.IwGx
 			if (resource != null)
 			{
 				resource.ApplyOpenGL(2);
+				SetFiltering(2);
 			}
 			else
 			{
@@ -744,11 +748,27 @@ namespace Toe.Utils.Mesh.Marmalade.IwGx
 			if (resource != null)
 			{
 				resource.ApplyOpenGL(3);
+				SetFiltering(3);
 			}
 			else
 			{
 				GL.ActiveTexture(TextureUnit.Texture3);
 				GL.Disable(EnableCap.Texture2D);
+			}
+		}
+
+		private void SetFiltering(int i)
+		{
+			GL.ActiveTexture(TextureUnit.Texture0+i);
+			if (this.filtering)
+			{
+				GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
+				GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+			}
+			else
+			{
+				GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
+				GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
 			}
 		}
 

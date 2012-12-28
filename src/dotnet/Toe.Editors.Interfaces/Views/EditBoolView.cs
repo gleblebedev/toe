@@ -12,15 +12,12 @@ namespace Toe.Editors.Interfaces.Views
 		public EditBoolView()
 		{
 			this.dataContext.DataContextChanged += this.UpdateTextBox;
-			this.ViewControl.TextChanged += this.UpdateDataContext;
+			this.ViewControl.CheckedChanged += this.UpdateDataContext;
 		}
 
 		private void UpdateDataContext(object sender, EventArgs e)
 		{
-			if (!Equals(this.DataContext.Value, this.ViewControl.Text))
-			{
-				this.DataContext.Value = this.ViewControl.Checked;
-			}
+			this.DataContext.Value = this.ViewControl.Checked;
 		}
 
 
