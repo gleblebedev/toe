@@ -21,6 +21,8 @@ namespace Toe.Editors.Geometry
 
 		private uint vbo;
 
+		private string currentFileName;
+
 		#endregion
 
 		#region Constructors and Destructors
@@ -32,6 +34,14 @@ namespace Toe.Editors.Geometry
 		}
 
 		#endregion
+
+		public string CurrentFileName
+		{
+			get
+			{
+				return currentFileName;
+			}
+		}
 
 		#region Public Properties
 
@@ -49,6 +59,7 @@ namespace Toe.Editors.Geometry
 
 		public void LoadFile(string filename)
 		{
+			this.currentFileName = filename;
 			using (var stream = File.OpenRead(filename))
 			{
 				this.mesh = this._meshReader.Load(stream);

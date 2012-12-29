@@ -10,9 +10,33 @@ namespace Toe.Utils.Mesh.Marmalade.IwGx
 
 		public byte CelNum { get; set; }
 
-		public byte CelNumU { get; set; }
+		private byte celNumU = 1;
 
-		public byte CelPeriod { get; set; }
+		public byte CelNumU
+		{
+			get
+			{
+				return this.celNumU;
+			}
+			set
+			{
+				this.celNumU = value;
+			}
+		}
+
+		private byte celPeriod = 1;
+
+		public byte CelPeriod
+		{
+			get
+			{
+				return this.celPeriod;
+			}
+			set
+			{
+				this.celPeriod = value;
+			}
+		}
 
 		protected virtual void RaisePropertyChanged(string propertyName)
 		{

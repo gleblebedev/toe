@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -39,9 +40,19 @@ namespace Toe.Editors.Marmalade
 		{
 			var collectionView = new ListBox() { Dock = DockStyle.Fill };
 			collectionView.DisplayMember = "Resource";
-			//collectionView.DataBindings.Add(new Binding("Text", Me._listOfItems, "SelectedItem.Comment", True, DataSourceUpdateMode.OnPropertyChanged))
 
-			this.dataContext.DataContextChanged += (s, a) => collectionView.DataSource = this.dataContext.Value;
+			this.dataContext.DataContextChanged += (s, a) =>
+				{
+					collectionView.DataSource = this.dataContext.Value;
+					var list = this.dataContext.Value as IList;
+					if (list != null)
+					{
+						if (list.Count == 1)
+							itemsPropertiesSplitter.Panel1Collapsed = true;
+						else
+							itemsPropertiesSplitter.Panel1Collapsed = false;
+					}
+				};
 			
 			collectionView.SelectedIndexChanged += (s, a) => this.ShowEditorFor((IResourceFileItem)collectionView.SelectedItem);
 			
@@ -107,6 +118,15 @@ namespace Toe.Editors.Marmalade
 				return this;
 			}
 		}
+
+		public string CurrentFileName
+		{
+			get
+			{
+				return resourceFile.FilePath;
+			}
+		}
+
 		protected override void Dispose(bool disposing)
 		{
 			if (disposing)

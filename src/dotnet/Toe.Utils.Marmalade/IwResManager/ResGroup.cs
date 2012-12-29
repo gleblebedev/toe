@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -48,8 +49,26 @@ namespace Toe.Utils.Mesh.Marmalade.IwResManager
 		public void AddFile(string fullPath)
 		{
 			var file = resourceManager.EnsureFile(fullPath);
-			if(file != null)
+			foreach (var f in externalResources)
+			{
+				if (f == file)
+					return;
+			}
+
+			if (file != null)
+			{
 				externalResources.Add(file);
+
+				var extension = Path.GetExtension(file.FilePath);
+				if (string.Compare(extension, ".geo",StringComparison.InvariantCultureIgnoreCase)==0)
+				{
+					var mtl = Path.ChangeExtension(file.FilePath, ".mtl");
+					if (File.Exists(mtl))
+					{
+						AddFile(mtl);
+					}
+				}
+			}
 		}
 	}
 }

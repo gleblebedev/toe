@@ -27,6 +27,8 @@ namespace Toe.Editors.Marmalade
 
 			var collectionView = new CollectionView<IResourceFile>(a=>editorEnvironment.EditorFor(a)) { Dock = DockStyle.Fill };
 			new PropertyBinding<ResGroup, IList<IResourceFile>>(collectionView, dataContext, m => m.ExternalResources, null);
+			resourceGroup.Controls.Add(collectionView);
+
 		}
 
 		#region Implementation of IView

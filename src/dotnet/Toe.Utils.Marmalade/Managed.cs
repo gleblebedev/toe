@@ -1,11 +1,12 @@
 using System;
 using System.ComponentModel;
+using System.Globalization;
 
 using Toe.Resources;
 
 namespace Toe.Utils.Mesh.Marmalade
 {
-	public abstract class Managed: INotifyPropertyChanged, IDisposable
+	public abstract class Managed : INotifyPropertyChanging, INotifyPropertyChanged, IDisposable, IBasePathProvider
 	{
 		~Managed()
 		{
@@ -31,6 +32,7 @@ namespace Toe.Utils.Mesh.Marmalade
 			{
 				if (this.nameHash != value)
 				{
+					this.RaisePropertyChanging("NameHash");
 					this.nameHash = value;
 					this.RaisePropertyChanged("NameHash");
 				}
@@ -50,6 +52,7 @@ namespace Toe.Utils.Mesh.Marmalade
 			{
 				if (this.name != value)
 				{
+					this.RaisePropertyChanging("Name");
 					this.name = value;
 					this.RaisePropertyChanged("Name");
 					this.NameHash = Hash.Get(Name);
@@ -69,6 +72,7 @@ namespace Toe.Utils.Mesh.Marmalade
 			{
 				if (this.basePath != value)
 				{
+					this.RaisePropertyChanging("BasePath");
 					this.basePath = value;
 					this.RaisePropertyChanged("BasePath");
 				}
@@ -80,16 +84,26 @@ namespace Toe.Utils.Mesh.Marmalade
 			if (PropertyChanged != null)
 				PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 		}
-
+		protected virtual void RaisePropertyChanging(string propertyName)
+		{
+			if (PropertyChanging != null)
+				PropertyChanging(this, new PropertyChangingEventArgs(propertyName));
+		}
 		#region Implementation of INotifyPropertyChanged
 
 		public event PropertyChangedEventHandler PropertyChanged;
 
 		#endregion
 
+		#region Implementation of INotifyPropertyChanging
+
+		public event PropertyChangingEventHandler PropertyChanging;
+
+		#endregion
+
 		public override string ToString()
 		{
-			return Name+" ("+this.GetType().Name+")";
+			return string.Format(CultureInfo.InvariantCulture, "{0} ({1})", this.Name, this.GetType().Name);
 		}
 
 		/// <summary>

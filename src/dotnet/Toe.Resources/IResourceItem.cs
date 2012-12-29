@@ -5,5 +5,7 @@ namespace Toe.Resources
 		uint Hash { get; }
 
 		uint Type { get; }
+
+		object Value { get; }
 	}
 }

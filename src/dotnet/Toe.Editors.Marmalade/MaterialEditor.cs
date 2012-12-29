@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using Toe.Editors.Interfaces;
 using Toe.Editors.Interfaces.Bindings;
 using Toe.Editors.Interfaces.Views;
+using Toe.Resources;
 using Toe.Utils.Mesh.Marmalade.IwGx;
 
 using Control = System.Windows.Forms.Control;
@@ -86,7 +87,7 @@ namespace Toe.Editors.Marmalade
 			}
 			{
 				this.stackPanel.Controls.Add(new StringView { Text = "Specify texture for stage 0 (diffuse map)" });
-				var valueCtrl = new EditTextureView { Margin = new Padding(4) };
+				var valueCtrl = new EditTextureView(editorEnvironment) { Margin = new Padding(4) };
 				this.stackPanel.Controls.Add(valueCtrl);
 				new PropertyBinding<Material, ResourceReference>(
 					valueCtrl, this.dataContext, mtl => mtl.Texture0, null);
@@ -94,7 +95,7 @@ namespace Toe.Editors.Marmalade
 
 			{
 				this.stackPanel.Controls.Add(new StringView { Text = "Specify texture for stage 1" });
-				var valueCtrl = new EditTextureView { Margin = new Padding(4) };
+				var valueCtrl = new EditTextureView(editorEnvironment) { Margin = new Padding(4) };
 				this.stackPanel.Controls.Add(valueCtrl);
 				new PropertyBinding<Material, ResourceReference>(
 					valueCtrl, this.dataContext, mtl => mtl.Texture1, null);

@@ -8,6 +8,9 @@ using Microsoft.Xna.Framework;
 #else
 using System.Drawing;
 using OpenTK;
+
+using Toe.Resources;
+
 #endif
 
 namespace Toe.Utils.Mesh.Marmalade
@@ -150,6 +153,24 @@ namespace Toe.Utils.Mesh.Marmalade
 			//TODO: check if it is string
 			this.Consume();
 			return l;
+		}
+
+		public void ConsumeResourceReference(ResourceReference resourceReference)
+		{
+			var l = this.GetLexem();
+			this.Consume();
+			if (l.IndexOfAny(new char[]{'\\','/'},0) >= 0)
+			{
+				resourceReference.FileReference = l;
+			}
+			else if (File.Exists(Path.Combine(BasePath, l)))
+			{
+				resourceReference.FileReference = l;
+			}
+			else
+			{
+				resourceReference.NameReference = l;
+			}
 		}
 
 		public Vector2 ConsumeVector2()
@@ -430,6 +451,49 @@ namespace Toe.Utils.Mesh.Marmalade
 		public T ConsumeEnum<T>()
 		{
 			return (T)Enum.Parse(typeof(T), this.ConsumeString());
+		}
+
+		public void Error(string message)
+		{
+			throw new TextParserException(message);
+
+		}
+
+		public string ConsumeBlock()
+		{
+			this.Consume("{");
+			int depth = 1;
+			this.sb.Clear(); 
+			if (this.lexemReady)
+			{
+				this.sb.Append(this.lexem);
+			}
+			for (; ; )
+			{
+				if (nextChar < 0)
+				{
+					this.lexem = this.sb.ToString();
+					this.lexemReady = false;
+					return this.lexem;
+				}
+				if (nextChar == '{')
+				{
+					++depth;
+				}
+				if (nextChar == '}')
+				{
+					--depth;
+					if (depth == 0)
+					{
+						this.nextChar = this.reader.Read();
+						this.lexem = this.sb.ToString();
+						this.lexemReady = false;
+						return this.lexem;
+					}
+				}
+				this.sb.Append((char)this.nextChar);
+				this.nextChar = this.reader.Read();
+			}
 		}
 	}
 }

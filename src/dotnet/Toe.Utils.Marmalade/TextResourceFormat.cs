@@ -40,7 +40,7 @@ namespace Toe.Utils.Mesh.Marmalade
 					if (lexem == null) return items;
 					if (lexem == "CIwMaterial")
 					{
-						items.Add(new MtlReader(resourceManager).Parse(parser));
+						items.Add(new MtlReader(resourceManager, context).Parse(parser));
 						continue;
 					}
 					if (lexem == "CIwModel")
@@ -73,9 +73,8 @@ namespace Toe.Utils.Mesh.Marmalade
 					}
 					if (lexem == "CIwGxShaderTechnique")
 					{
-						throw new NotImplementedException("CIwGxShaderTechnique");
-						//var item = new SkinReader().Parse(parser);
-						//items.Add(item);
+						var item = new ShaderReader(resourceManager).Parse(parser);
+						items.Add(item);
 						continue;
 					}
 					parser.UnknownLexem();

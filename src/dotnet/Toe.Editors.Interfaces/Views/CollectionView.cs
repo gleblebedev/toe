@@ -22,7 +22,6 @@ namespace Toe.Editors.Interfaces.Views
 		public CollectionView(Func<T,IView> viewFabric)
 		{
 			stackPanel = new StackPanel() { Dock = DockStyle.Fill };
-
 			this.Controls.Add(stackPanel);
 			this.viewFabric = viewFabric;
 			dataContext.DataContextChanged += this.OnDataContextChanged;

@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 #else
 using OpenTK.Graphics.OpenGL;
+
+using Toe.Resources;
+
 #endif
 
 namespace Toe.Utils.Mesh
@@ -61,7 +64,22 @@ namespace Toe.Utils.Mesh
 		}
 #endif
 
-		public string Material { get; set; }
+		private string material;
+
+		public string Material
+		{
+			get
+			{
+				return this.material;
+			}
+			set
+			{
+				if (this.material != value)
+				{
+					this.material = value;
+				}
+			}
+		}
 
 		#endregion
 	}

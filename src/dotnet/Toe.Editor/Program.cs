@@ -8,6 +8,7 @@ using Autofac;
 
 using Toe.Editors.Interfaces;
 using Toe.Editors.Marmalade;
+using Toe.Gx;
 using Toe.Resources;
 using Toe.Utils.Mesh.Marmalade;
 
@@ -40,6 +41,8 @@ namespace Toe.Editor
 			cb.RegisterType<TextResourceFormat>().As<IResourceFileFormat>().SingleInstance();
 			cb.RegisterType<TextureResourceFormat>().As<IResourceFileFormat>().SingleInstance();
 			cb.RegisterType<EditorResourceErrorHandler>().As<IResourceErrorHandler>().SingleInstance();
+			cb.RegisterType<ToeGrapicsContext>().As<ToeGrapicsContext>().SingleInstance();
+			
 			cb.RegisterType<MainEditorWindow>().SingleInstance();
 
 			using (container = cb.Build())
@@ -57,4 +60,5 @@ namespace Toe.Editor
 
 		#endregion
 	}
+
 }

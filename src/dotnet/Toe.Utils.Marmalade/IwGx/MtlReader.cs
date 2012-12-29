@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
+using Autofac;
+
 using Toe.Resources;
 
 namespace Toe.Utils.Mesh.Marmalade.IwGx
@@ -12,9 +14,12 @@ namespace Toe.Utils.Mesh.Marmalade.IwGx
 	{
 		private readonly IResourceManager resourceManager;
 
-		public MtlReader(IResourceManager resourceManager)
+		private readonly IComponentContext context;
+
+		public MtlReader(IResourceManager resourceManager, IComponentContext context)
 		{
 			this.resourceManager = resourceManager;
+			this.context = context;
 		}
 
 		public IList<Material> Load(Stream stream)
@@ -30,7 +35,8 @@ namespace Toe.Utils.Mesh.Marmalade.IwGx
 
 		public Managed Parse(TextParser parser)
 		{
-			Material material = new Material(resourceManager);
+			
+			Material material = context.Resolve<Material>();
 			material.BasePath = parser.BasePath;
 			parser.Consume("CIwMaterial");
 			parser.Consume("{");
@@ -146,19 +152,25 @@ namespace Toe.Utils.Mesh.Marmalade.IwGx
 				if (attribute == "texture0" || attribute == "mapDiffuse")
 					{
 						parser.Consume();
-						material.Texture0.FileReference = parser.ConsumeString();
+						parser.ConsumeResourceReference(material.Texture0);
 						continue;
 					}
 					if (attribute == "texture1")
 					{
 						parser.Consume();
-						material.Texture1.FileReference = parser.ConsumeString();
+						parser.ConsumeResourceReference(material.Texture1);
 						continue;
 					}
 					if (attribute == "texture2")
 					{
 						parser.Consume();
-						material.Texture2.FileReference = parser.ConsumeString();
+						parser.ConsumeResourceReference(material.Texture2);
+						continue;
+					}
+					if (attribute == "texture3")
+					{
+						parser.Consume();
+						parser.ConsumeResourceReference(material.Texture3);
 						continue;
 					}
 					if (attribute == "effectPreset")
@@ -184,13 +196,13 @@ namespace Toe.Utils.Mesh.Marmalade.IwGx
 							case "MODULATE":
 								material.BlendMode = BlendMode.MODULATE;
 								break;
-							case "BLEND_MODULATE_2X":
+							case "MODULATE_2X":
 								material.BlendMode = BlendMode.MODULATE_2X;
 								break;
-							case "BLEND_MODULATE_4X":
+							case "MODULATE_4X":
 								material.BlendMode = BlendMode.MODULATE_4X;
 								break;
-							case "BLEND_REPLACE":
+							case "REPLACE":
 								material.BlendMode = BlendMode.REPLACE;
 								break;
 							default:
@@ -201,7 +213,7 @@ namespace Toe.Utils.Mesh.Marmalade.IwGx
 					if (attribute == "shaderTechnique")
 					{
 						parser.Consume();
-						material.ShaderTechnique.FileReference = parser.ConsumeString();
+						parser.ConsumeResourceReference(material.ShaderTechnique);
 						continue;
 					}
 					if (attribute == "vertexShader")

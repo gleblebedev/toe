@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
 
@@ -28,13 +29,26 @@ namespace Toe.Editor
 			base.OnLoad(e);
 
 			//var filename = @"C:\Marmalade\6.2\examples\games\kartz\data\environment\track_01\track_01.group";
-			//var filename = @"C:\GitHub\toe\testcontent\GLES2.group";
+			OpenFile(@"C:\Marmalade\6.2\examples\IwGraphics\data\scalablePipeline\bike.group");
 			//OpenFile(@"C:\GitHub\toe\testcontent\FunkyShader.itx");
-			OpenFile(@"C:\GitHub\toe\testcontent\FunkyVicGLES2.mtl");
+			//OpenFile(@"C:\GitHub\toe\testcontent\FunkyVicGLES2.mtl");
 		}
 
 		public void OpenFile(string filename)
 		{
+			foreach (TabPage fileTab in fileTabs.TabPages)
+			{
+				var tag = fileTab.Tag as IResourceEditor;
+				if (tag != null)
+				{
+					if (string.Compare(tag.CurrentFileName, filename, StringComparison.InvariantCultureIgnoreCase) == 0)
+					{
+						fileTab.Select();
+						return;
+					}
+				}
+			}
+
 			var resourceEditor = CreateEditor(filename);
 			if (resourceEditor == null)
 				return;

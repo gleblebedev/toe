@@ -54,11 +54,25 @@ namespace Toe.Resources
 			}
 		}
 
+		public string FilePath
+		{
+			get
+			{
+				return this.filePath;
+			}
+		}
+
 		#region Implementation of IResourceFile
 
 		public void Close()
 		{
 			--referenceCounter;
+			if (referenceCounter == 0)
+			{
+				//TODO: notify Items property changed
+				this.DropResources(this.resources);
+				this.resources = null;
+			}
 		}
 
 		public void Open()
@@ -78,11 +92,65 @@ namespace Toe.Resources
 			{
 				this.resourceFileFormat = this.ChooseReader();
 				if (this.resourceFileFormat == null) throw new FormatException(string.Format(CultureInfo.InvariantCulture, "Can't read {0}", this.filePath));
+				this.DropResources(this.resources);
 				this.resources = this.resourceFileFormat.Read(filePath);
+				this.ProvideResources(this.resources);
+
+				//TODO: subscribe on list changes
 			}
 			catch(Exception ex)
 			{
 				errorHandler.CanNotRead(filePath, ex);
+			}
+		}
+
+		private void ProvideResources(IEnumerable<IResourceFileItem> resourceFileItems)
+		{
+			if (resourceFileItems == null)
+				return;
+			foreach (var item in resourceFileItems)
+			{
+				resourceManager.ProvideResource(item.Type, item.NameHash, item.Resource);
+				SubscribeOnNameChange(item);
+			}
+		}
+
+		private void DropResources(IEnumerable<IResourceFileItem> resourceFileItems)
+		{
+			if (resourceFileItems == null)
+				return;
+			foreach (var item in resourceFileItems)
+			{
+				this.UnsubscribeOnNameChange(item);
+				resourceManager.RetractResource(item.Type, item.NameHash, item.Resource);
+			}
+		}
+
+		private void SubscribeOnNameChange(IResourceFileItem item)
+		{
+			item.PropertyChanged += ItemPropertyChanged;
+			item.PropertyChanging += ItemPropertyChanging;
+		}
+		private void UnsubscribeOnNameChange(IResourceFileItem item)
+		{
+			item.PropertyChanged -= ItemPropertyChanged;
+			item.PropertyChanging -= ItemPropertyChanging;
+		}
+		private void ItemPropertyChanging(object sender, PropertyChangingEventArgs e)
+		{
+			if (e.PropertyName == "NameHash")
+			{
+				var item = ((IResourceFileItem)sender);
+				resourceManager.RetractResource(item.Type, item.NameHash, item.Resource);
+			}
+		}
+
+		private void ItemPropertyChanged(object sender, PropertyChangedEventArgs e)
+		{
+			if (e.PropertyName == "NameHash")
+			{
+				var item = ((IResourceFileItem)sender);
+				resourceManager.ProvideResource(item.Type, item.NameHash, item.Resource);
 			}
 		}
 

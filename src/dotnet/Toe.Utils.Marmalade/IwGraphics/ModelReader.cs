@@ -16,28 +16,6 @@ namespace Toe.Utils.Mesh.Marmalade.IwGraphics
 	{
 		#region Public Methods and Operators
 
-		///// <summary>
-		///// Load mesh from stream.
-		///// </summary>
-		///// <param name="stream">Stream to read from.</param>
-		///// <returns>Complete parsed mesh.</returns>
-		//public Model Load(Stream stream)
-		//{
-			
-
-		//    using (var source = new StreamReader(stream))
-		//    {
-		//        var parser = new TextParser(source, TODO);
-
-		//        if (parser.GetLexem() == "CMesh")
-		//        {
-		//            var model = new Model();
-		//            model.Meshes.Add(ParseMesh(parser));
-		//            return model;
-		//        }
-		//        return this.Parse(parser);
-		//    }
-		//}
 
 		public Model Parse(TextParser parser)
 		{
@@ -163,7 +141,7 @@ namespace Toe.Utils.Mesh.Marmalade.IwGraphics
 			return mesh;
 		}
 
-		private ModelExtSelSetFace ParseModelExtSelSetFace(TextParser parser, StreamMesh mesh)
+		private ModelExtSelSetFace ParseModelExtSelSetFace(TextParser parser, IMesh mesh)
 		{
 			ModelExtSelSetFace sel = new ModelExtSelSetFace();
 			parser.Consume("CIwModelExtSelSetFace");

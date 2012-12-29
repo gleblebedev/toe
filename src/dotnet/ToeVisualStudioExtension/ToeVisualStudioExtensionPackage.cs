@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.InteropServices;
@@ -11,8 +13,13 @@ using Microsoft.VisualStudio.Shell.Interop;
 using Toe.Editors.Geometry;
 using Toe.Editors.Interfaces;
 using Toe.Editors.Marmalade;
+using Toe.Gx;
+using Toe.Resources;
 using Toe.ToeVsExt;
+using Toe.Utils.Mesh.Marmalade;
 using Toe.Utils.Mesh.Marmalade.IwGraphics;
+
+using IContainer = Autofac.IContainer;
 
 namespace TinyOpenEngine.ToeVisualStudioExtension
 {
@@ -45,6 +52,10 @@ namespace TinyOpenEngine.ToeVisualStudioExtension
 	[ProvideEditorExtension(typeof(EditorFactory), ".skel", 50, ProjectGuid = "{A2FE74E1-B743-11d0-AE1A-00A0C90FFFC3}",
 		TemplateDir = "Templates", NameResourceID = 105, DefaultName = "Skeleton")]
 	[ProvideEditorExtension(typeof(EditorFactory), ".mtl", 50, ProjectGuid = "{A2FE74E1-B743-11d0-AE1A-00A0C90FFFC3}",
+		TemplateDir = "Templates", NameResourceID = 105, DefaultName = "Material")]
+	[ProvideEditorExtension(typeof(EditorFactory), ".tga", 50, ProjectGuid = "{A2FE74E1-B743-11d0-AE1A-00A0C90FFFC3}",
+		TemplateDir = "Templates", NameResourceID = 105, DefaultName = "Material")]
+	[ProvideEditorExtension(typeof(EditorFactory), ".bmp", 50, ProjectGuid = "{A2FE74E1-B743-11d0-AE1A-00A0C90FFFC3}",
 		TemplateDir = "Templates", NameResourceID = 105, DefaultName = "Material")]
 	[ProvideEditorExtension(typeof(EditorFactory), ".bin", 1000, ProjectGuid = "{A2FE74E1-B743-11d0-AE1A-00A0C90FFFC3}",
 		NameResourceID = 105)]
@@ -86,9 +97,18 @@ namespace TinyOpenEngine.ToeVisualStudioExtension
 			var cb = new Autofac.ContainerBuilder();
 
 			cb.RegisterModule<AutofacModule>();
-			cb.RegisterType<EditorFactory>().As<IVsEditorFactory>().SingleInstance();
+			cb.RegisterGeneric(typeof(BindingList<>)).UsingConstructor(new Type[] { }).As(typeof(IList<>));
 			cb.RegisterType<VsEditorEnvironment>().As<IEditorEnvironment>().SingleInstance();
-			cb.RegisterInstance(this).As<Package>().ExternallyOwned();
+			cb.RegisterType<ResourceManager>().As<IResourceManager>().SingleInstance();
+			cb.RegisterType<ResourceFile>().As<IResourceFile>().InstancePerDependency();
+			cb.RegisterType<ResourceFileItem>().As<IResourceFileItem>().InstancePerDependency();
+			cb.RegisterType<ResourceEditorFactory>().As<IResourceEditorFactory>().SingleInstance();
+			cb.RegisterType<TextResourceFormat>().As<IResourceFileFormat>().SingleInstance();
+			cb.RegisterType<TextureResourceFormat>().As<IResourceFileFormat>().SingleInstance();
+			cb.RegisterType<EditorResourceErrorHandler>().As<IResourceErrorHandler>().SingleInstance();
+			cb.RegisterType<ToeGrapicsContext>().As<ToeGrapicsContext>().SingleInstance();
+			cb.RegisterType<EditorFactory>().As<IVsEditorFactory>().SingleInstance();
+			cb.RegisterInstance(this).As<Package>().As<ToeVisualStudioExtensionPackage>().ExternallyOwned();
 
 			container = cb.Build();
 
@@ -116,9 +136,20 @@ namespace TinyOpenEngine.ToeVisualStudioExtension
 			}
 		}
 
-		public IEditorEnvironment CreateEditorEnvironmentProxy()
+		//public IEditorEnvironment CreateEditorEnvironmentProxy()
+		//{
+		//    return new VsEditorEnvironment(this, container.Resolve<IResourceManager>());
+		//}
+
+		public void OpenFile(string filePath)
 		{
-			return new VsEditorEnvironment(this);
+			EnvDTE80.DTE2 dte = (EnvDTE80.DTE2)this.GetService(typeof(SDTE));
+			// http://msdn.microsoft.com/en-us/library/microsoft.visualstudio.shell.logicalview.aspx
+
+			var primary = "{00000000-0000-0000-0000-000000000000}";
+			var any = "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}";
+			var window = dte.OpenFile(primary, filePath);
+			window.Activate();
 		}
 	}
 }

@@ -9,5 +9,7 @@ namespace Toe.Resources
 		void Open();
 
 		IList<IResourceFileItem> Items { get; }
+
+		string FilePath { get; }
 	}
 }

@@ -59,14 +59,40 @@ namespace Toe.Resources
 			return item;
 		}
 
-		public IResourceItem ConsumeResource(uint type, uint hash)
+		public IResourceItem ConsumeResource(uint type, uint nameHash)
 		{
-			return EnsureItem(type, hash);
+			var consumeResource = (ResourceItem)EnsureItem(type, nameHash);
+			consumeResource.Consume();
+			return consumeResource;
 		}
 
-		
-		public void ReleaseResource(ResourceItem item)
+		public void ReleaseResource(uint type, uint nameHash)
 		{
+			var consumeResource = (ResourceItem)EnsureItem(type, nameHash);
+			consumeResource.Release();
+		}
+
+		public void ProvideResource(uint type, uint nameHash, object item)
+		{
+			var consumeResource = (ResourceItem)EnsureItem(type, nameHash);
+			consumeResource.Provide(item);
+		}
+
+		public void RetractResource(uint type, uint nameHash, object item)
+		{
+			var consumeResource = (ResourceItem)EnsureItem(type, nameHash);
+			consumeResource.Retract(item);
+		}
+
+		public object FindResource(uint type, uint hash)
+		{
+			var typeCollection = this.EnsureTypeCollection(type);
+			IResourceItem item;
+			if (!typeCollection.TryGetValue(hash, out item))
+			{
+				return null;
+			}
+			return item.Value;
 		}
 
 		#region Implementation of IDisposable

@@ -17,6 +17,7 @@ namespace Toe.Editors.Interfaces.Views
 			: base()
 		{
 			this.label = new Button();
+			this.label.Click += (s, a) => this.OnClick(a);
 			this.label.AutoSize = true;
 			this.AutoSize = true;
 			this.Height = this.label.Height;

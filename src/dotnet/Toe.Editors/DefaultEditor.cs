@@ -8,6 +8,8 @@ namespace Toe.Editors
 	{
 		private readonly IEditorEnvironment editorEnvironment;
 
+		private string currentFileName;
+
 		#region Constructors and Destructors
 
 		public DefaultEditor(IEditorEnvironment editorEnvironment)
@@ -19,6 +21,17 @@ namespace Toe.Editors
 
 		#endregion
 
+		#region Implementation of IResourceEditor
+
+		public string CurrentFileName
+		{
+			get
+			{
+				return currentFileName;
+			}
+		}
+
+		#endregion
 		#region Explicit Interface Properties
 
 		Control IResourceEditor.Control
@@ -33,8 +46,9 @@ namespace Toe.Editors
 
 		#region Public Methods and Operators
 
-		public void LoadFile(string filename)
+		public void LoadFile(string fileName)
 		{
+			this.currentFileName = fileName;
 		}
 
 		public void RecordCommand(string command)
@@ -43,6 +57,7 @@ namespace Toe.Editors
 
 		public void SaveFile(string fileName)
 		{
+			this.currentFileName = fileName;
 		}
 
 		public void StopRecorder()

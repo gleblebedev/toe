@@ -114,6 +114,9 @@
     </Compile>
     <Compile Include="Views\EnumValueOptions.cs" />
     <Compile Include="Views\EnumWellKnownValues.cs" />
+    <Compile Include="Views\ResourceFileEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Views\SingleControlView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -127,7 +130,12 @@
   <ItemGroup>
     <None Include="Toe.snk" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Toe.Resources\Toe.Resources.net40.vs2010.csproj">
+      <Project>{15C85727-F6FC-4A28-BB34-84C327AEFF81}</Project>
+      <Name>Toe.Resources.net40.vs2010</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

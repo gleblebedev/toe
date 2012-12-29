@@ -14,7 +14,7 @@ namespace Toe.Editors.Marmalade
 		protected override void Load(ContainerBuilder builder)
 		{
 			base.Load(builder);
-
+			builder.RegisterType<Material>().As<Material>();
 			builder.RegisterType<MaterialEditor>().As<IView>().Keyed<object>(typeof(Material)).InstancePerDependency();
 			builder.RegisterType<ResGroupEditor>().As<IView>().Keyed<object>(typeof(ResGroup)).InstancePerDependency();
 			builder.RegisterType<ResourceFileEditor>().As<ResourceFileEditor>().InstancePerDependency();
@@ -39,6 +39,9 @@ namespace Toe.Editors.Marmalade
 				fileName.EndsWith(".skin", StringComparison.InvariantCultureIgnoreCase) ||
 				fileName.EndsWith(".skel", StringComparison.InvariantCultureIgnoreCase) ||
 				fileName.EndsWith(".anim", StringComparison.InvariantCultureIgnoreCase) ||
+				fileName.EndsWith(".itx", StringComparison.InvariantCultureIgnoreCase) ||
+				fileName.EndsWith(".bmp", StringComparison.InvariantCultureIgnoreCase) ||
+				fileName.EndsWith(".tga", StringComparison.InvariantCultureIgnoreCase) ||
 				fileName.EndsWith(".group", StringComparison.InvariantCultureIgnoreCase))
 			{
 				return context.Resolve<ResourceFileEditor>();

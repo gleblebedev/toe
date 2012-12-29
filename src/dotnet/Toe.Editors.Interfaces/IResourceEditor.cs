@@ -13,6 +13,8 @@ namespace Toe.Editors.Interfaces
 
 		Control Control { get; }
 
+		string CurrentFileName { get;  }
+
 		#endregion
 
 		#region Public Methods and Operators

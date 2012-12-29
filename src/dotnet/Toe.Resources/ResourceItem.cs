@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 namespace Toe.Resources
@@ -10,7 +12,11 @@ namespace Toe.Resources
 
 		private readonly uint hash;
 
-		private object value;
+		private IList<object> values = new List<object>(1);
+
+		public int referenceCounter;
+
+
 
 		public ResourceItem(ResourceManager manager, uint type, uint hash)
 		{
@@ -23,15 +29,8 @@ namespace Toe.Resources
 		{
 			get
 			{
-				return this.value;
-			}
-			set
-			{
-				if (this.value != value)
-				{
-					this.value = value;
-					this.RaisePropertyChanged("Value");
-				}
+				if (this.values.Count == 0) return null;
+				return this.values[0];
 			}
 		}
 
@@ -61,7 +60,14 @@ namespace Toe.Resources
 
 		public void Provide(object value)
 		{
-			this.value = value;
+			this.values.Add(value);
+			RaisePropertyChanged("Value");
+		}
+		public void Retract(object value)
+		{
+			if (!this.values.Remove(value))
+				throw new ApplicationException("Can't retract resource - it wasn't provided");
+			RaisePropertyChanged("Value");
 		}
 		protected virtual void RaisePropertyChanged(string property)
 		{
@@ -73,5 +79,23 @@ namespace Toe.Resources
 		public event PropertyChangedEventHandler PropertyChanged;
 
 		#endregion
+
+		internal void Consume()
+		{
+			++referenceCounter;
+		}
+
+		public bool IsInUse
+		{
+			get
+			{
+				return referenceCounter>0 && values.Count>0;
+			}
+		}
+
+		internal void Release()
+		{
+			--referenceCounter;
+		}
 	}
 }

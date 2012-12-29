@@ -15,6 +15,7 @@ namespace Toe.Resources
 			this.type = type;
 			this.resource = resource;
 			this.resource.PropertyChanged += OnPropertyChanged;
+			this.resource.PropertyChanging += OnPropertyChanging;
 		}
 
 		private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -28,9 +29,26 @@ namespace Toe.Resources
 				PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 		}
 
+		private void OnPropertyChanging(object sender, PropertyChangingEventArgs e)
+		{
+			if (e.PropertyName == "Name") RaisePropertyChanging("Name");
+			else if (e.PropertyName == "NameHash") RaisePropertyChanging("NameHash");
+		}
+		protected virtual void RaisePropertyChanging(string propertyName)
+		{
+			if (PropertyChanging != null)
+				PropertyChanging(this, new PropertyChangingEventArgs(propertyName));
+		}
+
 		#region Implementation of INotifyPropertyChanged
 
 		public event PropertyChangedEventHandler PropertyChanged;
+
+		#endregion
+
+		#region Implementation of INotifyPropertyChanging
+
+		public event PropertyChangingEventHandler PropertyChanging;
 
 		#endregion
 
@@ -55,6 +73,14 @@ namespace Toe.Resources
 			get
 			{
 				return this.resource.NameHash;
+			}
+		}
+
+		public uint Type
+		{
+			get
+			{
+				return this.type;
 			}
 		}
 	}
