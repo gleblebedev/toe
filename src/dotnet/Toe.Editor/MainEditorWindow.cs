@@ -29,7 +29,7 @@ namespace Toe.Editor
 			base.OnLoad(e);
 
 			//var filename = @"C:\Marmalade\6.2\examples\games\kartz\data\environment\track_01\track_01.group";
-			OpenFile(@"C:\Marmalade\6.2\examples\IwGraphics\data\scalablePipeline\bike.group");
+			//OpenFile(@"C:\Marmalade\6.2\examples\IwGraphics\data\scalablePipeline\bike.group");
 			//OpenFile(@"C:\GitHub\toe\testcontent\FunkyShader.itx");
 			//OpenFile(@"C:\GitHub\toe\testcontent\FunkyVicGLES2.mtl");
 		}

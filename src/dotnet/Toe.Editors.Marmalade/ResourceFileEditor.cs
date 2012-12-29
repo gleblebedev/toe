@@ -186,7 +186,9 @@ namespace Toe.Editors.Marmalade
 		private void InitializeComponent()
 		{
 			this.itemsPropertiesSplitter = new System.Windows.Forms.SplitContainer();
-			((System.ComponentModel.ISupportInitialize)(this.itemsPropertiesSplitter)).BeginInit();
+			var i = this.itemsPropertiesSplitter as System.ComponentModel.ISupportInitialize;
+			if (i != null)
+				i.BeginInit();
 			this.itemsPropertiesSplitter.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -202,7 +204,8 @@ namespace Toe.Editors.Marmalade
 			// 
 			this.Controls.Add(this.itemsPropertiesSplitter);
 			this.Name = "ResourceFileEditor";
-			((System.ComponentModel.ISupportInitialize)(this.itemsPropertiesSplitter)).EndInit();
+			if (i != null) 
+				i.EndInit();
 			this.itemsPropertiesSplitter.ResumeLayout(false);
 			this.ResumeLayout(false);
 
