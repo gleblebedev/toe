@@ -98,13 +98,13 @@
       <Project>{1D297D66-08E0-4239-9D2C-0F29F6F5A895}</Project>
       <Name>Toe.Gx.net40.vs2010</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Toe.Resources\Toe.Resources.net40.vs2010.csproj">
-      <Project>{15C85727-F6FC-4A28-BB34-84C327AEFF81}</Project>
-      <Name>Toe.Resources.net40.vs2010</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Toe.Utils.Mesh\Toe.Utils.Mesh.net40.vs2010.csproj">
       <Project>{1AB2E074-5CE6-4CD6-A379-3D6A58116319}</Project>
       <Name>Toe.Utils.Mesh.net40.vs2010</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Toe.Resources\Toe.Resources.net40.vs2010.csproj">
+      <Project>{15C85727-F6FC-4A28-BB34-84C327AEFF81}</Project>
+      <Name>Toe.Resources.net40.vs2010</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

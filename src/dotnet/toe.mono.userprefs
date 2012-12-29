@@ -4,28 +4,17 @@
     <Files>
       <File FileName="Toe.mono\Main.cs" Line="10" Column="2" />
       <File FileName="Toe\MainWindow.cs" Line="15" Column="40" />
-      <File FileName="c:\GitHub\toe\src\dotnet\Toe.Editor\MainEditorWindow.cs" Line="5" Column="7" />
+      <File FileName="c:\GitHub\toe\src\dotnet\Toe.Editor\MainEditorWindow.cs" Line="5" Column="1" />
       <File FileName="c:\GitHub\toe\src\dotnet\Toe.Editors.Marmalade\MaterialEditor.cs" Line="195" Column="5" />
-      <File FileName="Toe.Editor\Program.cs" Line="26" Column="20" />
+      <File FileName="Toe.Editor\Program.cs" Line="43" Column="33" />
       <File FileName="c:\GitHub\toe\src\dotnet\Toe.Editors.Marmalade\MaterialPreview.cs" Line="1" Column="7" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True" selected="True">
-          <Node name="Toe.Editor.mono" expanded="True">
-            <Node name="References" expanded="True" />
-          </Node>
-          <Node name="Toe.Editors.Geometry.net40.vs2010" expanded="True" />
-          <Node name="Toe.Editors.Interfaces.net40.vs2010" expanded="True" />
-          <Node name="Toe.Editors.Marmalade.net40.vs2010" expanded="True">
-            <Node name="References" expanded="True" />
-          </Node>
-          <Node name="Toe.Editors.net40.vs2010" expanded="True" />
-          <Node name="Toe.mono" expanded="True">
-            <Node name="References" expanded="True" />
-          </Node>
-          <Node name="Toe.Utils.Marmalade.net40.vs2010" expanded="True" />
-          <Node name="Toe.Utils.Mesh.net40.vs2010" expanded="True" />
+          <Node name="Toe.Editor.mono" expanded="True" />
+          <Node name="Toe.Gx.net40.vs2010" expanded="True" />
+          <Node name="Toe.Resources.net40.vs2010" expanded="True" />
         </State>
       </Pad>
     </Pads>
