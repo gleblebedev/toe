@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.IO;
-using System.Linq;
-using System.Text;
 
 using Autofac;
 
@@ -12,22 +8,21 @@ using Toe.Resources;
 
 namespace Toe.Utils.Mesh.Marmalade.IwResManager
 {
-	public class ResGroup:Managed
+	public class ResGroup : Managed
 	{
-		private readonly IResourceManager resourceManager;
-
-		private readonly IComponentContext context;
+		#region Constants and Fields
 
 		public static readonly uint TypeHash = Hash.Get("CIwResGroup");
 
-		#region Overrides of Managed
+		private readonly IComponentContext context;
 
-		public override uint GetClassHashCode()
-		{
-			return TypeHash;
-		}
+		private readonly IList<IResourceFile> externalResources;
+
+		private readonly IResourceManager resourceManager;
 
 		#endregion
+
+		#region Constructors and Destructors
 
 		public ResGroup(IResourceManager resourceManager, IComponentContext context)
 		{
@@ -36,7 +31,9 @@ namespace Toe.Utils.Mesh.Marmalade.IwResManager
 			this.externalResources = this.context.Resolve<IList<IResourceFile>>();
 		}
 
-		private readonly IList<IResourceFile> externalResources;
+		#endregion
+
+		#region Public Properties
 
 		public IList<IResourceFile> ExternalResources
 		{
@@ -46,29 +43,42 @@ namespace Toe.Utils.Mesh.Marmalade.IwResManager
 			}
 		}
 
+		#endregion
+
+		#region Public Methods and Operators
+
 		public void AddFile(string fullPath)
 		{
-			var file = resourceManager.EnsureFile(fullPath);
-			foreach (var f in externalResources)
+			var file = this.resourceManager.EnsureFile(fullPath);
+			foreach (var f in this.externalResources)
 			{
 				if (f == file)
+				{
 					return;
+				}
 			}
 
 			if (file != null)
 			{
-				externalResources.Add(file);
+				this.externalResources.Add(file);
 
 				var extension = Path.GetExtension(file.FilePath);
-				if (string.Compare(extension, ".geo",StringComparison.InvariantCultureIgnoreCase)==0)
+				if (string.Compare(extension, ".geo", StringComparison.InvariantCultureIgnoreCase) == 0)
 				{
 					var mtl = Path.ChangeExtension(file.FilePath, ".mtl");
 					if (File.Exists(mtl))
 					{
-						AddFile(mtl);
+						this.AddFile(mtl);
 					}
 				}
 			}
 		}
+
+		public override uint GetClassHashCode()
+		{
+			return TypeHash;
+		}
+
+		#endregion
 	}
 }

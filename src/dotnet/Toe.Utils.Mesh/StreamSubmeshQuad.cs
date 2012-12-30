@@ -11,6 +11,7 @@ namespace Toe.Utils.Mesh
 		public StreamSubmeshTiangleIndexes C;
 
 		public StreamSubmeshTiangleIndexes D;
+
 		#endregion
 	}
 }

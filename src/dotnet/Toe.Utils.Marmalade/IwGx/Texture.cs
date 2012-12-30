@@ -6,26 +6,23 @@ using OpenTK.Graphics.OpenGL;
 using Toe.Gx;
 using Toe.Resources;
 
-using All = OpenTK.Graphics.OpenGL.All;
-using GL = OpenTK.Graphics.OpenGL.GL;
-using PixelType = OpenTK.Graphics.OpenGL.PixelType;
+using PixelFormat = System.Drawing.Imaging.PixelFormat;
 
 namespace Toe.Utils.Mesh.Marmalade.IwGx
 {
 	public class Texture : Managed
 	{
+		#region Constants and Fields
+
 		public static readonly uint TypeHash = Hash.Get("CIwTexture");
 
 		private Bitmap bitmap;
 
-		protected override void Dispose(bool disposing)
-		{
-			base.Dispose(disposing);
-			if (disposing)
-			{
-				if (bitmap != null) bitmap.Dispose();
-			}
-		}
+		private uint textureId;
+
+		#endregion
+
+		#region Public Properties
 
 		public Bitmap Bitmap
 		{
@@ -43,33 +40,26 @@ namespace Toe.Utils.Mesh.Marmalade.IwGx
 			}
 		}
 
-		#region Overrides of Managed
-
-		public override uint GetClassHashCode()
-		{
-			return TypeHash;
-		}
-
 		#endregion
+
+		#region Public Methods and Operators
 
 		public void ApplyOpenGL(int stage)
 		{
 			GL.ActiveTexture(TextureUnit.Texture0 + stage);
 			OpenTKHelper.Assert();
 
-			if (textureId == 0)
+			if (this.textureId == 0)
 			{
-				GL.GenTextures(1, out textureId);
+				GL.GenTextures(1, out this.textureId);
 				OpenTKHelper.Assert();
 				GL.PushAttrib(AttribMask.TextureBit);
 				try
 				{
-					GL.BindTexture(TextureTarget.Texture2D, textureId);
+					GL.BindTexture(TextureTarget.Texture2D, this.textureId);
 					OpenTKHelper.Assert();
-					BitmapData data = bitmap.LockBits(
-						new System.Drawing.Rectangle(0, 0, bitmap.Width, bitmap.Height),
-						ImageLockMode.ReadOnly,
-						System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+					BitmapData data = this.bitmap.LockBits(
+						new Rectangle(0, 0, this.bitmap.Width, this.bitmap.Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
 					GL.TexImage2D(
 						TextureTarget.Texture2D,
 						0,
@@ -83,7 +73,7 @@ namespace Toe.Utils.Mesh.Marmalade.IwGx
 					GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
 					GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
 					OpenTKHelper.Assert();
-					bitmap.UnlockBits(data);
+					this.bitmap.UnlockBits(data);
 					GL.Finish();
 					OpenTKHelper.Assert();
 				}
@@ -94,11 +84,31 @@ namespace Toe.Utils.Mesh.Marmalade.IwGx
 			}
 			GL.Enable(EnableCap.Texture2D);
 			OpenTKHelper.Assert();
-			GL.BindTexture(TextureTarget.Texture2D, textureId);
+			GL.BindTexture(TextureTarget.Texture2D, this.textureId);
 			OpenTKHelper.Assert();
-
 		}
 
-		private uint textureId = 0;
+		public override uint GetClassHashCode()
+		{
+			return TypeHash;
+		}
+
+		#endregion
+
+		#region Methods
+
+		protected override void Dispose(bool disposing)
+		{
+			base.Dispose(disposing);
+			if (disposing)
+			{
+				if (this.bitmap != null)
+				{
+					this.bitmap.Dispose();
+				}
+			}
+		}
+
+		#endregion
 	}
 }

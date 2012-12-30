@@ -1,21 +1,43 @@
+using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
+
+using Autofac;
+
+using Toe.Utils.Marmalade;
+using Toe.Utils.Marmalade.IwAnim;
 
 namespace Toe.Utils.Mesh.Marmalade.IwAnim
 {
-	public class SkinReader 
+	public class SkinTextSerializer : ITextSerializer
 	{
+		private readonly IComponentContext context;
+
+		public SkinTextSerializer(IComponentContext context)
+		{
+			this.context = context;
+		}
+
+		#region Public Properties
+
+		public string DefaultFileExtension
+		{
+			get
+			{
+				return ".skin";
+			}
+		}
+
+		#endregion
+
 		#region Public Methods and Operators
 
-
-		public IMesh Parse(TextParser parser)
+		public Managed Parse(TextParser parser)
 		{
-			StreamMesh mesh = new StreamMesh();
+			AnimSkin mesh = context.Resolve<AnimSkin>();
 			parser.Consume("CIwAnimSkin");
 			parser.Consume("{");
 
-			for (;;)
+			for (; ; )
 			{
 				var attribute = parser.GetLexem();
 				if (attribute == "}")
@@ -32,13 +54,13 @@ namespace Toe.Utils.Mesh.Marmalade.IwAnim
 				if (attribute == "skeleton")
 				{
 					parser.Consume();
-					mesh.Skeleton = parser.ConsumeString();
+					parser.ConsumeResourceReference(mesh.Skeleton);
 					continue;
 				}
 				if (attribute == "model")
 				{
 					parser.Consume();
-					mesh.SkeletonModel = parser.ConsumeString();
+					parser.ConsumeResourceReference(mesh.SkeletonModel);
 					continue;
 				}
 				if (attribute == "CIwAnimSkinSet")
@@ -57,7 +79,7 @@ namespace Toe.Utils.Mesh.Marmalade.IwAnim
 
 		#region Methods
 
-		private static void ParseAnimSkinSet(TextParser parser, StreamMesh mesh)
+		private static void ParseAnimSkinSet(TextParser parser, AnimSkin mesh)
 		{
 			List<int> bones = new List<int>(4);
 			parser.Consume("{");
@@ -102,7 +124,7 @@ namespace Toe.Utils.Mesh.Marmalade.IwAnim
 			}
 		}
 
-		private static void ParseVertWeights(TextParser parser, List<int> bones, StreamMesh mesh)
+		private static void ParseVertWeights(TextParser parser, List<int> bones, AnimSkin mesh)
 		{
 			parser.Consume("{");
 			var bone = parser.ConsumeInt();

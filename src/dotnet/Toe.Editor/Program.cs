@@ -12,6 +12,7 @@ using Toe.Gx;
 using Toe.Resources;
 using Toe.Utils.Mesh.Marmalade;
 
+using AutofacModule = Toe.Utils.Marmalade.AutofacModule;
 using IContainer = Autofac.IContainer;
 
 namespace Toe.Editor
@@ -31,17 +32,16 @@ namespace Toe.Editor
 			AppDomain.CurrentDomain.UnhandledException += OnException;
 			var cb = new Autofac.ContainerBuilder();
 
+			cb.RegisterModule<Toe.Editors.Marmalade.AutofacModule>();
 			cb.RegisterModule<AutofacModule>();
-			cb.RegisterGeneric(typeof(BindingList<>)).UsingConstructor(new Type[]{}).As(typeof(IList<>));
+			cb.RegisterGeneric(typeof(BindingList<>)).UsingConstructor(new Type[] { }).As(typeof(IList<>));
 			cb.RegisterType<EditorEnvironment>().As<IEditorEnvironment>().SingleInstance();
 			cb.RegisterType<ResourceManager>().As<IResourceManager>().SingleInstance();
 			cb.RegisterType<ResourceFile>().As<IResourceFile>().InstancePerDependency();
 			cb.RegisterType<ResourceFileItem>().As<IResourceFileItem>().InstancePerDependency();
 			cb.RegisterType<ResourceEditorFactory>().As<IResourceEditorFactory>().SingleInstance();
-			cb.RegisterType<TextResourceFormat>().As<IResourceFileFormat>().SingleInstance();
-			cb.RegisterType<TextureResourceFormat>().As<IResourceFileFormat>().SingleInstance();
 			cb.RegisterType<EditorResourceErrorHandler>().As<IResourceErrorHandler>().SingleInstance();
-			cb.RegisterType<ToeGrapicsContext>().As<ToeGrapicsContext>().SingleInstance();
+			cb.RegisterType<ToeGraphicsContext>().As<ToeGraphicsContext>().SingleInstance();
 			
 			cb.RegisterType<MainEditorWindow>().SingleInstance();
 

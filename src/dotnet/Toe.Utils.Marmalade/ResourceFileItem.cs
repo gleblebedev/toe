@@ -6,59 +6,35 @@ namespace Toe.Resources
 {
 	public class ResourceFileItem : IResourceFileItem, INotifyPropertyChanged
 	{
-		private readonly uint type;
+		#region Constants and Fields
 
 		private readonly Managed resource;
+
+		private readonly uint type;
+
+		#endregion
+
+		#region Constructors and Destructors
 
 		public ResourceFileItem(uint type, Managed resource)
 		{
 			this.type = type;
 			this.resource = resource;
-			this.resource.PropertyChanged += OnPropertyChanged;
-			this.resource.PropertyChanging += OnPropertyChanging;
+			this.resource.PropertyChanged += this.OnPropertyChanged;
+			this.resource.PropertyChanging += this.OnPropertyChanging;
 		}
-
-		private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
-		{
-			if (e.PropertyName == "Name") RaisePropertyChanged("Name");
-			else if (e.PropertyName == "NameHash") RaisePropertyChanged("NameHash");
-		}
-		protected virtual void RaisePropertyChanged(string propertyName)
-		{
-			if (PropertyChanged != null)
-				PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-		}
-
-		private void OnPropertyChanging(object sender, PropertyChangingEventArgs e)
-		{
-			if (e.PropertyName == "Name") RaisePropertyChanging("Name");
-			else if (e.PropertyName == "NameHash") RaisePropertyChanging("NameHash");
-		}
-		protected virtual void RaisePropertyChanging(string propertyName)
-		{
-			if (PropertyChanging != null)
-				PropertyChanging(this, new PropertyChangingEventArgs(propertyName));
-		}
-
-		#region Implementation of INotifyPropertyChanged
-
-		public event PropertyChangedEventHandler PropertyChanged;
 
 		#endregion
 
-		#region Implementation of INotifyPropertyChanging
+		#region Public Events
+
+		public event PropertyChangedEventHandler PropertyChanged;
 
 		public event PropertyChangingEventHandler PropertyChanging;
 
 		#endregion
 
-		public object Resource
-		{
-			get
-			{
-				return this.resource;
-			}
-		}
+		#region Public Properties
 
 		public string Name
 		{
@@ -76,6 +52,14 @@ namespace Toe.Resources
 			}
 		}
 
+		public object Resource
+		{
+			get
+			{
+				return this.resource;
+			}
+		}
+
 		public uint Type
 		{
 			get
@@ -83,5 +67,51 @@ namespace Toe.Resources
 				return this.type;
 			}
 		}
+
+		#endregion
+
+		#region Methods
+
+		protected virtual void RaisePropertyChanged(string propertyName)
+		{
+			if (this.PropertyChanged != null)
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+
+		protected virtual void RaisePropertyChanging(string propertyName)
+		{
+			if (this.PropertyChanging != null)
+			{
+				this.PropertyChanging(this, new PropertyChangingEventArgs(propertyName));
+			}
+		}
+
+		private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+		{
+			if (e.PropertyName == "Name")
+			{
+				this.RaisePropertyChanged("Name");
+			}
+			else if (e.PropertyName == "NameHash")
+			{
+				this.RaisePropertyChanged("NameHash");
+			}
+		}
+
+		private void OnPropertyChanging(object sender, PropertyChangingEventArgs e)
+		{
+			if (e.PropertyName == "Name")
+			{
+				this.RaisePropertyChanging("Name");
+			}
+			else if (e.PropertyName == "NameHash")
+			{
+				this.RaisePropertyChanging("NameHash");
+			}
+		}
+
+		#endregion
 	}
 }

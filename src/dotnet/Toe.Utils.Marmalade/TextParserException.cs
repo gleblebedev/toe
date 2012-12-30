@@ -8,7 +8,6 @@ namespace Toe.Utils.Mesh.Marmalade
 		#region Constructors and Destructors
 
 		public TextParserException()
-			: base()
 		{
 		}
 
@@ -17,8 +16,8 @@ namespace Toe.Utils.Mesh.Marmalade
 		{
 		}
 
-		public TextParserException(string message,Exception ex)
-			: base(message,ex)
+		public TextParserException(string message, Exception ex)
+			: base(message, ex)
 		{
 		}
 

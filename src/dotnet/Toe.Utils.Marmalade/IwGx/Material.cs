@@ -15,7 +15,7 @@ namespace Toe.Utils.Mesh.Marmalade.IwGx
 
 		public static readonly uint TypeHash = Hash.Get("CIwMaterial");
 
-		private readonly ToeGrapicsContext grapicsContext;
+		private readonly ToeGraphicsContext graphicsContext;
 
 		private readonly IResourceManager resourceManager;
 
@@ -33,11 +33,11 @@ namespace Toe.Utils.Mesh.Marmalade.IwGx
 
 		private AlphaTestMode alphaTestMode = AlphaTestMode.DISABLED;
 
-		private byte alphaTestValue = 0;
+		private byte alphaTestValue;
 
 		private BlendMode blendMode = BlendMode.MODULATE;
 
-		private bool clampUV = false;
+		private bool clampUV;
 
 		private Color colAmbient = Color.FromArgb(255, 255, 255, 255);
 
@@ -85,10 +85,10 @@ namespace Toe.Utils.Mesh.Marmalade.IwGx
 
 		#region Constructors and Destructors
 
-		public Material(IResourceManager resourceManager, ToeGrapicsContext grapicsContext)
+		public Material(IResourceManager resourceManager, ToeGraphicsContext graphicsContext)
 		{
 			this.resourceManager = resourceManager;
-			this.grapicsContext = grapicsContext;
+			this.graphicsContext = graphicsContext;
 			this.texture0 = new ResourceReference(Texture.TypeHash, resourceManager, this);
 			this.texture0.ReferenceChanged += (s, a) => this.RaisePropertyChanged("Texture0");
 
@@ -584,17 +584,25 @@ namespace Toe.Utils.Mesh.Marmalade.IwGx
 			switch (this.CullMode)
 			{
 				case CullMode.FRONT:
-					if (!this.grapicsContext.FlipCulling)
+					if (!this.graphicsContext.FlipCulling)
+					{
 						GL.CullFace(CullFaceMode.Front);
+					}
 					else
+					{
 						GL.CullFace(CullFaceMode.Back);
+					}
 					GL.Enable(EnableCap.CullFace);
 					break;
 				case CullMode.BACK:
-					if (!this.grapicsContext.FlipCulling)
+					if (!this.graphicsContext.FlipCulling)
+					{
 						GL.CullFace(CullFaceMode.Back);
+					}
 					else
+					{
 						GL.CullFace(CullFaceMode.Front);
+					}
 					GL.Enable(EnableCap.CullFace);
 					break;
 				case CullMode.NONE:
@@ -689,7 +697,7 @@ namespace Toe.Utils.Mesh.Marmalade.IwGx
 			GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Specular, this.ColSpecular);
 
 			var technique = this.shaderTechnique.Resource as ShaderTechnique;
-			if (this.grapicsContext.IsShadersEnabled && technique != null)
+			if (this.graphicsContext.IsShadersEnabled && technique != null)
 			{
 				this.ApplyTextureToChannel(this.texture0, 0);
 				this.ApplyTextureToChannel(this.texture1, 1);

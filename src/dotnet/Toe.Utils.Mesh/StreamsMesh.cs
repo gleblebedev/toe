@@ -1,10 +1,11 @@
 using System.Collections.Generic;
+using System.Drawing;
 
+using OpenTK;
 #if WINDOWS_PHONE
 using Microsoft.Xna.Framework;
 #else
-using System.Drawing;
-using OpenTK;
+
 #endif
 
 namespace Toe.Utils.Mesh
@@ -15,7 +16,7 @@ namespace Toe.Utils.Mesh
 
 		public MeshStream<VertexWeight> weights = new MeshStream<VertexWeight>();
 
-		private readonly List<MeshBone> bones = new List<MeshBone>();
+		private readonly BoneCollection bones = new BoneCollection();
 
 		private readonly MeshStream<Color> colors = new MeshStream<Color>();
 
@@ -33,7 +34,7 @@ namespace Toe.Utils.Mesh
 
 		#region Public Properties
 
-		public List<MeshBone> Bones
+		public BoneCollection Bones
 		{
 			get
 			{
@@ -114,17 +115,7 @@ namespace Toe.Utils.Mesh
 
 		public int EnsureBone(string boneName)
 		{
-			int index;
-			for (index = 0; index < this.bones.Count; index++)
-			{
-				var bone = this.bones[index];
-				if (bone.Name == boneName)
-				{
-					return index;
-				}
-			}
-			this.bones.Add(new MeshBone { Name = boneName });
-			return index;
+			return bones.EnsureBone(boneName);
 		}
 
 		public MeshStream<Vector2> EnsureUVStream(int setId)
@@ -135,6 +126,7 @@ namespace Toe.Utils.Mesh
 			}
 			return this.UV[setId];
 		}
+
 #if WINDOWS_PHONE
 #else
 		public void RenderOpenGL()
@@ -146,6 +138,7 @@ namespace Toe.Utils.Mesh
 			}
 		}
 #endif
+
 		#endregion
 	}
 }

@@ -3,6 +3,7 @@ using Toe.Editors.Interfaces.Bindings;
 using Toe.Editors.Interfaces.Views;
 using Toe.Editors.Marmalade;
 using Toe.Resources;
+using Toe.Utils.Marmalade.IwGraphics;
 using Toe.Utils.Mesh.Marmalade.IwGraphics;
 using Toe.Utils.Mesh.Marmalade.IwGx;
 using Toe.Utils.Mesh.Marmalade.IwResManager;

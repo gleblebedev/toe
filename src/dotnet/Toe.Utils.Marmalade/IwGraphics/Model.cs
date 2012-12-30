@@ -1,14 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 
 using Toe.Resources;
+using Toe.Utils.Mesh;
+using Toe.Utils.Mesh.Marmalade;
 
-namespace Toe.Utils.Mesh.Marmalade.IwGraphics
+namespace Toe.Utils.Marmalade.IwGraphics
 {
-	public class Model:Managed
+	public class Model : Managed
 	{
+		#region Constants and Fields
+
+		public static readonly uint TypeHash = Hash.Get("CIwModel");
+
+		private readonly IList<IMesh> meshes = new List<IMesh>();
+
+		#endregion
+
+		#region Public Properties
 
 		public IList<IMesh> Meshes
 		{
@@ -18,11 +26,9 @@ namespace Toe.Utils.Mesh.Marmalade.IwGraphics
 			}
 		}
 
-		private readonly IList<IMesh> meshes = new List<IMesh>();
+		#endregion
 
-		public static readonly uint TypeHash = Hash.Get("CIwModel");
-
-		#region Overrides of Managed
+		#region Public Methods and Operators
 
 		public override uint GetClassHashCode()
 		{

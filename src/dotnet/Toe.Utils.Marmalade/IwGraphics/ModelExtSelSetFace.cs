@@ -4,11 +4,13 @@ namespace Toe.Utils.Mesh.Marmalade.IwGraphics
 {
 	public class ModelExtSelSetFace
 	{
-		public string Name { get; set; }
-
-		public float otzOfs { get; set; }
+		#region Constants and Fields
 
 		private readonly IList<int> f = new List<int>();
+
+		#endregion
+
+		#region Public Properties
 
 		public IList<int> F
 		{
@@ -17,5 +19,11 @@ namespace Toe.Utils.Mesh.Marmalade.IwGraphics
 				return this.f;
 			}
 		}
+
+		public string Name { get; set; }
+
+		public float otzOfs { get; set; }
+
+		#endregion
 	}
 }

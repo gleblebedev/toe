@@ -1,17 +1,27 @@
-using System.Globalization;
-using System.IO;
+using Toe.Utils.Marmalade;
+using Toe.Utils.Marmalade.IwAnim;
 
 namespace Toe.Utils.Mesh.Marmalade.IwAnim
 {
-	public class SkelReader 
+	public class SkelTextSerializer : ITextSerializer
 	{
+		#region Public Properties
+
+		public string DefaultFileExtension
+		{
+			get
+			{
+				return ".skel";
+			}
+		}
+
+		#endregion
+
 		#region Public Methods and Operators
 
-	
-
-		public IMesh Parse(TextParser parser)
+		public Managed Parse(TextParser parser)
 		{
-			StreamMesh mesh = new StreamMesh();
+			AnimSkel mesh = new AnimSkel();
 			parser.Consume("CIwAnimSkel");
 			parser.Consume("{");
 
@@ -51,7 +61,7 @@ namespace Toe.Utils.Mesh.Marmalade.IwAnim
 
 		#region Methods
 
-		private static void ParseBone(TextParser parser, StreamMesh mesh)
+		private static void ParseBone(TextParser parser, AnimSkel mesh)
 		{
 			parser.Consume("{");
 			MeshBone bone = null;

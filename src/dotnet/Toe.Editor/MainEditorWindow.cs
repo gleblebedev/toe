@@ -110,5 +110,10 @@ namespace Toe.Editor
 				return;
 			fileTabs.TabPages.Remove(tab);
 		}
+
+		private void combatEvagroupToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			this.OpenFile(@"C:\Marmalade\6.2\examples\ArtExports\combatEva\maxExported\combatEva.group");
+		}
 	}
 }

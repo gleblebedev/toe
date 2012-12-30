@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Toe.Gx
 {
-	public class ToeGrapicsContext
+	public class ToeGraphicsContext
 	{
 		private bool flipCulling = true;
 

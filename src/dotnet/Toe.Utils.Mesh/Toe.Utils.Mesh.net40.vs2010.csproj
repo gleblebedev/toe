@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BoneCollection.cs" />
     <Compile Include="IMesh.cs" />
     <Compile Include="IMeshReader.cs" />
     <Compile Include="IMeshWriter.cs" />

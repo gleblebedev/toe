@@ -9,10 +9,10 @@ namespace Toe.Utils.Mesh.Marmalade.IwGx
 	public enum BlendMode
 	{
 		MODULATE, //!< multiply;
-		DECAL,    //!< decal;
-		ADD,      //!< additive;
-		REPLACE,  //!< replace;
-		BLEND,    //!< blend (strange inverting behaviour);
+		DECAL, //!< decal;
+		ADD, //!< additive;
+		REPLACE, //!< replace;
+		BLEND, //!< blend (strange inverting behaviour);
 		MODULATE_2X, //!< blend 2x
 		MODULATE_4X, //!< blend 4x
 	};

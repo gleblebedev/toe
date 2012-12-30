@@ -343,7 +343,9 @@ namespace Toe.Editors.Marmalade
 		private void InitializeComponent()
 		{
 			this.formPreviewSplit = new System.Windows.Forms.SplitContainer();
-			((System.ComponentModel.ISupportInitialize)(this.formPreviewSplit)).BeginInit();
+			var i = this.formPreviewSplit as System.ComponentModel.ISupportInitialize;
+			if (i != null)
+				i.BeginInit();
 			this.formPreviewSplit.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -361,7 +363,8 @@ namespace Toe.Editors.Marmalade
 			this.Controls.Add(this.formPreviewSplit);
 			this.Name = "MaterialEditor";
 			this.Size = new System.Drawing.Size(400, 150);
-			((System.ComponentModel.ISupportInitialize)(this.formPreviewSplit)).EndInit();
+			if (i != null)
+				i.EndInit();
 			this.formPreviewSplit.ResumeLayout(false);
 			this.ResumeLayout(false);
 

@@ -48,7 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ToeGrapicsContext.cs" />
+    <Compile Include="ToeGraphicsContext.cs" />
     <Compile Include="OpenTKHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

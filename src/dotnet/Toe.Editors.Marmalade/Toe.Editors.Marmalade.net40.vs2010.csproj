@@ -79,6 +79,7 @@
     <Compile Include="ResGroupEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="ResourceEditorFactory.cs" />
     <Compile Include="ResourceFileEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>

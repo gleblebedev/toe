@@ -1,11 +1,9 @@
 using System.Collections.Generic;
 
+using OpenTK.Graphics.OpenGL;
 #if WINDOWS_PHONE
 using Microsoft.Xna.Framework;
 #else
-using OpenTK.Graphics.OpenGL;
-
-using Toe.Resources;
 
 #endif
 

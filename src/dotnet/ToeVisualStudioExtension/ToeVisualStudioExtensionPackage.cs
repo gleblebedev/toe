@@ -19,6 +19,7 @@ using Toe.ToeVsExt;
 using Toe.Utils.Mesh.Marmalade;
 using Toe.Utils.Mesh.Marmalade.IwGraphics;
 
+using AutofacModule = Toe.Utils.Marmalade.AutofacModule;
 using IContainer = Autofac.IContainer;
 
 namespace TinyOpenEngine.ToeVisualStudioExtension
@@ -96,6 +97,7 @@ namespace TinyOpenEngine.ToeVisualStudioExtension
 
 			var cb = new Autofac.ContainerBuilder();
 
+			cb.RegisterModule<Toe.Editors.Marmalade.AutofacModule>();
 			cb.RegisterModule<AutofacModule>();
 			cb.RegisterGeneric(typeof(BindingList<>)).UsingConstructor(new Type[] { }).As(typeof(IList<>));
 			cb.RegisterType<VsEditorEnvironment>().As<IEditorEnvironment>().SingleInstance();
@@ -103,10 +105,9 @@ namespace TinyOpenEngine.ToeVisualStudioExtension
 			cb.RegisterType<ResourceFile>().As<IResourceFile>().InstancePerDependency();
 			cb.RegisterType<ResourceFileItem>().As<IResourceFileItem>().InstancePerDependency();
 			cb.RegisterType<ResourceEditorFactory>().As<IResourceEditorFactory>().SingleInstance();
-			cb.RegisterType<TextResourceFormat>().As<IResourceFileFormat>().SingleInstance();
-			cb.RegisterType<TextureResourceFormat>().As<IResourceFileFormat>().SingleInstance();
+
 			cb.RegisterType<EditorResourceErrorHandler>().As<IResourceErrorHandler>().SingleInstance();
-			cb.RegisterType<ToeGrapicsContext>().As<ToeGrapicsContext>().SingleInstance();
+			cb.RegisterType<ToeGraphicsContext>().As<ToeGraphicsContext>().SingleInstance();
 			cb.RegisterType<EditorFactory>().As<IVsEditorFactory>().SingleInstance();
 			cb.RegisterInstance(this).As<Package>().As<ToeVisualStudioExtensionPackage>().ExternallyOwned();
 

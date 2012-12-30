@@ -5,11 +5,10 @@ using System.IO;
 using Autofac;
 
 using Toe.Resources;
-using Toe.Utils.Marmalade;
 
 namespace Toe.Utils.Mesh.Marmalade
 {
-	public class TextResourceFormat : IResourceFileFormat
+	public class BinaryResourceFormat : IResourceFileFormat
 	{
 		#region Constants and Fields
 
@@ -21,7 +20,7 @@ namespace Toe.Utils.Mesh.Marmalade
 
 		#region Constructors and Destructors
 
-		public TextResourceFormat(IResourceManager resourceManager, IComponentContext context)
+		public BinaryResourceFormat(IResourceManager resourceManager, IComponentContext context)
 		{
 			this.resourceManager = resourceManager;
 			this.context = context;
@@ -34,31 +33,7 @@ namespace Toe.Utils.Mesh.Marmalade
 		public bool CanRead(string filePath)
 		{
 			var f = filePath.ToLower();
-			if (f.EndsWith(".mtl"))
-			{
-				return true;
-			}
-			if (f.EndsWith(".group"))
-			{
-				return true;
-			}
-			if (f.EndsWith(".geo"))
-			{
-				return true;
-			}
-			if (f.EndsWith(".anim"))
-			{
-				return true;
-			}
-			if (f.EndsWith(".skel"))
-			{
-				return true;
-			}
-			if (f.EndsWith(".skin"))
-			{
-				return true;
-			}
-			if (f.EndsWith(".itx"))
+			if (f.EndsWith(".group.bin"))
 			{
 				return true;
 			}
@@ -73,27 +48,9 @@ namespace Toe.Utils.Mesh.Marmalade
 		public IList<Managed> Load(Stream stream, string basePath)
 		{
 			IList<Managed> items = this.context.Resolve<IList<Managed>>();
-
-			using (var source = new StreamReader(stream))
+			using (var source = new BinaryReader(stream))
 			{
-				var parser = new TextParser(source, basePath);
-
-				for (;;)
-				{
-					var lexem = parser.GetLexem();
-					if (lexem == null)
-					{
-						return items;
-					}
-					object serializer;
-					if (this.context.TryResolveKeyed(Hash.Get(lexem), typeof(ITextSerializer), out serializer))
-					{
-						items.Add(((ITextSerializer)serializer).Parse(parser));
-						continue;
-					}
-
-					parser.UnknownLexem();
-				}
+				var parser = new BinaryParser(source, basePath);
 			}
 			return items;
 		}

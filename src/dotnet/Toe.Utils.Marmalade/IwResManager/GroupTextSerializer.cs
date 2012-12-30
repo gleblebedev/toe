@@ -3,24 +3,47 @@ using System.IO;
 using Autofac;
 
 using Toe.Resources;
+using Toe.Utils.Marmalade;
 
 namespace Toe.Utils.Mesh.Marmalade.IwResManager
 {
-	public class GroupReader
+	public class GroupTextSerializer : ITextSerializer
 	{
+		#region Constants and Fields
+
 		private readonly IComponentContext context;
 
-		public GroupReader(IComponentContext context)
+		#endregion
+
+		#region Constructors and Destructors
+
+		public GroupTextSerializer(IComponentContext context)
 		{
 			this.context = context;
 		}
 
+		#endregion
+
+		#region Public Properties
+
+		public string DefaultFileExtension
+		{
+			get
+			{
+				return ".group";
+			}
+		}
+
+		#endregion
+
+		#region Public Methods and Operators
+
 		public Managed Parse(TextParser parser)
 		{
-			ResGroup group = new ResGroup(context.Resolve<IResourceManager>(), context) { BasePath = parser.BasePath };
+			ResGroup group = new ResGroup(this.context.Resolve<IResourceManager>(), this.context) { BasePath = parser.BasePath };
 			parser.Consume("CIwResGroup");
 			parser.Consume("{");
-			for (; ; )
+			for (;;)
 			{
 				var attribute = parser.GetLexem();
 				if (attribute == "}")
@@ -35,7 +58,10 @@ namespace Toe.Utils.Mesh.Marmalade.IwResManager
 					continue;
 				}
 				var relPath = attribute.Replace('/', Path.DirectorySeparatorChar);
-				if (relPath.Length > 2 && relPath[0] == '.' && relPath[1] == Path.DirectorySeparatorChar) relPath = relPath.Substring(2);
+				if (relPath.Length > 2 && relPath[0] == '.' && relPath[1] == Path.DirectorySeparatorChar)
+				{
+					relPath = relPath.Substring(2);
+				}
 				string fullPath;
 				if (relPath[0] == Path.DirectorySeparatorChar)
 				{
@@ -53,8 +79,6 @@ namespace Toe.Utils.Mesh.Marmalade.IwResManager
 						searchPath = Path.GetDirectoryName(searchPath);
 					}
 					while (true);
-
-
 				}
 				else
 				{
@@ -70,5 +94,7 @@ namespace Toe.Utils.Mesh.Marmalade.IwResManager
 			}
 			return group;
 		}
+
+		#endregion
 	}
 }

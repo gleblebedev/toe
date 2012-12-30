@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Globalization;
 using System.IO;
 
+using Toe.Resources;
 #if WINDOWS_PHONE
 using Microsoft.Xna.Framework;
 #else
-using OpenTK;
-
-using Toe.Resources;
 
 #endif
 
@@ -18,12 +15,22 @@ namespace Toe.Utils.Mesh.Marmalade.IwGraphics
 	/// </summary>
 	public class GeoReader : IMeshReader
 	{
+		#region Constants and Fields
+
 		private readonly IResourceManager resourceManager;
+
+		#endregion
+
+		#region Constructors and Destructors
 
 		public GeoReader(IResourceManager resourceManager)
 		{
 			this.resourceManager = resourceManager;
 		}
+
+		#endregion
+
+		#region Public Methods and Operators
 
 		/// <summary>
 		/// Load mesh from stream.
@@ -41,5 +48,7 @@ namespace Toe.Utils.Mesh.Marmalade.IwGraphics
 
 			throw new NotImplementedException();
 		}
+
+		#endregion
 	}
 }

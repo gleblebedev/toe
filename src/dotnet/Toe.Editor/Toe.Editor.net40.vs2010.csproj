@@ -62,6 +62,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EditorConfiguration.cs" />
     <Compile Include="EditorEnvironment.cs" />
     <Compile Include="EditorResourceErrorHandler.cs" />
     <Compile Include="MainEditorWindow.cs">

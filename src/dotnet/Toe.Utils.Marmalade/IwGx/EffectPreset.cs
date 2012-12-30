@@ -16,11 +16,12 @@ namespace Toe.Utils.Mesh.Marmalade.IwGx
 		/// <summary>
 		/// Use 2nd texture as a normal map, then use BlendMode to combine 1st texture.
 		/// </summary>
-		NORMAL_MAPPING, 
+		NORMAL_MAPPING,
+
 		/// <summary>
 		/// Combine 2nd texture as a spherical reflection map, Automatically computes reflection UVs
 		/// </summary>
-		REFLECTION_MAPPING,  
+		REFLECTION_MAPPING,
 
 		/// <summary>
 		/// PRIVATE
@@ -35,16 +36,16 @@ namespace Toe.Utils.Mesh.Marmalade.IwGx
 		/// <summary>
 		/// Modulate in framebuffer for gl lightmaps
 		/// </summary>
-		LIGHTMAP_POST_PROCESS, 
+		LIGHTMAP_POST_PROCESS,
 
 		/// <summary>
 		/// Use 2nd texture as a specular normal map, then use BlendMode to combine 1st texture
 		/// </summary>
-		NORMAL_MAPPING_SPECULAR,     
+		NORMAL_MAPPING_SPECULAR,
 
 		/// <summary>
 		/// Ignore the second texture stage on non-shader HW
 		/// </summary>
-		TEXTURE0_ONLY,      
+		TEXTURE0_ONLY,
 	};
 }

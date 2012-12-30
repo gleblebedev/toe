@@ -1,16 +1,14 @@
 using System;
+using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Text;
 
+using Toe.Resources;
 #if WINDOWS_PHONE
 using Microsoft.Xna.Framework;
 #else
-using System.Drawing;
 using OpenTK;
-
-using Toe.Resources;
-
 #endif
 
 namespace Toe.Utils.Mesh.Marmalade
@@ -19,11 +17,11 @@ namespace Toe.Utils.Mesh.Marmalade
 	{
 		#region Constants and Fields
 
+		private readonly string basePath;
+
 		private readonly float[] floatBuf = new float[4];
 
 		private readonly TextReader reader;
-
-		private readonly string basePath;
 
 		private readonly StringBuilder sb = new StringBuilder(32);
 
@@ -44,6 +42,10 @@ namespace Toe.Utils.Mesh.Marmalade
 			this.nextChar = reader.Read();
 		}
 
+		#endregion
+
+		#region Public Properties
+
 		public string BasePath
 		{
 			get
@@ -54,27 +56,14 @@ namespace Toe.Utils.Mesh.Marmalade
 
 		#endregion
 
-		#region Public Properties
-
-		public string GetLexem()
-		{
-			if (this.lexemReady)
-			{
-				return this.lexem;
-			}
-			this.ReadLexem();
-			return this.lexem;
-		}
-
-		#endregion
-
 		#region Public Methods and Operators
 
 		public void Consume(string text)
 		{
 			if (0 != string.Compare(this.GetLexem(), text, StringComparison.InvariantCulture))
 			{
-				throw new TextParserException(string.Format(CultureInfo.InvariantCulture, "Expected \"{0}\", but there was \"{1}\"", text, this.GetLexem()));
+				throw new TextParserException(
+					string.Format(CultureInfo.InvariantCulture, "Expected \"{0}\", but there was \"{1}\"", text, this.GetLexem()));
 			}
 			this.Consume();
 		}
@@ -82,6 +71,66 @@ namespace Toe.Utils.Mesh.Marmalade
 		public void Consume()
 		{
 			this.lexemReady = false;
+		}
+
+		public string ConsumeBlock()
+		{
+			this.Consume("{");
+			int depth = 1;
+			this.sb.Clear();
+			if (this.lexemReady)
+			{
+				this.sb.Append(this.lexem);
+			}
+			for (;;)
+			{
+				if (this.nextChar < 0)
+				{
+					this.lexem = this.sb.ToString();
+					this.lexemReady = false;
+					return this.lexem;
+				}
+				if (this.nextChar == '{')
+				{
+					++depth;
+				}
+				if (this.nextChar == '}')
+				{
+					--depth;
+					if (depth == 0)
+					{
+						this.nextChar = this.reader.Read();
+						this.lexem = this.sb.ToString();
+						this.lexemReady = false;
+						return this.lexem;
+					}
+				}
+				this.sb.Append((char)this.nextChar);
+				this.nextChar = this.reader.Read();
+			}
+		}
+
+		public bool ConsumeBool()
+		{
+			var lexem = this.GetLexem();
+			if (0 == string.Compare(lexem, "true", StringComparison.InvariantCultureIgnoreCase))
+			{
+				this.Consume();
+				return true;
+			}
+			if (0 == string.Compare(lexem, "false", StringComparison.InvariantCultureIgnoreCase))
+			{
+				this.Consume();
+				return false;
+			}
+			return this.ConsumeInt() != 0;
+		}
+
+		public byte ConsumeByte()
+		{
+			var f = byte.Parse(this.GetLexem(), CultureInfo.InvariantCulture);
+			this.Consume();
+			return f;
 		}
 
 		public Color ConsumeColor()
@@ -116,14 +165,15 @@ namespace Toe.Utils.Mesh.Marmalade
 			}
 			if (maxItems == 3)
 			{
-				return Color.FromArgb(
-					255,
-					ClampColor(this.floatBuf[0]),
-					ClampColor(this.floatBuf[1]),
-					ClampColor(this.floatBuf[2]));
+				return Color.FromArgb(255, ClampColor(this.floatBuf[0]), ClampColor(this.floatBuf[1]), ClampColor(this.floatBuf[2]));
 			}
 #endif
 			throw new NotImplementedException();
+		}
+
+		public T ConsumeEnum<T>()
+		{
+			return (T)Enum.Parse(typeof(T), this.ConsumeString());
 		}
 
 		public float ConsumeFloat()
@@ -147,23 +197,15 @@ namespace Toe.Utils.Mesh.Marmalade
 			return new Quaternion(this.floatBuf[3], this.floatBuf[0], this.floatBuf[1], this.floatBuf[2]);
 		}
 
-		public string ConsumeString()
-		{
-			var l = this.GetLexem();
-			//TODO: check if it is string
-			this.Consume();
-			return l;
-		}
-
 		public void ConsumeResourceReference(ResourceReference resourceReference)
 		{
 			var l = this.GetLexem();
 			this.Consume();
-			if (l.IndexOfAny(new char[]{'\\','/'},0) >= 0)
+			if (l.IndexOfAny(new[] { '\\', '/' }, 0) >= 0)
 			{
 				resourceReference.FileReference = l;
 			}
-			else if (File.Exists(Path.Combine(BasePath, l)))
+			else if (File.Exists(Path.Combine(this.BasePath, l)))
 			{
 				resourceReference.FileReference = l;
 			}
@@ -171,6 +213,21 @@ namespace Toe.Utils.Mesh.Marmalade
 			{
 				resourceReference.NameReference = l;
 			}
+		}
+
+		public short ConsumeShort()
+		{
+			var f = short.Parse(this.GetLexem(), CultureInfo.InvariantCulture);
+			this.Consume();
+			return f;
+		}
+
+		public string ConsumeString()
+		{
+			var l = this.GetLexem();
+			//TODO: check if it is string
+			this.Consume();
+			return l;
 		}
 
 		public Vector2 ConsumeVector2()
@@ -187,12 +244,43 @@ namespace Toe.Utils.Mesh.Marmalade
 			return new Vector3(this.floatBuf[0], this.floatBuf[1], this.floatBuf[2]);
 		}
 
+		public void Error(string message)
+		{
+			throw new TextParserException(message);
+		}
+
+		public string GetLexem()
+		{
+			if (this.lexemReady)
+			{
+				return this.lexem;
+			}
+			this.ReadLexem();
+			return this.lexem;
+		}
+
 		public void Skip(string s)
 		{
 			if (this.GetLexem() == s)
 			{
 				this.Consume();
 			}
+		}
+
+		public void UnknownLexem()
+		{
+			var where = "input stream";
+			var textReader = this.reader;
+			if (textReader is StreamReader)
+			{
+				var baseStream = ((StreamReader)textReader).BaseStream;
+				if (baseStream is FileStream)
+				{
+					where = ((FileStream)baseStream).Name;
+				}
+			}
+			throw new TextParserException(
+				string.Format(CultureInfo.InvariantCulture, "Unknown element \"{0}\" in {1}", this.lexem, where));
 		}
 
 		#endregion
@@ -258,7 +346,7 @@ namespace Toe.Utils.Mesh.Marmalade
 			{
 				this.nextChar = this.reader.Read();
 			}
-			if (nextChar == '/')
+			if (this.nextChar == '/')
 			{
 				this.nextChar = this.reader.Read();
 				if (this.nextChar != '/' && this.nextChar != '*')
@@ -406,94 +494,5 @@ namespace Toe.Utils.Mesh.Marmalade
 		}
 
 		#endregion
-
-		public void UnknownLexem()
-		{
-			var where = "input stream";
-			var textReader = this.reader;
-			if (textReader is StreamReader)
-			{
-				var baseStream = ((StreamReader)textReader).BaseStream;
-				if (baseStream is FileStream) where = ((FileStream)baseStream).Name;
-			}
-			throw new TextParserException(string.Format(CultureInfo.InvariantCulture, "Unknown element \"{0}\" in {1}", lexem, where));
-		}
-
-		public bool ConsumeBool()
-		{
-			var lexem = this.GetLexem();
-			if (0==string.Compare(lexem, "true",StringComparison.InvariantCultureIgnoreCase))
-			{
-				this.Consume();
-				return true;
-			}
-			if (0 == string.Compare(lexem, "false", StringComparison.InvariantCultureIgnoreCase))
-			{
-				this.Consume();
-				return false;
-			}
-			return this.ConsumeInt() != 0;
-		}
-
-		public byte ConsumeByte()
-		{
-			var f = byte.Parse(this.GetLexem(), CultureInfo.InvariantCulture);
-			this.Consume();
-			return f;
-		}
-
-		public short ConsumeShort()
-		{
-			var f = short.Parse(this.GetLexem(), CultureInfo.InvariantCulture);
-			this.Consume();
-			return f;
-		}
-		public T ConsumeEnum<T>()
-		{
-			return (T)Enum.Parse(typeof(T), this.ConsumeString());
-		}
-
-		public void Error(string message)
-		{
-			throw new TextParserException(message);
-
-		}
-
-		public string ConsumeBlock()
-		{
-			this.Consume("{");
-			int depth = 1;
-			this.sb.Clear(); 
-			if (this.lexemReady)
-			{
-				this.sb.Append(this.lexem);
-			}
-			for (; ; )
-			{
-				if (nextChar < 0)
-				{
-					this.lexem = this.sb.ToString();
-					this.lexemReady = false;
-					return this.lexem;
-				}
-				if (nextChar == '{')
-				{
-					++depth;
-				}
-				if (nextChar == '}')
-				{
-					--depth;
-					if (depth == 0)
-					{
-						this.nextChar = this.reader.Read();
-						this.lexem = this.sb.ToString();
-						this.lexemReady = false;
-						return this.lexem;
-					}
-				}
-				this.sb.Append((char)this.nextChar);
-				this.nextChar = this.reader.Read();
-			}
-		}
 	}
 }

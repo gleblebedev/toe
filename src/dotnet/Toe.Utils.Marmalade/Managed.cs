@@ -8,33 +8,48 @@ namespace Toe.Utils.Mesh.Marmalade
 {
 	public abstract class Managed : INotifyPropertyChanging, INotifyPropertyChanged, IDisposable, IBasePathProvider
 	{
-		~Managed()
-		{
-			this.Dispose(false);
-		}
+		#region Constants and Fields
 
-		protected virtual void Dispose(bool disposing)
-		{
-			
-		}
+		private string basePath;
 
 		private string name;
 
 		private uint nameHash;
 
-		public uint NameHash
+		#endregion
+
+		#region Constructors and Destructors
+
+		~Managed()
+		{
+			this.Dispose(false);
+		}
+
+		#endregion
+
+		#region Public Events
+
+		public event PropertyChangedEventHandler PropertyChanged;
+
+		public event PropertyChangingEventHandler PropertyChanging;
+
+		#endregion
+
+		#region Public Properties
+
+		public string BasePath
 		{
 			get
 			{
-				return this.nameHash;
+				return this.basePath;
 			}
 			set
 			{
-				if (this.nameHash != value)
+				if (this.basePath != value)
 				{
-					this.RaisePropertyChanging("NameHash");
-					this.nameHash = value;
-					this.RaisePropertyChanged("NameHash");
+					this.RaisePropertyChanging("BasePath");
+					this.basePath = value;
+					this.RaisePropertyChanged("BasePath");
 				}
 			}
 		}
@@ -55,56 +70,31 @@ namespace Toe.Utils.Mesh.Marmalade
 					this.RaisePropertyChanging("Name");
 					this.name = value;
 					this.RaisePropertyChanged("Name");
-					this.NameHash = Hash.Get(Name);
+					this.NameHash = Hash.Get(this.Name);
 				}
 			}
 		}
 
-		private string basePath;
-
-		public string BasePath
+		public uint NameHash
 		{
 			get
 			{
-				return this.basePath;
+				return this.nameHash;
 			}
 			set
 			{
-				if (this.basePath != value)
+				if (this.nameHash != value)
 				{
-					this.RaisePropertyChanging("BasePath");
-					this.basePath = value;
-					this.RaisePropertyChanged("BasePath");
+					this.RaisePropertyChanging("NameHash");
+					this.nameHash = value;
+					this.RaisePropertyChanged("NameHash");
 				}
 			}
 		}
 
-		protected virtual void RaisePropertyChanged(string propertyName)
-		{
-			if (PropertyChanged != null)
-				PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-		}
-		protected virtual void RaisePropertyChanging(string propertyName)
-		{
-			if (PropertyChanging != null)
-				PropertyChanging(this, new PropertyChangingEventArgs(propertyName));
-		}
-		#region Implementation of INotifyPropertyChanged
-
-		public event PropertyChangedEventHandler PropertyChanged;
-
 		#endregion
 
-		#region Implementation of INotifyPropertyChanging
-
-		public event PropertyChangingEventHandler PropertyChanging;
-
-		#endregion
-
-		public override string ToString()
-		{
-			return string.Format(CultureInfo.InvariantCulture, "{0} ({1})", this.Name, this.GetType().Name);
-		}
+		#region Public Methods and Operators
 
 		/// <summary>
 		/// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
@@ -116,5 +106,36 @@ namespace Toe.Utils.Mesh.Marmalade
 		}
 
 		public abstract uint GetClassHashCode();
+
+		public override string ToString()
+		{
+			return string.Format(CultureInfo.InvariantCulture, "{0} ({1})", this.Name, this.GetType().Name);
+		}
+
+		#endregion
+
+		#region Methods
+
+		protected virtual void Dispose(bool disposing)
+		{
+		}
+
+		protected virtual void RaisePropertyChanged(string propertyName)
+		{
+			if (this.PropertyChanged != null)
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+
+		protected virtual void RaisePropertyChanging(string propertyName)
+		{
+			if (this.PropertyChanging != null)
+			{
+				this.PropertyChanging(this, new PropertyChangingEventArgs(propertyName));
+			}
+		}
+
+		#endregion
 	}
 }

@@ -106,9 +106,7 @@
     <Compile Include="Views\EditStringView.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Panels\Panel.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="Panels\Panel.cs" />
     <Compile Include="Views\EditTextureView.cs">
       <SubType>UserControl</SubType>
     </Compile>

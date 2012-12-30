@@ -6,9 +6,9 @@ namespace Toe.Utils.Mesh.Marmalade.IwGx
 	/// @par Required Header Files
 	/// IwMaterial.h
 	/// </summary>
-	enum DepthWriteMode
+	internal enum DepthWriteMode
 	{
-		DEPTH_WRITE_NORMAL,             //!< Defer to blend mode to determine depth buffer write
-		DEPTH_WRITE_DISABLED,           //!< Disable depth buffer write
+		DEPTH_WRITE_NORMAL, //!< Defer to blend mode to determine depth buffer write
+		DEPTH_WRITE_DISABLED, //!< Disable depth buffer write
 	};
 }

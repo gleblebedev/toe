@@ -1,5 +1,3 @@
-
-
 namespace Toe.Utils.Mesh.Marmalade.IwGx
 {
 	/// <summary>

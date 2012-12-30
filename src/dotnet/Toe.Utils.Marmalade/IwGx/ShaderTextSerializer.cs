@@ -1,21 +1,44 @@
 using System.Globalization;
 
 using Toe.Resources;
+using Toe.Utils.Marmalade;
 
 namespace Toe.Utils.Mesh.Marmalade.IwGx
 {
-	public class ShaderReader
+	public class ShaderTextSerializer : ITextSerializer
 	{
+		#region Constants and Fields
+
 		private readonly IResourceManager resourceManager;
 
 		private string fragment;
 
 		private string vertex;
 
-		public ShaderReader(IResourceManager resourceManager)
+		#endregion
+
+		#region Constructors and Destructors
+
+		public ShaderTextSerializer(IResourceManager resourceManager)
 		{
 			this.resourceManager = resourceManager;
 		}
+
+		#endregion
+
+		#region Public Properties
+
+		public string DefaultFileExtension
+		{
+			get
+			{
+				return ".itx";
+			}
+		}
+
+		#endregion
+
+		#region Public Methods and Operators
 
 		public Managed Parse(TextParser parser)
 		{
@@ -24,7 +47,7 @@ namespace Toe.Utils.Mesh.Marmalade.IwGx
 
 			parser.Consume("CIwGxShaderTechnique");
 			parser.Consume("{");
-			for (; ; )
+			for (;;)
 			{
 				var attribute = parser.GetLexem();
 				if (attribute == "}")
@@ -47,9 +70,18 @@ namespace Toe.Utils.Mesh.Marmalade.IwGx
 				{
 					parser.Consume();
 					attribute = parser.GetLexem();
-					if (attribute == "vertex") this.ParseVertexShader(parser, shader);
-					else if (attribute == "fragment") this.ParseFragmentShader(parser, shader);
-					else parser.UnknownLexem();
+					if (attribute == "vertex")
+					{
+						this.ParseVertexShader(parser, shader);
+					}
+					else if (attribute == "fragment")
+					{
+						this.ParseFragmentShader(parser, shader);
+					}
+					else
+					{
+						parser.UnknownLexem();
+					}
 					continue;
 				}
 				parser.UnknownLexem();
@@ -57,17 +89,24 @@ namespace Toe.Utils.Mesh.Marmalade.IwGx
 			return shader;
 		}
 
+		#endregion
+
+		#region Methods
+
+		private void ParseFloatParam(TextParser parser, ShaderTechnique shader, string paramName, int numArgs)
+		{
+			float[] a = new float[numArgs];
+			for (int i = 0; i < numArgs; ++i)
+			{
+				a[i] = parser.ConsumeFloat();
+			}
+			shader.AddParam(new ShaderTechniqueFloatParam(paramName, a));
+		}
+
 		private void ParseFragmentShader(TextParser parser, ShaderTechnique shader)
 		{
 			parser.Consume();
 			shader.FragmentShaderSource = parser.ConsumeBlock();
-		}
-
-		private void ParseVertexShader(TextParser parser, ShaderTechnique shader)
-		{
-			parser.Consume();
-
-			shader.VertexShaderSource = parser.ConsumeBlock();
 		}
 
 		private void ParseParam(TextParser parser, ShaderTechnique shader)
@@ -87,11 +126,13 @@ namespace Toe.Utils.Mesh.Marmalade.IwGx
 			}
 		}
 
-		private void ParseFloatParam(TextParser parser, ShaderTechnique shader, string paramName, int numArgs)
+		private void ParseVertexShader(TextParser parser, ShaderTechnique shader)
 		{
-			float[] a = new float[numArgs];
-			for (int i = 0; i < numArgs; ++i) a[i] = parser.ConsumeFloat();
-			shader.AddParam(new ShaderTechniqueFloatParam(paramName, a));
+			parser.Consume();
+
+			shader.VertexShaderSource = parser.ConsumeBlock();
 		}
+
+		#endregion
 	}
 }

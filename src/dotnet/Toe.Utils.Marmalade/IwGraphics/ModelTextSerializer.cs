@@ -1,10 +1,12 @@
-﻿using System.Globalization;
-using System.IO;
+﻿using OpenTK;
+
+using Toe.Utils.Marmalade;
+using Toe.Utils.Marmalade.IwGraphics;
 
 #if WINDOWS_PHONE
 using Microsoft.Xna.Framework;
 #else
-using OpenTK;
+
 #endif
 
 namespace Toe.Utils.Mesh.Marmalade.IwGraphics
@@ -12,12 +14,23 @@ namespace Toe.Utils.Mesh.Marmalade.IwGraphics
 	/// <summary>
 	/// Marmalade SDK .geo file parser.
 	/// </summary>
-	public class ModelReader
+	public class ModelTextSerializer : ITextSerializer
 	{
+		#region Public Properties
+
+		public string DefaultFileExtension
+		{
+			get
+			{
+				return ".geo";
+			}
+		}
+
+		#endregion
+
 		#region Public Methods and Operators
 
-
-		public Model Parse(TextParser parser)
+		public Managed Parse(TextParser parser)
 		{
 			var mesh = new Model();
 			parser.Consume("CIwModel");
@@ -47,10 +60,6 @@ namespace Toe.Utils.Mesh.Marmalade.IwGraphics
 
 			return mesh;
 		}
-
-		#endregion
-
-		#region Methods
 
 		public StreamMesh ParseMesh(TextParser parser)
 		{
@@ -135,80 +144,24 @@ namespace Toe.Utils.Mesh.Marmalade.IwGraphics
 					this.ParseModelExtSelSetFace(parser, mesh);
 					continue;
 				}
-				
+
 				parser.UnknownLexem();
 			}
 			return mesh;
 		}
 
-		private ModelExtSelSetFace ParseModelExtSelSetFace(TextParser parser, IMesh mesh)
-		{
-			ModelExtSelSetFace sel = new ModelExtSelSetFace();
-			parser.Consume("CIwModelExtSelSetFace");
-			parser.Consume("{");
-			for (; ; )
-			{
-				var attribute = parser.GetLexem();
-				if (attribute == "}")
-				{
-					parser.Consume();
-					break;
-				}
-				if (attribute == "name")
-				{
-					parser.Consume();
-					sel.Name = parser.ConsumeString();
-					continue;
-				}
-				if (attribute == "otzOfs")
-				{
-					parser.Consume();
-					sel.otzOfs = parser.ConsumeFloat();
-					continue;
-				}
-				if (attribute == "f")
-				{
-					parser.Consume();
-					sel.F.Add(parser.ConsumeInt());
-					continue;
-				}
-				parser.UnknownLexem();
-			}
-			return sel;
-		}
+		#endregion
 
-		private void ParseSurface(TextParser parser, ISubMesh submesh)
+		#region Methods
+
+		private static StreamSubmeshQuad ParseQuad(TextParser parser)
 		{
-			for (;;)
-			{
-				var attribute = parser.GetLexem();
-				if (attribute == "}")
-				{
-					parser.Consume();
-					break;
-				}
-				if (attribute == "material")
-				{
-					parser.Consume();
-					submesh.Material = parser.ConsumeString();
-					continue;
-				}
-				if (attribute == "CTris")
-				{
-					parser.Consume();
-					parser.Consume("{");
-					this.ParseTris(parser,  (StreamSubmesh)submesh);
-					continue;
-				}
-				if (attribute == "CQuads")
-				{
-					parser.Consume();
-					parser.Consume("{");
-					this.ParseQuads(parser, (StreamSubmesh)submesh);
-					continue;
-				}
-				parser.UnknownLexem();
-			}
+			StreamSubmeshQuad t;
+			t.A = ParseTrisIndexes(parser);
+			t.B = ParseTrisIndexes(parser);
+			t.C = ParseTrisIndexes(parser);
+			t.D = ParseTrisIndexes(parser);
+			return t;
 		}
 
 		private static StreamSubmeshTiangle ParseTriangle(TextParser parser)
@@ -219,67 +172,7 @@ namespace Toe.Utils.Mesh.Marmalade.IwGraphics
 			t.C = ParseTrisIndexes(parser);
 			return t;
 		}
-		private static StreamSubmeshQuad ParseQuad(TextParser parser)
-		{
-			StreamSubmeshQuad t;
-			t.A = ParseTrisIndexes(parser);
-			t.B = ParseTrisIndexes(parser);
-			t.C = ParseTrisIndexes(parser);
-			t.D = ParseTrisIndexes(parser);
-			return t;
-		}
-		private void ParseTris(TextParser parser, StreamSubmesh submesh)
-		{
-			for (;;)
-			{
-				var attribute = parser.GetLexem();
-				if (attribute == "}")
-				{
-					parser.Consume();
-					break;
-				}
-				if (attribute == "numTris")
-				{
-					parser.Consume();
-					submesh.Tris.Capacity = submesh.Tris.Count + parser.ConsumeInt();
-					continue;
-				}
-				if (attribute == "t")
-				{
-					parser.Consume();
-					submesh.Tris.Add(ParseTriangle(parser));
-					continue;
-				}
-				parser.UnknownLexem();
-			}
-		}
-		private void ParseQuads(TextParser parser, StreamSubmesh submesh)
-		{
-			for (; ; )
-			{
-				var attribute = parser.GetLexem();
-				if (attribute == "}")
-				{
-					parser.Consume();
-					break;
-				}
-				if (attribute == "numQuads")
-				{
-					parser.Consume();
-					submesh.Tris.Capacity = submesh.Tris.Count + parser.ConsumeInt()*2;
-					continue;
-				}
-				if (attribute == "q")
-				{
-					parser.Consume();
-					var streamSubmeshQuad = ParseQuad(parser);
-					submesh.Tris.Add(new StreamSubmeshTiangle { A = streamSubmeshQuad.A, B = streamSubmeshQuad.B, C = streamSubmeshQuad.C});
-					submesh.Tris.Add(new StreamSubmeshTiangle { A = streamSubmeshQuad.A, B = streamSubmeshQuad.C, C = streamSubmeshQuad.D });
-					continue;
-				}
-				parser.UnknownLexem();
-			}
-		}
+
 		private static StreamSubmeshTiangleIndexes ParseTrisIndexes(TextParser parser)
 		{
 			parser.Consume("{");
@@ -297,7 +190,7 @@ namespace Toe.Utils.Mesh.Marmalade.IwGraphics
 			}
 			if (parser.GetLexem() == "}")
 			{
-					i.UV0 = -1;
+				i.UV0 = -1;
 			}
 			else
 			{
@@ -306,7 +199,7 @@ namespace Toe.Utils.Mesh.Marmalade.IwGraphics
 			}
 			if (parser.GetLexem() == "}")
 			{
-						i.UV1 = -1;
+				i.UV1 = -1;
 			}
 			else
 			{
@@ -440,6 +333,132 @@ namespace Toe.Utils.Mesh.Marmalade.IwGraphics
 				{
 					parser.Consume();
 					vertices.Add(parser.ConsumeVector3());
+					continue;
+				}
+				parser.UnknownLexem();
+			}
+		}
+
+		private ModelExtSelSetFace ParseModelExtSelSetFace(TextParser parser, IMesh mesh)
+		{
+			ModelExtSelSetFace sel = new ModelExtSelSetFace();
+			parser.Consume("CIwModelExtSelSetFace");
+			parser.Consume("{");
+			for (;;)
+			{
+				var attribute = parser.GetLexem();
+				if (attribute == "}")
+				{
+					parser.Consume();
+					break;
+				}
+				if (attribute == "name")
+				{
+					parser.Consume();
+					sel.Name = parser.ConsumeString();
+					continue;
+				}
+				if (attribute == "otzOfs")
+				{
+					parser.Consume();
+					sel.otzOfs = parser.ConsumeFloat();
+					continue;
+				}
+				if (attribute == "f")
+				{
+					parser.Consume();
+					sel.F.Add(parser.ConsumeInt());
+					continue;
+				}
+				parser.UnknownLexem();
+			}
+			return sel;
+		}
+
+		private void ParseQuads(TextParser parser, StreamSubmesh submesh)
+		{
+			for (;;)
+			{
+				var attribute = parser.GetLexem();
+				if (attribute == "}")
+				{
+					parser.Consume();
+					break;
+				}
+				if (attribute == "numQuads")
+				{
+					parser.Consume();
+					submesh.Tris.Capacity = submesh.Tris.Count + parser.ConsumeInt() * 2;
+					continue;
+				}
+				if (attribute == "q")
+				{
+					parser.Consume();
+					var streamSubmeshQuad = ParseQuad(parser);
+					submesh.Tris.Add(
+						new StreamSubmeshTiangle { A = streamSubmeshQuad.A, B = streamSubmeshQuad.B, C = streamSubmeshQuad.C });
+					submesh.Tris.Add(
+						new StreamSubmeshTiangle { A = streamSubmeshQuad.A, B = streamSubmeshQuad.C, C = streamSubmeshQuad.D });
+					continue;
+				}
+				parser.UnknownLexem();
+			}
+		}
+
+		private void ParseSurface(TextParser parser, ISubMesh submesh)
+		{
+			for (;;)
+			{
+				var attribute = parser.GetLexem();
+				if (attribute == "}")
+				{
+					parser.Consume();
+					break;
+				}
+				if (attribute == "material")
+				{
+					parser.Consume();
+					submesh.Material = parser.ConsumeString();
+					continue;
+				}
+				if (attribute == "CTris")
+				{
+					parser.Consume();
+					parser.Consume("{");
+					this.ParseTris(parser, (StreamSubmesh)submesh);
+					continue;
+				}
+				if (attribute == "CQuads")
+				{
+					parser.Consume();
+					parser.Consume("{");
+					this.ParseQuads(parser, (StreamSubmesh)submesh);
+					continue;
+				}
+				parser.UnknownLexem();
+			}
+		}
+
+		private void ParseTris(TextParser parser, StreamSubmesh submesh)
+		{
+			for (;;)
+			{
+				var attribute = parser.GetLexem();
+				if (attribute == "}")
+				{
+					parser.Consume();
+					break;
+				}
+				if (attribute == "numTris")
+				{
+					parser.Consume();
+					submesh.Tris.Capacity = submesh.Tris.Count + parser.ConsumeInt();
+					continue;
+				}
+				if (attribute == "t")
+				{
+					parser.Consume();
+					submesh.Tris.Add(ParseTriangle(parser));
 					continue;
 				}
 				parser.UnknownLexem();

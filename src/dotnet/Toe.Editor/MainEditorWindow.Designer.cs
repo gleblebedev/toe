@@ -43,12 +43,13 @@
 			this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
 			this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-			this.fileTabs = new System.Windows.Forms.TabControl();
-			this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.undoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.redoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+			this.fileTabs = new System.Windows.Forms.TabControl();
+			this.combatEvagroupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuStrip1.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -139,6 +140,8 @@
 			// 
 			// recentFilesToolStripMenuItem
 			// 
+			this.recentFilesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.combatEvagroupToolStripMenuItem});
 			this.recentFilesToolStripMenuItem.Name = "recentFilesToolStripMenuItem";
 			this.recentFilesToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.recentFilesToolStripMenuItem.Text = "Recent Files";
@@ -164,6 +167,20 @@
 			this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
 			this.editToolStripMenuItem.Text = "Edit";
 			// 
+			// undoToolStripMenuItem
+			// 
+			this.undoToolStripMenuItem.Enabled = false;
+			this.undoToolStripMenuItem.Name = "undoToolStripMenuItem";
+			this.undoToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
+			this.undoToolStripMenuItem.Text = "Undo";
+			// 
+			// redoToolStripMenuItem
+			// 
+			this.redoToolStripMenuItem.Enabled = false;
+			this.redoToolStripMenuItem.Name = "redoToolStripMenuItem";
+			this.redoToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
+			this.redoToolStripMenuItem.Text = "Redo";
+			// 
 			// helpToolStripMenuItem
 			// 
 			this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -171,6 +188,12 @@
 			this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
 			this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
 			this.helpToolStripMenuItem.Text = "Help";
+			// 
+			// aboutToolStripMenuItem
+			// 
+			this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
+			this.aboutToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
+			this.aboutToolStripMenuItem.Text = "About";
 			// 
 			// statusStrip1
 			// 
@@ -189,25 +212,12 @@
 			this.fileTabs.Size = new System.Drawing.Size(284, 215);
 			this.fileTabs.TabIndex = 2;
 			// 
-			// aboutToolStripMenuItem
+			// combatEvagroupToolStripMenuItem
 			// 
-			this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-			this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-			this.aboutToolStripMenuItem.Text = "About";
-			// 
-			// undoToolStripMenuItem
-			// 
-			this.undoToolStripMenuItem.Enabled = false;
-			this.undoToolStripMenuItem.Name = "undoToolStripMenuItem";
-			this.undoToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-			this.undoToolStripMenuItem.Text = "Undo";
-			// 
-			// redoToolStripMenuItem
-			// 
-			this.redoToolStripMenuItem.Enabled = false;
-			this.redoToolStripMenuItem.Name = "redoToolStripMenuItem";
-			this.redoToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-			this.redoToolStripMenuItem.Text = "Redo";
+			this.combatEvagroupToolStripMenuItem.Name = "combatEvagroupToolStripMenuItem";
+			this.combatEvagroupToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
+			this.combatEvagroupToolStripMenuItem.Text = "CombatEva.group";
+			this.combatEvagroupToolStripMenuItem.Click += new System.EventHandler(this.combatEvagroupToolStripMenuItem_Click);
 			// 
 			// MainEditorWindow
 			// 
@@ -250,5 +260,6 @@
 		private System.Windows.Forms.ToolStripMenuItem undoToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem redoToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem combatEvagroupToolStripMenuItem;
 	}
 }
