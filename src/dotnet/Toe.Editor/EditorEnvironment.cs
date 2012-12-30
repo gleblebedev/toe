@@ -3,6 +3,7 @@ using Toe.Editors.Interfaces.Bindings;
 using Toe.Editors.Interfaces.Views;
 using Toe.Editors.Marmalade;
 using Toe.Resources;
+using Toe.Utils.Marmalade.IwAnim;
 using Toe.Utils.Marmalade.IwGraphics;
 using Toe.Utils.Mesh.Marmalade.IwGraphics;
 using Toe.Utils.Mesh.Marmalade.IwGx;
@@ -33,6 +34,10 @@ namespace Toe.Editor
 			if (itemToEdit is Model)
 			{
 				return new ModelEditor(this,resourceManager);
+			}
+			if (itemToEdit is AnimSkel)
+			{
+				return new SkeletonEditor(this, resourceManager);
 			}
 			if (itemToEdit is Texture)
 			{

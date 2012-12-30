@@ -88,6 +88,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="SkeletonEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="TextureEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>

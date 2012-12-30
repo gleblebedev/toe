@@ -31,9 +31,43 @@ namespace Toe.Utils.Mesh
 			}
 		}
 
-		public Vector3 Pos { get; set; }
+		public Vector3 BindingPos { get; set; }
 
-		public Quaternion Rot { get; set; }
+		public Quaternion BindingRot { get; set; }
+
+		private Vector3? actualPos;
+
+		public Vector3 ActualPos
+		{
+			get
+			{
+				if (this.actualPos == null) return BindingPos;
+				return this.actualPos.Value;
+			}
+			set
+			{
+				this.actualPos = value;
+			}
+		}
+
+		private Quaternion? actualRot;
+
+		public Quaternion ActualRot
+		{
+			get
+			{
+				if (actualRot == null) return BindingRot;
+				return this.actualRot.Value;
+			}
+			set
+			{
+				this.actualRot = value;
+			}
+		}
+
+		public Vector3 AbsolutePos { get; set; }
+
+		public Quaternion AbsoluteRot { get; set; }
 
 		#endregion
 	}

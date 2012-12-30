@@ -88,13 +88,13 @@ namespace Toe.Utils.Mesh.Marmalade.IwAnim
 				if (attribute == "pos")
 				{
 					parser.Consume();
-					bone.Pos = parser.ConsumeVector3();
+					bone.BindingPos = parser.ConsumeVector3();
 					continue;
 				}
 				if (attribute == "rot")
 				{
 					parser.Consume();
-					bone.Rot = parser.ConsumeQuaternion();
+					bone.BindingRot = parser.ConsumeQuaternion();
 					continue;
 				}
 				parser.UnknownLexem();

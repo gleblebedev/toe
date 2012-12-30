@@ -194,7 +194,8 @@ namespace Toe.Utils.Mesh.Marmalade
 		{
 			int maxItems = 4;
 			this.ConsumeVector(maxItems);
-			return new Quaternion(this.floatBuf[3], this.floatBuf[0], this.floatBuf[1], this.floatBuf[2]);
+			//return new Quaternion(this.floatBuf[3], this.floatBuf[0], this.floatBuf[1], this.floatBuf[2]);
+			return new Quaternion(this.floatBuf[0], this.floatBuf[1], this.floatBuf[2], this.floatBuf[3]);
 		}
 
 		public void ConsumeResourceReference(ResourceReference resourceReference)
@@ -408,6 +409,8 @@ namespace Toe.Utils.Mesh.Marmalade
 				case ';':
 					this.OnTerminalSymbol(";");
 					return;
+				case '-':
+				case '+':
 				case '0':
 				case '1':
 				case '2':
@@ -433,6 +436,11 @@ namespace Toe.Utils.Mesh.Marmalade
 		private void ReadNumber()
 		{
 			this.sb.Clear();
+			if (this.nextChar >= 0 && (this.nextChar == '-' || this.nextChar == '+'))
+			{
+				this.sb.Append((char)this.nextChar);
+				this.nextChar = this.reader.Read();
+			}
 			while (this.nextChar >= 0 && this.nextChar >= '0' && this.nextChar <= '9')
 			{
 				this.sb.Append((char)this.nextChar);
