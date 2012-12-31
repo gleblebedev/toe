@@ -23,6 +23,8 @@ namespace Toe.Editors
 
 		private float zNear = 1.0f;
 
+		private CoordinateSystem coordinateSystem = CoordinateSystem.ZUp;
+
 		#endregion
 
 		#region Public Properties
@@ -97,6 +99,94 @@ namespace Toe.Editors
 			{
 				this.zNear = value;
 			}
+		}
+
+		public Vector3 WorldUp
+		{
+			get
+			{
+				switch (coordinateSystem)
+				{
+					case CoordinateSystem.ZUp:
+						return new Vector3(0, 0, 1);
+						break;
+					case CoordinateSystem.YUp:
+						return new Vector3(0, 1, 0);
+						break;
+					default:
+						throw new ArgumentOutOfRangeException();
+				}
+			}
+		}
+		public Vector3 WorldRight
+		{
+			get
+			{
+				switch (coordinateSystem)
+				{
+					case CoordinateSystem.ZUp:
+						return new Vector3(1, 0, 0);
+						break;
+					case CoordinateSystem.YUp:
+						return new Vector3(1, 0, 0);
+						break;
+					default:
+						throw new ArgumentOutOfRangeException();
+				}
+			}
+		}
+		public Vector3 WorldForward
+		{
+			get
+			{
+				switch (coordinateSystem)
+				{
+					case CoordinateSystem.ZUp:
+						return new Vector3(0, 1, 0);
+						break;
+					case CoordinateSystem.YUp:
+						return new Vector3(0, 0, -1);
+						break;
+					default:
+						throw new ArgumentOutOfRangeException();
+				}
+			}
+		}
+		public Vector3 Up
+		{
+			get
+			{
+				return Vector3.Transform(WorldUp, rot);
+			}
+		}
+
+		public CoordinateSystem CoordinateSystem
+		{
+			get
+			{
+				return this.coordinateSystem;
+			}
+			set
+			{
+				this.coordinateSystem = value;
+			}
+		}
+
+		public Vector3 Right
+		{
+			get
+			{
+				return Vector3.Transform(WorldRight, rot);
+			}
+			
+		}
+		public Vector3 Forward
+		{
+			get
+			{
+				return Vector3.Transform(WorldForward, rot);
+			}
+
 		}
 
 		#endregion

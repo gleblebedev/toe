@@ -49,13 +49,13 @@ namespace Toe.Editors
 				{
 					if (dx != 0)
 					{
-						var r = Quaternion.FromAxisAngle(new Vector3(0, 0, 1), -dx / 100.0f);
+						var r = Quaternion.FromAxisAngle(this.Camera.WorldUp, -dx / 100.0f);
 						this.Camera.Rot = r * this.Camera.Rot;
 						this.Camera.Pos = Vector3.Transform(this.Camera.Pos, r);
 					}
 					if (dy != 0)
 					{
-						var right = Vector3.Transform(new Vector3(1, 0, 0), this.Camera.Rot);
+						var right = this.Camera.Right;
 						var r = Quaternion.FromAxisAngle(right, -dy / 100.0f);
 						this.Camera.Rot = r * this.Camera.Rot;
 						this.Camera.Pos = Vector3.Transform(this.Camera.Pos, r);
@@ -63,8 +63,8 @@ namespace Toe.Editors
 				}
 				if (MouseButtons.Middle == (button & MouseButtons.Middle))
 				{
-					var right = Vector3.Transform(new Vector3(1, 0, 0), this.Camera.Rot);
-					var up = Vector3.Transform(new Vector3(0, 1, 0), this.Camera.Rot);
+					var right = this.Camera.Right;
+					var up = this.Camera.Forward;
 					this.Camera.Pos += - dx * right + dy * up;
 				}
 			}

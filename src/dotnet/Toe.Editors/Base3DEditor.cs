@@ -43,7 +43,7 @@ namespace Toe.Editors
 			this.glControl.MouseMove += this.OnSceneMouseMove;
 			this.glControl.MouseEnter += this.OnSceneMouseEnter;
 			this.glControl.MouseLeave += this.OnSceneMouseLeave;
-			this.Camera.LookAt(new Vector3(512, 64, 1024), new Vector3(0, 0, 0), new Vector3(0, 0, 1));
+			this.Camera.LookAt(new Vector3(512, 64, 1024), new Vector3(0, 0, 0), this.Camera.WorldUp);
 			this.CameraController = new Autodesk3DMaxCompatibleController { Camera = this.Camera };
 		}
 
@@ -302,12 +302,21 @@ new Vector3(0.57735f, 0.57735f, 0.57735f),
 
 		private void SelectZUp(object sender, EventArgs e)
 		{
+			if (this.Camera.CoordinateSystem != CoordinateSystem.ZUp)
+			{
+				this.Camera.CoordinateSystem = CoordinateSystem.ZUp;
+				this.Camera.LookAt(new Vector3(512, 64, 1024), new Vector3(0, 0, 0), this.Camera.WorldUp);
+			}
 
 		}
 
 		private void SelectYUp(object sender, EventArgs e)
 		{
-
+			if (this.Camera.CoordinateSystem != CoordinateSystem.YUp)
+			{
+				this.Camera.CoordinateSystem = CoordinateSystem.YUp;
+				this.Camera.LookAt(new Vector3(512, 64, 1024), new Vector3(0, 0, 0), this.Camera.WorldUp);
+			}
 		}
 	}
 }
