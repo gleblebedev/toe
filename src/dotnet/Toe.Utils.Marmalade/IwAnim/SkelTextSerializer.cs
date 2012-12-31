@@ -21,7 +21,7 @@ namespace Toe.Utils.Mesh.Marmalade.IwAnim
 
 		public Managed Parse(TextParser parser)
 		{
-			AnimSkel mesh = new AnimSkel();
+			var mesh = new AnimSkel();
 			parser.Consume("CIwAnimSkel");
 			parser.Consume("{");
 

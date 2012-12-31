@@ -20,6 +20,8 @@ namespace Toe.Utils.Mesh.Marmalade.IwResManager
 
 		private readonly IResourceManager resourceManager;
 
+		private bool isShared;
+
 		#endregion
 
 		#region Constructors and Destructors
@@ -40,6 +42,23 @@ namespace Toe.Utils.Mesh.Marmalade.IwResManager
 			get
 			{
 				return this.externalResources;
+			}
+		}
+
+		public bool IsShared
+		{
+			get
+			{
+				return isShared;
+			}
+			set
+			{
+				if (isShared != value)
+				{
+					this.RaisePropertyChanging("IsShared");
+					isShared = value;
+					this.RaisePropertyChanged("IsShared");
+				}
 			}
 		}
 

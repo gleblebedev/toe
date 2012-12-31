@@ -12,37 +12,6 @@ using Toe.Utils.Mesh.Marmalade.IwGx;
 
 namespace Toe.Utils.Mesh.Marmalade
 {
-	public class TgaHeader
-	{
-		#region Constants and Fields
-
-		public byte colorMapEntrySize;
-
-		public ushort colorMapLength;
-
-		public byte colorMapType;
-
-		public byte depth;
-
-		public byte descriptor;
-
-		public ushort firstEntryIndex;
-
-		public ushort height;
-
-		public byte imageIDLength;
-
-		public byte imageType;
-
-		public ushort width;
-
-		public ushort xOrigin;
-
-		public ushort yOrigin;
-
-		#endregion
-	}
-
 	public class TextureResourceFormat : IResourceFileFormat
 	{
 		#region Constants and Fields
@@ -178,9 +147,14 @@ namespace Toe.Utils.Mesh.Marmalade
 				var correctedRgbValues = new byte[bmpData.Stride * b.Height];
 				for (int y = 0; y < b.Height; ++y)
 				{
+					int offset;
+					if ((header.descriptor & 0x20) == 0)
+						offset = (b.Height - 1 - y) * b.Width;
+					else 
+						offset = y * b.Width;
 					for (int x = 0; x < b.Width; ++x)
 					{
-						var srcpos = 3 * (x + (b.Height - 1 - y) * b.Width);
+						int srcpos = 3 * (x + offset);
 						var dstpos = x * 3 + y * bmpData.Stride;
 						correctedRgbValues[dstpos + 0] = rgbValues[srcpos + 0];
 						correctedRgbValues[dstpos + 1] = rgbValues[srcpos + 1];

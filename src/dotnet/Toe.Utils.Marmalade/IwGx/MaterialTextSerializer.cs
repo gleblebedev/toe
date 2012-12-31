@@ -198,6 +198,12 @@ namespace Toe.Utils.Mesh.Marmalade.IwGx
 					material.EffectPreset = parser.ConsumeEnum<EffectPreset>();
 					continue;
 				}
+				if (attribute == "shadeMode")
+				{
+					parser.Consume();
+					material.ShadeMode = parser.ConsumeEnum<ShadeMode>();
+					continue;
+				}
 				if (attribute == "blendMode")
 				{
 					parser.Consume();

@@ -194,8 +194,7 @@ namespace Toe.Utils.Mesh.Marmalade
 		{
 			int maxItems = 4;
 			this.ConsumeVector(maxItems);
-			//return new Quaternion(this.floatBuf[3], this.floatBuf[0], this.floatBuf[1], this.floatBuf[2]);
-			return new Quaternion(this.floatBuf[0], this.floatBuf[1], this.floatBuf[2], this.floatBuf[3]);
+			return new Quaternion(this.floatBuf[1], this.floatBuf[2], this.floatBuf[3], this.floatBuf[0]);
 		}
 
 		public void ConsumeResourceReference(ResourceReference resourceReference)

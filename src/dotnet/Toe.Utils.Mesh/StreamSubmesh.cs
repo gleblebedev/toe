@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 
+using OpenTK;
 using OpenTK.Graphics.OpenGL;
 #if WINDOWS_PHONE
 using Microsoft.Xna.Framework;
@@ -52,7 +53,14 @@ namespace Toe.Utils.Mesh
 			}
 			if (indexes.UV0 >= 0)
 			{
-				GL.TexCoord2(this.mesh.UV[0][indexes.UV0]);
+				var vector2 = this.mesh.UV[0][indexes.UV0];
+				var v = vector2;// new Vector2(vector2.X, -vector2.Y);
+				GL.MultiTexCoord2(TextureUnit.Texture0, ref v);
+			}
+			if (indexes.UV1 >= 0)
+			{
+				var vector2 = this.mesh.UV[0][indexes.UV1];
+				GL.MultiTexCoord2(TextureUnit.Texture1, ref vector2);
 			}
 			if (indexes.Color >= 0)
 			{
@@ -75,6 +83,23 @@ namespace Toe.Utils.Mesh
 				if (this.material != value)
 				{
 					this.material = value;
+				}
+			}
+		}
+
+		private string name;
+
+		public string Name
+		{
+			get
+			{
+				return this.name;
+			}
+			set
+			{
+				if (this.name != value)
+				{
+					this.name = value;
 				}
 			}
 		}

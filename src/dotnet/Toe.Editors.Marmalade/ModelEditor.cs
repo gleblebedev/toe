@@ -82,6 +82,8 @@ namespace Toe.Editors.Marmalade
 					{
 						GL.PushAttrib(AttribMask.AllAttribBits);
 						var m = resourceManager.FindResource(Material.TypeHash, Hash.Get(model.Name + "/" + submesh.Material)) as Material;
+						if (m==null)
+							m = resourceManager.FindResource(Material.TypeHash, Hash.Get(submesh.Material)) as Material;
 						if (m != null)
 						{
 							m.ApplyOpenGL();

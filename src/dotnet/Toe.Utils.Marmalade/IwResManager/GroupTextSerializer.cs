@@ -57,6 +57,12 @@ namespace Toe.Utils.Mesh.Marmalade.IwResManager
 					group.Name = parser.ConsumeString();
 					continue;
 				}
+				if (attribute == "shared")
+				{
+					parser.Consume();
+					group.IsShared = parser.ConsumeBool();
+					continue;
+				}
 				var relPath = attribute.Replace('/', Path.DirectorySeparatorChar);
 				if (relPath.Length > 2 && relPath[0] == '.' && relPath[1] == Path.DirectorySeparatorChar)
 				{

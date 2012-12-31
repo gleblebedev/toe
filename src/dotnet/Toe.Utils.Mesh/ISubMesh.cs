@@ -11,5 +11,7 @@ namespace Toe.Utils.Mesh
 #endif
 
 		string Material { get; set; }
+
+		string Name { get; }
 	}
 }

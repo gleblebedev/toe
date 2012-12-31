@@ -34,6 +34,7 @@ namespace Toe.Utils.Mesh
 			var meshBone = this.bones[index];
 			var pos = meshBone.ActualPos;
 			var rot = meshBone.ActualRot;
+			rot = new Quaternion(rot.X,rot.Y,rot.Z,rot.W);
 			if (meshBone.Parent >= 0)
 			{
 				if (index < meshBone.Parent)

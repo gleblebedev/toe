@@ -40,6 +40,7 @@
 			this.saveAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
 			this.recentFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.combatEvagroupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
 			this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -49,7 +50,6 @@
 			this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.statusStrip1 = new System.Windows.Forms.StatusStrip();
 			this.fileTabs = new System.Windows.Forms.TabControl();
-			this.combatEvagroupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuStrip1.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -146,6 +146,13 @@
 			this.recentFilesToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.recentFilesToolStripMenuItem.Text = "Recent Files";
 			// 
+			// combatEvagroupToolStripMenuItem
+			// 
+			this.combatEvagroupToolStripMenuItem.Name = "combatEvagroupToolStripMenuItem";
+			this.combatEvagroupToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
+			this.combatEvagroupToolStripMenuItem.Text = "male_lod0.group";
+			this.combatEvagroupToolStripMenuItem.Click += new System.EventHandler(this.combatEvagroupToolStripMenuItem_Click);
+			// 
 			// toolStripSeparator4
 			// 
 			this.toolStripSeparator4.Name = "toolStripSeparator4";
@@ -211,13 +218,6 @@
 			this.fileTabs.SelectedIndex = 0;
 			this.fileTabs.Size = new System.Drawing.Size(284, 215);
 			this.fileTabs.TabIndex = 2;
-			// 
-			// combatEvagroupToolStripMenuItem
-			// 
-			this.combatEvagroupToolStripMenuItem.Name = "combatEvagroupToolStripMenuItem";
-			this.combatEvagroupToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
-			this.combatEvagroupToolStripMenuItem.Text = "CombatEva.group";
-			this.combatEvagroupToolStripMenuItem.Click += new System.EventHandler(this.combatEvagroupToolStripMenuItem_Click);
 			// 
 			// MainEditorWindow
 			// 

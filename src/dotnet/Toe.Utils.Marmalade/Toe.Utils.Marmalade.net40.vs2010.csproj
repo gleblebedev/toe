@@ -101,6 +101,7 @@
     <Compile Include="TextResourceFormat.cs" />
     <Compile Include="TextResourceWriter.cs" />
     <Compile Include="TextureResourceFormat.cs" />
+    <Compile Include="TgaHeader.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Toe.Gx\Toe.Gx.net40.vs2010.csproj">

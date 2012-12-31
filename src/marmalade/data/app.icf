@@ -15,3 +15,10 @@
 #
 # Some conditional operations are also permitted, see the
 # S3E documentation for details.
+
+ [s3e] 
+ MemSizeDebug=10485760
+ SysGlesVersion=1
+
+[GX] 
+DataCacheSize=65536
