@@ -66,10 +66,10 @@ namespace Toe.Editors.Marmalade
 		{
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
-			var skin = this.Anim;
-			if (skin != null)
+			var anim = this.Anim;
+			if (anim != null)
 			{
-				var skeleton = skin.Skeleton.Resource as AnimSkel;
+				var skeleton = anim.Skeleton.Resource as AnimSkel;
 
 				if (skeleton != null)
 				{
@@ -78,6 +78,7 @@ namespace Toe.Editors.Marmalade
 					GL.Color3(1.0f, 1.0f, 1.0f);
 
 					var boneCollection = skeleton.Bones;
+					anim.Apply(skeleton, 0);
 					boneCollection.UpdateAbsoluteValues();
 					foreach (MeshBone bone in boneCollection)
 					{

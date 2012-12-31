@@ -43,5 +43,16 @@ namespace Toe.Utils.Marmalade.IwAnim
 		{
 			this.frames.Add(frame);
 		}
+
+		public void Apply(AnimSkel animSkel, float t)
+		{
+			var frame = this.frames[0];
+			foreach (var bone in frame.Bones)
+			{
+				var b = animSkel.Bones[animSkel.EnsureBone(bone.Name)];
+				b.ActualPos = bone.BindingPos;
+				b.ActualRot = bone.BindingRot;
+			}
+		}
 	}
 }

@@ -16,9 +16,14 @@ namespace Toe.Editors
 
 		private readonly EditorCamera camera = new EditorCamera();
 
-		private readonly GLControl gl;
+		private GLControl glControl;
 
 		private ICameraController cameraController;
+		private ToolStrip toolStrip1;
+		private ToolStripDropDownButton toolStripDropDownButton1;
+		private ToolStripMenuItem zUpToolStripMenuItem;
+		private ToolStripMenuItem yUpToolStripMenuItem;
+		//private GLControl glControl;
 
 		private bool loaded;
 
@@ -28,15 +33,16 @@ namespace Toe.Editors
 
 		public Base3DEditor()
 		{
-			this.gl = new GLControl(GraphicsMode.Default, 1, 0, GraphicsContextFlags.Default);
-			this.gl.Dock = DockStyle.Fill;
-			this.gl.Load += this.GLControlLoad;
-			this.gl.Paint += this.GLControlPaint;
-			this.gl.Resize += this.GLControlResize;
-			this.Controls.Add(this.gl);
-			this.gl.MouseMove += this.OnSceneMouseMove;
-			this.gl.MouseEnter += this.OnSceneMouseEnter;
-			this.gl.MouseLeave += this.OnSceneMouseLeave;
+			this.InitializeComponent();
+			//this.glControl = new GLControl(GraphicsMode.Default, 1, 0, GraphicsContextFlags.Default);
+			//this.glControl.Dock = DockStyle.Fill;
+			this.glControl.Load += this.GLControlLoad;
+			this.glControl.Paint += this.GLControlPaint;
+			this.glControl.Resize += this.GLControlResize;
+			this.Controls.Add(this.glControl);
+			this.glControl.MouseMove += this.OnSceneMouseMove;
+			this.glControl.MouseEnter += this.OnSceneMouseEnter;
+			this.glControl.MouseLeave += this.OnSceneMouseLeave;
 			this.Camera.LookAt(new Vector3(512, 64, 1024), new Vector3(0, 0, 0), new Vector3(0, 0, 1));
 			this.CameraController = new Autodesk3DMaxCompatibleController { Camera = this.Camera };
 		}
@@ -45,7 +51,7 @@ namespace Toe.Editors
 
 		public void Refresh()
 		{
-			gl.Invalidate();
+			this.glControl.Invalidate();
 		}
 
 		#region Public Properties
@@ -62,12 +68,12 @@ namespace Toe.Editors
 				{
 					if (this.cameraController != null)
 					{
-						this.cameraController.Detach(this.gl);
+						this.cameraController.Detach(this.glControl);
 					}
 					this.cameraController = value;
 					if (this.cameraController != null)
 					{
-						this.cameraController.Attach(this.gl);
+						this.cameraController.Attach(this.glControl);
 					}
 				}
 			}
@@ -90,7 +96,7 @@ namespace Toe.Editors
 		private void GLControlLoad(object sender, EventArgs e)
 		{
 			this.loaded = true;
-			this.gl.MakeCurrent();
+			this.glControl.MakeCurrent();
 			this.SetupViewport();
 		}
 
@@ -100,7 +106,7 @@ namespace Toe.Editors
 			{
 				return;
 			}
-			this.gl.MakeCurrent();
+			this.glControl.MakeCurrent();
 			GL.Enable(EnableCap.DepthTest);
 
 			this.Camera.SetProjection();
@@ -118,7 +124,7 @@ namespace Toe.Editors
 			GL.Vertex3(0, 0, 0);
 			GL.Vertex3(0, 0, 1024);
 			GL.End();
-			this.gl.SwapBuffers();
+			this.glControl.SwapBuffers();
 		}
 
 
@@ -184,7 +190,7 @@ new Vector3(0.57735f, 0.57735f, 0.57735f),
 			{
 				return;
 			}
-			this.gl.MakeCurrent();
+			this.glControl.MakeCurrent();
 			this.SetupViewport();
 		}
 
@@ -209,14 +215,14 @@ new Vector3(0.57735f, 0.57735f, 0.57735f),
 			if (this.CameraController != null)
 			{
 				this.CameraController.MouseMove(e.Button, e.Location);
-				this.gl.Refresh();
+				this.glControl.Refresh();
 			}
 		}
 
 		private void SetupViewport()
 		{
-			int w = this.gl.Width;
-			int h = this.gl.Height;
+			int w = this.glControl.Width;
+			int h = this.glControl.Height;
 			// Use all of the glControl painting area
 			GL.Viewport(0, 0, w, h);
 
@@ -224,5 +230,84 @@ new Vector3(0.57735f, 0.57735f, 0.57735f),
 		}
 
 		#endregion
+
+		private void InitializeComponent()
+		{
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Base3DEditor));
+			this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+			this.toolStripDropDownButton1 = new System.Windows.Forms.ToolStripDropDownButton();
+			this.zUpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.yUpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.glControl = new OpenTK.GLControl();
+			this.toolStrip1.SuspendLayout();
+			this.SuspendLayout();
+			// 
+			// toolStrip1
+			// 
+			this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripDropDownButton1});
+			this.toolStrip1.Location = new System.Drawing.Point(0, 0);
+			this.toolStrip1.Name = "toolStrip1";
+			this.toolStrip1.Size = new System.Drawing.Size(150, 25);
+			this.toolStrip1.TabIndex = 0;
+			this.toolStrip1.Text = "toolStrip1";
+			// 
+			// toolStripDropDownButton1
+			// 
+			this.toolStripDropDownButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.toolStripDropDownButton1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.zUpToolStripMenuItem,
+            this.yUpToolStripMenuItem});
+			this.toolStripDropDownButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButton1.Image")));
+			this.toolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.toolStripDropDownButton1.Name = "toolStripDropDownButton1";
+			this.toolStripDropDownButton1.Size = new System.Drawing.Size(29, 22);
+			this.toolStripDropDownButton1.Text = "toolStripDropDownButton1";
+			// 
+			// zUpToolStripMenuItem
+			// 
+			this.zUpToolStripMenuItem.Name = "zUpToolStripMenuItem";
+			this.zUpToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.zUpToolStripMenuItem.Text = "Z-Up";
+			this.zUpToolStripMenuItem.Click += new System.EventHandler(this.SelectZUp);
+			// 
+			// yUpToolStripMenuItem
+			// 
+			this.yUpToolStripMenuItem.Name = "yUpToolStripMenuItem";
+			this.yUpToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.yUpToolStripMenuItem.Text = "Y-Up";
+			this.yUpToolStripMenuItem.Click += new System.EventHandler(this.SelectYUp);
+			// 
+			// glControl
+			// 
+			this.glControl.BackColor = System.Drawing.Color.Black;
+			this.glControl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.glControl.Location = new System.Drawing.Point(0, 25);
+			this.glControl.Name = "glControl";
+			this.glControl.Size = new System.Drawing.Size(150, 125);
+			this.glControl.TabIndex = 1;
+			this.glControl.VSync = false;
+			// 
+			// Base3DEditor
+			// 
+			this.Controls.Add(this.glControl);
+			this.Controls.Add(this.toolStrip1);
+			this.Name = "Base3DEditor";
+			this.toolStrip1.ResumeLayout(false);
+			this.toolStrip1.PerformLayout();
+			this.ResumeLayout(false);
+			this.PerformLayout();
+
+		}
+
+		private void SelectZUp(object sender, EventArgs e)
+		{
+
+		}
+
+		private void SelectYUp(object sender, EventArgs e)
+		{
+
+		}
 	}
 }

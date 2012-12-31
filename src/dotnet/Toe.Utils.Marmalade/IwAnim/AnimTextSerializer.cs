@@ -1,5 +1,6 @@
 using Autofac;
 
+using Toe.Utils.Mesh;
 using Toe.Utils.Mesh.Marmalade;
 
 namespace Toe.Utils.Marmalade.IwAnim
@@ -65,6 +66,8 @@ namespace Toe.Utils.Marmalade.IwAnim
 			var frame = new AnimKeyFrame();
 			parser.Consume("CIwAnimKeyFrame");
 			parser.Consume("{");
+
+			MeshBone bone = null;
 			for (; ; )
 			{
 				var attribute = parser.GetLexem();
@@ -82,19 +85,19 @@ namespace Toe.Utils.Marmalade.IwAnim
 				if (attribute == "bone")
 				{
 					parser.Consume();
-					parser.ConsumeString();
+					bone = frame.Bones[frame.Bones.EnsureBone(parser.ConsumeString())];
 					continue;
 				}
 				if (attribute == "pos")
 				{
 					parser.Consume();
-					parser.ConsumeVector3();
+					bone.BindingPos = parser.ConsumeVector3();
 					continue;
 				}
 				if (attribute == "rot")
 				{
 					parser.Consume();
-					parser.ConsumeQuaternion();
+					bone.BindingRot = parser.ConsumeQuaternion();
 					continue;
 				}
 				parser.UnknownLexem();
