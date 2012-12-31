@@ -12,7 +12,7 @@ namespace Toe.Utils.Marmalade
 
 		#region Public Methods and Operators
 
-		Managed Parse(TextParser parser);
+		Managed Parse(TextParser parser, string defaultName);
 
 		#endregion
 	}

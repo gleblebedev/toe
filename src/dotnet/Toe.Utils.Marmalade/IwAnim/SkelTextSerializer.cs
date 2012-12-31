@@ -19,9 +19,10 @@ namespace Toe.Utils.Mesh.Marmalade.IwAnim
 
 		#region Public Methods and Operators
 
-		public Managed Parse(TextParser parser)
+		public Managed Parse(TextParser parser, string defaultName)
 		{
-			var mesh = new AnimSkel();
+			var skel = new AnimSkel();
+			skel.Name = defaultName;
 			parser.Consume("CIwAnimSkel");
 			parser.Consume("{");
 
@@ -36,25 +37,25 @@ namespace Toe.Utils.Mesh.Marmalade.IwAnim
 				if (attribute == "name")
 				{
 					parser.Consume();
-					mesh.Name = parser.ConsumeString();
+					skel.Name = parser.ConsumeString();
 					continue;
 				}
 				if (attribute == "numBones")
 				{
 					parser.Consume();
-					mesh.Bones.Capacity = parser.ConsumeInt();
+					skel.Bones.Capacity = parser.ConsumeInt();
 					continue;
 				}
 
 				if (attribute == "CIwAnimBone")
 				{
 					parser.Consume();
-					ParseBone(parser, mesh);
+					ParseBone(parser, skel);
 					continue;
 				}
 				parser.UnknownLexem();
 			}
-			return mesh;
+			return skel;
 		}
 
 		#endregion

@@ -42,20 +42,21 @@ namespace Toe.Utils.Mesh.Marmalade.IwGx
 
 		#region Public Methods and Operators
 
-		public IList<Material> Load(Stream stream)
-		{
-			IList<Material> materials = new List<Material>();
-			using (var source = new StreamReader(stream))
-			{
-				var parser = new TextParser(source, Directory.GetCurrentDirectory());
-				materials.Add((Material)this.Parse(parser));
-			}
-			return materials;
-		}
+		//public IList<Material> Load(Stream stream)
+		//{
+		//    IList<Material> materials = new List<Material>();
+		//    using (var source = new StreamReader(stream))
+		//    {
+		//        var parser = new TextParser(source, Directory.GetCurrentDirectory());
+		//        materials.Add((Material)this.Parse(parser, TODO));
+		//    }
+		//    return materials;
+		//}
 
-		public Managed Parse(TextParser parser)
+		public Managed Parse(TextParser parser, string defaultName)
 		{
 			Material material = this.context.Resolve<Material>();
+			material.Name = defaultName;
 			material.BasePath = parser.BasePath;
 			parser.Consume("CIwMaterial");
 			parser.Consume("{");

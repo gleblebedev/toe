@@ -38,9 +38,10 @@ namespace Toe.Utils.Mesh.Marmalade.IwResManager
 
 		#region Public Methods and Operators
 
-		public Managed Parse(TextParser parser)
+		public Managed Parse(TextParser parser, string defaultName)
 		{
 			ResGroup group = new ResGroup(this.context.Resolve<IResourceManager>(), this.context) { BasePath = parser.BasePath };
+			group.Name = defaultName;
 			parser.Consume("CIwResGroup");
 			parser.Consume("{");
 			for (;;)

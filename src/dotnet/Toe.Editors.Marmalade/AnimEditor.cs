@@ -3,14 +3,13 @@ using OpenTK.Graphics.OpenGL;
 using Toe.Editors.Interfaces;
 using Toe.Editors.Interfaces.Bindings;
 using Toe.Resources;
+using Toe.Utils.Marmalade.IwAnim;
 using Toe.Utils.Marmalade.IwGraphics;
 using Toe.Utils.Mesh;
-using Toe.Utils.Mesh.Marmalade.IwGraphics;
-using Toe.Utils.Mesh.Marmalade.IwGx;
 
 namespace Toe.Editors.Marmalade
 {
-	public class ModelEditor : Base3DEditor, IView
+	public class AnimEditor : Base3DEditor, IView
 	{
 		private readonly IEditorEnvironment editorEnvironment;
 
@@ -19,12 +18,12 @@ namespace Toe.Editors.Marmalade
 		private DataContextContainer dataContext = new DataContextContainer();
 		#region Implementation of IView
 
-		public Model Model
+		public Anim Anim
 		{
 			get
 			{
 				if (this.dataContext.Value == null) return null;
-				return (Model)this.dataContext.Value;
+				return (Anim)this.dataContext.Value;
 			}
 			set
 			{
@@ -42,7 +41,7 @@ namespace Toe.Editors.Marmalade
 
 		#endregion
 
-		public ModelEditor(IEditorEnvironment editorEnvironment, IResourceManager resourceManager)
+		public AnimEditor(IEditorEnvironment editorEnvironment, IResourceManager resourceManager)
 		{
 			this.editorEnvironment = editorEnvironment;
 			this.resourceManager = resourceManager;
@@ -58,7 +57,7 @@ namespace Toe.Editors.Marmalade
 
 		private void InitializeComponent()
 		{
-	
+
 		}
 
 		#region Overrides of Base3DEditor
@@ -67,19 +66,32 @@ namespace Toe.Editors.Marmalade
 		{
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
-			GL.PushAttrib(AttribMask.AllAttribBits);
-
-			GL.Enable(EnableCap.Lighting);
-			GL.Enable(EnableCap.Light0);
-			GL.Light(LightName.Light0, LightParameter.Position, new float[] { Camera.Pos.X, Camera.Pos.Y, Camera.Pos.Z });
-
-			var model = Model;
-			if (model != null)
+			var skin = this.Anim;
+			if (skin != null)
 			{
-				model.RenderOpenGL();
-				
+				var skeleton = skin.Skeleton.Resource as AnimSkel;
+
+				if (skeleton != null)
+				{
+					GL.Disable(EnableCap.DepthTest);
+					GL.Begin(BeginMode.Lines);
+					GL.Color3(1.0f, 1.0f, 1.0f);
+
+					var boneCollection = skeleton.Bones;
+					boneCollection.UpdateAbsoluteValues();
+					foreach (MeshBone bone in boneCollection)
+					{
+						var parent = bone.Parent;
+						if (parent >= 0)
+						{
+							var parentBone = boneCollection[parent];
+							GL.Vertex3(parentBone.AbsolutePos);
+							GL.Vertex3(bone.AbsolutePos);
+						}
+					}
+					GL.End();
+				}
 			}
-			GL.PopAttrib();
 		}
 
 		#endregion

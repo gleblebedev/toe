@@ -61,6 +61,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AnimEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="AutofacModule.cs" />
     <Compile Include="ManagedPreview.cs">
       <SubType>UserControl</SubType>
@@ -89,6 +92,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="SkeletonEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SkinEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="TextureEditor.cs">

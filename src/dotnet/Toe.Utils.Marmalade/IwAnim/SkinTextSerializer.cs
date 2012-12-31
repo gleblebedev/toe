@@ -31,9 +31,10 @@ namespace Toe.Utils.Mesh.Marmalade.IwAnim
 
 		#region Public Methods and Operators
 
-		public Managed Parse(TextParser parser)
+		public Managed Parse(TextParser parser, string defaultName)
 		{
-			AnimSkin mesh = context.Resolve<AnimSkin>();
+			AnimSkin skin = context.Resolve<AnimSkin>();
+			skin.Name = defaultName;
 			parser.Consume("CIwAnimSkin");
 			parser.Consume("{");
 
@@ -48,31 +49,31 @@ namespace Toe.Utils.Mesh.Marmalade.IwAnim
 				if (attribute == "name")
 				{
 					parser.Consume();
-					mesh.Name = parser.ConsumeString();
+					skin.Name = parser.ConsumeString();
 					continue;
 				}
 				if (attribute == "skeleton")
 				{
 					parser.Consume();
-					parser.ConsumeResourceReference(mesh.Skeleton);
+					parser.ConsumeResourceReference(skin.Skeleton);
 					continue;
 				}
 				if (attribute == "model")
 				{
 					parser.Consume();
-					parser.ConsumeResourceReference(mesh.SkeletonModel);
+					parser.ConsumeResourceReference(skin.SkeletonModel);
 					continue;
 				}
 				if (attribute == "CIwAnimSkinSet")
 				{
 					parser.Consume();
-					ParseAnimSkinSet(parser, mesh);
+					ParseAnimSkinSet(parser, skin);
 					continue;
 				}
 
 				parser.UnknownLexem();
 			}
-			return mesh;
+			return skin;
 		}
 
 		#endregion

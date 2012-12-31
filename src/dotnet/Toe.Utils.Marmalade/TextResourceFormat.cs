@@ -70,7 +70,7 @@ namespace Toe.Utils.Mesh.Marmalade
 			return false;
 		}
 
-		public IList<Managed> Load(Stream stream, string basePath)
+		public IList<Managed> Load(Stream stream, string defaultName, string basePath)
 		{
 			IList<Managed> items = this.context.Resolve<IList<Managed>>();
 
@@ -88,7 +88,7 @@ namespace Toe.Utils.Mesh.Marmalade
 					object serializer;
 					if (this.context.TryResolveKeyed(Hash.Get(lexem), typeof(ITextSerializer), out serializer))
 					{
-						items.Add(((ITextSerializer)serializer).Parse(parser));
+						items.Add(((ITextSerializer)serializer).Parse(parser, defaultName));
 						continue;
 					}
 
@@ -104,7 +104,7 @@ namespace Toe.Utils.Mesh.Marmalade
 
 			using (var fileStream = File.OpenRead(filePath))
 			{
-				var resources = this.Load(fileStream, Path.GetDirectoryName(Path.GetFullPath(filePath)));
+				var resources = this.Load(fileStream, Path.GetFileNameWithoutExtension(filePath), Path.GetDirectoryName(Path.GetFullPath(filePath)));
 				foreach (var resource in resources)
 				{
 					items.Add(new ResourceFileItem(resource.GetClassHashCode(), resource));

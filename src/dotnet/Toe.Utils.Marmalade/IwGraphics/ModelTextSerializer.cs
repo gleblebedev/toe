@@ -1,4 +1,6 @@
-﻿using OpenTK;
+﻿using Autofac;
+
+using OpenTK;
 
 using Toe.Utils.Marmalade;
 using Toe.Utils.Marmalade.IwGraphics;
@@ -16,6 +18,13 @@ namespace Toe.Utils.Mesh.Marmalade.IwGraphics
 	/// </summary>
 	public class ModelTextSerializer : ITextSerializer
 	{
+		private readonly IComponentContext context;
+
+		public ModelTextSerializer(IComponentContext context)
+		{
+			this.context = context;
+		}
+
 		#region Public Properties
 
 		public string DefaultFileExtension
@@ -30,9 +39,10 @@ namespace Toe.Utils.Mesh.Marmalade.IwGraphics
 
 		#region Public Methods and Operators
 
-		public Managed Parse(TextParser parser)
+		public Managed Parse(TextParser parser, string defaultName)
 		{
-			var mesh = new Model();
+			var model = context.Resolve<Model>();
+			model.Name = defaultName;
 			parser.Consume("CIwModel");
 			parser.Consume("{");
 
@@ -47,18 +57,18 @@ namespace Toe.Utils.Mesh.Marmalade.IwGraphics
 				if (attribute == "name")
 				{
 					parser.Consume();
-					mesh.Name = parser.ConsumeString();
+					model.Name = parser.ConsumeString();
 					continue;
 				}
 				if (attribute == "CMesh")
 				{
-					mesh.Meshes.Add(this.ParseMesh(parser));
+					model.Meshes.Add(this.ParseMesh(parser));
 					continue;
 				}
 				parser.UnknownLexem();
 			}
 
-			return mesh;
+			return model;
 		}
 
 		public StreamMesh ParseMesh(TextParser parser)

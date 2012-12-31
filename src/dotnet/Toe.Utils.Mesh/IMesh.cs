@@ -9,6 +9,8 @@ namespace Toe.Utils.Mesh
 	{
 		IList<ISubMesh> Submeshes { get; }
 
+		string Name { get; }
+
 #if WINDOWS_PHONE
 #else
 		void RenderOpenGL();

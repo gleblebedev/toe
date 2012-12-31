@@ -40,9 +40,10 @@ namespace Toe.Utils.Mesh.Marmalade.IwGx
 
 		#region Public Methods and Operators
 
-		public Managed Parse(TextParser parser)
+		public Managed Parse(TextParser parser, string defaultName)
 		{
 			ShaderTechnique shader = new ShaderTechnique(this.resourceManager);
+			shader.Name = defaultName;
 			shader.BasePath = parser.BasePath;
 
 			parser.Consume("CIwGxShaderTechnique");

@@ -23,9 +23,10 @@ namespace Toe.Utils.Marmalade.IwAnim
 			}
 		}
 
-		public Managed Parse(TextParser parser)
+		public Managed Parse(TextParser parser, string defaultName)
 		{
 			Anim mesh = context.Resolve<Anim>();
+			mesh.Name = defaultName;
 			parser.Consume("CIwAnim");
 			parser.Consume("{");
 

@@ -42,6 +42,14 @@ namespace TinyOpenEngine.ToeVisualStudioExtension
 			{
 				return new SkeletonEditor(this, resourceManager);
 			}
+			if (itemToEdit is AnimSkin)
+			{
+				return new SkinEditor(this, resourceManager);
+			}
+			if (itemToEdit is Anim)
+			{
+				return new AnimEditor(this, resourceManager);
+			}
 			if (itemToEdit is Texture)
 			{
 				return new TextureEditor(this, resourceManager);
