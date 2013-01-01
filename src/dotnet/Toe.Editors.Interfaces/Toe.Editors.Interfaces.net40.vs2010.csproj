@@ -53,6 +53,8 @@
     <Compile Include="Bindings\IBinding.cs" />
     <Compile Include="Bindings\IView.cs" />
     <Compile Include="Bindings\PropertyBinding.cs" />
+    <Compile Include="CommandHistory.cs" />
+    <Compile Include="ICommandHistory.cs" />
     <Compile Include="IEditorEnvironment.cs" />
     <Compile Include="IResourceEditor.cs" />
     <Compile Include="IResourceEditorFactory.cs" />

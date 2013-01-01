@@ -116,5 +116,27 @@ namespace Toe.Editor
 		{
 			this.OpenFile(@"C:\GitHub\toe\src\marmalade\data\male_lod0.group");
 		}
+
+		private void UndoClick(object sender, EventArgs e)
+		{
+			var tab = this.fileTabs.SelectedTab;
+			if (tab == null)
+				return;
+			var editor = tab.Tag as IResourceEditor;
+			if (editor == null)
+				return;
+			editor.Undo();
+		}
+
+		private void RedoClick(object sender, EventArgs e)
+		{
+			var tab = this.fileTabs.SelectedTab;
+			if (tab == null)
+				return;
+			var editor = tab.Tag as IResourceEditor;
+			if (editor == null)
+				return;
+			editor.Redo();
+		}
 	}
 }

@@ -17,13 +17,16 @@ namespace Toe.Editors.Marmalade
 
 		private readonly IEditorEnvironment editorEnvironment;
 
+		private readonly ICommandHistory history;
+
 		#endregion
 
 		#region Constructors and Destructors
 
-		public ResGroupEditor(IEditorEnvironment editorEnvironment)
+		public ResGroupEditor(IEditorEnvironment editorEnvironment, ICommandHistory history)
 		{
 			this.editorEnvironment = editorEnvironment;
+			this.history = history;
 			this.AutoSize = true;
 			this.Padding = new Padding(10);
 
@@ -31,7 +34,7 @@ namespace Toe.Editors.Marmalade
 				{ Text = "Resource Group", Dock = DockStyle.Fill, AutoSize = true, Padding = new Padding(10) };
 			this.Controls.Add(resourceGroup);
 
-			var collectionView = new CollectionView<IResourceFile>(a => editorEnvironment.EditorFor(a)) { Dock = DockStyle.Fill };
+			var collectionView = new CollectionView<IResourceFile>(a => editorEnvironment.EditorFor(a, history)) { Dock = DockStyle.Fill };
 			new PropertyBinding<ResGroup, IList<IResourceFile>>(collectionView, this.dataContext, m => m.ExternalResources, null);
 			resourceGroup.Controls.Add(collectionView);
 		}

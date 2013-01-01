@@ -19,6 +19,8 @@ namespace Toe.Editors.Marmalade
 
 		private readonly IResourceManager resourceManager;
 
+		private readonly ICommandHistory history;
+
 		private SplitContainer itemsPropertiesSplitter;
 
 		private IResourceFile resourceFile;
@@ -29,8 +31,10 @@ namespace Toe.Editors.Marmalade
 
 		public ResourceFileEditor(IEditorEnvironment editorEnvironment, IResourceManager resourceManager)
 		{
+			this.history = new CommandHistory();
 			this.editorEnvironment = editorEnvironment;
 			this.resourceManager = resourceManager;
+			this.history = history;
 			this.Dock = DockStyle.Fill;
 
 			this.InitializeComponent();
@@ -278,7 +282,7 @@ namespace Toe.Editors.Marmalade
 				c.Dispose();
 			}
 
-			var view = this.editorEnvironment.EditorFor(managed.Resource);
+			var view = this.editorEnvironment.EditorFor(managed.Resource, history);
 			view.DataContext.Value = managed.Resource;
 			var v = view as Control;
 			v.Dock = DockStyle.Fill;

@@ -1,4 +1,6 @@
 using Autofac;
+using Autofac.Core;
+using Autofac.Core.Activators.Reflection;
 
 using Toe.Editors.Interfaces;
 using Toe.Editors.Interfaces.Bindings;
@@ -29,14 +31,16 @@ namespace Toe.Editor
 
 		#region Implementation of IEditorEnvironment
 
-		public IView EditorFor(object itemToEdit)
+		public IView EditorFor(object itemToEdit, ICommandHistory history)
 		{
-			object view;
-			if (context.TryResolveKeyed(itemToEdit.GetType(), typeof(IView), out view))
+			var typedParameters = new Parameter[] { TypedParameter.From(history) };
+			IView view = context.ResolveOptionalKeyed<IView>(itemToEdit.GetType(), typedParameters);
+			if (view != null)
 			{
 				return (IView)view;
 			}
-			if (context.TryResolveKeyed(itemToEdit.GetType().BaseType, typeof(IView), out view))
+			view = context.ResolveOptionalKeyed<IView>(itemToEdit.GetType().BaseType, typedParameters);
+			if (view != null)
 			{
 				return (IView)view;
 			}
