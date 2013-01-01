@@ -53,7 +53,9 @@
     <Compile Include="Bindings\IBinding.cs" />
     <Compile Include="Bindings\IView.cs" />
     <Compile Include="Bindings\PropertyBinding.cs" />
+    <Compile Include="CommandExt.cs" />
     <Compile Include="CommandHistory.cs" />
+    <Compile Include="ICommand.cs" />
     <Compile Include="ICommandHistory.cs" />
     <Compile Include="IEditorEnvironment.cs" />
     <Compile Include="IResourceEditor.cs" />
@@ -70,6 +72,7 @@
     </Compile>
     <Compile Include="Panels\VerticalStackPanelLayout.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SetValueCommand.cs" />
     <Compile Include="Views\ButtonView.cs">
       <SubType>UserControl</SubType>
     </Compile>

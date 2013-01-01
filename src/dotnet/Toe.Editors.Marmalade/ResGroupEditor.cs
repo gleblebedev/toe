@@ -34,7 +34,7 @@ namespace Toe.Editors.Marmalade
 				{ Text = "Resource Group", Dock = DockStyle.Fill, AutoSize = true, Padding = new Padding(10) };
 			this.Controls.Add(resourceGroup);
 
-			var collectionView = new CollectionView<IResourceFile>(a => editorEnvironment.EditorFor(a, history)) { Dock = DockStyle.Fill };
+			var collectionView = new CollectionView<IResourceFile>(a => editorEnvironment.EditorFor(a,history)) { Dock = DockStyle.Fill };
 			new PropertyBinding<ResGroup, IList<IResourceFile>>(collectionView, this.dataContext, m => m.ExternalResources, null);
 			resourceGroup.Controls.Add(collectionView);
 		}

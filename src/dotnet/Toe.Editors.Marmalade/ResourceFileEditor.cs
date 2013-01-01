@@ -9,7 +9,7 @@ using Toe.Resources;
 
 namespace Toe.Editors.Marmalade
 {
-	public class ResourceFileEditor : UserControl, IResourceEditor
+	public class ResourceFileEditor : UserControl, IResourceEditor,INotifyPropertyChanged
 	{
 		#region Constants and Fields
 
@@ -36,7 +36,7 @@ namespace Toe.Editors.Marmalade
 			this.resourceManager = resourceManager;
 			this.history = history;
 			this.Dock = DockStyle.Fill;
-
+			history.PropertyChanged += NotifyHistoryChanged;
 			this.InitializeComponent();
 			this.InitializeEditor();
 		}
@@ -73,7 +73,7 @@ namespace Toe.Editors.Marmalade
 		{
 			get
 			{
-				return false;
+				return history.CanRedo;
 			}
 		}
 
@@ -81,7 +81,7 @@ namespace Toe.Editors.Marmalade
 		{
 			get
 			{
-				return false;
+				return history.CanUndo;
 			}
 		}
 
@@ -127,6 +127,7 @@ namespace Toe.Editors.Marmalade
 			this.resourceFile.Open();
 
 			this.dataContext.Value = this.resourceFile.Items;
+			this.history.Clear();
 		}
 
 		public void RecordCommand(string command)
@@ -135,7 +136,7 @@ namespace Toe.Editors.Marmalade
 
 		public void Redo()
 		{
-			
+			history.Redo();
 		}
 
 		public void SaveFile(string filename)
@@ -154,6 +155,10 @@ namespace Toe.Editors.Marmalade
 			//    }
 			//}
 		}
+		private void NotifyHistoryChanged(object sender, PropertyChangedEventArgs e)
+		{
+			if (PropertyChanged != null) PropertyChanged(this, e);
+		}
 
 		public void StopRecorder()
 		{
@@ -161,7 +166,7 @@ namespace Toe.Editors.Marmalade
 
 		public void Undo()
 		{
-			
+			history.Undo();
 		}
 
 		public void onSelectAll()
@@ -290,6 +295,12 @@ namespace Toe.Editors.Marmalade
 
 			this.itemsPropertiesSplitter.Panel2Collapsed = false;
 		}
+
+		#endregion
+
+		#region Implementation of INotifyPropertyChanged
+
+		public event PropertyChangedEventHandler PropertyChanged;
 
 		#endregion
 	}

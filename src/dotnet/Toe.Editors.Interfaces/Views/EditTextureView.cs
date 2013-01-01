@@ -12,11 +12,14 @@ namespace Toe.Editors.Interfaces.Views
 	{
 		private readonly IEditorEnvironment editorEnvironment;
 
+		private readonly ICommandHistory history;
+
 		DataContextContainer dataContext = new DataContextContainer();
 
-		public EditTextureView(IEditorEnvironment editorEnvironment)
+		public EditTextureView(IEditorEnvironment editorEnvironment, ICommandHistory history)
 		{
 			this.editorEnvironment = editorEnvironment;
+			this.history = history;
 			//this.label.AutoSize = true;
 			new DataContextBinding(ViewControl, this.DataContext,false);
 			this.ViewControl.Click += OnButtonClick;

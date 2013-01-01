@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Windows.Forms;
 
@@ -14,6 +15,7 @@ namespace Toe.Editor
 	{
 		private readonly IComponentContext context;
 
+		private IResourceEditor lastEditor = null;
 
 		#region Constructors and Destructors
 
@@ -21,9 +23,57 @@ namespace Toe.Editor
 		{
 			this.context = context;
 			this.InitializeComponent();
-
+			fileTabs.SelectedIndexChanged += RebindToEditor;
 
 		}
+
+		private void RebindToEditor(object sender, EventArgs e)
+		{
+			var tab = this.fileTabs.SelectedTab;
+			if (tab == null)
+				return;
+			var editor = tab.Tag as IResourceEditor;
+			if (editor == null)
+				return;
+
+			if (lastEditor != editor)
+			{
+				UnbindEditor(lastEditor);
+				BindEditor(editor);
+			}
+
+		}
+
+		private void BindEditor(IResourceEditor editor)
+		{
+			var notifyPropertyChanged = editor as INotifyPropertyChanged;
+			if (notifyPropertyChanged != null)
+			{
+				notifyPropertyChanged.PropertyChanged += EditorPropertyChanged;
+			}
+			UpdateMenuButtons(editor);
+		}
+
+		private void EditorPropertyChanged(object sender, PropertyChangedEventArgs e)
+		{
+			UpdateMenuButtons(sender as IResourceEditor);
+		}
+
+		private void UpdateMenuButtons(IResourceEditor editor)
+		{
+			undoMenuItem.Enabled = undoButton.Enabled = editor.CanUndo;
+			redoButton.Enabled = redoButton.Enabled = editor.CanRedo;
+		}
+
+		private void UnbindEditor(IResourceEditor editor)
+		{
+			var notifyPropertyChanged = editor as INotifyPropertyChanged;
+			if (notifyPropertyChanged != null)
+			{
+				notifyPropertyChanged.PropertyChanged -= EditorPropertyChanged;
+			}
+		}
+
 		protected override void OnLoad(System.EventArgs e)
 		{
 			base.OnLoad(e);
@@ -43,7 +93,7 @@ namespace Toe.Editor
 				{
 					if (string.Compare(tag.CurrentFileName, filename, StringComparison.InvariantCultureIgnoreCase) == 0)
 					{
-						fileTab.Select();
+						fileTabs.SelectedTab = fileTab;
 						return;
 					}
 				}
@@ -138,5 +188,7 @@ namespace Toe.Editor
 				return;
 			editor.Redo();
 		}
+
+	
 	}
 }

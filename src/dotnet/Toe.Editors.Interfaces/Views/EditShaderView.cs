@@ -6,10 +6,13 @@ namespace Toe.Editors.Interfaces.Views
 {
 	public class EditShaderView : SingleControlView<ButtonView>, IView
 	{
+		private readonly ICommandHistory history;
+
 		DataContextContainer dataContext = new DataContextContainer();
 
-		public EditShaderView()
+		public EditShaderView(ICommandHistory history)
 		{
+			this.history = history;
 			//this.label.AutoSize = true;
 			new DataContextBinding(ViewControl, this.DataContext,false);
 		}
