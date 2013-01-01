@@ -48,7 +48,7 @@
     <Compile Include="MainEditorWindow.Designer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="EditorEnvironment.cs" />
-    <Compile Include="EditorResourceErrorHandler.cs" />
+    <Compile Include="Resources.Designer.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Toe.Utils.Mesh\Toe.Utils.Mesh.net40.vs2010.csproj">
@@ -103,5 +103,16 @@
     <None Include="track_01.mtl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="Resources\redo.png" />
+    <None Include="Resources\undo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LogicalName>Toe.Editor.Resources.resources</LogicalName>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>

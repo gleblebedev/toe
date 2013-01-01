@@ -6,13 +6,19 @@
       <File FileName="Toe\MainWindow.cs" Line="15" Column="40" />
       <File FileName="c:\GitHub\toe\src\dotnet\Toe.Editor\MainEditorWindow.cs" Line="5" Column="1" />
       <File FileName="c:\GitHub\toe\src\dotnet\Toe.Editors.Marmalade\MaterialEditor.cs" Line="195" Column="5" />
-      <File FileName="Toe.Editor\Program.cs" Line="8" Column="1" />
+      <File FileName="Toe.Editor\Program.cs" Line="56" Column="3" />
       <File FileName="c:\GitHub\toe\src\dotnet\Toe.Editors.Marmalade\MaterialPreview.cs" Line="1" Column="7" />
+      <File FileName="c:\GitHub\toe\src\dotnet\Toe.Editor\MainEditorWindow.Designer.cs" Line="265" Column="47" />
+      <File FileName="Toe.Editor\Resources.resx" Line="17" Column="46" />
+      <File FileName="Toe.Editor\Resources.Designer.cs" Line="33" Column="10" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
-        <State expanded="True" selected="True">
-          <Node name="Toe.Editor.mono" expanded="True" />
+        <State expanded="True">
+          <Node name="Toe.Editor.mono" expanded="True">
+            <Node name="Resources" expanded="True" />
+            <Node name="Resources.resx" selected="True" />
+          </Node>
           <Node name="Toe.Gx.net40.vs2010" expanded="True" />
           <Node name="Toe.Resources.net40.vs2010" expanded="True" />
         </State>
