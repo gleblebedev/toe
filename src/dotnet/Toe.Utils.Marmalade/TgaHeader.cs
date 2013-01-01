@@ -1,4 +1,4 @@
-namespace Toe.Utils.Mesh.Marmalade
+namespace Toe.Utils.Marmalade
 {
 	internal class TgaHeader
 	{

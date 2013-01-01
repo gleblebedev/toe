@@ -2,13 +2,15 @@
 using System.IO;
 
 using Toe.Resources;
+using Toe.Utils.Mesh;
+
 #if WINDOWS_PHONE
 using Microsoft.Xna.Framework;
 #else
 
 #endif
 
-namespace Toe.Utils.Mesh.Marmalade.IwGraphics
+namespace Toe.Utils.Marmalade.IwGraphics
 {
 	/// <summary>
 	/// Marmalade SDK .geo file parser.

@@ -3,9 +3,8 @@
 using OpenTK.Graphics.OpenGL;
 
 using Toe.Resources;
+using Toe.Utils.Marmalade.IwGx;
 using Toe.Utils.Mesh;
-using Toe.Utils.Mesh.Marmalade;
-using Toe.Utils.Mesh.Marmalade.IwGx;
 
 namespace Toe.Utils.Marmalade.IwGraphics
 {

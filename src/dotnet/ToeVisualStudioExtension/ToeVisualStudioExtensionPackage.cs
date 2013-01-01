@@ -16,8 +16,7 @@ using Toe.Editors.Marmalade;
 using Toe.Gx;
 using Toe.Resources;
 using Toe.ToeVsExt;
-using Toe.Utils.Mesh.Marmalade;
-using Toe.Utils.Mesh.Marmalade.IwGraphics;
+using Toe.Utils.Marmalade;
 
 using AutofacModule = Toe.Utils.Marmalade.AutofacModule;
 using IContainer = Autofac.IContainer;

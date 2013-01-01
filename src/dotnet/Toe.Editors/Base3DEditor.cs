@@ -1,12 +1,12 @@
 using System;
+using System.ComponentModel;
+using System.Drawing;
 using System.Windows.Forms;
 
 using OpenTK;
-using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 
 using Toe.Gx;
-using Toe.Utils.Mesh.Marmalade;
 
 namespace Toe.Editors
 {
@@ -16,18 +16,23 @@ namespace Toe.Editors
 
 		private readonly EditorCamera camera = new EditorCamera();
 
-		private GLControl glControl;
-
 		private ICameraController cameraController;
-		private ToolStrip toolStrip1;
-		private ToolStripDropDownButton toolStripDropDownButton1;
-		private ToolStripMenuItem zUpToolStripMenuItem;
-		private ToolStripMenuItem yUpToolStripMenuItem;
-		//private GLControl glControl;
+
+		private GLControl glControl;
 
 		private bool loaded;
 
+		private ToolStrip toolStrip1;
+
+		private ToolStripDropDownButton toolStripDropDownButton1;
+
+		private ToolStripMenuItem yUpToolStripMenuItem;
+
+		private ToolStripMenuItem zUpToolStripMenuItem;
+
 		#endregion
+
+		//private GLControl glControl;
 
 		#region Constructors and Destructors
 
@@ -43,18 +48,22 @@ namespace Toe.Editors
 			this.glControl.MouseMove += this.OnSceneMouseMove;
 			this.glControl.MouseEnter += this.OnSceneMouseEnter;
 			this.glControl.MouseLeave += this.OnSceneMouseLeave;
+			this.glControl.MouseWheel += this.OnSceneMouseWheel;
 			this.Camera.LookAt(new Vector3(512, 64, 1024), new Vector3(0, 0, 0), this.Camera.WorldUp);
-			this.CameraController = new Autodesk3DMaxCompatibleController { Camera = this.Camera };
+			this.CameraController = new TargetCameraController { Camera = this.Camera };
 		}
 
 		#endregion
 
-		public void Refresh()
-		{
-			this.glControl.Invalidate();
-		}
-
 		#region Public Properties
+
+		public EditorCamera Camera
+		{
+			get
+			{
+				return this.camera;
+			}
+		}
 
 		public ICameraController CameraController
 		{
@@ -79,19 +88,62 @@ namespace Toe.Editors
 			}
 		}
 
-		public EditorCamera Camera
+		#endregion
+
+		#region Public Methods and Operators
+
+		public void Refresh()
 		{
-			get
-			{
-				return this.camera;
-			}
+			this.glControl.Invalidate();
 		}
 
 		#endregion
 
 		#region Methods
 
+		protected void RenderBox(float size)
+		{
+			Vector3[] p = new[]
+				{
+					new Vector3(-size, -size, size), new Vector3(size, -size, size), new Vector3(-size, size, size),
+					new Vector3(size, size, size), new Vector3(-size, size, -size), new Vector3(size, size, -size),
+					new Vector3(-size, -size, -size), new Vector3(size, -size, -size),
+				};
+			Vector3[] n = new[]
+				{
+					new Vector3(-0.57735f, -0.57735f, -0.57735f), new Vector3(-0.57735f, 0.57735f, -0.57735f),
+					new Vector3(0.57735f, -0.57735f, -0.57735f), new Vector3(0.57735f, 0.57735f, -0.57735f),
+					new Vector3(-0.57735f, -0.57735f, 0.57735f), new Vector3(-0.57735f, 0.57735f, 0.57735f),
+					new Vector3(0.57735f, -0.57735f, 0.57735f), new Vector3(0.57735f, 0.57735f, 0.57735f),
+				};
+			Vector2[] uv = new[]
+				{ new Vector2(0.0f, 0.0f), new Vector2(1.0f, 0.0f), new Vector2(1.0f, 1.0f), new Vector2(0.0f, 1.0f), };
+			OpenTKHelper.Assert();
+			GL.Begin(BeginMode.Quads);
+
+			this.DrawBoxQuad(p, n, uv, new[] { 2, 5, 3, 7, 1, 6, 0, 4 });
+			this.DrawBoxQuad(p, n, uv, new[] { 4, 1, 5, 3, 3, 7, 2, 5 });
+			this.DrawBoxQuad(p, n, uv, new[] { 6, 0, 7, 2, 5, 3, 4, 1 });
+			this.DrawBoxQuad(p, n, uv, new[] { 0, 4, 1, 6, 7, 2, 6, 0 });
+			this.DrawBoxQuad(p, n, uv, new[] { 3, 7, 5, 3, 7, 2, 1, 6 });
+			this.DrawBoxQuad(p, n, uv, new[] { 4, 1, 2, 5, 0, 4, 6, 0 });
+
+			GL.End();
+			OpenTKHelper.Assert();
+		}
+
 		protected abstract void RenderScene();
+
+		private void DrawBoxQuad(Vector3[] p, Vector3[] n, Vector2[] uv, int[] ints)
+		{
+			for (int i = 0; i < 4; ++i)
+			{
+				GL.Normal3(n[ints[i * 2 + 1]]);
+				GL.MultiTexCoord2(TextureUnit.Texture1, ref uv[i]);
+				GL.TexCoord2(uv[i]);
+				GL.Vertex3(p[ints[i * 2]]);
+			}
+		}
 
 		private void GLControlLoad(object sender, EventArgs e)
 		{
@@ -127,63 +179,6 @@ namespace Toe.Editors
 			this.glControl.SwapBuffers();
 		}
 
-
-		protected void RenderBox(float size)
-		{
-
-			Vector3[] p = new Vector3[]
-				{
-new Vector3(-size, -size, size),
-new Vector3(size, -size, size),
-new Vector3(-size, size, size),
-new Vector3(size, size, size),
-new Vector3(-size, size, -size),
-new Vector3(size, size, -size),
-new Vector3(-size, -size, -size),
-new Vector3(size, -size, -size),
-				};
-			Vector3[] n = new Vector3[]
-				{
-new Vector3(-0.57735f, -0.57735f, -0.57735f),
-new Vector3(-0.57735f, 0.57735f, -0.57735f),
-new Vector3(0.57735f, -0.57735f, -0.57735f),
-new Vector3(0.57735f, 0.57735f, -0.57735f),
-new Vector3(-0.57735f, -0.57735f, 0.57735f),
-new Vector3(-0.57735f, 0.57735f, 0.57735f),
-new Vector3(0.57735f, -0.57735f, 0.57735f),
-new Vector3(0.57735f, 0.57735f, 0.57735f),
-				};
-			Vector2[] uv = new Vector2[]
-				{
-					new Vector2( 0.0f,0.0f ),
-					new Vector2( 1.0f,0.0f ),
-					new Vector2( 1.0f,1.0f ),
-					new Vector2( 0.0f,1.0f ),
-
-				};
-			OpenTKHelper.Assert();
-			GL.Begin(BeginMode.Quads);
-
-			DrawBoxQuad(p, n, uv, new int[] { 2, 5, 3, 7, 1, 6, 0, 4 });
-			DrawBoxQuad(p, n, uv, new int[] { 4, 1, 5, 3, 3, 7, 2, 5 });
-			DrawBoxQuad(p, n, uv, new int[] { 6, 0, 7, 2, 5, 3, 4, 1 });
-			DrawBoxQuad(p, n, uv, new int[] { 0, 4, 1, 6, 7, 2, 6, 0 });
-			DrawBoxQuad(p, n, uv, new int[] { 3, 7, 5, 3, 7, 2, 1, 6 });
-			DrawBoxQuad(p, n, uv, new int[] { 4, 1, 2, 5, 0, 4, 6, 0 });
-
-			GL.End();
-			OpenTKHelper.Assert();
-		}
-		private void DrawBoxQuad(Vector3[] p, Vector3[] n, Vector2[] uv, int[] ints)
-		{
-			for (int i = 0; i < 4; ++i)
-			{
-				GL.Normal3(n[ints[i * 2 + 1]]);
-				GL.MultiTexCoord2(TextureUnit.Texture1, ref uv[i]);
-				GL.TexCoord2(uv[i]);
-				GL.Vertex3(p[ints[i * 2]]);
-			}
-		}
 		private void GLControlResize(object sender, EventArgs e)
 		{
 			if (!this.loaded)
@@ -192,6 +187,72 @@ new Vector3(0.57735f, 0.57735f, 0.57735f),
 			}
 			this.glControl.MakeCurrent();
 			this.SetupViewport();
+		}
+
+		private void InitializeComponent()
+		{
+			ComponentResourceManager resources = new ComponentResourceManager(typeof(Base3DEditor));
+			this.toolStrip1 = new ToolStrip();
+			this.toolStripDropDownButton1 = new ToolStripDropDownButton();
+			this.zUpToolStripMenuItem = new ToolStripMenuItem();
+			this.yUpToolStripMenuItem = new ToolStripMenuItem();
+			this.glControl = new GLControl();
+			this.toolStrip1.SuspendLayout();
+			this.SuspendLayout();
+			// 
+			// toolStrip1
+			// 
+			this.toolStrip1.Items.AddRange(new ToolStripItem[] { this.toolStripDropDownButton1 });
+			this.toolStrip1.Location = new Point(0, 0);
+			this.toolStrip1.Name = "toolStrip1";
+			this.toolStrip1.Size = new Size(150, 25);
+			this.toolStrip1.TabIndex = 0;
+			this.toolStrip1.Text = "toolStrip1";
+			// 
+			// toolStripDropDownButton1
+			// 
+			this.toolStripDropDownButton1.DisplayStyle = ToolStripItemDisplayStyle.Image;
+			this.toolStripDropDownButton1.DropDownItems.AddRange(
+				new ToolStripItem[] { this.zUpToolStripMenuItem, this.yUpToolStripMenuItem });
+			this.toolStripDropDownButton1.Image = ((Image)(resources.GetObject("toolStripDropDownButton1.Image")));
+			this.toolStripDropDownButton1.ImageTransparentColor = Color.Magenta;
+			this.toolStripDropDownButton1.Name = "toolStripDropDownButton1";
+			this.toolStripDropDownButton1.Size = new Size(29, 22);
+			this.toolStripDropDownButton1.Text = "toolStripDropDownButton1";
+			// 
+			// zUpToolStripMenuItem
+			// 
+			this.zUpToolStripMenuItem.Name = "zUpToolStripMenuItem";
+			this.zUpToolStripMenuItem.Size = new Size(152, 22);
+			this.zUpToolStripMenuItem.Text = "Z-Up";
+			this.zUpToolStripMenuItem.Click += this.SelectZUp;
+			// 
+			// yUpToolStripMenuItem
+			// 
+			this.yUpToolStripMenuItem.Name = "yUpToolStripMenuItem";
+			this.yUpToolStripMenuItem.Size = new Size(152, 22);
+			this.yUpToolStripMenuItem.Text = "Y-Up";
+			this.yUpToolStripMenuItem.Click += this.SelectYUp;
+			// 
+			// glControl
+			// 
+			this.glControl.BackColor = Color.Black;
+			this.glControl.Dock = DockStyle.Fill;
+			this.glControl.Location = new Point(0, 25);
+			this.glControl.Name = "glControl";
+			this.glControl.Size = new Size(150, 125);
+			this.glControl.TabIndex = 1;
+			this.glControl.VSync = false;
+			// 
+			// Base3DEditor
+			// 
+			this.Controls.Add(this.glControl);
+			this.Controls.Add(this.toolStrip1);
+			this.Name = "Base3DEditor";
+			this.toolStrip1.ResumeLayout(false);
+			this.toolStrip1.PerformLayout();
+			this.ResumeLayout(false);
+			this.PerformLayout();
 		}
 
 		private void OnSceneMouseEnter(object sender, EventArgs e)
@@ -219,6 +280,33 @@ new Vector3(0.57735f, 0.57735f, 0.57735f),
 			}
 		}
 
+		private void OnSceneMouseWheel(object sender, MouseEventArgs e)
+		{
+			if (this.CameraController != null)
+			{
+				this.CameraController.MouseWheel(e.Delta, e.Location);
+				this.glControl.Refresh();
+			}
+		}
+
+		private void SelectYUp(object sender, EventArgs e)
+		{
+			if (this.Camera.CoordinateSystem != CoordinateSystem.YUp)
+			{
+				this.Camera.CoordinateSystem = CoordinateSystem.YUp;
+				this.Camera.LookAt(new Vector3(512, 64, 1024), new Vector3(0, 0, 0), this.Camera.WorldUp);
+			}
+		}
+
+		private void SelectZUp(object sender, EventArgs e)
+		{
+			if (this.Camera.CoordinateSystem != CoordinateSystem.ZUp)
+			{
+				this.Camera.CoordinateSystem = CoordinateSystem.ZUp;
+				this.Camera.LookAt(new Vector3(512, 64, 1024), new Vector3(0, 0, 0), this.Camera.WorldUp);
+			}
+		}
+
 		private void SetupViewport()
 		{
 			int w = this.glControl.Width;
@@ -230,93 +318,5 @@ new Vector3(0.57735f, 0.57735f, 0.57735f),
 		}
 
 		#endregion
-
-		private void InitializeComponent()
-		{
-			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Base3DEditor));
-			this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-			this.toolStripDropDownButton1 = new System.Windows.Forms.ToolStripDropDownButton();
-			this.zUpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.yUpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.glControl = new OpenTK.GLControl();
-			this.toolStrip1.SuspendLayout();
-			this.SuspendLayout();
-			// 
-			// toolStrip1
-			// 
-			this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripDropDownButton1});
-			this.toolStrip1.Location = new System.Drawing.Point(0, 0);
-			this.toolStrip1.Name = "toolStrip1";
-			this.toolStrip1.Size = new System.Drawing.Size(150, 25);
-			this.toolStrip1.TabIndex = 0;
-			this.toolStrip1.Text = "toolStrip1";
-			// 
-			// toolStripDropDownButton1
-			// 
-			this.toolStripDropDownButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.toolStripDropDownButton1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.zUpToolStripMenuItem,
-            this.yUpToolStripMenuItem});
-			this.toolStripDropDownButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButton1.Image")));
-			this.toolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.toolStripDropDownButton1.Name = "toolStripDropDownButton1";
-			this.toolStripDropDownButton1.Size = new System.Drawing.Size(29, 22);
-			this.toolStripDropDownButton1.Text = "toolStripDropDownButton1";
-			// 
-			// zUpToolStripMenuItem
-			// 
-			this.zUpToolStripMenuItem.Name = "zUpToolStripMenuItem";
-			this.zUpToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-			this.zUpToolStripMenuItem.Text = "Z-Up";
-			this.zUpToolStripMenuItem.Click += new System.EventHandler(this.SelectZUp);
-			// 
-			// yUpToolStripMenuItem
-			// 
-			this.yUpToolStripMenuItem.Name = "yUpToolStripMenuItem";
-			this.yUpToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-			this.yUpToolStripMenuItem.Text = "Y-Up";
-			this.yUpToolStripMenuItem.Click += new System.EventHandler(this.SelectYUp);
-			// 
-			// glControl
-			// 
-			this.glControl.BackColor = System.Drawing.Color.Black;
-			this.glControl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.glControl.Location = new System.Drawing.Point(0, 25);
-			this.glControl.Name = "glControl";
-			this.glControl.Size = new System.Drawing.Size(150, 125);
-			this.glControl.TabIndex = 1;
-			this.glControl.VSync = false;
-			// 
-			// Base3DEditor
-			// 
-			this.Controls.Add(this.glControl);
-			this.Controls.Add(this.toolStrip1);
-			this.Name = "Base3DEditor";
-			this.toolStrip1.ResumeLayout(false);
-			this.toolStrip1.PerformLayout();
-			this.ResumeLayout(false);
-			this.PerformLayout();
-
-		}
-
-		private void SelectZUp(object sender, EventArgs e)
-		{
-			if (this.Camera.CoordinateSystem != CoordinateSystem.ZUp)
-			{
-				this.Camera.CoordinateSystem = CoordinateSystem.ZUp;
-				this.Camera.LookAt(new Vector3(512, 64, 1024), new Vector3(0, 0, 0), this.Camera.WorldUp);
-			}
-
-		}
-
-		private void SelectYUp(object sender, EventArgs e)
-		{
-			if (this.Camera.CoordinateSystem != CoordinateSystem.YUp)
-			{
-				this.Camera.CoordinateSystem = CoordinateSystem.YUp;
-				this.Camera.LookAt(new Vector3(512, 64, 1024), new Vector3(0, 0, 0), this.Camera.WorldUp);
-			}
-		}
 	}
 }

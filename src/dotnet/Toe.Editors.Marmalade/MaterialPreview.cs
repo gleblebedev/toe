@@ -1,13 +1,16 @@
-using OpenTK;
 using OpenTK.Graphics.OpenGL;
-
-using Toe.Utils.Mesh.Marmalade;
 
 namespace Toe.Editors.Marmalade
 {
-	public class MaterialPreview:Base3DEditor
+	public class MaterialPreview : Base3DEditor
 	{
+		#region Constants and Fields
+
 		private readonly MaterialEditor editor;
+
+		#endregion
+
+		#region Constructors and Destructors
 
 		public MaterialPreview(MaterialEditor editor)
 		{
@@ -17,36 +20,35 @@ namespace Toe.Editors.Marmalade
 			this.Camera.ZFar = 2048.0f;
 		}
 
-		#region Overrides of Base3DEditor
+		#endregion
+
+		#region Methods
 
 		protected override void RenderScene()
 		{
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
-
-			if (editor.Material == null)
+			if (this.editor.Material == null)
+			{
 				return;
-			if (editor.Material.Invisible)
+			}
+			if (this.editor.Material.Invisible)
+			{
 				return;
+			}
 
 			GL.PushAttrib(AttribMask.AllAttribBits);
 
 			GL.Enable(EnableCap.Lighting);
 			GL.Enable(EnableCap.Light0);
-			GL.Light(LightName.Light0, LightParameter.Position, new float[]{Camera.Pos.X,Camera.Pos.Y,Camera.Pos.Z});
+			GL.Light(
+				LightName.Light0, LightParameter.Position, new[] { this.Camera.Pos.X, this.Camera.Pos.Y, this.Camera.Pos.Z });
 
-
-
-			editor.Material.ApplyOpenGL();
-			RenderBox(250);
+			this.editor.Material.ApplyOpenGL();
+			this.RenderBox(250);
 
 			GL.PopAttrib();
-
 		}
-
-		
-
-	
 
 		#endregion
 	}

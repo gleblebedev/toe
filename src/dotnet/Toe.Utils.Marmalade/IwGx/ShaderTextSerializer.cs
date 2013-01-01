@@ -1,9 +1,8 @@
 using System.Globalization;
 
 using Toe.Resources;
-using Toe.Utils.Marmalade;
 
-namespace Toe.Utils.Mesh.Marmalade.IwGx
+namespace Toe.Utils.Marmalade.IwGx
 {
 	public class ShaderTextSerializer : ITextSerializer
 	{

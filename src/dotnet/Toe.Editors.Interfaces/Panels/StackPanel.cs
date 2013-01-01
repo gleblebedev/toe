@@ -1,12 +1,14 @@
 using System.Windows.Forms;
 
-namespace Toe.Editors.Interfaces.Views
+using Toe.Editors.Interfaces.Views;
+
+namespace Toe.Editors.Interfaces.Panels
 {
 	public class StackPanel : Panel //FlowLayoutPanel
 	{
 		public StackPanel()
 		{
-			AutoScroll = true;
+			this.AutoScroll = true;
 			
 			//this.FlowDirection = FlowDirection.TopDown;
 			//this.WrapContents = false;

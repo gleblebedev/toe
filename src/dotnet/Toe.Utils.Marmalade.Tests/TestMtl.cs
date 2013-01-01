@@ -6,8 +6,6 @@ using Autofac;
 using NUnit.Framework;
 
 using Toe.Resources;
-using Toe.Utils.Mesh.Marmalade.IwGx;
-using Toe.Utils.Mesh.Marmalade.IwResManager;
 
 namespace Toe.Utils.Mesh.Marmalade.Tests
 {

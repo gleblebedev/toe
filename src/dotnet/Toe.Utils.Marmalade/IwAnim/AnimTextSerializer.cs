@@ -1,7 +1,6 @@
 using Autofac;
 
 using Toe.Utils.Mesh;
-using Toe.Utils.Mesh.Marmalade;
 
 namespace Toe.Utils.Marmalade.IwAnim
 {

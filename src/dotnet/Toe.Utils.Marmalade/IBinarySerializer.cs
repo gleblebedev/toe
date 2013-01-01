@@ -1,5 +1,3 @@
-using Toe.Utils.Mesh.Marmalade;
-
 namespace Toe.Utils.Marmalade
 {
 	public interface IBinarySerializer

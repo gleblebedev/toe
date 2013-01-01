@@ -91,6 +91,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="ShaderEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="SkeletonEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>

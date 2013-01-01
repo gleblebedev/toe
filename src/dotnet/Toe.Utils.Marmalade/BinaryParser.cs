@@ -1,6 +1,6 @@
 using System.IO;
 
-namespace Toe.Utils.Mesh.Marmalade
+namespace Toe.Utils.Marmalade
 {
 	public class BinaryParser
 	{

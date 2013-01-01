@@ -1,4 +1,4 @@
-namespace Toe.Utils.Mesh.Marmalade.IwGx
+namespace Toe.Utils.Marmalade.IwGx
 {
 	/// <summary>
 	/// Alpha (transparency) modes.

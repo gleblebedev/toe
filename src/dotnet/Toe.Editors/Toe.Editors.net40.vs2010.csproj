@@ -53,7 +53,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Autodesk3DMaxCompatibleController.cs" />
+    <Compile Include="GameCameraController.cs" />
+    <Compile Include="TargetCameraController.cs" />
     <Compile Include="Base3DEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>

@@ -88,10 +88,10 @@
     <Compile Include="IwGx\ShaderTechniqueParam.cs" />
     <Compile Include="IwGx\Texture.cs" />
     <Compile Include="IwResManager\GroupTextSerializer.cs" />
+    <Compile Include="IwResManager\ModeratedList.cs" />
     <Compile Include="IwResManager\ResGroup.cs" />
     <Compile Include="IwResManager\ResourceFileReference.cs" />
     <Compile Include="Managed.cs" />
-    <Compile Include="OpenTKHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="IwAnim\SkelTextSerializer.cs" />
     <Compile Include="IwAnim\SkinTextSerializer.cs" />

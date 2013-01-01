@@ -1,4 +1,4 @@
-namespace Toe.Utils.Mesh.Marmalade.IwResManager
+namespace Toe.Utils.Marmalade.IwResManager
 {
 	public class ResourceFileReference
 	{
@@ -7,5 +7,10 @@ namespace Toe.Utils.Mesh.Marmalade.IwResManager
 		public string Path { get; set; }
 
 		#endregion
+
+		public override string ToString()
+		{
+			return Path;
+		}
 	}
 }

@@ -5,11 +5,10 @@ using OpenTK.Graphics.OpenGL;
 
 using Toe.Gx;
 using Toe.Resources;
-using Toe.Utils.Marmalade;
 
 using PixelFormat = System.Drawing.Imaging.PixelFormat;
 
-namespace Toe.Utils.Mesh.Marmalade.IwGx
+namespace Toe.Utils.Marmalade.IwGx
 {
 	public class Texture : Managed
 	{

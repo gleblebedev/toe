@@ -1,7 +1,6 @@
-using Toe.Utils.Marmalade;
-using Toe.Utils.Marmalade.IwAnim;
+using Toe.Utils.Mesh;
 
-namespace Toe.Utils.Mesh.Marmalade.IwAnim
+namespace Toe.Utils.Marmalade.IwAnim
 {
 	public class SkelTextSerializer : ITextSerializer
 	{

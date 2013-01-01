@@ -9,6 +9,7 @@ using NUnit.Framework;
 using Toe.Editors.Marmalade;
 using Toe.Gx;
 using Toe.Resources;
+using Toe.Utils.Marmalade;
 
 using AutofacModule = Toe.Utils.Marmalade.AutofacModule;
 using IContainer = Autofac.IContainer;

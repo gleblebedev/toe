@@ -1,6 +1,6 @@
 using System.ComponentModel;
 
-namespace Toe.Utils.Mesh.Marmalade.IwGx
+namespace Toe.Utils.Marmalade.IwGx
 {
 	public class MatAnim : INotifyPropertyChanged
 	{

@@ -3,9 +3,6 @@ using System.Collections.Generic;
 using Toe.Resources;
 using Toe.Utils.Marmalade.IwGraphics;
 using Toe.Utils.Mesh;
-using Toe.Utils.Mesh.Marmalade;
-using Toe.Utils.Mesh.Marmalade.IwAnim;
-using Toe.Utils.Mesh.Marmalade.IwGraphics;
 
 namespace Toe.Utils.Marmalade.IwAnim
 {

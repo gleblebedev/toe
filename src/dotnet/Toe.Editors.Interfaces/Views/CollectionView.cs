@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Windows.Forms;
 
 using Toe.Editors.Interfaces.Bindings;
+using Toe.Editors.Interfaces.Panels;
 
 namespace Toe.Editors.Interfaces.Views
 {

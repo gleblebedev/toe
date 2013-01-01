@@ -5,16 +5,15 @@ using System.IO;
 using System.Text;
 
 using Toe.Resources;
+
+using OpenTK;
 #if WINDOWS_PHONE
 using Microsoft.Xna.Framework;
 #else
-using OpenTK;
-
-using Toe.Utils.Marmalade;
 
 #endif
 
-namespace Toe.Utils.Mesh.Marmalade
+namespace Toe.Utils.Marmalade
 {
 	public class TextParser
 	{
@@ -202,7 +201,7 @@ namespace Toe.Utils.Mesh.Marmalade
 
 		public void ConsumeResourceReference(ResourceReference resourceReference)
 		{
-			ConsumeResourceReference(resourceReference, null);
+			this.ConsumeResourceReference(resourceReference, null);
 
 			
 		}
@@ -517,6 +516,7 @@ namespace Toe.Utils.Mesh.Marmalade
 				if (File.Exists(Path.Combine(this.BasePath, combinedPath)))
 				{
 					resourceReference.FileReference = combinedPath;
+					return;
 				}
 			}
 			resourceReference.NameReference = l;

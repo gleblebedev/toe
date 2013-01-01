@@ -1,3 +1,5 @@
+using Autofac;
+
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 
@@ -8,9 +10,8 @@ using Toe.Editors.Marmalade;
 using Toe.Resources;
 using Toe.Utils.Marmalade.IwAnim;
 using Toe.Utils.Marmalade.IwGraphics;
-using Toe.Utils.Mesh.Marmalade.IwGraphics;
-using Toe.Utils.Mesh.Marmalade.IwGx;
-using Toe.Utils.Mesh.Marmalade.IwResManager;
+using Toe.Utils.Marmalade.IwGx;
+using Toe.Utils.Marmalade.IwResManager;
 
 namespace TinyOpenEngine.ToeVisualStudioExtension
 {
@@ -20,47 +21,27 @@ namespace TinyOpenEngine.ToeVisualStudioExtension
 
 		private readonly IResourceManager resourceManager;
 
-		public VsEditorEnvironment(ToeVisualStudioExtensionPackage package, IResourceManager resourceManager)
+		private readonly IComponentContext context;
+
+		public VsEditorEnvironment(ToeVisualStudioExtensionPackage package, IResourceManager resourceManager, IComponentContext context)
 		{
 			this.package = package;
 			this.resourceManager = resourceManager;
+			this.context = context;
 		}
 
 		#region Implementation of IEditorEnvironment
 
 		public IView EditorFor(object itemToEdit)
 		{
-			if (itemToEdit is Material)
+			object view;
+			if (context.TryResolveKeyed(itemToEdit.GetType(), typeof(IView), out view))
 			{
-				return new MaterialEditor(this);
+				return (IView)view;
 			}
-			if (itemToEdit is Model)
+			if (context.TryResolveKeyed(itemToEdit.GetType().BaseType, typeof(IView), out view))
 			{
-				return new ModelEditor(this, resourceManager);
-			}
-			if (itemToEdit is AnimSkel)
-			{
-				return new SkeletonEditor(this, resourceManager);
-			}
-			if (itemToEdit is AnimSkin)
-			{
-				return new SkinEditor(this, resourceManager);
-			}
-			if (itemToEdit is Anim)
-			{
-				return new AnimEditor(this, resourceManager);
-			}
-			if (itemToEdit is Texture)
-			{
-				return new TextureEditor(this, resourceManager);
-			}
-			if (itemToEdit is ResGroup)
-			{
-				return new ResGroupEditor(this);
-			}
-			if (itemToEdit is IResourceFile)
-			{
-				return new ResourceFileReferenceEditor(this);
+				return (IView)view;
 			}
 			return new StringView();
 		}

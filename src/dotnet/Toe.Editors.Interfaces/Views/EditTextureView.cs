@@ -1,4 +1,6 @@
 using System;
+using System.ComponentModel;
+using System.Drawing;
 using System.Windows.Forms;
 
 using Toe.Editors.Interfaces.Bindings;
@@ -18,18 +20,32 @@ namespace Toe.Editors.Interfaces.Views
 			//this.label.AutoSize = true;
 			new DataContextBinding(ViewControl, this.DataContext,false);
 			this.ViewControl.Click += OnButtonClick;
+			this.dataContext.PropertyChanged += OnReferencePropertyChanged;
+			this.dataContext.DataContextChanged += OnReferencePropertyChanged;
+		}
+
+		private void OnReferencePropertyChanged(object sender, EventArgs e)
+		{
+			if (this.Reference.Resource == null && !this.Reference.IsEmpty)
+			{
+				this.BackColor = Color.Red;
+			}
+			else
+			{
+				this.BackColor = Color.FromArgb(255, 240, 240, 240);
+			}
 		}
 
 		private void OnButtonClick(object sender, EventArgs a)
 		{
-			var filePath = Text.FilePath;
+			var filePath = this.Reference.FilePath;
 			if (!string.IsNullOrEmpty(filePath))
 				editorEnvironment.Open(filePath);
 		}
 
 		#region Implementation of IView
 
-		public ResourceReference Text
+		public ResourceReference Reference
 		{
 			get
 			{

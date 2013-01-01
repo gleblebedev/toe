@@ -11,35 +11,17 @@ namespace Toe.Editors.Marmalade
 {
 	public class SkinEditor : Base3DEditor, IView
 	{
+		#region Constants and Fields
+
+		private readonly DataContextContainer dataContext = new DataContextContainer();
+
 		private readonly IEditorEnvironment editorEnvironment;
 
 		private readonly IResourceManager resourceManager;
 
-		private DataContextContainer dataContext = new DataContextContainer();
-		#region Implementation of IView
-
-		public AnimSkin Skin
-		{
-			get
-			{
-				if (this.dataContext.Value == null) return null;
-				return (AnimSkin)this.dataContext.Value;
-			}
-			set
-			{
-				this.dataContext.Value = value;
-			}
-		}
-
-		public DataContextContainer DataContext
-		{
-			get
-			{
-				return this.dataContext;
-			}
-		}
-
 		#endregion
+
+		#region Constructors and Destructors
 
 		public SkinEditor(IEditorEnvironment editorEnvironment, IResourceManager resourceManager)
 		{
@@ -50,17 +32,37 @@ namespace Toe.Editors.Marmalade
 			this.InitializeEditor();
 		}
 
-		private void InitializeEditor()
-		{
+		#endregion
 
+		#region Public Properties
+
+		public DataContextContainer DataContext
+		{
+			get
+			{
+				return this.dataContext;
+			}
 		}
 
-		private void InitializeComponent()
+		public AnimSkin Skin
 		{
-
+			get
+			{
+				if (this.dataContext.Value == null)
+				{
+					return null;
+				}
+				return (AnimSkin)this.dataContext.Value;
+			}
+			set
+			{
+				this.dataContext.Value = value;
+			}
 		}
 
-		#region Overrides of Base3DEditor
+		#endregion
+
+		#region Methods
 
 		protected override void RenderScene()
 		{
@@ -97,6 +99,14 @@ namespace Toe.Editors.Marmalade
 					GL.End();
 				}
 			}
+		}
+
+		private void InitializeComponent()
+		{
+		}
+
+		private void InitializeEditor()
+		{
 		}
 
 		#endregion

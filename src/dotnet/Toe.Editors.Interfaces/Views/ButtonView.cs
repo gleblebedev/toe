@@ -28,8 +28,16 @@ namespace Toe.Editors.Interfaces.Views
 
 		protected override void OnResize(EventArgs e)
 		{
+			this.label.Width = Width;
 			base.OnResize(e);
 		}
+		public override Size GetPreferredSize(Size proposedSize)
+		{
+			var preferredSize = label.GetPreferredSize(proposedSize);
+			if (proposedSize.Width < int.MaxValue && proposedSize.Width > preferredSize.Width) preferredSize = new Size(proposedSize.Width, preferredSize.Height);
+			return preferredSize;
+		}
+
 		private void LabelSizeChanged(object sender, EventArgs e)
 		{
 			if (this.Height != this.label.Height)

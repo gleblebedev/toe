@@ -152,11 +152,11 @@ namespace Toe.Editors
 				}
 			}
 		}
-		public Vector3 Up
+		public Vector3 Forward
 		{
 			get
 			{
-				return Vector3.Transform(WorldUp, rot);
+				return Vector3.Transform(new Vector3(0, 0, -1), rot);
 			}
 		}
 
@@ -176,15 +176,15 @@ namespace Toe.Editors
 		{
 			get
 			{
-				return Vector3.Transform(WorldRight, rot);
+				return Vector3.Transform(new Vector3(1, 0, 0), rot);
 			}
 			
 		}
-		public Vector3 Forward
+		public Vector3 Up
 		{
 			get
 			{
-				return Vector3.Transform(WorldForward, rot);
+				return Vector3.Transform(new Vector3(0, 1, 0), rot);
 			}
 
 		}

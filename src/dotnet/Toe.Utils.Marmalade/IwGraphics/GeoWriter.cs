@@ -1,7 +1,9 @@
 using System;
 using System.IO;
 
-namespace Toe.Utils.Mesh.Marmalade.IwGraphics
+using Toe.Utils.Mesh;
+
+namespace Toe.Utils.Marmalade.IwGraphics
 {
 	public class GeoWriter : IMeshWriter
 	{

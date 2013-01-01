@@ -10,8 +10,8 @@ using Toe.Editors.Interfaces;
 using Toe.Editors.Marmalade;
 using Toe.Gx;
 using Toe.Resources;
+using Toe.Utils.Marmalade;
 using Toe.Utils.Mesh;
-using Toe.Utils.Mesh.Marmalade;
 
 using AutofacModule = Toe.Utils.Marmalade.AutofacModule;
 using IContainer = Autofac.IContainer;

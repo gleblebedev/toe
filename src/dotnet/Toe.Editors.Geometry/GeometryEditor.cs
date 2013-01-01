@@ -13,7 +13,7 @@ namespace Toe.Editors.Geometry
 	{
 		#region Constants and Fields
 
-		private readonly IMeshReader _meshReader;
+		private readonly IMeshReader meshReader;
 
 		private readonly IMeshWriter meshWriter;
 
@@ -29,7 +29,7 @@ namespace Toe.Editors.Geometry
 
 		public GeometryEditor(IMeshReader meshReader, IMeshWriter meshWriter)
 		{
-			this._meshReader = meshReader;
+			this.meshReader = meshReader;
 			this.meshWriter = meshWriter;
 		}
 
@@ -45,6 +45,46 @@ namespace Toe.Editors.Geometry
 
 		#region Public Properties
 
+		public bool CanCopy
+		{
+			get
+			{
+				return false;
+			}
+		}
+
+		public bool CanCut
+		{
+			get
+			{
+				return false;
+			}
+		}
+
+		public bool CanPaste
+		{
+			get
+			{
+				return false;
+			}
+		}
+
+		public bool CanRedo
+		{
+			get
+			{
+				return false;
+			}
+		}
+
+		public bool CanUndo
+		{
+			get
+			{
+				return false;
+			}
+		}
+
 		public Control Control
 		{
 			get
@@ -57,17 +97,27 @@ namespace Toe.Editors.Geometry
 
 		#region Public Methods and Operators
 
+		public void Delete()
+		{
+			throw new System.NotImplementedException();
+		}
+
 		public void LoadFile(string filename)
 		{
 			this.currentFileName = filename;
 			using (var stream = File.OpenRead(filename))
 			{
-				this.mesh = this._meshReader.Load(stream);
+				this.mesh = this.meshReader.Load(stream);
 			}
 		}
 
 		public void RecordCommand(string command)
 		{
+		}
+
+		public void Redo()
+		{
+			
 		}
 
 		public void SaveFile(string filename)
@@ -83,6 +133,16 @@ namespace Toe.Editors.Geometry
 
 		public void StopRecorder()
 		{
+		}
+
+		public void Undo()
+		{
+			
+		}
+
+		public void onSelectAll()
+		{
+			
 		}
 
 		#endregion

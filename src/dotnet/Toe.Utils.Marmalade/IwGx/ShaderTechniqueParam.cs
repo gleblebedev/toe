@@ -1,4 +1,4 @@
-namespace Toe.Utils.Mesh.Marmalade.IwGx
+namespace Toe.Utils.Marmalade.IwGx
 {
 	public abstract class ShaderTechniqueParam
 	{

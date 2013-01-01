@@ -3,41 +3,23 @@ using OpenTK.Graphics.OpenGL;
 using Toe.Editors.Interfaces;
 using Toe.Editors.Interfaces.Bindings;
 using Toe.Resources;
-using Toe.Utils.Mesh.Marmalade.IwGx;
+using Toe.Utils.Marmalade.IwGx;
 
 namespace Toe.Editors.Marmalade
 {
 	public class TextureEditor : Base3DEditor, IView
 	{
+		#region Constants and Fields
+
+		private readonly DataContextContainer dataContext = new DataContextContainer();
+
 		private readonly IEditorEnvironment editorEnvironment;
 
 		private readonly IResourceManager resourceManager;
 
-		private DataContextContainer dataContext = new DataContextContainer();
-		#region Implementation of IView
-
-		public Texture Texture
-		{
-			get
-			{
-				if (this.dataContext.Value == null) return null;
-				return (Texture)this.dataContext.Value;
-			}
-			set
-			{
-				this.dataContext.Value = value;
-			}
-		}
-
-		public DataContextContainer DataContext
-		{
-			get
-			{
-				return this.dataContext;
-			}
-		}
-
 		#endregion
+
+		#region Constructors and Destructors
 
 		public TextureEditor(IEditorEnvironment editorEnvironment, IResourceManager resourceManager)
 		{
@@ -48,29 +30,57 @@ namespace Toe.Editors.Marmalade
 			this.InitializeEditor();
 		}
 
-		private void InitializeEditor()
-		{
+		#endregion
 
+		#region Public Properties
+
+		public DataContextContainer DataContext
+		{
+			get
+			{
+				return this.dataContext;
+			}
 		}
 
-		private void InitializeComponent()
+		public Texture Texture
 		{
-	
+			get
+			{
+				if (this.dataContext.Value == null)
+				{
+					return null;
+				}
+				return (Texture)this.dataContext.Value;
+			}
+			set
+			{
+				this.dataContext.Value = value;
+			}
 		}
 
-		#region Overrides of Base3DEditor
+		#endregion
+
+		#region Methods
 
 		protected override void RenderScene()
 		{
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
 			GL.Color4(1.0f, 1.0f, 1.0f, 1.0f);
-			var texture = Texture;
+			var texture = this.Texture;
 			if (texture != null)
 			{
 				texture.ApplyOpenGL(0);
 				base.RenderBox(250.0f);
 			}
+		}
+
+		private void InitializeComponent()
+		{
+		}
+
+		private void InitializeEditor()
+		{
 		}
 
 		#endregion

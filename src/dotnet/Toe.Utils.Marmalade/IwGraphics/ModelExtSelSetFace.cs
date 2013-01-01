@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Toe.Utils.Mesh.Marmalade.IwGraphics
+namespace Toe.Utils.Marmalade.IwGraphics
 {
 	public class ModelExtSelSetFace
 	{

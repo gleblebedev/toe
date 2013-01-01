@@ -1799,7 +1799,7 @@ namespace Toe.ToeVsExt
 		/// </summary>
 		private void onDelete(object sender, EventArgs e)
 		{
-			//editorControl.RichTextBoxControl.SelectedText = "";
+			editorControl.Delete();
 			this.editorControl.RecordCommand("Delete");
 		}
 
@@ -1859,7 +1859,7 @@ namespace Toe.ToeVsExt
 		private void onQueryCopy(object sender, EventArgs e)
 		{
 			OleMenuCommand command = (OleMenuCommand)sender;
-			//command.Enabled = editorControl.RichTextBoxControl.SelectionLength > 0 ? true : false;
+			command.Enabled = editorControl.CanCopy;
 		}
 
 		/// <summary>
@@ -1872,7 +1872,7 @@ namespace Toe.ToeVsExt
 		private void onQueryCutOrDelete(object sender, EventArgs e)
 		{
 			OleMenuCommand command = (OleMenuCommand)sender;
-			//command.Enabled = editorControl.RichTextBoxControl.SelectionLength > 0 ? true : false;
+			command.Enabled = editorControl.CanCut;
 		}
 
 		/// <summary>
@@ -1883,6 +1883,7 @@ namespace Toe.ToeVsExt
 		private void onQueryPaste(object sender, EventArgs e)
 		{
 			OleMenuCommand command = (OleMenuCommand)sender;
+			command.Enabled = editorControl.CanPaste;
 			//command.Enabled = editorControl.RichTextBoxControl.CanPaste(DataFormats.GetFormat(DataFormats.Text));
 		}
 
@@ -1911,7 +1912,7 @@ namespace Toe.ToeVsExt
 		private void onQueryRedo(object sender, EventArgs e)
 		{
 			OleMenuCommand command = (OleMenuCommand)sender;
-			command.Enabled = false; // editorControl.RichTextBoxControl.CanRedo;
+			command.Enabled = editorControl.CanRedo;
 		}
 
 		/// <summary>
@@ -1922,7 +1923,7 @@ namespace Toe.ToeVsExt
 		private void onQueryUndo(object sender, EventArgs e)
 		{
 			OleMenuCommand command = (OleMenuCommand)sender;
-			command.Enabled = false; // editorControl.RichTextBoxControl.CanUndo;
+			command.Enabled = editorControl.CanUndo;
 		}
 
 		/// <summary>
@@ -1932,6 +1933,7 @@ namespace Toe.ToeVsExt
 		/// <param name="e">  Not used.</param>
 		private void onRedo(object sender, EventArgs e)
 		{
+			editorControl.Redo();
 			//editorControl.RichTextBoxControl.Redo();
 		}
 
@@ -1942,7 +1944,7 @@ namespace Toe.ToeVsExt
 		/// <param name="e">  Not used.</param>
 		private void onSelectAll(object sender, EventArgs e)
 		{
-			//editorControl.RichTextBoxControl.SelectAll();
+			editorControl.onSelectAll();
 		}
 
 		/// <summary>
@@ -1952,6 +1954,7 @@ namespace Toe.ToeVsExt
 		/// <param name="e">  Not used.</param>
 		private void onUndo(object sender, EventArgs e)
 		{
+			editorControl.Undo();
 			//editorControl.RichTextBoxControl.Undo();
 		}
 

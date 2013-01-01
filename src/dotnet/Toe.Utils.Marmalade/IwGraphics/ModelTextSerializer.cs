@@ -2,8 +2,7 @@
 
 using OpenTK;
 
-using Toe.Utils.Marmalade;
-using Toe.Utils.Marmalade.IwGraphics;
+using Toe.Utils.Mesh;
 
 #if WINDOWS_PHONE
 using Microsoft.Xna.Framework;
@@ -11,7 +10,7 @@ using Microsoft.Xna.Framework;
 
 #endif
 
-namespace Toe.Utils.Mesh.Marmalade.IwGraphics
+namespace Toe.Utils.Marmalade.IwGraphics
 {
 	/// <summary>
 	/// Marmalade SDK .geo file parser.
@@ -41,7 +40,7 @@ namespace Toe.Utils.Mesh.Marmalade.IwGraphics
 
 		public Managed Parse(TextParser parser, string defaultName)
 		{
-			var model = context.Resolve<Model>();
+			var model = this.context.Resolve<Model>();
 			model.Name = defaultName;
 			parser.Consume("CIwModel");
 			parser.Consume("{");

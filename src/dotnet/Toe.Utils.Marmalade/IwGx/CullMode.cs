@@ -1,4 +1,4 @@
-namespace Toe.Utils.Mesh.Marmalade.IwGx
+namespace Toe.Utils.Marmalade.IwGx
 {
 	/// <summary>
 	/// Backface culling modes.

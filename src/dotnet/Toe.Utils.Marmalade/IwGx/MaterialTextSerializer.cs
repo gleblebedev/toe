@@ -1,12 +1,8 @@
-﻿using System.Collections.Generic;
-using System.IO;
-
-using Autofac;
+﻿using Autofac;
 
 using Toe.Resources;
-using Toe.Utils.Marmalade;
 
-namespace Toe.Utils.Mesh.Marmalade.IwGx
+namespace Toe.Utils.Marmalade.IwGx
 {
 	public class MaterialTextSerializer : ITextSerializer
 	{

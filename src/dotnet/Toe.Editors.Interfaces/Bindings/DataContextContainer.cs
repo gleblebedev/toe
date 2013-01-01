@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -38,11 +39,47 @@ namespace Toe.Editors.Interfaces.Bindings
 			var notifyCollectionChanged = this.value as INotifyCollectionChanged;
 			if (notifyCollectionChanged != null) notifyCollectionChanged.CollectionChanged += OnDataCollectionChanged;
 
+			var bindingList = this.value as IBindingList;
+			if (bindingList != null) bindingList.ListChanged += OnBindingListChanged;
+			
+
 			var notifyPropertyChanged = this.value as INotifyPropertyChanged;
 			if (notifyPropertyChanged != null) notifyPropertyChanged.PropertyChanged += OnDataPropertyChanged;
 
 			var notifyPropertyChanging = this.value as INotifyPropertyChanging;
 			if (notifyPropertyChanging != null) notifyPropertyChanging.PropertyChanging += OnDataPropertyChanging;
+		}
+
+		private void OnBindingListChanged(object sender, ListChangedEventArgs e)
+		{
+			switch (e.ListChangedType)
+			{
+				case ListChangedType.Reset:
+					this.RaiseDataCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+					break;
+				case ListChangedType.ItemAdded:
+					this.RaiseDataCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, ((IList)sender)[e.NewIndex], e.NewIndex));
+					break;
+				case ListChangedType.ItemDeleted:
+					//TODO: implement conversion
+					this.RaiseDataCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+					break;
+				case ListChangedType.ItemMoved:
+					this.RaiseDataCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Move, ((IList)sender)[e.NewIndex], e.NewIndex, e.OldIndex));
+					break;
+				case ListChangedType.ItemChanged:
+					//TODO: implement conversion
+					this.RaiseDataCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+					break;
+				case ListChangedType.PropertyDescriptorAdded:
+					break;
+				case ListChangedType.PropertyDescriptorDeleted:
+					break;
+				case ListChangedType.PropertyDescriptorChanged:
+					break;
+				default:
+					throw new ArgumentOutOfRangeException();
+			}
 		}
 
 		private void Unsubscribe()

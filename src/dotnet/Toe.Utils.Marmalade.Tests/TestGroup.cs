@@ -4,7 +4,6 @@ using System.IO;
 using NUnit.Framework;
 
 using Toe.Resources;
-using Toe.Utils.Mesh.Marmalade.IwGx;
 
 namespace Toe.Utils.Mesh.Marmalade.Tests
 {

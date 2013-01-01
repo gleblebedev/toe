@@ -2,7 +2,7 @@ using OpenTK.Graphics.OpenGL;
 
 using Toe.Gx;
 
-namespace Toe.Utils.Mesh.Marmalade.IwGx
+namespace Toe.Utils.Marmalade.IwGx
 {
 	public class ShaderTechniqueFloatParam : ShaderTechniqueParam
 	{

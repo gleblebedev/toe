@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 
 using Toe.Resources;
-using Toe.Utils.Mesh.Marmalade;
 
 namespace Toe.Utils.Marmalade.IwAnim
 {

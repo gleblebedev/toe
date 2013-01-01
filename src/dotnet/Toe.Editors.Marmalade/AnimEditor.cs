@@ -4,25 +4,45 @@ using Toe.Editors.Interfaces;
 using Toe.Editors.Interfaces.Bindings;
 using Toe.Resources;
 using Toe.Utils.Marmalade.IwAnim;
-using Toe.Utils.Marmalade.IwGraphics;
 using Toe.Utils.Mesh;
 
 namespace Toe.Editors.Marmalade
 {
 	public class AnimEditor : Base3DEditor, IView
 	{
+		#region Constants and Fields
+
+		private readonly DataContextContainer dataContext = new DataContextContainer();
+
 		private readonly IEditorEnvironment editorEnvironment;
 
 		private readonly IResourceManager resourceManager;
 
-		private DataContextContainer dataContext = new DataContextContainer();
-		#region Implementation of IView
+		#endregion
+
+		#region Constructors and Destructors
+
+		public AnimEditor(IEditorEnvironment editorEnvironment, IResourceManager resourceManager)
+		{
+			this.editorEnvironment = editorEnvironment;
+			this.resourceManager = resourceManager;
+			this.InitializeComponent();
+
+			this.InitializeEditor();
+		}
+
+		#endregion
+
+		#region Public Properties
 
 		public Anim Anim
 		{
 			get
 			{
-				if (this.dataContext.Value == null) return null;
+				if (this.dataContext.Value == null)
+				{
+					return null;
+				}
 				return (Anim)this.dataContext.Value;
 			}
 			set
@@ -41,26 +61,7 @@ namespace Toe.Editors.Marmalade
 
 		#endregion
 
-		public AnimEditor(IEditorEnvironment editorEnvironment, IResourceManager resourceManager)
-		{
-			this.editorEnvironment = editorEnvironment;
-			this.resourceManager = resourceManager;
-			this.InitializeComponent();
-
-			this.InitializeEditor();
-		}
-
-		private void InitializeEditor()
-		{
-
-		}
-
-		private void InitializeComponent()
-		{
-
-		}
-
-		#region Overrides of Base3DEditor
+		#region Methods
 
 		protected override void RenderScene()
 		{
@@ -93,6 +94,14 @@ namespace Toe.Editors.Marmalade
 					GL.End();
 				}
 			}
+		}
+
+		private void InitializeComponent()
+		{
+		}
+
+		private void InitializeEditor()
+		{
 		}
 
 		#endregion

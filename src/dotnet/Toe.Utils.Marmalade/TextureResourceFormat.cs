@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 using Autofac;
 
 using Toe.Resources;
-using Toe.Utils.Mesh.Marmalade.IwGx;
+using Toe.Utils.Marmalade.IwGx;
 
-namespace Toe.Utils.Mesh.Marmalade
+namespace Toe.Utils.Marmalade
 {
 	public class TextureResourceFormat : IResourceFileFormat
 	{

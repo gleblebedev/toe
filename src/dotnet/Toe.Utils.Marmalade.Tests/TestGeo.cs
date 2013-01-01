@@ -5,7 +5,6 @@ using System.Resources;
 using NUnit.Framework;
 
 using Toe.Resources;
-using Toe.Utils.Mesh.Marmalade.IwGraphics;
 
 namespace Toe.Utils.Mesh.Marmalade.Tests
 {

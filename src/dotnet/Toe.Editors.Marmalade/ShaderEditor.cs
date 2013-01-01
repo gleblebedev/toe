@@ -1,13 +1,12 @@
-using OpenTK.Graphics.OpenGL;
+using System.Windows.Forms;
 
 using Toe.Editors.Interfaces;
 using Toe.Editors.Interfaces.Bindings;
-using Toe.Resources;
-using Toe.Utils.Marmalade.IwGraphics;
+using Toe.Utils.Marmalade.IwGx;
 
 namespace Toe.Editors.Marmalade
 {
-	public class ModelEditor : Base3DEditor, IView
+	public class ShaderEditor : UserControl, IView
 	{
 		#region Constants and Fields
 
@@ -15,16 +14,13 @@ namespace Toe.Editors.Marmalade
 
 		private readonly IEditorEnvironment editorEnvironment;
 
-		private readonly IResourceManager resourceManager;
-
 		#endregion
 
 		#region Constructors and Destructors
 
-		public ModelEditor(IEditorEnvironment editorEnvironment, IResourceManager resourceManager)
+		public ShaderEditor(IEditorEnvironment editorEnvironment)
 		{
 			this.editorEnvironment = editorEnvironment;
-			this.resourceManager = resourceManager;
 			this.InitializeComponent();
 
 			this.InitializeEditor();
@@ -42,7 +38,7 @@ namespace Toe.Editors.Marmalade
 			}
 		}
 
-		public Model Model
+		public ShaderTechnique Material
 		{
 			get
 			{
@@ -50,7 +46,7 @@ namespace Toe.Editors.Marmalade
 				{
 					return null;
 				}
-				return (Model)this.dataContext.Value;
+				return (ShaderTechnique)this.dataContext.Value;
 			}
 			set
 			{
@@ -61,25 +57,6 @@ namespace Toe.Editors.Marmalade
 		#endregion
 
 		#region Methods
-
-		protected override void RenderScene()
-		{
-			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-
-			GL.PushAttrib(AttribMask.AllAttribBits);
-
-			GL.Enable(EnableCap.Lighting);
-			GL.Enable(EnableCap.Light0);
-			GL.Light(
-				LightName.Light0, LightParameter.Position, new[] { this.Camera.Pos.X, this.Camera.Pos.Y, this.Camera.Pos.Z });
-
-			var model = this.Model;
-			if (model != null)
-			{
-				model.RenderOpenGL();
-			}
-			GL.PopAttrib();
-		}
 
 		private void InitializeComponent()
 		{

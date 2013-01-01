@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 
 using Autofac;
 
 using Toe.Resources;
-using Toe.Utils.Marmalade;
 
-namespace Toe.Utils.Mesh.Marmalade.IwResManager
+namespace Toe.Utils.Marmalade.IwResManager
 {
 	public class ResGroup : Managed
 	{
@@ -16,6 +16,8 @@ namespace Toe.Utils.Mesh.Marmalade.IwResManager
 		public static readonly uint TypeHash = Hash.Get("CIwResGroup");
 
 		private readonly IComponentContext context;
+
+		private readonly IList<Managed> embeddedResources;
 
 		private readonly IList<IResourceFile> externalResources;
 
@@ -31,12 +33,31 @@ namespace Toe.Utils.Mesh.Marmalade.IwResManager
 		{
 			this.resourceManager = resourceManager;
 			this.context = context;
-			this.externalResources = this.context.Resolve<IList<IResourceFile>>();
+
+			//TODO: make public properties read-only
+			this.externalResources = context.Resolve<IList<IResourceFile>>();
+			this.embeddedResources = context.Resolve<IList<Managed>>();
 		}
 
 		#endregion
 
 		#region Public Properties
+
+		public override uint ClassHashCode
+		{
+			get
+			{
+				return TypeHash;
+			}
+		}
+
+		public IList<Managed> EmbeddedResources
+		{
+			get
+			{
+				return this.embeddedResources;
+			}
+		}
 
 		public IList<IResourceFile> ExternalResources
 		{
@@ -50,14 +71,14 @@ namespace Toe.Utils.Mesh.Marmalade.IwResManager
 		{
 			get
 			{
-				return isShared;
+				return this.isShared;
 			}
 			set
 			{
-				if (isShared != value)
+				if (this.isShared != value)
 				{
 					this.RaisePropertyChanging("IsShared");
-					isShared = value;
+					this.isShared = value;
 					this.RaisePropertyChanged("IsShared");
 				}
 			}
@@ -66,6 +87,15 @@ namespace Toe.Utils.Mesh.Marmalade.IwResManager
 		#endregion
 
 		#region Public Methods and Operators
+		public void AddResource(Managed item)
+		{
+			if (embeddedResources.Contains(item))
+				throw new ApplicationException("item is in collection already");
+
+			embeddedResources.Add(item);
+			SubscribeOnNameChange(item);
+			resourceManager.ProvideResource(item.ClassHashCode, item.NameHash, item);
+		}
 
 		public void AddFile(string fullPath)
 		{
@@ -82,6 +112,8 @@ namespace Toe.Utils.Mesh.Marmalade.IwResManager
 			{
 				this.externalResources.Add(file);
 
+				file.Open();
+
 				var extension = Path.GetExtension(file.FilePath);
 				if (string.Compare(extension, ".geo", StringComparison.InvariantCultureIgnoreCase) == 0)
 				{
@@ -94,12 +126,77 @@ namespace Toe.Utils.Mesh.Marmalade.IwResManager
 			}
 		}
 
-		public override uint ClassHashCode
+		#endregion
+
+		#region Methods
+
+		protected override void Dispose(bool disposing)
 		{
-			get
+			base.Dispose(disposing);
+			if (disposing)
 			{
-				return TypeHash;
+				this.Clear();
 			}
+		}
+
+		private void Clear()
+		{
+			while (this.externalResources.Count > 0)
+			{
+				this.RemoveFileAt(this.externalResources.Count - 1);
+			}
+			while (this.embeddedResources.Count > 0)
+			{
+				this.RemoveResourceAt(this.embeddedResources.Count - 1);
+			}
+		}
+
+		private void ItemPropertyChanged(object sender, PropertyChangedEventArgs e)
+		{
+			if (e.PropertyName == "NameHash")
+			{
+				var item = ((Managed)sender);
+				this.resourceManager.ProvideResource(item.ClassHashCode, item.NameHash, item);
+			}
+		}
+
+		private void ItemPropertyChanging(object sender, PropertyChangingEventArgs e)
+		{
+			if (e.PropertyName == "NameHash")
+			{
+				var item = ((Managed)sender);
+				this.resourceManager.RetractResource(item.ClassHashCode, item.NameHash, item);
+			}
+		}
+
+		private void RemoveFileAt(int index)
+		{
+			var file = this.externalResources[index];
+			this.externalResources.RemoveAt(index);
+			file.Close();
+		}
+
+		private void RemoveResourceAt(int index)
+		{
+			var item = this.embeddedResources[index];
+
+			this.UnsubscribeOnNameChange(item);
+
+			this.resourceManager.RetractResource(item.ClassHashCode, item.NameHash, item);
+
+			item.Dispose();
+		}
+
+		private void SubscribeOnNameChange(Managed item)
+		{
+			item.PropertyChanged += this.ItemPropertyChanged;
+			item.PropertyChanging += this.ItemPropertyChanging;
+		}
+
+		private void UnsubscribeOnNameChange(Managed item)
+		{
+			item.PropertyChanged -= this.ItemPropertyChanged;
+			item.PropertyChanging -= this.ItemPropertyChanging;
 		}
 
 		#endregion

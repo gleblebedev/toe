@@ -195,6 +195,15 @@ namespace Toe.Resources
 			}
 		}
 
+		public bool IsEmpty
+		{
+			get
+			{
+				return string.IsNullOrEmpty(fileReference) && hashReference == 0;
+			}
+		
+		}
+
 		#endregion
 
 		#region Public Methods and Operators

@@ -1,4 +1,4 @@
-namespace Toe.Utils.Mesh.Marmalade.IwGx
+namespace Toe.Utils.Marmalade.IwGx
 {
 	/// <summary>
 	/// Modulation modes. For textured materials, this affects how the texel colour is modified by the vertex colour to calculate the colour to be written to the backbuffer.

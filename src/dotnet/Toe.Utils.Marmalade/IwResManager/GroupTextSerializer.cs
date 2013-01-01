@@ -3,9 +3,8 @@ using System.IO;
 using Autofac;
 
 using Toe.Resources;
-using Toe.Utils.Marmalade;
 
-namespace Toe.Utils.Mesh.Marmalade.IwResManager
+namespace Toe.Utils.Marmalade.IwResManager
 {
 	public class GroupTextSerializer : ITextSerializer
 	{
@@ -93,7 +92,7 @@ namespace Toe.Utils.Mesh.Marmalade.IwResManager
 				else
 				{
 					fullPath = Path.Combine(parser.BasePath, relPath);
-					if (File.Exists(fullPath))
+					//if (File.Exists(fullPath))
 					{
 						group.AddFile(fullPath);
 						parser.ConsumeString();

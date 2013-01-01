@@ -25,6 +25,8 @@ namespace Toe.Editors
 
 		void MouseMove(MouseButtons button, Point location);
 
+		void MouseWheel(float delta, Point location);
+
 		#endregion
 	}
 }

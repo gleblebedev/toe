@@ -3,11 +3,8 @@ using Autofac;
 using Toe.Resources;
 using Toe.Utils.Marmalade.IwAnim;
 using Toe.Utils.Marmalade.IwGraphics;
-using Toe.Utils.Mesh.Marmalade;
-using Toe.Utils.Mesh.Marmalade.IwAnim;
-using Toe.Utils.Mesh.Marmalade.IwGraphics;
-using Toe.Utils.Mesh.Marmalade.IwGx;
-using Toe.Utils.Mesh.Marmalade.IwResManager;
+using Toe.Utils.Marmalade.IwGx;
+using Toe.Utils.Marmalade.IwResManager;
 
 namespace Toe.Utils.Marmalade
 {

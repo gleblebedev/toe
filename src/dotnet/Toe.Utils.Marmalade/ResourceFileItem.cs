@@ -1,9 +1,8 @@
 using System.ComponentModel;
 
-using Toe.Utils.Marmalade;
-using Toe.Utils.Mesh.Marmalade;
+using Toe.Resources;
 
-namespace Toe.Resources
+namespace Toe.Utils.Marmalade
 {
 	public class ResourceFileItem : IResourceFileItem, INotifyPropertyChanged
 	{

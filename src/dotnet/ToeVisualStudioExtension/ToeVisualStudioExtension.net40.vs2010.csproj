@@ -119,7 +119,6 @@
   <ItemGroup>
     <Compile Include="EditorFactory.cs" />
     <Compile Include="EditorPane.cs" />
-    <Compile Include="EditorResourceErrorHandler.cs" />
     <Compile Include="IEditor.cs" />
     <Compile Include="MyEditor.cs">
       <SubType>UserControl</SubType>

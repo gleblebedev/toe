@@ -4,43 +4,23 @@ using Toe.Editors.Interfaces;
 using Toe.Editors.Interfaces.Bindings;
 using Toe.Resources;
 using Toe.Utils.Marmalade.IwAnim;
-using Toe.Utils.Marmalade.IwGraphics;
 using Toe.Utils.Mesh;
-using Toe.Utils.Mesh.Marmalade.IwGx;
 
 namespace Toe.Editors.Marmalade
 {
 	public class SkeletonEditor : Base3DEditor, IView
 	{
+		#region Constants and Fields
+
+		private readonly DataContextContainer dataContext = new DataContextContainer();
+
 		private readonly IEditorEnvironment editorEnvironment;
 
 		private readonly IResourceManager resourceManager;
 
-		private DataContextContainer dataContext = new DataContextContainer();
-		#region Implementation of IView
-
-		public AnimSkel Skeleton
-		{
-			get
-			{
-				if (this.dataContext.Value == null) return null;
-				return (AnimSkel)this.dataContext.Value;
-			}
-			set
-			{
-				this.dataContext.Value = value;
-			}
-		}
-
-		public DataContextContainer DataContext
-		{
-			get
-			{
-				return this.dataContext;
-			}
-		}
-
 		#endregion
+
+		#region Constructors and Destructors
 
 		public SkeletonEditor(IEditorEnvironment editorEnvironment, IResourceManager resourceManager)
 		{
@@ -51,23 +31,43 @@ namespace Toe.Editors.Marmalade
 			this.InitializeEditor();
 		}
 
-		private void InitializeEditor()
-		{
+		#endregion
 
+		#region Public Properties
+
+		public DataContextContainer DataContext
+		{
+			get
+			{
+				return this.dataContext;
+			}
 		}
 
-		private void InitializeComponent()
+		public AnimSkel Skeleton
 		{
-
+			get
+			{
+				if (this.dataContext.Value == null)
+				{
+					return null;
+				}
+				return (AnimSkel)this.dataContext.Value;
+			}
+			set
+			{
+				this.dataContext.Value = value;
+			}
 		}
 
-		#region Overrides of Base3DEditor
+		#endregion
+
+		#region Methods
 
 		protected override void RenderScene()
 		{
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
-			var model = Skeleton;
+			var model = this.Skeleton;
 			if (model != null)
 			{
 				GL.Begin(BeginMode.Lines);
@@ -85,6 +85,14 @@ namespace Toe.Editors.Marmalade
 				}
 				GL.End();
 			}
+		}
+
+		private void InitializeComponent()
+		{
+		}
+
+		private void InitializeEditor()
+		{
 		}
 
 		#endregion

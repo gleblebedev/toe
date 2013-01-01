@@ -5,7 +5,7 @@ using OpenTK;
 
 namespace Toe.Editors
 {
-	public class Autodesk3DMaxCompatibleController : ICameraController
+	public class GameCameraController : ICameraController
 	{
 		#region Constants and Fields
 
@@ -51,24 +51,21 @@ namespace Toe.Editors
 					{
 						var r = Quaternion.FromAxisAngle(this.Camera.WorldUp, -dx / 100.0f);
 						this.Camera.Rot = r * this.Camera.Rot;
-						this.Camera.Pos = Vector3.Transform(this.Camera.Pos, r);
 					}
 					if (dy != 0)
 					{
 						var right = this.Camera.Right;
 						var r = Quaternion.FromAxisAngle(right, -dy / 100.0f);
 						this.Camera.Rot = r * this.Camera.Rot;
-						this.Camera.Pos = Vector3.Transform(this.Camera.Pos, r);
 					}
-				}
-				if (MouseButtons.Middle == (button & MouseButtons.Middle))
-				{
-					var right = this.Camera.Right;
-					var up = this.Camera.Forward;
-					this.Camera.Pos += - dx * right + dy * up;
 				}
 			}
 			this.lastKnownMousePosition = location;
+		}
+
+		public void MouseWheel(float delta, Point location)
+		{
+			
 		}
 
 		#endregion

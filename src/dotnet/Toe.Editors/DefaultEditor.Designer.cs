@@ -34,6 +34,68 @@
 
 		#endregion
 
-	
+		#region Implementation of IResourceEditor
+
+		public bool CanCopy
+		{
+			get
+			{
+				return false;
+			}
+		}
+
+		public bool CanCut
+		{
+			get
+			{
+				return false;
+			}
+		}
+
+		public bool CanPaste
+		{
+			get
+			{
+				return false;
+			}
+		}
+
+		public bool CanRedo
+		{
+			get
+			{
+				return false;
+			}
+		}
+
+		public bool CanUndo
+		{
+			get
+			{
+				return false;
+			}
+		}
+
+		public void Delete()
+		{
+			
+		}
+
+		public void Redo()
+		{
+			
+		}
+
+		public void Undo()
+		{
+			
+		}
+
+		public void onSelectAll()
+		{
+			
+		}
+
+		#endregion
 	}
 }

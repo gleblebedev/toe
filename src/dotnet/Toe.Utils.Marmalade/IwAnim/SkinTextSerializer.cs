@@ -1,12 +1,10 @@
-using System;
 using System.Collections.Generic;
 
 using Autofac;
 
-using Toe.Utils.Marmalade;
-using Toe.Utils.Marmalade.IwAnim;
+using Toe.Utils.Mesh;
 
-namespace Toe.Utils.Mesh.Marmalade.IwAnim
+namespace Toe.Utils.Marmalade.IwAnim
 {
 	public class SkinTextSerializer : ITextSerializer
 	{
@@ -33,7 +31,7 @@ namespace Toe.Utils.Mesh.Marmalade.IwAnim
 
 		public Managed Parse(TextParser parser, string defaultName)
 		{
-			AnimSkin skin = context.Resolve<AnimSkin>();
+			AnimSkin skin = this.context.Resolve<AnimSkin>();
 			skin.Name = defaultName;
 			parser.Consume("CIwAnimSkin");
 			parser.Consume("{");

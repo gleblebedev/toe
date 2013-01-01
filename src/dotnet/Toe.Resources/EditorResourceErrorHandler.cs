@@ -1,9 +1,7 @@
 using System;
 using System.Windows.Forms;
 
-using Toe.Resources;
-
-namespace Toe.Editor
+namespace Toe.Resources
 {
 	public class EditorResourceErrorHandler : ResourceErrorHandler, IResourceErrorHandler
 	{
@@ -11,8 +9,8 @@ namespace Toe.Editor
 
 		public override void CanNotRead(string filePath, Exception exception)
 		{
-			var res = MessageBox.Show("Can't read " + filePath, "Resource error", MessageBoxButtons.AbortRetryIgnore);
-			if (res == DialogResult.Abort)
+			var res = ResourceErrorDialog.ShowDialogOrDefault(filePath, exception.Message);
+			if (res != DialogResult.Ignore)
 			{
 				base.CanNotRead(filePath,exception);
 			}

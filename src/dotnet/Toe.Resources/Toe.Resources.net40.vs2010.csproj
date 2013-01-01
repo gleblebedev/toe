@@ -44,6 +44,8 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -51,6 +53,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EditorResourceErrorHandler.cs" />
     <Compile Include="Hash.cs" />
     <Compile Include="IBasePathProvider.cs" />
     <Compile Include="IResourceErrorHandler.cs" />
@@ -60,6 +63,9 @@
     <Compile Include="IResourceItem.cs" />
     <Compile Include="IResourceManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ResourceErrorDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="ResourceErrorHandler.cs" />
     <Compile Include="ResourceFile.cs" />
     <Compile Include="ResourceItem.cs" />
@@ -69,6 +75,11 @@
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="Toe.snk" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ResourceErrorDialog.resx">
+      <DependentUpon>ResourceErrorDialog.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

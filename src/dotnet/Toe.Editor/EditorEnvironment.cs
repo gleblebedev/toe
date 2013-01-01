@@ -1,3 +1,5 @@
+using Autofac;
+
 using Toe.Editors.Interfaces;
 using Toe.Editors.Interfaces.Bindings;
 using Toe.Editors.Interfaces.Views;
@@ -5,9 +7,8 @@ using Toe.Editors.Marmalade;
 using Toe.Resources;
 using Toe.Utils.Marmalade.IwAnim;
 using Toe.Utils.Marmalade.IwGraphics;
-using Toe.Utils.Mesh.Marmalade.IwGraphics;
-using Toe.Utils.Mesh.Marmalade.IwGx;
-using Toe.Utils.Mesh.Marmalade.IwResManager;
+using Toe.Utils.Marmalade.IwGx;
+using Toe.Utils.Marmalade.IwResManager;
 
 namespace Toe.Editor
 {
@@ -17,47 +18,27 @@ namespace Toe.Editor
 
 		private readonly IResourceManager resourceManager;
 
-		public EditorEnvironment(MainEditorWindow mainEditorWindow, IResourceManager resourceManager)
+		private readonly IComponentContext context;
+
+		public EditorEnvironment(MainEditorWindow mainEditorWindow, IResourceManager resourceManager, IComponentContext context)
 		{
 			this.mainEditorWindow = mainEditorWindow;
 			this.resourceManager = resourceManager;
+			this.context = context;
 		}
 
 		#region Implementation of IEditorEnvironment
 
 		public IView EditorFor(object itemToEdit)
 		{
-			if (itemToEdit is Material)
+			object view;
+			if (context.TryResolveKeyed(itemToEdit.GetType(), typeof(IView), out view))
 			{
-				return new MaterialEditor(this);
+				return (IView)view;
 			}
-			if (itemToEdit is Model)
+			if (context.TryResolveKeyed(itemToEdit.GetType().BaseType, typeof(IView), out view))
 			{
-				return new ModelEditor(this,resourceManager);
-			}
-			if (itemToEdit is AnimSkel)
-			{
-				return new SkeletonEditor(this, resourceManager);
-			}
-			if (itemToEdit is AnimSkin)
-			{
-				return new SkinEditor(this, resourceManager);
-			}
-			if (itemToEdit is Anim)
-			{
-				return new AnimEditor(this, resourceManager);
-			}
-			if (itemToEdit is Texture)
-			{
-				return new TextureEditor(this, resourceManager);
-			}
-			if (itemToEdit is ResGroup)
-			{
-				return new ResGroupEditor(this);
-			}
-			if (itemToEdit is IResourceFile)
-			{
-				return new ResourceFileReferenceEditor(this);
+				return (IView)view;
 			}
 			return new StringView();
 		}
