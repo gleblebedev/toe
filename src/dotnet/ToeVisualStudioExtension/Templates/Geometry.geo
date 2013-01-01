@@ -1,6 +1,0 @@
-CIwModel
-{
-	CMesh
-	{
-	}
-}

@@ -129,21 +129,61 @@
     <Compile Include="NativeMethods.cs" />
     <Compile Include="VsEditorEnvironment.cs" />
     <Compile Include="VSMacroRecorder.cs" />
-    <Content Include="Templates\Group.vsdir">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <Resource Include="ItemTemplate\Anim.ico" />
+    <Resource Include="ItemTemplate\Geometry.ico" />
+    <VSTemplate Include="ItemTemplate\geometry.vstemplate">
+      <OutputSubPath>TOE</OutputSubPath>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </VSTemplate>
+    <VSTemplate Include="ItemTemplate\geometryvc.vstemplate">
+      <OutputSubPath>TOE</OutputSubPath>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </VSTemplate>
+    <VSTemplate Include="ItemTemplate\anim.vstemplate">
+      <OutputSubPath>TOE</OutputSubPath>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </VSTemplate>
+    <VSTemplate Include="ItemTemplate\skel.vstemplate">
+      <OutputSubPath>TOE</OutputSubPath>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </VSTemplate>
+    <VSTemplate Include="ItemTemplate\material.vstemplate">
+      <OutputSubPath>TOE</OutputSubPath>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </VSTemplate>
+    <VSTemplate Include="ItemTemplate\skin.vstemplate">
+      <OutputSubPath>TOE</OutputSubPath>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </VSTemplate>
+    <VSTemplate Include="ItemTemplate\group.vstemplate">
+      <OutputSubPath>TOE</OutputSubPath>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </VSTemplate>
+    <Content Include="ItemTemplate\group.group">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Resource Include="ItemTemplate\Group.ico" />
+    <Resource Include="ItemTemplate\Itx.ico" />
+    <Resource Include="ItemTemplate\Marmalade.ico" />
+    <Resource Include="ItemTemplate\Material.ico" />
+    <Resource Include="ItemTemplate\Skel.ico" />
+    <Resource Include="ItemTemplate\Skin.ico" />
+    <Content Include="ItemTemplate\anim.anim">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ItemTemplate\geometry.geo">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ItemTemplate\material.mtl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ItemTemplate\skel.skel">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ItemTemplate\skin.skin">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="packages.config" />
-    <None Include="Templates\Geometry.geo">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <Content Include="Templates\Group.group">
-      <IncludeInVSIX>true</IncludeInVSIX>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Templates\Geometry.vsdir">
-      <IncludeInVSIX>true</IncludeInVSIX>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Compile Include="Guids.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -237,6 +277,7 @@
     <Content Include="Resources\File.ico" />
     <Content Include="Resources\Package.ico" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <UseCodebase>true</UseCodebase>
   </PropertyGroup>
@@ -249,4 +290,17 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <PropertyGroup>
+    <GetVsixSourceItemsDependsOn>$(GetVsixSourceItemsDependsOn);GetVsixTemplateItems</GetVsixSourceItemsDependsOn>
+  </PropertyGroup>
+  <Target Name="GetVsixTemplateItems" DependsOnTargets="ZipProjects;ZipItems">
+    <ItemGroup>
+      <VSIXSourceItem Include="@(IntermediateZipItem)">
+        <VSIXSubPath>ItemTemplates\%(IntermediateZipItem.Language)\%(IntermediateZipItem.OutputSubPath)\%(IntermediateZipItem.Culture)</VSIXSubPath>
+      </VSIXSourceItem>
+      <VSIXSourceItem Include="@(IntermediateZipProject)">
+        <VSIXSubPath>ProjectTemplates\%(IntermediateZipProject.Language)\%(IntermediateZipProject.OutputSubPath)\%(IntermediateZipProject.Culture)</VSIXSubPath>
+      </VSIXSourceItem>
+    </ItemGroup>
+  </Target>
 </Project>

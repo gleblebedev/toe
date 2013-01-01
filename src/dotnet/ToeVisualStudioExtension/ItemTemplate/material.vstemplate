@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<VSTemplate Version="3.0.0" Type="Item" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
+  <TemplateData>
+    <Name>Marmalade SDK Material</Name>
+    <Description>Marmalade SDK Material file</Description>
+    <Icon>Material.ico</Icon>
+    <TemplateID>ff1c75e5-d26a-4b4b-8763-599af4adb188</TemplateID>
+    <ProjectType>CSharp</ProjectType>
+    <RequiredFrameworkVersion>2.0</RequiredFrameworkVersion>
+    <NumberOfParentCategoriesToRollUp>1</NumberOfParentCategoriesToRollUp>
+    <DefaultName>material.mtl</DefaultName>
+  </TemplateData>
+  <TemplateContent>
+    <ProjectItem ReplaceParameters="false">material.mtl</ProjectItem>
+  </TemplateContent>
+</VSTemplate>

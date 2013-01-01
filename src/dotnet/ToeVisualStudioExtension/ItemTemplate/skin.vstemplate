@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<VSTemplate Version="3.0.0" Type="Item" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
+  <TemplateData>
+    <Name>Marmalade SDK Skin</Name>
+    <Description>Marmalade SDK Skin file</Description>
+    <Icon>Skin.ico</Icon>
+    <TemplateID>72f9ad1e-c4a8-424f-b043-8374c7fa9353</TemplateID>
+    <ProjectType>CSharp</ProjectType>
+    <RequiredFrameworkVersion>2.0</RequiredFrameworkVersion>
+    <NumberOfParentCategoriesToRollUp>1</NumberOfParentCategoriesToRollUp>
+    <DefaultName>skin.skin</DefaultName>
+  </TemplateData>
+  <TemplateContent>
+    <ProjectItem ReplaceParameters="false">skin.skin</ProjectItem>
+  </TemplateContent>
+</VSTemplate>

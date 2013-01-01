@@ -70,8 +70,7 @@ namespace Toe.Editors.Marmalade
 
 			GL.Enable(EnableCap.Lighting);
 			GL.Enable(EnableCap.Light0);
-			GL.Light(
-				LightName.Light0, LightParameter.Position, new[] { this.Camera.Pos.X, this.Camera.Pos.Y, this.Camera.Pos.Z });
+			GL.Light(LightName.Light0, LightParameter.Position, new[] { this.Camera.Pos.X, this.Camera.Pos.Y, this.Camera.Pos.Z, 1.0f });
 
 			var model = this.Model;
 			if (model != null)

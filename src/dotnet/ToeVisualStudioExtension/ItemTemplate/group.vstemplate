@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<VSTemplate Version="3.0.0" Type="Item" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
+  <TemplateData>
+    <Name>Marmalade SDK Resource Group</Name>
+    <Description>Marmalade SDK Resource Group file</Description>
+    <Icon>Group.ico</Icon>
+    <TemplateID>b9d6bd59-a54b-4339-a0de-5cb9e99bc0f9</TemplateID>
+    <ProjectType>CSharp</ProjectType>
+    <RequiredFrameworkVersion>2.0</RequiredFrameworkVersion>
+    <NumberOfParentCategoriesToRollUp>1</NumberOfParentCategoriesToRollUp>
+    <DefaultName>group.group</DefaultName>
+  </TemplateData>
+  <TemplateContent>
+    <ProjectItem ReplaceParameters="false">group.group</ProjectItem>
+  </TemplateContent>
+</VSTemplate>

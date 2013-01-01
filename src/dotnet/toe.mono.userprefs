@@ -1,6 +1,6 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Toe.Editor\Program.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="c:\GitHub\toe\src\dotnet\Toe.Editors.Marmalade\MaterialPreview.cs">
     <Files>
       <File FileName="Toe.mono\Main.cs" Line="10" Column="2" />
       <File FileName="Toe\MainWindow.cs" Line="15" Column="40" />
@@ -17,7 +17,9 @@
         <State expanded="True">
           <Node name="Toe.Editor.mono" expanded="True">
             <Node name="Resources" expanded="True" />
-            <Node name="Resources.resx" selected="True" />
+          </Node>
+          <Node name="Toe.Editors.Marmalade.net40.vs2010" expanded="True">
+            <Node name="MaterialPreview.cs" selected="True" />
           </Node>
           <Node name="Toe.Gx.net40.vs2010" expanded="True" />
           <Node name="Toe.Resources.net40.vs2010" expanded="True" />

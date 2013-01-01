@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<VSTemplate Version="3.0.0" Type="Item" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
+  <TemplateData>
+    <Name>Marmalade SDK Animation</Name>
+    <Description>Marmalade SDK animation file</Description>
+    <Icon>Anim.ico</Icon>
+    <TemplateID>ecbcee54-4cd8-4975-b882-2a12b6cf12e4</TemplateID>
+    <ProjectType>CSharp</ProjectType>
+    <RequiredFrameworkVersion>2.0</RequiredFrameworkVersion>
+    <NumberOfParentCategoriesToRollUp>1</NumberOfParentCategoriesToRollUp>
+    <DefaultName>anim.anim</DefaultName>
+  </TemplateData>
+  <TemplateContent>
+    <ProjectItem ReplaceParameters="false">anim.anim</ProjectItem>
+  </TemplateContent>
+</VSTemplate>

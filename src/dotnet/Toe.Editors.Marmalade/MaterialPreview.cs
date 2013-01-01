@@ -41,8 +41,7 @@ namespace Toe.Editors.Marmalade
 
 			GL.Enable(EnableCap.Lighting);
 			GL.Enable(EnableCap.Light0);
-			GL.Light(
-				LightName.Light0, LightParameter.Position, new[] { this.Camera.Pos.X, this.Camera.Pos.Y, this.Camera.Pos.Z, 1.0f });
+			GL.Light(LightName.Light0, LightParameter.Position, new[] { this.Camera.Pos.X, this.Camera.Pos.Y, this.Camera.Pos.Z, 1.0f });
 
 			this.editor.Material.ApplyOpenGL();
 			this.RenderBox(250);

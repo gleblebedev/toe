@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<VSTemplate Version="3.0.0" Type="Item" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
+  <TemplateData>
+    <Name>Marmalade SDK Geometry</Name>
+    <Description>Marmalade SDK Geometry file</Description>
+    <Icon>Geometry.ico</Icon>
+    <TemplateID>63e03476-6af1-4abd-9819-8a6b55d94b3c</TemplateID>
+    <ProjectType>CSharp</ProjectType>
+    <RequiredFrameworkVersion>2.0</RequiredFrameworkVersion>
+    <NumberOfParentCategoriesToRollUp>1</NumberOfParentCategoriesToRollUp>
+    <DefaultName>geometry.geo</DefaultName>
+  </TemplateData>
+  <TemplateContent>
+    <ProjectItem ReplaceParameters="false">geometry.geo</ProjectItem>
+  </TemplateContent>
+</VSTemplate>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<VSTemplate Version="3.0.0" Type="Item" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
+  <TemplateData>
+    <Name>Marmalade SDK Skeleton</Name>
+    <Description>Marmalade SDK Skeleton file</Description>
+    <Icon>Skel.ico</Icon>
+    <TemplateID>f6ad56c4-c2fa-4d50-ab11-af50a55973ce</TemplateID>
+    <ProjectType>CSharp</ProjectType>
+    <RequiredFrameworkVersion>2.0</RequiredFrameworkVersion>
+    <NumberOfParentCategoriesToRollUp>1</NumberOfParentCategoriesToRollUp>
+    <DefaultName>skel.skel</DefaultName>
+  </TemplateData>
+  <TemplateContent>
+    <ProjectItem ReplaceParameters="false">skel.skel</ProjectItem>
+  </TemplateContent>
+</VSTemplate>
