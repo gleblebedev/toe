@@ -176,6 +176,7 @@ namespace Toe.Editors
 			GL.Vertex3(0, 0, 0);
 			GL.Vertex3(0, 0, 1024);
 			GL.End();
+			GL.Flush();
 			this.glControl.SwapBuffers();
 		}
 
