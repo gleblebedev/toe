@@ -1,6 +1,6 @@
 namespace Toe.Utils.Mesh.Marmalade
 {
-	public class TgaHeader
+	internal class TgaHeader
 	{
 		#region Constants and Fields
 

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Toe.Resources
 {
@@ -14,7 +15,7 @@ namespace Toe.Resources
 
 		private IList<object> values = new List<object>(1);
 
-		public int referenceCounter;
+		private int referenceCounter;
 
 
 
@@ -69,6 +70,7 @@ namespace Toe.Resources
 				throw new ApplicationException("Can't retract resource - it wasn't provided");
 			RaisePropertyChanged("Value");
 		}
+		[SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate")]
 		protected virtual void RaisePropertyChanged(string property)
 		{
 			if (this.PropertyChanged!=null)

@@ -4,7 +4,7 @@ using System.Globalization;
 
 using Toe.Resources;
 
-namespace Toe.Utils.Mesh.Marmalade
+namespace Toe.Utils.Marmalade
 {
 	public abstract class Managed : INotifyPropertyChanging, INotifyPropertyChanged, IDisposable, IBasePathProvider
 	{
@@ -103,9 +103,10 @@ namespace Toe.Utils.Mesh.Marmalade
 		public void Dispose()
 		{
 			this.Dispose(true);
+			GC.SuppressFinalize(this);
 		}
 
-		public abstract uint GetClassHashCode();
+		public abstract uint ClassHashCode { get; }
 
 		public override string ToString()
 		{

@@ -1,5 +1,6 @@
 using System.ComponentModel;
 
+using Toe.Utils.Marmalade;
 using Toe.Utils.Mesh.Marmalade;
 
 namespace Toe.Resources

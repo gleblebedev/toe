@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -8,6 +9,16 @@ namespace Toe.Resources
 {
 	public class ResourceManager : IResourceManager
 	{
+		~ResourceManager()
+		{
+			this.Dispose(false);
+		}
+
+		protected virtual void Dispose(bool disposing)
+		{
+			
+		}
+
 		private readonly IComponentContext context;
 
 		public ResourceManager(IComponentContext context)
@@ -82,6 +93,16 @@ namespace Toe.Resources
 		{
 			var consumeResource = (ResourceItem)EnsureItem(type, nameHash);
 			consumeResource.Retract(item);
+			TryToRemoveResource(consumeResource);
+		}
+
+		private void TryToRemoveResource(ResourceItem resourceItem)
+		{
+			if (!resourceItem.IsInUse)
+			{
+				var typeCollection = this.EnsureTypeCollection(resourceItem.Type);
+				typeCollection.Remove(resourceItem.Hash);
+			}
 		}
 
 		public object FindResource(uint type, uint hash)
@@ -103,7 +124,8 @@ namespace Toe.Resources
 		/// <filterpriority>2</filterpriority>
 		public void Dispose()
 		{
-			
+			this.Dispose(true);
+			GC.SuppressFinalize(this);
 		}
 
 		#endregion

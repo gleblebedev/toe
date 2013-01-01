@@ -9,6 +9,9 @@ using Toe.Resources;
 using Microsoft.Xna.Framework;
 #else
 using OpenTK;
+
+using Toe.Utils.Marmalade;
+
 #endif
 
 namespace Toe.Utils.Mesh.Marmalade
@@ -60,10 +63,10 @@ namespace Toe.Utils.Mesh.Marmalade
 
 		public void Consume(string text)
 		{
-			if (0 != string.Compare(this.GetLexem(), text, StringComparison.InvariantCulture))
+			if (0 != string.Compare(this.Lexem, text, StringComparison.InvariantCulture))
 			{
 				throw new TextParserException(
-					string.Format(CultureInfo.InvariantCulture, "Expected \"{0}\", but there was \"{1}\"", text, this.GetLexem()));
+					string.Format(CultureInfo.InvariantCulture, "Expected \"{0}\", but there was \"{1}\"", text, this.Lexem));
 			}
 			this.Consume();
 		}
@@ -112,7 +115,7 @@ namespace Toe.Utils.Mesh.Marmalade
 
 		public bool ConsumeBool()
 		{
-			var lexem = this.GetLexem();
+			var lexem = this.Lexem;
 			if (0 == string.Compare(lexem, "true", StringComparison.InvariantCultureIgnoreCase))
 			{
 				this.Consume();
@@ -128,7 +131,7 @@ namespace Toe.Utils.Mesh.Marmalade
 
 		public byte ConsumeByte()
 		{
-			var f = byte.Parse(this.GetLexem(), CultureInfo.InvariantCulture);
+			var f = byte.Parse(this.Lexem, CultureInfo.InvariantCulture);
 			this.Consume();
 			return f;
 		}
@@ -178,14 +181,14 @@ namespace Toe.Utils.Mesh.Marmalade
 
 		public float ConsumeFloat()
 		{
-			var f = float.Parse(this.GetLexem(), CultureInfo.InvariantCulture);
+			var f = float.Parse(this.Lexem, CultureInfo.InvariantCulture);
 			this.Consume();
 			return f;
 		}
 
 		public int ConsumeInt()
 		{
-			var f = int.Parse(this.GetLexem(), CultureInfo.InvariantCulture);
+			var f = int.Parse(this.Lexem, CultureInfo.InvariantCulture);
 			this.Consume();
 			return f;
 		}
@@ -199,32 +202,21 @@ namespace Toe.Utils.Mesh.Marmalade
 
 		public void ConsumeResourceReference(ResourceReference resourceReference)
 		{
-			var l = this.GetLexem();
-			this.Consume();
-			if (l.IndexOfAny(new[] { '\\', '/' }, 0) >= 0)
-			{
-				resourceReference.FileReference = l;
-			}
-			else if (File.Exists(Path.Combine(this.BasePath, l)))
-			{
-				resourceReference.FileReference = l;
-			}
-			else
-			{
-				resourceReference.NameReference = l;
-			}
+			ConsumeResourceReference(resourceReference, null);
+
+			
 		}
 
 		public short ConsumeShort()
 		{
-			var f = short.Parse(this.GetLexem(), CultureInfo.InvariantCulture);
+			var f = short.Parse(this.Lexem, CultureInfo.InvariantCulture);
 			this.Consume();
 			return f;
 		}
 
 		public string ConsumeString()
 		{
-			var l = this.GetLexem();
+			var l = this.Lexem;
 			//TODO: check if it is string
 			this.Consume();
 			return l;
@@ -249,19 +241,22 @@ namespace Toe.Utils.Mesh.Marmalade
 			throw new TextParserException(message);
 		}
 
-		public string GetLexem()
+		public string Lexem
 		{
-			if (this.lexemReady)
+			get
 			{
+				if (this.lexemReady)
+				{
+					return this.lexem;
+				}
+				this.ReadLexem();
 				return this.lexem;
 			}
-			this.ReadLexem();
-			return this.lexem;
 		}
 
 		public void Skip(string s)
 		{
-			if (this.GetLexem() == s)
+			if (this.Lexem == s)
 			{
 				this.Consume();
 			}
@@ -302,14 +297,14 @@ namespace Toe.Utils.Mesh.Marmalade
 			}
 			for (index = 0; index < maxItems; ++index)
 			{
-				var l = this.GetLexem();
+				var l = this.Lexem;
 				if (l == "}")
 				{
 					this.Consume();
 					return index;
 				}
 				this.floatBuf[index] = this.ConsumeFloat();
-				if (this.GetLexem() == ",")
+				if (this.Lexem == ",")
 				{
 					this.Consume();
 				}
@@ -501,5 +496,30 @@ namespace Toe.Utils.Mesh.Marmalade
 		}
 
 		#endregion
+
+		public void ConsumeResourceReference(ResourceReference resourceReference, string folder)
+		{
+			var l = this.Lexem;
+			this.Consume();
+			if (l.IndexOfAny(new[] { '\\', '/' }, 0) >= 0)
+			{
+				resourceReference.FileReference = l;
+				return;
+			}
+			if (File.Exists(Path.Combine(this.BasePath, l)))
+			{
+				resourceReference.FileReference = l;
+				return;
+			}
+			if (folder != null)
+			{
+				var combinedPath = Path.Combine(folder, l);
+				if (File.Exists(Path.Combine(this.BasePath, combinedPath)))
+				{
+					resourceReference.FileReference = combinedPath;
+				}
+			}
+			resourceReference.NameReference = l;
+		}
 	}
 }

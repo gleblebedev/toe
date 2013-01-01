@@ -186,6 +186,26 @@ namespace Toe.Utils.Mesh.Marmalade
 					}
 					pos += len;
 				}
+
+				var correctedRgbValues = new byte[bmpData.Stride * b.Height];
+				for (int y = 0; y < b.Height; ++y)
+				{
+					int offset;
+					if ((header.descriptor & 0x20) == 0)
+						offset = (b.Height - 1 - y) * b.Width;
+					else
+						offset = y * b.Width;
+					for (int x = 0; x < b.Width; ++x)
+					{
+						int srcpos = 4 * (x + offset);
+						var dstpos = x * 4 + y * bmpData.Stride;
+						correctedRgbValues[dstpos + 0] = rgbValues[srcpos + 0];
+						correctedRgbValues[dstpos + 1] = rgbValues[srcpos + 1];
+						correctedRgbValues[dstpos + 2] = rgbValues[srcpos + 2];
+						correctedRgbValues[dstpos + 3] = rgbValues[srcpos + 3];
+					}
+				}
+
 				Marshal.Copy(rgbValues, 0, ptr, bytes);
 
 				b.UnlockBits(bmpData);

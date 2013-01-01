@@ -26,6 +26,9 @@ namespace Toe.Utils.Mesh.Marmalade.IwResManager
 
 		#region Public Properties
 
+		/// <summary>
+		/// Default file extension for text resource file for this particular resource.
+		/// </summary>
 		public string DefaultFileExtension
 		{
 			get
@@ -46,7 +49,7 @@ namespace Toe.Utils.Mesh.Marmalade.IwResManager
 			parser.Consume("{");
 			for (;;)
 			{
-				var attribute = parser.GetLexem();
+				var attribute = parser.Lexem;
 				if (attribute == "}")
 				{
 					parser.Consume();

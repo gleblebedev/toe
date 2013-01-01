@@ -16,6 +16,9 @@ namespace Toe.Utils.Marmalade.IwAnim
 
 		#region Implementation of ITextSerializer
 
+		/// <summary>
+		/// Default file extension for text resource file for this particular resource.
+		/// </summary>
 		public string DefaultFileExtension
 		{
 			get
@@ -33,7 +36,7 @@ namespace Toe.Utils.Marmalade.IwAnim
 
 			for (; ; )
 			{
-				var attribute = parser.GetLexem();
+				var attribute = parser.Lexem;
 				if (attribute == "}")
 				{
 					parser.Consume();
@@ -70,7 +73,7 @@ namespace Toe.Utils.Marmalade.IwAnim
 			MeshBone bone = null;
 			for (; ; )
 			{
-				var attribute = parser.GetLexem();
+				var attribute = parser.Lexem;
 				if (attribute == "}")
 				{
 					parser.Consume();

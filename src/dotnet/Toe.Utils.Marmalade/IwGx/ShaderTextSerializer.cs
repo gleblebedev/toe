@@ -50,7 +50,7 @@ namespace Toe.Utils.Mesh.Marmalade.IwGx
 			parser.Consume("{");
 			for (;;)
 			{
-				var attribute = parser.GetLexem();
+				var attribute = parser.Lexem;
 				if (attribute == "}")
 				{
 					parser.Consume();
@@ -70,7 +70,7 @@ namespace Toe.Utils.Mesh.Marmalade.IwGx
 				if (attribute == "shader")
 				{
 					parser.Consume();
-					attribute = parser.GetLexem();
+					attribute = parser.Lexem;
 					if (attribute == "vertex")
 					{
 						this.ParseVertexShader(parser, shader);

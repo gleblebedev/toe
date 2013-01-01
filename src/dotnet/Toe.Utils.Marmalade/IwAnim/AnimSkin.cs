@@ -24,7 +24,7 @@ namespace Toe.Utils.Marmalade.IwAnim
 
 		public static readonly uint TypeHash = Hash.Get("CIwAnimSkin");
 
-		public MeshStream<VertexWeight> weights = new MeshStream<VertexWeight>();
+		private readonly MeshStream<VertexWeight> weights = new MeshStream<VertexWeight>();
 
 		private readonly BoneCollection bones = new BoneCollection();
 
@@ -75,9 +75,12 @@ namespace Toe.Utils.Marmalade.IwAnim
 
 		#region Public Methods and Operators
 
-		public override uint GetClassHashCode()
+		public override uint ClassHashCode
 		{
-			return TypeHash;
+			get
+			{
+				return TypeHash;
+			}
 		}
 
 		#endregion

@@ -1,11 +1,15 @@
 using System;
+using System.Runtime.Serialization;
 
-namespace Toe.Utils.Mesh.Marmalade
+namespace Toe.Utils.Marmalade
 {
 	[Serializable]
 	public class TextParserException : Exception
 	{
 		#region Constructors and Destructors
+
+
+
 
 		public TextParserException()
 		{
@@ -13,6 +17,11 @@ namespace Toe.Utils.Mesh.Marmalade
 
 		public TextParserException(string message)
 			: base(message)
+		{
+		}
+
+		public TextParserException(SerializationInfo info, StreamingContext context)
+			: base(info, context)
 		{
 		}
 

@@ -62,7 +62,7 @@ namespace Toe.Utils.Mesh.Marmalade.IwGx
 			parser.Consume("{");
 			for (;;)
 			{
-				var attribute = parser.GetLexem();
+				var attribute = parser.Lexem;
 				if (attribute == "}")
 				{
 					parser.Consume();
@@ -172,25 +172,25 @@ namespace Toe.Utils.Mesh.Marmalade.IwGx
 				if (attribute == "texture0" || attribute == "mapDiffuse")
 				{
 					parser.Consume();
-					parser.ConsumeResourceReference(material.Texture0);
+					parser.ConsumeResourceReference(material.Texture0, "textures");
 					continue;
 				}
 				if (attribute == "texture1")
 				{
 					parser.Consume();
-					parser.ConsumeResourceReference(material.Texture1);
+					parser.ConsumeResourceReference(material.Texture1, "textures");
 					continue;
 				}
 				if (attribute == "texture2")
 				{
 					parser.Consume();
-					parser.ConsumeResourceReference(material.Texture2);
+					parser.ConsumeResourceReference(material.Texture2, "textures");
 					continue;
 				}
 				if (attribute == "texture3")
 				{
 					parser.Consume();
-					parser.ConsumeResourceReference(material.Texture3);
+					parser.ConsumeResourceReference(material.Texture3, "textures");
 					continue;
 				}
 				if (attribute == "effectPreset")

@@ -28,7 +28,7 @@ namespace Toe.Utils.Mesh.Marmalade.IwAnim
 
 			for (;;)
 			{
-				var attribute = parser.GetLexem();
+				var attribute = parser.Lexem;
 				if (attribute == "}")
 				{
 					parser.Consume();
@@ -68,7 +68,7 @@ namespace Toe.Utils.Mesh.Marmalade.IwAnim
 			MeshBone bone = null;
 			for (;;)
 			{
-				var attribute = parser.GetLexem();
+				var attribute = parser.Lexem;
 				if (attribute == "}")
 				{
 					parser.Consume();

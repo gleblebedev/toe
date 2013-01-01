@@ -48,7 +48,7 @@ namespace Toe.Utils.Mesh.Marmalade.IwGraphics
 
 			for (;;)
 			{
-				var attribute = parser.GetLexem();
+				var attribute = parser.Lexem;
 				if (attribute == "}")
 				{
 					parser.Consume();
@@ -78,7 +78,7 @@ namespace Toe.Utils.Mesh.Marmalade.IwGraphics
 			var mesh = new StreamMesh();
 			for (;;)
 			{
-				var attribute = parser.GetLexem();
+				var attribute = parser.Lexem;
 				if (attribute == "}")
 				{
 					parser.Consume();
@@ -189,7 +189,7 @@ namespace Toe.Utils.Mesh.Marmalade.IwGraphics
 			StreamSubmeshTiangleIndexes i;
 			i.Vertex = parser.ConsumeInt();
 			parser.Skip(",");
-			if (parser.GetLexem() == "}")
+			if (parser.Lexem == "}")
 			{
 				i.Normal = -1;
 			}
@@ -198,7 +198,7 @@ namespace Toe.Utils.Mesh.Marmalade.IwGraphics
 				i.Normal = parser.ConsumeInt();
 				parser.Skip(",");
 			}
-			if (parser.GetLexem() == "}")
+			if (parser.Lexem == "}")
 			{
 				i.UV0 = -1;
 			}
@@ -207,7 +207,7 @@ namespace Toe.Utils.Mesh.Marmalade.IwGraphics
 				i.UV0 = parser.ConsumeInt();
 				parser.Skip(",");
 			}
-			if (parser.GetLexem() == "}")
+			if (parser.Lexem == "}")
 			{
 				i.UV1 = -1;
 			}
@@ -216,7 +216,7 @@ namespace Toe.Utils.Mesh.Marmalade.IwGraphics
 				i.UV1 = parser.ConsumeInt();
 				parser.Skip(",");
 			}
-			if (parser.GetLexem() == "}")
+			if (parser.Lexem == "}")
 			{
 				i.Color = -1;
 			}
@@ -234,7 +234,7 @@ namespace Toe.Utils.Mesh.Marmalade.IwGraphics
 
 			for (;;)
 			{
-				var attribute = parser.GetLexem();
+				var attribute = parser.Lexem;
 				if (attribute == "}")
 				{
 					parser.Consume();
@@ -275,7 +275,7 @@ namespace Toe.Utils.Mesh.Marmalade.IwGraphics
 		{
 			for (;;)
 			{
-				var attribute = parser.GetLexem();
+				var attribute = parser.Lexem;
 				if (attribute == "}")
 				{
 					parser.Consume();
@@ -301,7 +301,7 @@ namespace Toe.Utils.Mesh.Marmalade.IwGraphics
 		{
 			for (;;)
 			{
-				var attribute = parser.GetLexem();
+				var attribute = parser.Lexem;
 				if (attribute == "}")
 				{
 					parser.Consume();
@@ -327,7 +327,7 @@ namespace Toe.Utils.Mesh.Marmalade.IwGraphics
 		{
 			for (;;)
 			{
-				var attribute = parser.GetLexem();
+				var attribute = parser.Lexem;
 				if (attribute == "}")
 				{
 					parser.Consume();
@@ -356,7 +356,7 @@ namespace Toe.Utils.Mesh.Marmalade.IwGraphics
 			parser.Consume("{");
 			for (;;)
 			{
-				var attribute = parser.GetLexem();
+				var attribute = parser.Lexem;
 				if (attribute == "}")
 				{
 					parser.Consume();
@@ -389,7 +389,7 @@ namespace Toe.Utils.Mesh.Marmalade.IwGraphics
 		{
 			for (;;)
 			{
-				var attribute = parser.GetLexem();
+				var attribute = parser.Lexem;
 				if (attribute == "}")
 				{
 					parser.Consume();
@@ -419,7 +419,7 @@ namespace Toe.Utils.Mesh.Marmalade.IwGraphics
 		{
 			for (;;)
 			{
-				var attribute = parser.GetLexem();
+				var attribute = parser.Lexem;
 				if (attribute == "}")
 				{
 					parser.Consume();
@@ -453,7 +453,7 @@ namespace Toe.Utils.Mesh.Marmalade.IwGraphics
 		{
 			for (;;)
 			{
-				var attribute = parser.GetLexem();
+				var attribute = parser.Lexem;
 				if (attribute == "}")
 				{
 					parser.Consume();

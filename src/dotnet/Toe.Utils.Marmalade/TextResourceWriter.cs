@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.IO;
 
+using Toe.Utils.Marmalade;
+
 namespace Toe.Utils.Mesh.Marmalade
 {
 	public class TextResourceWriter

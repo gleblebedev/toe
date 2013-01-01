@@ -5,6 +5,7 @@ using OpenTK.Graphics.OpenGL;
 
 using Toe.Gx;
 using Toe.Resources;
+using Toe.Utils.Marmalade;
 
 using PixelFormat = System.Drawing.Imaging.PixelFormat;
 
@@ -88,9 +89,12 @@ namespace Toe.Utils.Mesh.Marmalade.IwGx
 			OpenTKHelper.Assert();
 		}
 
-		public override uint GetClassHashCode()
+		public override uint ClassHashCode
 		{
-			return TypeHash;
+			get
+			{
+				return TypeHash;
+			}
 		}
 
 		#endregion

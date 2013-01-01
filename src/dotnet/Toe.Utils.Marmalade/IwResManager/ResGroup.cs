@@ -5,6 +5,7 @@ using System.IO;
 using Autofac;
 
 using Toe.Resources;
+using Toe.Utils.Marmalade;
 
 namespace Toe.Utils.Mesh.Marmalade.IwResManager
 {
@@ -93,9 +94,12 @@ namespace Toe.Utils.Mesh.Marmalade.IwResManager
 			}
 		}
 
-		public override uint GetClassHashCode()
+		public override uint ClassHashCode
 		{
-			return TypeHash;
+			get
+			{
+				return TypeHash;
+			}
 		}
 
 		#endregion

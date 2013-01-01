@@ -3,6 +3,7 @@ using System.Windows.Forms;
 
 using Toe.Editors.Interfaces.Bindings;
 using Toe.Editors.Interfaces.Views;
+using Toe.Utils.Marmalade;
 using Toe.Utils.Mesh.Marmalade;
 using Toe.Utils.Mesh.Marmalade.IwResManager;
 

@@ -40,7 +40,7 @@ namespace Toe.Utils.Mesh.Marmalade.IwAnim
 
 			for (; ; )
 			{
-				var attribute = parser.GetLexem();
+				var attribute = parser.Lexem;
 				if (attribute == "}")
 				{
 					parser.Consume();
@@ -86,7 +86,7 @@ namespace Toe.Utils.Mesh.Marmalade.IwAnim
 			parser.Consume("{");
 			for (;;)
 			{
-				var attribute = parser.GetLexem();
+				var attribute = parser.Lexem;
 				if (attribute == "}")
 				{
 					parser.Consume();
@@ -98,7 +98,7 @@ namespace Toe.Utils.Mesh.Marmalade.IwAnim
 					parser.Consume("{");
 					for (;;)
 					{
-						attribute = parser.GetLexem();
+						attribute = parser.Lexem;
 						if (attribute == "}")
 						{
 							parser.Consume();

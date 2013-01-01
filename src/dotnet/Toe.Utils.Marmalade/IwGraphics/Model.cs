@@ -40,9 +40,12 @@ namespace Toe.Utils.Marmalade.IwGraphics
 
 		#region Public Methods and Operators
 
-		public override uint GetClassHashCode()
+		public override uint ClassHashCode
 		{
-			return TypeHash;
+			get
+			{
+				return TypeHash;
+			}
 		}
 
 		#endregion

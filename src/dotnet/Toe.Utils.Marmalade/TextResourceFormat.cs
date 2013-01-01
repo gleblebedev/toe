@@ -80,7 +80,7 @@ namespace Toe.Utils.Mesh.Marmalade
 
 				for (;;)
 				{
-					var lexem = parser.GetLexem();
+					var lexem = parser.Lexem;
 					if (lexem == null)
 					{
 						return items;
@@ -107,7 +107,7 @@ namespace Toe.Utils.Mesh.Marmalade
 				var resources = this.Load(fileStream, Path.GetFileNameWithoutExtension(filePath), Path.GetDirectoryName(Path.GetFullPath(filePath)));
 				foreach (var resource in resources)
 				{
-					items.Add(new ResourceFileItem(resource.GetClassHashCode(), resource));
+					items.Add(new ResourceFileItem(resource.ClassHashCode, resource));
 				}
 			}
 

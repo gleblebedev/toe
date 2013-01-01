@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
+using System.Threading;
 
 using Autofac;
 
@@ -86,6 +88,7 @@ namespace Toe.Resources
 
 		#endregion
 
+		[SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
 		private void ReadFile()
 		{
 			try
@@ -97,6 +100,10 @@ namespace Toe.Resources
 				this.ProvideResources(this.resources);
 
 				//TODO: subscribe on list changes
+			}
+			catch(ThreadAbortException)
+			{
+				throw;
 			}
 			catch(Exception ex)
 			{
@@ -123,7 +130,13 @@ namespace Toe.Resources
 			{
 				this.UnsubscribeOnNameChange(item);
 				resourceManager.RetractResource(item.Type, item.NameHash, item.Resource);
+				var disposable = item.Resource as IDisposable;
+				if (disposable!=null)
+				{
+					disposable.Dispose();
+				}
 			}
+			resourceFileItems = null;
 		}
 
 		private void SubscribeOnNameChange(IResourceFileItem item)

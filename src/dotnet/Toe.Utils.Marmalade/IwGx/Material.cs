@@ -6,6 +6,7 @@ using OpenTK.Graphics.OpenGL;
 
 using Toe.Gx;
 using Toe.Resources;
+using Toe.Utils.Marmalade;
 
 namespace Toe.Utils.Mesh.Marmalade.IwGx
 {
@@ -740,9 +741,12 @@ namespace Toe.Utils.Mesh.Marmalade.IwGx
 			}
 		}
 
-		public override uint GetClassHashCode()
+		public override uint ClassHashCode
 		{
-			return TypeHash;
+			get
+			{
+				return TypeHash;
+			}
 		}
 
 		#endregion

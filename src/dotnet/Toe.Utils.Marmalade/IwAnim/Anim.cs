@@ -32,9 +32,12 @@ namespace Toe.Utils.Marmalade.IwAnim
 
 		#region Overrides of Managed
 
-		public override uint GetClassHashCode()
+		public override uint ClassHashCode
 		{
-			return TypeHash;
+			get
+			{
+				return TypeHash;
+			}
 		}
 
 		#endregion

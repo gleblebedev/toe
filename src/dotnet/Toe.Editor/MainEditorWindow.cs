@@ -109,6 +109,7 @@ namespace Toe.Editor
 			if (tab == null)
 				return;
 			fileTabs.TabPages.Remove(tab);
+			tab.Dispose();
 		}
 
 		private void combatEvagroupToolStripMenuItem_Click(object sender, EventArgs e)

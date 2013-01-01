@@ -5,6 +5,7 @@ using System.IO;
 using Autofac;
 
 using Toe.Resources;
+using Toe.Utils.Marmalade;
 
 namespace Toe.Utils.Mesh.Marmalade
 {
@@ -64,7 +65,7 @@ namespace Toe.Utils.Mesh.Marmalade
 				var resources = this.Load(fileStream, Path.GetDirectoryName(Path.GetFullPath(filePath)));
 				foreach (var resource in resources)
 				{
-					items.Add(new ResourceFileItem(resource.GetClassHashCode(), resource));
+					items.Add(new ResourceFileItem(resource.ClassHashCode, resource));
 				}
 			}
 
