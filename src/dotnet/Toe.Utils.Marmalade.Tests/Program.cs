@@ -9,6 +9,16 @@
 			//(new TestGeo()).TestLegs();
 			//(new TestSkin()).TestLegs();
 			//(new TestSkel()).TestLegs();
+			var testGroup = (new TestGroup());
+			try
+			{
+				testGroup.TestFixtureSetUp();
+				testGroup.TestMarmaladeFolderForBinary();
+			}
+			finally
+			{
+				testGroup.TestFixtureTearDown();
+			}
 		}
 
 		#endregion

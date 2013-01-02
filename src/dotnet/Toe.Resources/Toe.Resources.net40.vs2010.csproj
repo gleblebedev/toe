@@ -67,6 +67,7 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="ResourceErrorHandler.cs" />
+    <Compile Include="ResourceErrorHandlerException.cs" />
     <Compile Include="ResourceFile.cs" />
     <Compile Include="ResourceItem.cs" />
     <Compile Include="ResourceManager.cs" />

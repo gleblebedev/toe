@@ -9,12 +9,16 @@ using Autofac;
 using Toe.Editors.Interfaces;
 using Toe.Editors.Marmalade;
 using Toe.Gx;
+using Toe.Marmalade;
+using Toe.Marmalade.BinaryFiles;
+using Toe.Marmalade.TextFiles;
+using Toe.Marmalade.TextureFiles;
 using Toe.Resources;
 using Toe.Utils.Marmalade;
 using Toe.Utils.Mesh;
 
-using AutofacModule = Toe.Utils.Marmalade.AutofacModule;
 using IContainer = Autofac.IContainer;
+using ResourceFileItem = Toe.Marmalade.TextFiles.ResourceFileItem;
 
 namespace Toe.Editor
 {
@@ -33,8 +37,13 @@ namespace Toe.Editor
 			AppDomain.CurrentDomain.UnhandledException += OnException;
 			var cb = new Autofac.ContainerBuilder();
 
-			cb.RegisterModule<Toe.Editors.Marmalade.AutofacModule>();
-			cb.RegisterModule<AutofacModule>();
+			cb.RegisterModule<MarmaladeEditorsAutofacModule>();
+			cb.RegisterModule<MarmaladeAutofacModule>();
+			cb.RegisterModule<MarmaladeTextFilesAutofacModule>();
+			cb.RegisterModule<MarmaladeBinaryFilesAutofacModule>();
+			cb.RegisterModule<MarmaladeTextureFilesAutofacModule>();
+			
+
 			cb.RegisterGeneric(typeof(BindingList<>)).UsingConstructor(new Type[] { }).As(typeof(IList<>));
 			cb.RegisterType<EditorEnvironment>().As<IEditorEnvironment>().SingleInstance();
 			cb.RegisterType<ResourceManager>().As<IResourceManager>().SingleInstance();

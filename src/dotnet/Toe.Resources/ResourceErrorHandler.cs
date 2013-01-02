@@ -8,9 +8,7 @@ namespace Toe.Resources
 
 		public virtual void CanNotRead(string filePath, Exception exception)
 		{
-			if (exception != null)
-				throw exception;
-			throw new ApplicationException(string.Format("Can't read {0}", filePath));
+			throw new ResourceErrorHandlerException(string.Format("Can't read {0}", filePath), exception);
 		}
 
 		#endregion

@@ -2,6 +2,7 @@ using OpenTK.Graphics.OpenGL;
 
 using Toe.Editors.Interfaces;
 using Toe.Editors.Interfaces.Bindings;
+using Toe.Marmalade.IwGx;
 using Toe.Resources;
 using Toe.Utils.Marmalade.IwGx;
 

@@ -35,7 +35,8 @@ namespace Toe.Editors.Marmalade
 			    || fileName.EndsWith(".itx", StringComparison.InvariantCultureIgnoreCase)
 			    || fileName.EndsWith(".bmp", StringComparison.InvariantCultureIgnoreCase)
 			    || fileName.EndsWith(".tga", StringComparison.InvariantCultureIgnoreCase)
-			    || fileName.EndsWith(".group", StringComparison.InvariantCultureIgnoreCase))
+			    || fileName.EndsWith(".group", StringComparison.InvariantCultureIgnoreCase)
+			    || fileName.EndsWith(".group.bin", StringComparison.InvariantCultureIgnoreCase))
 			{
 				return this.context.Resolve<ResourceFileEditor>();
 			}

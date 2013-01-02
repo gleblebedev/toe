@@ -16,11 +16,14 @@
       <Pad Id="ProjectPad">
         <State expanded="True">
           <Node name="Toe.Editor.mono" expanded="True">
-            <Node name="Resources" expanded="True" />
-            <Node name="MainEditorWindow.resx" selected="True" />
+            <Node name="References" expanded="True" selected="True" />
           </Node>
           <Node name="Toe.Editors.Marmalade.net40.vs2010" expanded="True" />
           <Node name="Toe.Gx.net40.vs2010" expanded="True" />
+          <Node name="Toe.Marmalade.BinaryFiles" expanded="True" />
+          <Node name="Toe.Marmalade.net40.vs2010" expanded="True" />
+          <Node name="Toe.Marmalade.TextFiles" expanded="True" />
+          <Node name="Toe.Marmalade.TextureFiles" expanded="True" />
           <Node name="Toe.Resources.net40.vs2010" expanded="True" />
         </State>
       </Pad>

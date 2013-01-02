@@ -1,0 +1,101 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{6A49694C-C9B0-4E1D-83B2-2A445B3371FE}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Toe.Marmalade.TextFiles</RootNamespace>
+    <AssemblyName>Toe.Marmalade.TextFiles</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>False</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>True</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>True</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>Toe.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Autofac">
+      <HintPath>..\packages\Autofac.2.6.3.862\lib\NET40\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="Autofac.Configuration">
+      <HintPath>..\packages\Autofac.2.6.3.862\lib\NET40\Autofac.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenTK">
+      <HintPath>..\bin\net40\OpenTK.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ITextSerializer.cs" />
+    <Compile Include="IwAnim\AnimTextSerializer.cs" />
+    <Compile Include="IwAnim\SkelTextSerializer.cs" />
+    <Compile Include="IwAnim\SkinTextSerializer.cs" />
+    <Compile Include="IwGraphics\GeoReader.cs" />
+    <Compile Include="IwGraphics\ModelTextSerializer.cs" />
+    <Compile Include="IwGx\MaterialTextSerializer.cs" />
+    <Compile Include="IwGx\ShaderTextSerializer.cs" />
+    <Compile Include="IwResManager\GroupTextSerializer.cs" />
+    <Compile Include="MarmaladeTextFilesAutofacModule.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ResourceFileItem.cs" />
+    <Compile Include="TextParser.cs" />
+    <Compile Include="TextParserException.cs" />
+    <Compile Include="TextResourceFormat.cs" />
+    <Compile Include="TextResourceWriter.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+    <None Include="Toe.snk" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Toe.Marmalade\Toe.Marmalade.net40.vs2010.csproj">
+      <Project>{2708D020-33C1-4A4A-BDB0-035FB9EEDFFD}</Project>
+      <Name>Toe.Marmalade.net40.vs2010</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Toe.Resources\Toe.Resources.net40.vs2010.csproj">
+      <Project>{15C85727-F6FC-4A28-BB34-84C327AEFF81}</Project>
+      <Name>Toe.Resources.net40.vs2010</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Toe.Utils.Mesh\Toe.Utils.Mesh.net40.vs2010.csproj">
+      <Project>{1AB2E074-5CE6-4CD6-A379-3D6A58116319}</Project>
+      <Name>Toe.Utils.Mesh.net40.vs2010</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

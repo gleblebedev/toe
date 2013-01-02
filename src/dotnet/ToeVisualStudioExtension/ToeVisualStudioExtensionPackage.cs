@@ -14,12 +14,16 @@ using Toe.Editors.Geometry;
 using Toe.Editors.Interfaces;
 using Toe.Editors.Marmalade;
 using Toe.Gx;
+using Toe.Marmalade;
+using Toe.Marmalade.BinaryFiles;
+using Toe.Marmalade.TextFiles;
+using Toe.Marmalade.TextureFiles;
 using Toe.Resources;
 using Toe.ToeVsExt;
 using Toe.Utils.Marmalade;
 
-using AutofacModule = Toe.Utils.Marmalade.AutofacModule;
 using IContainer = Autofac.IContainer;
+using ResourceFileItem = Toe.Marmalade.TextFiles.ResourceFileItem;
 
 namespace TinyOpenEngine.ToeVisualStudioExtension
 {
@@ -96,8 +100,12 @@ namespace TinyOpenEngine.ToeVisualStudioExtension
 
 			var cb = new Autofac.ContainerBuilder();
 
-			cb.RegisterModule<Toe.Editors.Marmalade.AutofacModule>();
-			cb.RegisterModule<AutofacModule>();
+			cb.RegisterModule<MarmaladeEditorsAutofacModule>();
+			cb.RegisterModule<MarmaladeAutofacModule>();
+			cb.RegisterModule<MarmaladeTextFilesAutofacModule>();
+			cb.RegisterModule<MarmaladeBinaryFilesAutofacModule>();
+			cb.RegisterModule<MarmaladeTextureFilesAutofacModule>();
+
 			cb.RegisterGeneric(typeof(BindingList<>)).UsingConstructor(new Type[] { }).As(typeof(IList<>));
 			cb.RegisterType<VsEditorEnvironment>().As<IEditorEnvironment>().SingleInstance();
 			cb.RegisterType<ResourceManager>().As<IResourceManager>().SingleInstance();

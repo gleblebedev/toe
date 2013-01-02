@@ -1,0 +1,107 @@
+using Toe.Marmalade.IwAnim;
+using Toe.Utils.Mesh;
+
+namespace Toe.Utils.Marmalade.IwAnim
+{
+	public class SkelTextSerializer : ITextSerializer
+	{
+		#region Public Properties
+
+		public string DefaultFileExtension
+		{
+			get
+			{
+				return ".skel";
+			}
+		}
+
+		#endregion
+
+		#region Public Methods and Operators
+
+		public Managed Parse(TextParser parser, string defaultName)
+		{
+			var skel = new AnimSkel();
+			skel.Name = defaultName;
+			parser.Consume("CIwAnimSkel");
+			parser.Consume("{");
+
+			for (;;)
+			{
+				var attribute = parser.Lexem;
+				if (attribute == "}")
+				{
+					parser.Consume();
+					break;
+				}
+				if (attribute == "name")
+				{
+					parser.Consume();
+					skel.Name = parser.ConsumeString();
+					continue;
+				}
+				if (attribute == "numBones")
+				{
+					parser.Consume();
+					skel.Bones.Capacity = parser.ConsumeInt();
+					continue;
+				}
+
+				if (attribute == "CIwAnimBone")
+				{
+					parser.Consume();
+					ParseBone(parser, skel);
+					continue;
+				}
+				parser.UnknownLexem();
+			}
+			return skel;
+		}
+
+		#endregion
+
+		#region Methods
+
+		private static void ParseBone(TextParser parser, AnimSkel mesh)
+		{
+			parser.Consume("{");
+			MeshBone bone = null;
+			for (;;)
+			{
+				var attribute = parser.Lexem;
+				if (attribute == "}")
+				{
+					parser.Consume();
+					break;
+				}
+				if (attribute == "name")
+				{
+					parser.Consume();
+					bone = mesh.Bones[mesh.EnsureBone(parser.ConsumeString())];
+					continue;
+				}
+				if (attribute == "parent")
+				{
+					parser.Consume();
+					bone.Parent = mesh.EnsureBone(parser.ConsumeString());
+					continue;
+				}
+				if (attribute == "pos")
+				{
+					parser.Consume();
+					bone.BindingPos = parser.ConsumeVector3();
+					continue;
+				}
+				if (attribute == "rot")
+				{
+					parser.Consume();
+					bone.BindingRot = parser.ConsumeQuaternion();
+					continue;
+				}
+				parser.UnknownLexem();
+			}
+		}
+
+		#endregion
+	}
+}

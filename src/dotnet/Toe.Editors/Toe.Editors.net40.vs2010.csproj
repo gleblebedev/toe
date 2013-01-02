@@ -86,10 +86,6 @@
       <Project>{1D297D66-08E0-4239-9D2C-0F29F6F5A895}</Project>
       <Name>Toe.Gx.net40.vs2010</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Toe.Utils.Marmalade\Toe.Utils.Marmalade.net40.vs2010.csproj">
-      <Project>{914A4563-0A6F-42D3-8BDA-240AA07DA76E}</Project>
-      <Name>Toe.Utils.Marmalade.net40.vs2010</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Base3DEditor.resx">

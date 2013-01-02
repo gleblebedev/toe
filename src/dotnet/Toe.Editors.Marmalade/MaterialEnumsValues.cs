@@ -1,4 +1,5 @@
 using Toe.Editors.Interfaces.Views;
+using Toe.Marmalade.IwGx;
 using Toe.Utils.Marmalade.IwGx;
 
 namespace Toe.Editors.Marmalade

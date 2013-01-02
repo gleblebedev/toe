@@ -29,7 +29,21 @@ namespace Toe.Utils.Mesh.Marmalade.Tests
 				}
 			}
 		}
-
+		[Test]
+		public void TestMarmaladeFolderForBinary()
+		{
+			using (var rm = Container.Resolve<IResourceManager>())
+			{
+				var s = new FolderTreeSearch(@"C:\Marmalade\6.2\examples\", "*.group.bin");
+				foreach (var file in s)
+				{
+					Console.WriteLine(file);
+					var f = rm.EnsureFile(file);
+					f.Open();
+					f.Close();
+				}
+			}
+		}
 		#endregion
 	}
 }
