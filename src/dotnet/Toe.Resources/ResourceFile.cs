@@ -97,18 +97,19 @@ namespace Toe.Resources
 				if (this.resourceFileFormat == null) throw new FormatException(string.Format(CultureInfo.InvariantCulture, "Can't read {0}", this.filePath));
 				this.DropResources(this.resources);
 				this.resources = this.resourceFileFormat.Read(filePath);
-				this.ProvideResources(this.resources);
 
 				//TODO: subscribe on list changes
 			}
 			catch(ThreadAbortException)
 			{
+				this.DropResources(this.resources);
 				throw;
 			}
 			catch(Exception ex)
 			{
 				errorHandler.CanNotRead(filePath, ex);
 			}
+			this.ProvideResources(this.resources);
 		}
 
 		private void ProvideResources(IEnumerable<IResourceFileItem> resourceFileItems)

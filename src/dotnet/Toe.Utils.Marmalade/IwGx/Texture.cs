@@ -1,6 +1,7 @@
 using System.Drawing;
 using System.Drawing.Imaging;
 
+using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 
 using Toe.Gx;
@@ -19,6 +20,8 @@ namespace Toe.Utils.Marmalade.IwGx
 		private Bitmap bitmap;
 
 		private uint textureId;
+
+		private IGraphicsContext context;
 
 		#endregion
 
@@ -51,41 +54,52 @@ namespace Toe.Utils.Marmalade.IwGx
 
 			if (this.textureId == 0)
 			{
-				GL.GenTextures(1, out this.textureId);
-				OpenTKHelper.Assert();
-				GL.PushAttrib(AttribMask.TextureBit);
-				try
-				{
-					GL.BindTexture(TextureTarget.Texture2D, this.textureId);
-					OpenTKHelper.Assert();
-					BitmapData data = this.bitmap.LockBits(
-						new Rectangle(0, 0, this.bitmap.Width, this.bitmap.Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
-					GL.TexImage2D(
-						TextureTarget.Texture2D,
-						0,
-						PixelInternalFormat.Rgba,
-						data.Width,
-						data.Height,
-						0,
-						OpenTK.Graphics.OpenGL.PixelFormat.Bgra,
-						PixelType.UnsignedByte,
-						data.Scan0);
-					GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
-					GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
-					OpenTKHelper.Assert();
-					this.bitmap.UnlockBits(data);
-					GL.Finish();
-					OpenTKHelper.Assert();
-				}
-				finally
-				{
-					GL.PopAttrib();
-				}
+				this.GenTexture();
+			}
+			else if (context.IsDisposed)
+			{
+				this.GenTexture();
 			}
 			GL.Enable(EnableCap.Texture2D);
 			OpenTKHelper.Assert();
 			GL.BindTexture(TextureTarget.Texture2D, this.textureId);
 			OpenTKHelper.Assert();
+		}
+
+		private void GenTexture()
+		{
+			context = GraphicsContext.CurrentContext;
+
+			GL.GenTextures(1, out this.textureId);
+			OpenTKHelper.Assert();
+			GL.PushAttrib(AttribMask.TextureBit);
+			try
+			{
+				GL.BindTexture(TextureTarget.Texture2D, this.textureId);
+				OpenTKHelper.Assert();
+				BitmapData data = this.bitmap.LockBits(
+					new Rectangle(0, 0, this.bitmap.Width, this.bitmap.Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
+				GL.TexImage2D(
+					TextureTarget.Texture2D,
+					0,
+					PixelInternalFormat.Rgba,
+					data.Width,
+					data.Height,
+					0,
+					OpenTK.Graphics.OpenGL.PixelFormat.Bgra,
+					PixelType.UnsignedByte,
+					data.Scan0);
+				GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
+				GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+				OpenTKHelper.Assert();
+				this.bitmap.UnlockBits(data);
+				GL.Finish();
+				OpenTKHelper.Assert();
+			}
+			finally
+			{
+				GL.PopAttrib();
+			}
 		}
 
 		public override uint ClassHashCode

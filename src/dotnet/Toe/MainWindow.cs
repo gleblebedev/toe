@@ -27,6 +27,7 @@ namespace Toe
 		public MainWindow()
 		{
 			this.gl = new GLControl(GraphicsMode.Default, 1, 0, GraphicsContextFlags.Default);
+
 			this.gl.Dock = DockStyle.Fill;
 			this.gl.Load += this.GLControlLoad;
 			this.gl.Paint += this.GLControlPaint;

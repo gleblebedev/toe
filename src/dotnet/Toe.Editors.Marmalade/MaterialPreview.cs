@@ -1,5 +1,7 @@
 using OpenTK.Graphics.OpenGL;
 
+using Toe.Gx;
+
 namespace Toe.Editors.Marmalade
 {
 	public class MaterialPreview : Base3DEditor
@@ -8,13 +10,16 @@ namespace Toe.Editors.Marmalade
 
 		private readonly MaterialEditor editor;
 
+		private readonly ToeGraphicsContext graphicsContext;
+
 		#endregion
 
 		#region Constructors and Destructors
 
-		public MaterialPreview(MaterialEditor editor)
+		public MaterialPreview(MaterialEditor editor, ToeGraphicsContext graphicsContext)
 		{
 			this.editor = editor;
+			this.graphicsContext = graphicsContext;
 			this.Camera.Ortho = false;
 			this.Camera.ZNear = 16.0f;
 			this.Camera.ZFar = 2048.0f;

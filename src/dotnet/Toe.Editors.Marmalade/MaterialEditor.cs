@@ -8,6 +8,7 @@ using Toe.Editors.Interfaces;
 using Toe.Editors.Interfaces.Bindings;
 using Toe.Editors.Interfaces.Panels;
 using Toe.Editors.Interfaces.Views;
+using Toe.Gx;
 using Toe.Resources;
 using Toe.Utils.Marmalade.IwGx;
 
@@ -23,6 +24,8 @@ namespace Toe.Editors.Marmalade
 
 		private readonly ICommandHistory history;
 
+		private readonly ToeGraphicsContext graphicsContext;
+
 		private SplitContainer formPreviewSplit;
 
 		private TableLayoutPanel stackPanel;
@@ -31,11 +34,12 @@ namespace Toe.Editors.Marmalade
 
 		#region Constructors and Destructors
 
-		public MaterialEditor(IEditorEnvironment editorEnvironment, ICommandHistory history)
+		public MaterialEditor(IEditorEnvironment editorEnvironment, ICommandHistory history, ToeGraphicsContext graphicsContext)
 		{
 			this.editorEnvironment = editorEnvironment;
 			this.history = history;
-			
+			this.graphicsContext = graphicsContext;
+
 			this.InitializeComponent();
 
 			this.InitializeEditor();
@@ -141,7 +145,7 @@ namespace Toe.Editors.Marmalade
 			this.formPreviewSplit.Panel1.Controls.Add(sp);
 
 			//var preview = new PictureBox { Image = Resources.material, Dock = DockStyle.Fill, AutoSize = true };
-			var preview = new MaterialPreview(this) { Dock = DockStyle.Fill };
+			var preview = new MaterialPreview(this,this.graphicsContext) { Dock = DockStyle.Fill };
 			this.formPreviewSplit.Panel2.Controls.Add(preview);
 			this.dataContext.DataContextChanged += (s, a) => preview.RefreshScene();
 			this.dataContext.PropertyChanged += (s, a) => preview.RefreshScene();
