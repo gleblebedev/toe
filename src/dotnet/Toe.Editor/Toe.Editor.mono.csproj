@@ -114,5 +114,8 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LogicalName>Toe.Editor.Resources.resources</LogicalName>
     </EmbeddedResource>
+    <EmbeddedResource Include="MainEditorWindow.resx">
+      <LogicalName>Toe.Editor.MainEditorWindow.resources</LogicalName>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>

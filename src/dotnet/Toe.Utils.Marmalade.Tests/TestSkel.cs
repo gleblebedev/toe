@@ -1,6 +1,8 @@
 using System;
 using System.IO;
 
+using Autofac;
+
 using NUnit.Framework;
 
 using Toe.Resources;
@@ -8,42 +10,38 @@ using Toe.Resources;
 namespace Toe.Utils.Mesh.Marmalade.Tests
 {
 	[TestFixture]
-	public class TestSkel
+	public class TestSkel : BaseTest
 	{
 		#region Public Methods and Operators
 
-		//[Test]
-		//public void TestLegs()
-		//{
-		//    using (IResourceManager rm = new Toe.Resources.ResourceManager())
-		//    {
-		//        var r = new TextResourceReader(rm);
-		//        var fileName = "male_skel_lod0.skel";
-		//        using (var fileStream = File.OpenRead(fileName))
-		//        {
-		//            r.Load(fileStream, Path.GetDirectoryName(Path.GetFullPath(fileName)));
-		//        }
-		//    }
-		//}
+		[Test]
+		public void TestLegs()
+		{
+			using (var rm = Container.Resolve<IResourceManager>())
+			{
+				var fileName = "male_skel_lod0.skel";
+				var f = rm.EnsureFile(fileName);
+				f.Open();
+				Assert.Greater(f.Items.Count, 0);
+				f.Close();
+			}
+		}
 
-		//[Test]
-		//public void TestMarmaladeFolder()
-		//{
-		//    using (IResourceManager rm = new Toe.Resources.ResourceManager())
-		//    {
-		//        var r = new TextResourceReader(rm);
-
-		//        var s = new FolderTreeSearch(@"C:\Marmalade\6.2\examples\", "*.skel");
-		//        foreach (var file in s)
-		//        {
-		//            Console.WriteLine(file);
-		//            using (var fileStream = File.OpenRead(file))
-		//            {
-		//                r.Load(fileStream, Path.GetDirectoryName(Path.GetFullPath(file)));
-		//            }
-		//        }
-		//    }
-		//}
+		[Test]
+		public void TestMarmaladeFolder()
+		{
+			using (var rm = Container.Resolve<IResourceManager>())
+			{
+				var s = new FolderTreeSearch(@"C:\Marmalade\6.2\examples\", "*.skel");
+				foreach (var file in s)
+				{
+					Console.WriteLine(file);
+					var f = rm.EnsureFile(file);
+					f.Open();
+					f.Close();
+				}
+			}
+		}
 
 
 		#endregion

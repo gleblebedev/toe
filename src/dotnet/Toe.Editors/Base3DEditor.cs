@@ -92,7 +92,7 @@ namespace Toe.Editors
 
 		#region Public Methods and Operators
 
-		public void Refresh()
+		public void RefreshScene()
 		{
 			this.glControl.Invalidate();
 		}

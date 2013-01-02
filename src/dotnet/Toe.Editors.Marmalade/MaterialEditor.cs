@@ -143,8 +143,8 @@ namespace Toe.Editors.Marmalade
 			//var preview = new PictureBox { Image = Resources.material, Dock = DockStyle.Fill, AutoSize = true };
 			var preview = new MaterialPreview(this) { Dock = DockStyle.Fill };
 			this.formPreviewSplit.Panel2.Controls.Add(preview);
-			this.dataContext.DataContextChanged += (s, a) => preview.Refresh();
-			this.dataContext.PropertyChanged += (s, a) => preview.Refresh();
+			this.dataContext.DataContextChanged += (s, a) => preview.RefreshScene();
+			this.dataContext.PropertyChanged += (s, a) => preview.RefreshScene();
 
 			{
 				this.stackPanel.Controls.Add(new StringView { Text = "Material name" });

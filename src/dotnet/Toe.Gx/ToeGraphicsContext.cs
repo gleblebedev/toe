@@ -34,5 +34,7 @@ namespace Toe.Gx
 				this.flipCulling = value;
 			}
 		}
+
+
 	}
 }

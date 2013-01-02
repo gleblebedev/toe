@@ -42,6 +42,13 @@ namespace Toe.Utils.Marmalade.IwGraphics
 		{
 			var model = this.context.Resolve<Model>();
 			model.Name = defaultName;
+
+			if (parser.Lexem == "CMesh")
+			{
+				model.Meshes.Add(this.ParseMesh(parser));
+				return model;
+			}
+
 			parser.Consume("CIwModel");
 			parser.Consume("{");
 

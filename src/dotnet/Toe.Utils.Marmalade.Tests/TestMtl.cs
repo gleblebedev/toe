@@ -17,7 +17,7 @@ namespace Toe.Utils.Mesh.Marmalade.Tests
 		[Test]
 		public void TestMarmaladeFolder()
 		{
-			using (IResourceManager rm = Container.Resolve<IResourceManager>())
+			using (var rm = Container.Resolve<IResourceManager>())
 			{
 				var s = new FolderTreeSearch(@"C:\Marmalade\6.2\examples\", "*.mtl");
 				foreach (var file in s)
