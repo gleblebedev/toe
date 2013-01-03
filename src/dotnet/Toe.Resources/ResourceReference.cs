@@ -227,7 +227,7 @@ namespace Toe.Resources
 			{
 				return this.NameReference;
 			}
-			return string.Format(CultureInfo.InvariantCulture, "{0}", this.HashReference);
+			return string.Format(CultureInfo.InvariantCulture, "0x{0:X8}", this.HashReference);
 		}
 
 		#endregion

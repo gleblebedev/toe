@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 
+using OpenTK;
 using OpenTK.Graphics.OpenGL;
 
 using Toe.Marmalade.IwGx;
@@ -23,6 +24,8 @@ namespace Toe.Utils.Marmalade.IwGraphics
 		public static readonly uint TypeHash = Hash.Get("CIwModel");
 
 		private readonly IList<IMesh> meshes = new List<IMesh>();
+
+		private uint flags;
 
 		#endregion
 
@@ -48,6 +51,27 @@ namespace Toe.Utils.Marmalade.IwGraphics
 			}
 		}
 
+		public uint Flags
+		{
+			get
+			{
+				return flags;
+			}
+			set
+			{
+				if (flags != value)
+				{
+					this.RaisePropertyChanging("Flags");
+					flags = value;
+					this.RaisePropertyChanged("Flags");
+				}
+			}
+		}
+
+		public Vector3 Center { get; set; }
+
+		public float Radius { get; set; }
+
 		#endregion
 
 		public void RenderOpenGL()
@@ -57,9 +81,16 @@ namespace Toe.Utils.Marmalade.IwGraphics
 				foreach (ISubMesh submesh in mesh.Submeshes)
 				{
 					GL.PushAttrib(AttribMask.AllAttribBits);
-					var m = resourceManager.FindResource(Material.TypeHash, Hash.Get(mesh.Name + "/" + submesh.Material)) as Material;
-					if (m == null)
-						m = resourceManager.FindResource(Material.TypeHash, Hash.Get(submesh.Material)) as Material;
+					Material m = null;
+					if (!string.IsNullOrEmpty(submesh.Material))
+					{
+						m = this.resourceManager.FindResource(Material.TypeHash, Hash.Get(mesh.Name + "/" + submesh.Material)) as Material;
+						if (m == null) m = resourceManager.FindResource(Material.TypeHash, Hash.Get(submesh.Material)) as Material;
+					}
+					else
+					{
+						m = this.resourceManager.FindResource(Material.TypeHash, submesh.MaterialHash) as Material;
+					}
 					if (m != null)
 					{
 						m.ApplyOpenGL();

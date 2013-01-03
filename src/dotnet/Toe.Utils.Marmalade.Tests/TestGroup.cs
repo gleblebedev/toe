@@ -13,7 +13,18 @@ namespace Toe.Utils.Mesh.Marmalade.Tests
 	public class TestGroup : BaseTest
 	{
 		#region Public Methods and Operators
-
+		[Test]
+		public void TestGroupBin()
+		{
+			using (var rm = Container.Resolve<IResourceManager>())
+			{
+				var file = @"C:\GitHub\toe\src\marmalade\data-ram\data-gles1\male_lod0.group.bin";
+				Console.WriteLine(file);
+				var f = rm.EnsureFile(file);
+				f.Open();
+				f.Close();
+			}
+		}
 		[Test]
 		public void TestMarmaladeFolder()
 		{

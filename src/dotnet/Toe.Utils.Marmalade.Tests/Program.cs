@@ -13,7 +13,8 @@
 			try
 			{
 				testGroup.TestFixtureSetUp();
-				testGroup.TestMarmaladeFolderForBinary();
+				testGroup.TestGroupBin();
+				//testGroup.TestMarmaladeFolderForBinary();
 			}
 			finally
 			{

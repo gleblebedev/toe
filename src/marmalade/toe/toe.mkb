@@ -20,4 +20,5 @@ assets
 subprojects
 {
     ../modules/core/toecore.mkf
+	s3eHook
 }

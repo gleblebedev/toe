@@ -2,6 +2,9 @@ using System.Collections.Generic;
 
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
+
+using Toe.Resources;
+
 #if WINDOWS_PHONE
 using Microsoft.Xna.Framework;
 #else
@@ -19,9 +22,9 @@ namespace Toe.Utils.Mesh
 			this.mesh = mesh;
 		}
 
-		private readonly List<StreamSubmeshTiangle> tris = new List<StreamSubmeshTiangle>();
+		private readonly List<StreamSubmeshTriangle> tris = new List<StreamSubmeshTriangle>();
 
-		public List<StreamSubmeshTiangle> Tris
+		public List<StreamSubmeshTriangle> Tris
 		{
 			get
 			{
@@ -45,7 +48,7 @@ namespace Toe.Utils.Mesh
 			GL.End();
 		}
 
-		private void RenderVertex(StreamSubmeshTiangleIndexes indexes)
+		private void RenderVertex(StreamSubmeshTriangleIndexes indexes)
 		{
 			if (indexes.Normal >= 0)
 			{
@@ -83,6 +86,7 @@ namespace Toe.Utils.Mesh
 				if (this.material != value)
 				{
 					this.material = value;
+					this.materialHash = Hash.Get(value);
 				}
 			}
 		}
@@ -101,6 +105,21 @@ namespace Toe.Utils.Mesh
 				{
 					this.name = value;
 				}
+			}
+		}
+
+		private uint materialHash;
+
+		public uint MaterialHash
+		{
+			get
+			{
+				return this.materialHash;
+			}
+			set
+			{
+				this.materialHash = value;
+				this.material = null;
 			}
 		}
 

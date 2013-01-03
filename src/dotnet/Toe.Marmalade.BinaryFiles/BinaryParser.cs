@@ -4,6 +4,8 @@ using System.Drawing;
 using System.IO;
 using System.Text;
 
+using OpenTK;
+
 namespace Toe.Marmalade.BinaryFiles
 {
 	public class BinaryParser
@@ -166,6 +168,38 @@ namespace Toe.Marmalade.BinaryFiles
 		public float ConsumeFloat()
 		{
 			return this.source.ReadSingle();
+		}
+
+		public byte[] ConsumeByteArray(int size)
+		{
+			byte[] uints = new byte[size];
+			this.ConsumeArray(uints);
+			return uints;
+		}
+		public Vector2 ConsumeVector2()
+		{
+			float x = this.ConsumeFloat();
+			float y = this.ConsumeFloat();
+			return new Vector2(x, y);
+		}
+		public Vector3 ConsumeVector3()
+		{
+			float x = this.ConsumeFloat();
+			float y = this.ConsumeFloat();
+			float z = this.ConsumeFloat();
+			return new Vector3(x,y,z);
+		}
+
+		public ushort[] ConsumeUInt16Array(int size)
+		{
+			ushort[] res = new ushort[size];
+			int pos = 0;
+			while (pos < size)
+			{
+				res[pos] = this.source.ReadUInt16();
+				++pos;
+			}
+			return res;
 		}
 	}
 }

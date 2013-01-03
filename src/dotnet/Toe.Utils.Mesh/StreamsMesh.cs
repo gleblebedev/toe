@@ -102,6 +102,8 @@ namespace Toe.Utils.Mesh
 
 		public string useGeo { get; set; }
 
+		public uint NameHash { get; set; }
+
 		#endregion
 
 		#region Public Methods and Operators

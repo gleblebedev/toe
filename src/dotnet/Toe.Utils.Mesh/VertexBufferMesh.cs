@@ -33,6 +33,8 @@ namespace Toe.Utils.Mesh
 			}
 		}
 
+		public uint NameHash { get; set; }
+
 		private string name;
 		#endregion
 

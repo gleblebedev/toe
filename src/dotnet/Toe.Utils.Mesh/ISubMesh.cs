@@ -13,5 +13,7 @@ namespace Toe.Utils.Mesh
 		string Material { get; set; }
 
 		string Name { get; }
+
+		uint MaterialHash { get; set; }
 	}
 }

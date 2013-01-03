@@ -13,6 +13,49 @@ namespace Toe.Marmalade.IwGx
 {
 	public class Material : Managed
 	{
+		/// <summary>
+		/// if gouraud-shaded, perform intensity shading only, using R component of colour
+		/// </summary>
+		public const uint INTENSITY_F = (1 << 0);
+
+		/// <summary>
+		/// No shading or lighting, fully lit
+		/// </summary>
+		public const uint UNMODULATE_F = (1 << 1);
+        public const uint FLAT_F          = (1 << 2);     // do NOT use gouraud shading for this material
+        public const uint TWO_SIDED_F     = (1 << 3);     // material is two-sided (perform no culling)
+        public const uint CULL_FRONT_F    = (1 << 4);     // if TWO_SIDED_F is NOT set; cull front-facing rather than back-facing polys
+        public const uint NO_FILTERING_F  = (1 << 5);     // disable filtering for all textures
+        public const uint NO_RENDER_F     = (1 << 6);     // do not render geometry with this material
+        public const uint MERGE_GEOM_F    = (1 << 7);     // If trans=SW; light=SW; rast=HW: try to merge all MatGeomInfo into one
+        public const uint CLAMP_UV_F      = (1 << 8);     // If set the texture coords are clamped when the texture object is set
+        public const uint ATLAS_MATERIAL_F =  (1 << 9);
+        public const uint NO_FOG_F        = (1 <<10);     // Disable Fogging for this material
+
+        // System flags
+        public const uint IN_USE_F        = (1 << 12);    // material is being used to render this frame (used when caching geometry)
+
+
+
+        // Packed Enum Members
+        public const int ALPHA_MODE_SHIFT    = 16;
+        public const uint ALPHA_MODE_MASK     = 0x00070000;   // AlphaMode member
+        public const int BLEND_MODE_SHIFT    = 19;
+        public const uint BLEND_MODE_MASK     = 0x00380000;   // BlendMode member
+        public const int EFFECT_PRESET_SHIFT = 22;
+        public const uint EFFECT_PRESET_MASK  = 0x01C00000;   // EffectPreset member
+        public const int ALPHATEST_MODE_SHIFT = 25;
+        public const uint ALPHATEST_MODE_MASK = 0x1e000000;   // Alpha Test member
+        public const int DEPTH_WRITE_MODE_SHIFT = 29;
+
+		/// <summary>
+		/// Depth test mode member
+		/// </summary>
+		public const uint DEPTH_WRITE_MODE_MASK = 0x1 << DEPTH_WRITE_MODE_SHIFT; 
+
+		public const uint PRIVATE_FLAGS_MASK = 0xffffffff;
+
+
 		#region Constants and Fields
 
 		public static readonly uint TypeHash = Hash.Get("CIwMaterial");
@@ -82,6 +125,8 @@ namespace Toe.Marmalade.IwGx
 		private int zDepthOfs;
 
 		private int zDepthOfsHw;
+
+		private bool atlasMaterial;
 
 		#endregion
 
@@ -747,6 +792,76 @@ namespace Toe.Marmalade.IwGx
 			get
 			{
 				return TypeHash;
+			}
+		}
+
+		public uint Flags
+		{
+			set
+			{
+				if (0 != (value & INTENSITY_F))
+				{
+				}
+				else
+				{
+					
+				}
+				if (0 != (value & UNMODULATE_F))
+				{
+				}
+				else
+				{
+					
+				}
+				if (0 != (value & FLAT_F))
+				{
+					this.ShadeMode = ShadeMode.FLAT;
+				}
+				else
+				{
+					this.ShadeMode = ShadeMode.GOURAUD;
+				}
+				if (0 != (value & TWO_SIDED_F))
+				{
+					this.CullMode = CullMode.NONE;
+				}
+				else if (0 != (value & CULL_FRONT_F))
+				{
+					this.CullMode = CullMode.FRONT;
+				}
+				else
+				{
+					this.CullMode = CullMode.BACK;
+				}
+				Filtering =  (0 == (value & NO_FILTERING_F));
+				Invisible =  (0 != (value & NO_RENDER_F));
+				MergeGeom =  (0 != (value & MERGE_GEOM_F));
+				ClampUV =  (0 != (value & CLAMP_UV_F));
+				AtlasMaterial =  (0 != (value & ATLAS_MATERIAL_F));
+				NoFog =  (0 != (value & NO_FOG_F));
+
+				AlphaMode = (AlphaMode) ((value & ALPHA_MODE_MASK)>>ALPHA_MODE_SHIFT);
+				BlendMode = (BlendMode) ((value & BLEND_MODE_MASK)>>BLEND_MODE_SHIFT);
+				EffectPreset = (EffectPreset)((value & EFFECT_PRESET_MASK) >> EFFECT_PRESET_SHIFT);
+				AlphaTestMode = (AlphaTestMode)((value & ALPHATEST_MODE_MASK) >> ALPHATEST_MODE_SHIFT);
+				DepthWriteEnable = 0==((value & DEPTH_WRITE_MODE_MASK) >> DEPTH_WRITE_MODE_SHIFT);
+			}
+		}
+
+		protected bool AtlasMaterial
+		{
+			get
+			{
+				return atlasMaterial;
+			}
+			set
+			{
+				if (atlasMaterial != value)
+				{
+					this.RaisePropertyChanging("AtlasMaterial");
+					atlasMaterial = value;
+					this.RaisePropertyChanged("AtlasMaterial");
+				}
 			}
 		}
 

@@ -13,7 +13,7 @@ namespace Toe.Editors.Interfaces.Views
 
 		public override bool Layout(object container, LayoutEventArgs layoutEventArgs)
 		{
-			Control parent = container as Control;
+			Panel parent = container as Panel;
 
 			// Use DisplayRectangle so that parent.Padding is honored.
 			Rectangle parentDisplayRectangle = parent.DisplayRectangle;
@@ -46,7 +46,7 @@ namespace Toe.Editors.Interfaces.Views
 					preferredSize = c.Size;
 				}
 
-				if (parent.ClientRectangle.Width > preferredSize.Width)
+				//if (parent.ClientRectangle.Width > preferredSize.Width)
 					preferredSize = new Size(parent.ClientRectangle.Width, preferredSize.Height); 
 				c.Size = preferredSize;
 
@@ -58,13 +58,16 @@ namespace Toe.Editors.Interfaces.Views
 				nextControlLocation.Y += c.Height + c.Margin.Bottom;
 			}
 
+			if (!parent.AutoScroll) parent.Height = nextControlLocation.Y;
+
 			// Optional: Return whether or not the container's 
 			// parent should perform layout as a result of this 
 			// layout. Some layout engines return the value of 
 			// the container's AutoSize property.
 
-			return false;
+			return true;
 		}
+
 		
 //        internal static FlowLayoutSettings CreateSettings(IArrangedElement owner)
 //        {

@@ -10,6 +10,7 @@ namespace Toe.Utils.Mesh
 		IList<ISubMesh> Submeshes { get; }
 
 		string Name { get; }
+		uint NameHash { get; }
 
 #if WINDOWS_PHONE
 #else

@@ -94,7 +94,7 @@ namespace Toe.Resources
 			try
 			{
 				this.resourceFileFormat = this.ChooseReader();
-				if (this.resourceFileFormat == null) throw new FormatException(string.Format(CultureInfo.InvariantCulture, "Can't read {0}", this.filePath));
+				if (this.resourceFileFormat == null) throw new FormatException(string.Format(CultureInfo.InvariantCulture, "Can't find a reader for {0}", this.filePath));
 				this.DropResources(this.resources);
 				this.resources = this.resourceFileFormat.Read(filePath);
 

@@ -9,8 +9,8 @@ CIwResGroup
 	./male_legs_trousers0_lod0.geo 
 	./male_torse_jacket0_lod0.geo 
 	./male_head_0_lod0.geo 
-	./male_skel_lod0.skel 
-	./male_legs_trousers0_lod0.skin 
-	./male_torse_jacket0_lod0.skin 
-	./male_head_0_lod0.skin 
+//	./male_skel_lod0.skel 
+//	./male_legs_trousers0_lod0.skin 
+//	./male_torse_jacket0_lod0.skin 
+//	./male_head_0_lod0.skin 
 }

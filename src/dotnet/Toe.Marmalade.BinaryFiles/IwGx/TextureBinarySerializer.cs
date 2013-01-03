@@ -7,6 +7,8 @@ using System.Text;
 
 using Autofac;
 
+using OpenTK;
+
 using Toe.Marmalade.IwGx;
 using Toe.Utils.Marmalade;
 
@@ -32,8 +34,9 @@ namespace Toe.Marmalade.BinaryFiles.IwGx
 			texture.FormatSW = (ImageFormat)parser.ConsumeByte();
 			texture.FormatHW = (ImageFormat)parser.ConsumeByte();
 
-			parser.Expect((short)0x1000);
-			parser.Expect((short)0x1000);
+			float x = parser.ConsumeFloat();
+			float y = parser.ConsumeFloat();
+			texture.UVScale = new Vector2(x, y);
 
 			texture.Image = this.ParseImage(parser);
 
@@ -46,7 +49,7 @@ namespace Toe.Marmalade.BinaryFiles.IwGx
 		{
 			var image = new Image();
 
-			image.Format = parser.ConsumeUInt8();
+			image.Format = (ImageFormat)parser.ConsumeUInt8();
 
 			image.Flags = parser.ConsumeUInt16();
 
@@ -61,9 +64,9 @@ namespace Toe.Marmalade.BinaryFiles.IwGx
 
 			switch (image.Format)
 			{
-				case Image.ABGR_8888:
+				case ImageFormat.ABGR_8888:
 					return image;
-				case Image.BGR_888:
+				case ImageFormat.BGR_888:
 					return image;
 				//case Image.PALETTE4_ABGR_1555:
 				//    format = (new Palette4Abgr1555(image.width, image.height, image.pitch));
@@ -85,15 +88,21 @@ namespace Toe.Marmalade.BinaryFiles.IwGx
 				//    Debug.WriteLine(string.Format("Image RGBA_6666 {0}x{1}", image.width, image.height));
 				//    LoadRgba6666(serialise);
 				//    return;
-				//case Image.PALETTE8_RGB_888:
-				//    Debug.WriteLine(string.Format("Image PALETTE8_RGB_888 {0}x{1}", image.width, image.height));
-				//    Load256ColourPalettised(serialise);
-				//    return;
+				case ImageFormat.PALETTE8_RGB_888:
+					image.PaletteData = parser.ConsumeByteArray(256 * 3);
+					return image;
+				case ImageFormat.PALETTE8_ABGR_8888:
+				case ImageFormat.PALETTE8_ARGB_8888:
+				case ImageFormat.PALETTE8_RGBA_8888:
+					image.PaletteData = parser.ConsumeByteArray(256 * 4);
+				    return image;
 				default:
 					throw new FormatException(string.Format(CultureInfo.CurrentCulture, "Unknown image format 0x{0:x}", image.Format));
 			}
 		
 		}
+
+
 		//private void Load256ColourPalettised(IwSerialise serialise)
 		//{
 		//    this.data = new byte[this.height * this.pitch];

@@ -72,7 +72,13 @@ namespace Toe.Editors.Marmalade
 			if (texture != null)
 			{
 				texture.ApplyOpenGL(0);
+				GL.Enable(EnableCap.Blend);
+				GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+				GL.Enable(EnableCap.AlphaTest);
+				GL.AlphaFunc(AlphaFunction.Gequal, 0);
 				base.RenderBox(250.0f);
+				GL.Disable(EnableCap.Blend);
+				GL.Disable(EnableCap.AlphaTest);
 			}
 		}
 

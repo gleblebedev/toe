@@ -1,6 +1,7 @@
 using System.Drawing;
 using System.Drawing.Imaging;
 
+using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 
@@ -172,6 +173,8 @@ namespace Toe.Marmalade.IwGx
 		#endregion
 
 		private Image image;
+
+		public Vector2 UVScale;
 
 		public Image Image
 		{

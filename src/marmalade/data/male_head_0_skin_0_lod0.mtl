@@ -1,9 +1,11 @@
 CIwMaterial
 {
 name "male_head_0_skin_0_lod0"
-colEmissive {0,0,0}
 texture0 "./textures/male_head_0_skin_0_lod0.tga"
 shadeMode GOURAUD
 modulateMode RGB
 blendMode MODULATE
+effectPreset TEXTURE0_ONLY 
+texture1 "./textures/rgbtest.png"
+texture3 "./textures/rgbtest.png"
 }

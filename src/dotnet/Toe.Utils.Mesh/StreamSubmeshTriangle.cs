@@ -1,6 +1,6 @@
 namespace Toe.Utils.Mesh
 {
-	public struct StreamSubmeshQuad
+	public struct StreamSubmeshTriangle
 	{
 		#region Constants and Fields
 
@@ -9,8 +9,6 @@ namespace Toe.Utils.Mesh
 		public StreamSubmeshTriangleIndexes B;
 
 		public StreamSubmeshTriangleIndexes C;
-
-		public StreamSubmeshTriangleIndexes D;
 
 		#endregion
 	}

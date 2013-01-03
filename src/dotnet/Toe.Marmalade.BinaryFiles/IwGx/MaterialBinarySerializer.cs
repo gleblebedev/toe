@@ -27,10 +27,12 @@ namespace Toe.Marmalade.BinaryFiles.IwGx
 
 			var isShort = parser.ConsumeBool();
 
+			material.Flags = parser.ConsumeUInt32();
+			
 			if (!isShort)
 			{
-				material.ZDepthOfs = parser.ConsumeInt32();
-				material.ZDepthOfsHW = parser.ConsumeInt32();
+				material.ZDepthOfs = parser.ConsumeInt16();
+				material.ZDepthOfsHW = parser.ConsumeInt16();
 				material.ColEmissive = parser.ConsumeColor();
 				material.ColAmbient = parser.ConsumeColor();
 				material.ColDiffuse = parser.ConsumeColor();
@@ -42,7 +44,8 @@ namespace Toe.Marmalade.BinaryFiles.IwGx
 			if (!isShort)
 			{
 				material.Texture1.HashReference = parser.ConsumeUInt32();
-				parser.ConsumeUInt32(); ///TODO: probably shader
+				material.Texture2.HashReference = parser.ConsumeUInt32();
+				material.Texture3.HashReference = parser.ConsumeUInt32();
 
 				var animated = parser.ConsumeBool();
 				if (animated)
@@ -56,8 +59,7 @@ namespace Toe.Marmalade.BinaryFiles.IwGx
 					material.MatAnim.CelPeriod = parser.ConsumeByte();
 				}
 				material.AlphaTestValue = parser.ConsumeByte();
-				parser.ConsumeUInt32(); ///TODO: probably shader
-				parser.ConsumeUInt32(); ///TODO: probably shader
+				material.ShaderTechnique.HashReference = parser.ConsumeUInt32();
 			}
 			return material;
 		}

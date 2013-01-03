@@ -1,3 +1,4 @@
+using System.Drawing;
 using System.Windows.Forms;
 
 using Toe.Editors.Interfaces.Views;
@@ -12,6 +13,22 @@ namespace Toe.Editors.Interfaces.Panels
 			
 			//this.FlowDirection = FlowDirection.TopDown;
 			//this.WrapContents = false;
+		}
+		public override System.Drawing.Size GetPreferredSize(System.Drawing.Size proposedSize)
+		{
+			int h=0;
+			foreach (Control c in Controls)
+			{
+				// Only apply layout to visible controls.
+				if (!c.Visible)
+				{
+					continue;
+				}
+
+				var preferredSize = c.GetPreferredSize(proposedSize);
+				h += preferredSize.Height + c.Height + c.Margin.Bottom;
+			}
+			return new Size(proposedSize.Width,h);
 		}
 		public override System.Windows.Forms.Layout.LayoutEngine LayoutEngine
 		{

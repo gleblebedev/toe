@@ -182,19 +182,19 @@ namespace Toe.Marmalade.TextFiles.IwGraphics
 			return t;
 		}
 
-		private static StreamSubmeshTiangle ParseTriangle(TextParser parser)
+		private static StreamSubmeshTriangle ParseTriangle(TextParser parser)
 		{
-			StreamSubmeshTiangle t;
+			StreamSubmeshTriangle t;
 			t.A = ParseTrisIndexes(parser);
 			t.B = ParseTrisIndexes(parser);
 			t.C = ParseTrisIndexes(parser);
 			return t;
 		}
 
-		private static StreamSubmeshTiangleIndexes ParseTrisIndexes(TextParser parser)
+		private static StreamSubmeshTriangleIndexes ParseTrisIndexes(TextParser parser)
 		{
 			parser.Consume("{");
-			StreamSubmeshTiangleIndexes i;
+			StreamSubmeshTriangleIndexes i;
 			i.Vertex = parser.ConsumeInt();
 			parser.Skip(",");
 			if (parser.Lexem == "}")
@@ -414,9 +414,9 @@ namespace Toe.Marmalade.TextFiles.IwGraphics
 					parser.Consume();
 					var streamSubmeshQuad = ParseQuad(parser);
 					submesh.Tris.Add(
-						new StreamSubmeshTiangle { A = streamSubmeshQuad.A, B = streamSubmeshQuad.B, C = streamSubmeshQuad.C });
+						new StreamSubmeshTriangle { A = streamSubmeshQuad.A, B = streamSubmeshQuad.B, C = streamSubmeshQuad.C });
 					submesh.Tris.Add(
-						new StreamSubmeshTiangle { A = streamSubmeshQuad.A, B = streamSubmeshQuad.C, C = streamSubmeshQuad.D });
+						new StreamSubmeshTriangle { A = streamSubmeshQuad.A, B = streamSubmeshQuad.C, C = streamSubmeshQuad.D });
 					continue;
 				}
 				parser.UnknownLexem();

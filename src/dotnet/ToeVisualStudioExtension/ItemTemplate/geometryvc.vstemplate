@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <VSTemplate Version="3.0.0" Type="Item" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
   <TemplateData>
-    <Name>Marmalade SDK Geometry</Name>
-    <Description>Marmalade SDK Geometry file</Description>
-    <Icon>Geometry.ico</Icon>
-    <TemplateID>0c5537f3-355f-4b7e-a650-bec01c2eff0d</TemplateID>
-    <ProjectType>VC</ProjectType>
-    <ProjectSubType>
-    </ProjectSubType>
-    <!--<CreateNewFolder>true</CreateNewFolder>-->
     <DefaultName>geometry.geo</DefaultName>
+    <Name>Marmalade SDK Geometry (.geo)</Name>
+    <Description>Marmalade SDK Geometry file</Description>
+    <ProjectType>VC</ProjectType>
+    <SortOrder>10</SortOrder>
+    <Icon>Geometry.ico</Icon>
+    
+    <!--<TemplateID>0c5537f3-355f-4b7e-a650-bec01c2eff0d</TemplateID>
+    <ProjectSubType>
+    </ProjectSubType>-->
+    <!--<CreateNewFolder>true</CreateNewFolder>-->
   </TemplateData>
   <TemplateContent>
-    <ProjectItem ReplaceParameters="false">geometry.geo</ProjectItem>
+    <References/>
+    <ProjectItem SubType="" TargetFileName="$fileinputname$.geo" ReplaceParameters="false">geometry.geo</ProjectItem>
   </TemplateContent>
 </VSTemplate>

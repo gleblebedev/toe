@@ -21,6 +21,8 @@ namespace Toe.Editors.Marmalade
 
 		private readonly ICommandHistory history;
 
+		private SplitContainer split;
+
 		#endregion
 
 		#region Constructors and Destructors
@@ -32,20 +34,47 @@ namespace Toe.Editors.Marmalade
 			this.AutoSize = true;
 			this.Padding = new Padding(10);
 
-			var resourceGroup = new GroupBox
-				{ Text = "Resource Group", Dock = DockStyle.Fill, AutoSize = true, Padding = new Padding(10) };
-			this.Controls.Add(resourceGroup);
+			this.SuspendLayout();
+
+			split = new SplitContainer() { Dock = DockStyle.Fill };
+			split.Panel2Collapsed = true;
+			this.Controls.Add(split);
 
 			var sp = new StackPanel() { Dock = DockStyle.Fill, AutoSize = true };
-			resourceGroup.Controls.Add(sp);
+			split.Panel1.Controls.Add(sp);
 
-			var collectionView = new CollectionView<IResourceFile>(a => editorEnvironment.EditorFor(a,history)) { Dock = DockStyle.Fill };
+			var collectionView = new CollectionView<IResourceFile>(a => editorEnvironment.EditorFor(a, history)) { AutoSize = true };
+			collectionView.ItemsPanel.AutoSize = true;
+			collectionView.ItemsPanel.AutoScroll = false;
 			new PropertyBinding<ResGroup, IList<IResourceFile>>(collectionView, this.dataContext, m => m.ExternalResources, null);
 			sp.Controls.Add(collectionView);
 
-			var embCollectionView = new CollectionView<IResourceFile>(a => editorEnvironment.EditorFor(a, history)) { Dock = DockStyle.Fill };
+			var embCollectionView = new CollectionView<Managed>(a => CreateButtonForResource(a)) { AutoSize = true};
+			embCollectionView.ItemsPanel.AutoSize = true;
+			embCollectionView.ItemsPanel.AutoScroll = false;
 			new PropertyBinding<ResGroup, IList<Managed>>(embCollectionView, this.dataContext, m => m.EmbeddedResources, null);
 			sp.Controls.Add(embCollectionView);
+
+			this.ResumeLayout();
+			this.PerformLayout();
+		}
+
+		private IView CreateButtonForResource(Managed managed)
+		{
+			var buttonForResource = new ButtonView();
+			buttonForResource.Click += (s, a) => OpenEditorForResource(managed);
+			return buttonForResource;
+		}
+
+		private void OpenEditorForResource(Managed managed)
+		{
+			split.Panel2Collapsed = false;
+			split.Panel2.Controls.Clear();
+			IView editorFor = editorEnvironment.EditorFor(managed, history);
+			editorFor.DataContext.Value = managed;
+			var control = (Control)editorFor;
+			control.Dock = DockStyle.Fill;
+			split.Panel2.Controls.Add(control);
 		}
 
 		#endregion
