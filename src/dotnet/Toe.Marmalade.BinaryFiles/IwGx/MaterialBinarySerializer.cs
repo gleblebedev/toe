@@ -29,8 +29,8 @@ namespace Toe.Marmalade.BinaryFiles.IwGx
 
 			if (!isShort)
 			{
-				material.ZDepthOfs = parser.ConsumeFloat();
-				material.ZDepthOfsHW = parser.ConsumeFloat();
+				material.ZDepthOfs = parser.ConsumeInt32();
+				material.ZDepthOfsHW = parser.ConsumeInt32();
 				material.ColEmissive = parser.ConsumeColor();
 				material.ColAmbient = parser.ConsumeColor();
 				material.ColDiffuse = parser.ConsumeColor();

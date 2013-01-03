@@ -3,8 +3,10 @@ using System.Windows.Forms;
 
 using Toe.Editors.Interfaces;
 using Toe.Editors.Interfaces.Bindings;
+using Toe.Editors.Interfaces.Panels;
 using Toe.Editors.Interfaces.Views;
 using Toe.Resources;
+using Toe.Utils.Marmalade;
 using Toe.Utils.Marmalade.IwResManager;
 
 namespace Toe.Editors.Marmalade
@@ -34,9 +36,16 @@ namespace Toe.Editors.Marmalade
 				{ Text = "Resource Group", Dock = DockStyle.Fill, AutoSize = true, Padding = new Padding(10) };
 			this.Controls.Add(resourceGroup);
 
+			var sp = new StackPanel() { Dock = DockStyle.Fill, AutoSize = true };
+			resourceGroup.Controls.Add(sp);
+
 			var collectionView = new CollectionView<IResourceFile>(a => editorEnvironment.EditorFor(a,history)) { Dock = DockStyle.Fill };
 			new PropertyBinding<ResGroup, IList<IResourceFile>>(collectionView, this.dataContext, m => m.ExternalResources, null);
-			resourceGroup.Controls.Add(collectionView);
+			sp.Controls.Add(collectionView);
+
+			var embCollectionView = new CollectionView<IResourceFile>(a => editorEnvironment.EditorFor(a, history)) { Dock = DockStyle.Fill };
+			new PropertyBinding<ResGroup, IList<Managed>>(embCollectionView, this.dataContext, m => m.EmbeddedResources, null);
+			sp.Controls.Add(embCollectionView);
 		}
 
 		#endregion

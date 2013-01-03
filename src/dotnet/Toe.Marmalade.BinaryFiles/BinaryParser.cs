@@ -38,6 +38,10 @@ namespace Toe.Marmalade.BinaryFiles
 			{
 				return this.source.BaseStream.Position;
 			}
+			set
+			{
+				this.source.BaseStream.Position = value;
+			}
 		}
 
 		#endregion

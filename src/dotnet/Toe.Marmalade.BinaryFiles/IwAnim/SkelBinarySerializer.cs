@@ -2,6 +2,7 @@ using System;
 
 using Autofac;
 
+using Toe.Marmalade.IwAnim;
 using Toe.Utils.Marmalade;
 
 namespace Toe.Marmalade.BinaryFiles.IwAnim
@@ -20,7 +21,7 @@ namespace Toe.Marmalade.BinaryFiles.IwAnim
 		/// </summary>
 		public Managed Parse(BinaryParser parser)
 		{
-			throw new NotImplementedException("Can't read skeleton");
+			throw new NotImplementedException();
 		}
 
 

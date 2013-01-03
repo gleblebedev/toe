@@ -41,6 +41,8 @@ namespace Toe.Marmalade.IwAnim
 			}
 		}
 
+		public float Duration { get; set; }
+
 		#endregion
 
 		public void AddFrame(AnimKeyFrame frame)

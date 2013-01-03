@@ -198,6 +198,7 @@ namespace Toe.Utils.Marmalade.IwResManager
 		private void RemoveResourceAt(int index)
 		{
 			var item = this.embeddedResources[index];
+			embeddedResources.RemoveAt(index);
 
 			this.UnsubscribeOnNameChange(item);
 

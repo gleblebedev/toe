@@ -293,17 +293,17 @@ namespace Toe.Editors.Marmalade
 
 			{
 				this.stackPanel.Controls.Add(new StringView { Text = "Depth offset to apply when using SW rasterisation" });
-				var valueCtrl = new EditFloatView { Margin = new Padding(4) };
+				var valueCtrl = new EditIntView { Margin = new Padding(4) };
 				this.stackPanel.Controls.Add(valueCtrl);
-				new PropertyBinding<Material, float>(
+				new PropertyBinding<Material, int>(
 					valueCtrl, this.dataContext, mtl => mtl.ZDepthOfs, (mtl, value) => history.SetValue(mtl, mtl.ZDepthOfs, value, (a, b) => { a.ZDepthOfs = b; }));
 			}
 
 			{
 				this.stackPanel.Controls.Add(new StringView { Text = "Depth offset to apply when using HW rasterisation" });
-				var valueCtrl = new EditFloatView { Margin = new Padding(4) };
+				var valueCtrl = new EditIntView { Margin = new Padding(4) };
 				this.stackPanel.Controls.Add(valueCtrl);
-				new PropertyBinding<Material, float>(
+				new PropertyBinding<Material, int>(
 					valueCtrl, this.dataContext, mtl => mtl.ZDepthOfsHW, (mtl, value) => history.SetValue(mtl, mtl.ZDepthOfsHW, value, (a, b) => { a.ZDepthOfsHW = b; }));
 			}
 

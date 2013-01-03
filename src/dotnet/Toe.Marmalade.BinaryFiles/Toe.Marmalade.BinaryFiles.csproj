@@ -55,7 +55,7 @@
     <Compile Include="BinaryParser.cs" />
     <Compile Include="BinaryResourceFormat.cs" />
     <Compile Include="IBinarySerializer.cs" />
-    <Compile Include="IwAnim\ModelBinarySerializer.cs" />
+    <Compile Include="IwAnim\AnimBinarySerializer.cs" />
     <Compile Include="IwAnim\SkelBinarySerializer.cs" />
     <Compile Include="IwAnim\SkinBinarySerializer.cs" />
     <Compile Include="IwGraphics\ModelBinarySerializer.cs" />

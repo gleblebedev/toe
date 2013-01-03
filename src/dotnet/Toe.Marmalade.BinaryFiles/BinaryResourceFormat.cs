@@ -164,12 +164,22 @@ namespace Toe.Marmalade.BinaryFiles
 						continue;
 					}
 					var s = (IBinarySerializer)ser;
-					var res = s.Parse(parser);
-					resGroup.AddResource(res);
+					Managed res = null;
+					try
+					{
+						res = s.Parse(parser);
+						resGroup.AddResource(res);
+					} 
+					catch(Exception ex)
+					{
+						this.errorHandler.CanNotRead(parser.BasePath, new FormatException(string.Format("Can't read resource for type {0}", hash), ex));
+						parser.Position = pos + length;
+						continue;
+					}
 
 					if (parser.Position != pos + length)
 					{
-						throw new FormatException(string.Format("Parse of {0} failed: wrong position by {1} bytes", res.GetType().Name, parser.Position - (pos + length)));
+						throw new FormatException(string.Format("Parse of {0} failed: wrong position by {1} bytes", (res ==null)?hash.ToString():res.GetType().Name, parser.Position - (pos + length)));
 						//parser.Position = pos + length;
 					}
 				}

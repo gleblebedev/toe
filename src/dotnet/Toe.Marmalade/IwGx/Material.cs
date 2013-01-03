@@ -79,9 +79,9 @@ namespace Toe.Marmalade.IwGx
 
 		private string vertexShader;
 
-		private float zDepthOfs;
+		private int zDepthOfs;
 
-		private float zDepthOfsHw;
+		private int zDepthOfsHw;
 
 		#endregion
 
@@ -543,7 +543,7 @@ namespace Toe.Marmalade.IwGx
 			}
 		}
 
-		public float ZDepthOfs
+		public int ZDepthOfs
 		{
 			get
 			{
@@ -559,7 +559,7 @@ namespace Toe.Marmalade.IwGx
 			}
 		}
 
-		public float ZDepthOfsHW
+		public int ZDepthOfsHW
 		{
 			get
 			{
