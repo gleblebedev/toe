@@ -165,7 +165,12 @@ namespace Toe.Utils.Marmalade.IwGx
 					material.ColSpecular = parser.ConsumeColor();
 					continue;
 				}
-
+				if (attribute == "noFog")
+				{
+					parser.Consume();
+					material.NoFog = parser.ConsumeBool();
+					continue;
+				}
 				if (attribute == "texture0" || attribute == "mapDiffuse")
 				{
 					parser.Consume();

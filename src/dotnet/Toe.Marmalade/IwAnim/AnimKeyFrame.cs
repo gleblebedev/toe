@@ -1,8 +1,6 @@
-using System.Collections;
-
 using Toe.Utils.Mesh;
 
-namespace Toe.Utils.Marmalade.IwAnim
+namespace Toe.Marmalade.IwAnim
 {
 	public class AnimKeyFrame
 	{
@@ -14,11 +12,11 @@ namespace Toe.Utils.Marmalade.IwAnim
 		{
 			get
 			{
-				return time;
+				return this.time;
 			}
 			set
 			{
-				time = value;
+				this.time = value;
 			}
 		}
 
@@ -26,11 +24,11 @@ namespace Toe.Utils.Marmalade.IwAnim
 		{
 			get
 			{
-				return bones;
+				return this.bones;
 			}
 			set
 			{
-				bones = value;
+				this.bones = value;
 			}
 		}
 	}

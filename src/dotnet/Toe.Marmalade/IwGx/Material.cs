@@ -114,7 +114,7 @@ namespace Toe.Marmalade.IwGx
 
 		private ModulateMode modulateMode = ModulateMode.RGB;
 
-		private bool noFog = true;
+		private bool noFog = false;
 
 		private ShadeMode shadeMode = ShadeMode.GOURAUD;
 

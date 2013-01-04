@@ -1,3 +1,5 @@
+using System;
+
 using OpenTK.Graphics.OpenGL;
 
 using Toe.Gx;
@@ -23,13 +25,14 @@ namespace Toe.Editors.Marmalade
 			this.Camera.Ortho = false;
 			this.Camera.ZNear = 16.0f;
 			this.Camera.ZFar = 2048.0f;
+			base.RenderScene += this.RenderScene;
 		}
 
 		#endregion
 
 		#region Methods
 
-		protected override void RenderScene()
+		protected void RenderScene(object sender, EventArgs args)
 		{
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 

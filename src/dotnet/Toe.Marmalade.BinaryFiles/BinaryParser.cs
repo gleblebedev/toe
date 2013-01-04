@@ -16,6 +16,8 @@ namespace Toe.Marmalade.BinaryFiles
 
 		private readonly BinaryReader source;
 
+		private readonly List<byte> stringBuffer = new List<byte>(256);
+
 		#endregion
 
 		#region Constructors and Destructors
@@ -25,6 +27,10 @@ namespace Toe.Marmalade.BinaryFiles
 			this.source = source;
 			this.basePath = basePath;
 		}
+
+		#endregion
+
+		#region Public Properties
 
 		public string BasePath
 		{
@@ -48,94 +54,7 @@ namespace Toe.Marmalade.BinaryFiles
 
 		#endregion
 
-		public byte ConsumeByte()
-		{
-			return this.source.ReadByte();
-		}
-
-		public ushort ConsumeUInt16()
-		{
-			return this.source.ReadUInt16();
-		}
-		public uint PeekUInt32()
-		{
-			var pos = this.source.BaseStream.Position;
-			var res = this.source.ReadUInt32();
-			this.source.BaseStream.Position = pos;
-			return res;
-		}
-
-		public uint ConsumeUInt32()
-		{
-			return this.source.ReadUInt32();
-		}
-
-		public void Skip(uint len)
-		{
-			this.source.BaseStream.Position += len;
-		}
-
-		readonly List<byte> stringBuffer = new List<byte>(256);
-
-		public string ConsumeStringZ()
-		{
-			this.stringBuffer.Clear();
-			for (;;)
-			{
-				var b = this.ConsumeByte();
-				if (b == 0)
-					break;
-				this.stringBuffer.Add(b);
-			}
-			return Encoding.UTF8.GetString(this.stringBuffer.ToArray());
-		}
-
-		public int ConsumeInt32()
-		{
-			return this.source.ReadInt32();
-		}
-
-		public bool ConsumeBool()
-		{
-			return this.ConsumeByte() != 0;
-		}
-
-		public short ConsumeInt16()
-		{
-			return this.source.ReadInt16();
-		}
-		public void Expect(byte val)
-		{
-			var v = this.ConsumeByte();
-			if (v != val)
-				throw new FormatException(string.Format("Expected {0} but found {1}", val, v));
-		}
-
-		public void Expect(short val)
-		{
-			var v = this.ConsumeInt16();
-			if (v != val)
-				throw new FormatException(string.Format("Expected {0} but found {1}", val, v));
-		}
-
-		public void Expect(ushort val)
-		{
-			var v = this.ConsumeUInt16();
-			if (v != val)
-				throw new FormatException(string.Format("Expected {0} but found {1}", val, v));
-		}
-
-		public void Expect(bool val)
-		{
-			var v = this.ConsumeBool();
-			if (v != val)
-				throw new FormatException(string.Format("Expected {0} but found {1}", val, v));
-		}
-
-		public byte ConsumeUInt8()
-		{
-			return this.ConsumeByte();
-		}
+		#region Public Methods and Operators
 
 		public void ConsumeArray(byte[] uints)
 		{
@@ -144,9 +63,28 @@ namespace Toe.Marmalade.BinaryFiles
 			{
 				var len = this.source.BaseStream.Read(uints, pos, uints.Length - pos);
 				if (len <= 0)
+				{
 					throw new FormatException();
+				}
 				pos += len;
 			}
+		}
+
+		public bool ConsumeBool()
+		{
+			return this.ConsumeByte() != 0;
+		}
+
+		public byte ConsumeByte()
+		{
+			return this.source.ReadByte();
+		}
+
+		public byte[] ConsumeByteArray(int size)
+		{
+			byte[] uints = new byte[size];
+			this.ConsumeArray(uints);
+			return uints;
 		}
 
 		public Color ConsumeColor()
@@ -158,36 +96,65 @@ namespace Toe.Marmalade.BinaryFiles
 			return Color.FromArgb(a, r, g, b);
 		}
 
-		public void Expect(uint val)
-		{
-			var v = this.ConsumeUInt32();
-			if (v != val)
-				throw new FormatException(string.Format("Expected {0} but found {1}", val, v));
-		}
-
 		public float ConsumeFloat()
 		{
 			return this.source.ReadSingle();
 		}
 
-		public byte[] ConsumeByteArray(int size)
+		public float[] ConsumeFloatArray(int size)
 		{
-			byte[] uints = new byte[size];
-			this.ConsumeArray(uints);
-			return uints;
+			float[] res = new float[size];
+			int pos = 0;
+			while (pos < size)
+			{
+				res[pos] = this.source.ReadSingle();
+				++pos;
+			}
+			return res;
 		}
-		public Vector2 ConsumeVector2()
+
+		public short ConsumeInt16()
 		{
-			float x = this.ConsumeFloat();
-			float y = this.ConsumeFloat();
-			return new Vector2(x, y);
+			return this.source.ReadInt16();
 		}
-		public Vector3 ConsumeVector3()
+
+		public int ConsumeInt32()
 		{
+			return this.source.ReadInt32();
+		}
+
+		public Quaternion ConsumeQuaternion()
+		{
+			float w = this.ConsumeFloat();
 			float x = this.ConsumeFloat();
 			float y = this.ConsumeFloat();
 			float z = this.ConsumeFloat();
-			return new Vector3(x,y,z);
+			return new Quaternion(x, y, z, w);
+		}
+
+		public sbyte ConsumeSByte()
+		{
+			return this.source.ReadSByte();
+		}
+
+		public string ConsumeStringZ()
+		{
+			this.stringBuffer.Clear();
+			for (;;)
+			{
+				var b = this.ConsumeByte();
+				if (b == 0)
+				{
+					break;
+				}
+				this.stringBuffer.Add(b);
+			}
+			return Encoding.UTF8.GetString(this.stringBuffer.ToArray());
+		}
+
+		public ushort ConsumeUInt16()
+		{
+			return this.source.ReadUInt16();
 		}
 
 		public ushort[] ConsumeUInt16Array(int size)
@@ -201,5 +168,102 @@ namespace Toe.Marmalade.BinaryFiles
 			}
 			return res;
 		}
+
+		public uint ConsumeUInt32()
+		{
+			return this.source.ReadUInt32();
+		}
+
+		public byte ConsumeUInt8()
+		{
+			return this.ConsumeByte();
+		}
+
+		public Vector2 ConsumeVector2()
+		{
+			float x = this.ConsumeFloat();
+			float y = this.ConsumeFloat();
+			return new Vector2(x, y);
+		}
+
+		public Vector3 ConsumeVector3()
+		{
+			float x = this.ConsumeFloat();
+			float y = this.ConsumeFloat();
+			float z = this.ConsumeFloat();
+			return new Vector3(x, y, z);
+		}
+
+		public Vector3[] ConsumeVector3Array(int size)
+		{
+			Vector3[] res = new Vector3[size];
+			int pos = 0;
+			while (pos < size)
+			{
+				res[pos] = this.ConsumeVector3();
+				++pos;
+			}
+			return res;
+		}
+
+		public void Expect(byte val)
+		{
+			var v = this.ConsumeByte();
+			if (v != val)
+			{
+				throw new FormatException(string.Format("Expected {0} but found {1}", val, v));
+			}
+		}
+
+		public void Expect(short val)
+		{
+			var v = this.ConsumeInt16();
+			if (v != val)
+			{
+				throw new FormatException(string.Format("Expected {0} but found {1}", val, v));
+			}
+		}
+
+		public void Expect(ushort val)
+		{
+			var v = this.ConsumeUInt16();
+			if (v != val)
+			{
+				throw new FormatException(string.Format("Expected {0} but found {1}", val, v));
+			}
+		}
+
+		public void Expect(bool val)
+		{
+			var v = this.ConsumeBool();
+			if (v != val)
+			{
+				throw new FormatException(string.Format("Expected {0} but found {1}", val, v));
+			}
+		}
+
+		public void Expect(uint val)
+		{
+			var v = this.ConsumeUInt32();
+			if (v != val)
+			{
+				throw new FormatException(string.Format("Expected {0} but found {1}", val, v));
+			}
+		}
+
+		public uint PeekUInt32()
+		{
+			var pos = this.source.BaseStream.Position;
+			var res = this.source.ReadUInt32();
+			this.source.BaseStream.Position = pos;
+			return res;
+		}
+
+		public void Skip(uint len)
+		{
+			this.source.BaseStream.Position += len;
+		}
+
+		#endregion
 	}
 }

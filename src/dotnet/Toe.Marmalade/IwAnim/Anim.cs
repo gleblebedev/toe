@@ -2,13 +2,25 @@ using System.Collections.Generic;
 
 using Toe.Resources;
 using Toe.Utils.Marmalade;
-using Toe.Utils.Marmalade.IwAnim;
+using Toe.Utils.Mesh;
 
 namespace Toe.Marmalade.IwAnim
 {
 	public class Anim : Managed
 	{
+		#region Constants and Fields
+
+		public static readonly uint TypeHash = Hash.Get("CIwAnim");
+
+		private readonly IList<AnimKeyFrame> frames = new List<AnimKeyFrame>();
+
 		private readonly IResourceManager resourceManager;
+
+		private readonly ResourceReference skeleton;
+
+		#endregion
+
+		#region Constructors and Destructors
 
 		public Anim(IResourceManager resourceManager)
 		{
@@ -16,22 +28,9 @@ namespace Toe.Marmalade.IwAnim
 			this.skeleton = new ResourceReference(AnimSkel.TypeHash, resourceManager, this);
 		}
 
-		public static readonly uint TypeHash = Hash.Get("CIwAnim");
+		#endregion
 
-		private IList<AnimKeyFrame> frames = new List<AnimKeyFrame>();
-
-		private ResourceReference skeleton;
-
-		public ResourceReference Skeleton
-		{
-			get
-			{
-				return this.skeleton;
-			}
-			
-		}
-
-		#region Overrides of Managed
+		#region Public Properties
 
 		public override uint ClassHashCode
 		{
@@ -43,7 +42,41 @@ namespace Toe.Marmalade.IwAnim
 
 		public float Duration { get; set; }
 
+		public ResourceReference Skeleton
+		{
+			get
+			{
+				return this.skeleton;
+			}
+		}
+
 		#endregion
+
+		#region Properties
+
+		private bool IsAnonymousBones
+		{
+			get
+			{
+				if (this.frames.Count == 0)
+				{
+					return true;
+				}
+				if (this.frames[0].Bones.Count == 0)
+				{
+					return true;
+				}
+				if (this.frames[0].Bones[0].NameHash == 0)
+				{
+					return true;
+				}
+				return false;
+			}
+		}
+
+		#endregion
+
+		#region Public Methods and Operators
 
 		public void AddFrame(AnimKeyFrame frame)
 		{
@@ -52,13 +85,39 @@ namespace Toe.Marmalade.IwAnim
 
 		public void Apply(AnimSkel animSkel, float t)
 		{
-			var frame = this.frames[0];
-			foreach (var bone in frame.Bones)
+			if (this.frames == null)
 			{
-				var b = animSkel.Bones[animSkel.EnsureBone(bone.Name)];
-				b.ActualPos = bone.BindingPos;
-				b.ActualRot = bone.BindingRot;
+				return;
+			}
+			if (this.frames.Count == 0)
+			{
+				return;
+			}
+			var frame = this.frames[0];
+			if (frame.Bones.Count == 0)
+			{
+				return;
+			}
+			if (this.IsAnonymousBones)
+			{
+				for (int index = 0; index < frame.Bones.Count; ++index)
+				{
+					var bone = frame.Bones[index];
+					MeshBone b;
+					if (!this.IsAnonymousBones)
+					{
+						b = animSkel.Bones[animSkel.EnsureBone(bone.NameHash)];
+					}
+					else
+					{
+						b = animSkel.Bones[index];
+					}
+					b.ActualPos = bone.BindingPos;
+					b.ActualRot = bone.BindingRot;
+				}
 			}
 		}
+
+		#endregion
 	}
 }

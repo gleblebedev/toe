@@ -59,6 +59,13 @@ namespace Toe.Resources
 			}
 		}
 
+		public override string ToString()
+		{
+			object value = Value;
+			if (value == null) return string.Empty;
+			return value.ToString();
+		}
+
 		public void Provide(object value)
 		{
 			this.values.Add(value);

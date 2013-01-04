@@ -535,8 +535,9 @@ namespace Toe.Marmalade.IwGx
 				//    break;
 				//case ImageFormat.ABGR_2AAA:
 				//    break;
-				//case ImageFormat.PALETTE4_RGB_888:
-				//    break;
+				case ImageFormat.PALETTE4_RGB_888:
+					Palette4Rgb888ToAbgr8888(image);
+				    break;
 				//case ImageFormat.PALETTE4_RGBA_8888:
 				//    break;
 				//case ImageFormat.PALETTE4_RGB_565:
@@ -547,8 +548,9 @@ namespace Toe.Marmalade.IwGx
 				//    break;
 				//case ImageFormat.PALETTE4_ABGR_1555:
 				//    break;
-				//case ImageFormat.PALETTE8_RGB_888:
-				//    break;
+				case ImageFormat.PALETTE8_RGB_888:
+					Palette8Rgb888ToAbgr8888(image);
+				    break;
 				case ImageFormat.PALETTE8_RGBA_8888:
 					Palette8Rgba8888ToAbgr8888(image);
 				    break;
@@ -635,7 +637,46 @@ namespace Toe.Marmalade.IwGx
 				}
 			}
 		}
-
+		private void Palette4Rgb888ToAbgr8888(Image image)
+		{
+			for (var y = 0; y < height; ++y)
+			{
+				int dstIndex = image.pitch * y;
+				int srcIndex = pitch * y;
+				for (var x = 0; x < width; x+=2)
+				{
+					byte byteIndex = data[srcIndex];
+					++srcIndex;
+					var i = (byteIndex >> 4) * 3;
+					image.data[dstIndex++] = PaletteData[i + 2];
+					image.data[dstIndex++] = PaletteData[i + 1];
+					image.data[dstIndex++] = PaletteData[i + 0];
+					image.data[dstIndex++] = 255;
+					i = (byteIndex &0x0F) * 3;
+					image.data[dstIndex++] = PaletteData[i + 2];
+					image.data[dstIndex++] = PaletteData[i + 1];
+					image.data[dstIndex++] = PaletteData[i + 0];
+					image.data[dstIndex++] = 255;
+				}
+			}
+		}
+		private void Palette8Rgb888ToAbgr8888(Image image)
+		{
+			for (var y = 0; y < height; ++y)
+			{
+				int dstIndex = image.pitch * y;
+				int srcIndex = pitch * y;
+				for (var x = 0; x < width; ++x)
+				{
+					var i = data[srcIndex] * 3;
+					++srcIndex;
+					image.data[dstIndex++] = PaletteData[i + 2];
+					image.data[dstIndex++] = PaletteData[i + 1];
+					image.data[dstIndex++] = PaletteData[i + 0];
+					image.data[dstIndex++] = 255;
+				}
+			}
+		}
 		#endregion
 	}
 }

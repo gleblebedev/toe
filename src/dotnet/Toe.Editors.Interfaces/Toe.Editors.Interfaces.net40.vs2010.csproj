@@ -55,6 +55,18 @@
     <Compile Include="Bindings\PropertyBinding.cs" />
     <Compile Include="CommandExt.cs" />
     <Compile Include="CommandHistory.cs" />
+    <Compile Include="Dialogs\ResourcePickerDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\ResourcePickerDialog.Designer.cs">
+      <DependentUpon>ResourcePickerDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\TexturePickerDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\TexturePickerDialog.Designer.cs">
+      <DependentUpon>TexturePickerDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="ICommand.cs" />
     <Compile Include="ICommandHistory.cs" />
     <Compile Include="IEditorEnvironment.cs" />
@@ -86,6 +98,9 @@
       <DependentUpon>ColorPickerDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\ColorView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\EditResourceReferenceView.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Views\EditShaderView.cs">
@@ -147,5 +162,13 @@
       <Project>{15C85727-F6FC-4A28-BB34-84C327AEFF81}</Project>
       <Name>Toe.Resources.net40.vs2010</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Dialogs\ResourcePickerDialog.resx">
+      <DependentUpon>ResourcePickerDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\EditResourceReferenceView.resx">
+      <DependentUpon>EditResourceReferenceView.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>

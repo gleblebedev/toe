@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
@@ -352,7 +353,7 @@ namespace Toe.Editors
 			GL.LoadMatrix(ref projection);
 
 			GL.MatrixMode(MatrixMode.Modelview);
-
+			Trace.WriteLine(string.Format("Camera rot {0}", this.rot));
 			Matrix4 view = Matrix4.Rotate(this.rot) * Matrix4.CreateTranslation(this.pos);
 			view.Invert();
 			GL.LoadMatrix(ref view);

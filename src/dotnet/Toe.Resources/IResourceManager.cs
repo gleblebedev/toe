@@ -16,5 +16,7 @@ namespace Toe.Resources
 		void RetractResource(uint type, uint nameHash, object item);
 
 		object FindResource(uint type, uint hashReference);
+
+		IList<IResourceItem> GetAllResourcesOfType(uint type);
 	}
 }

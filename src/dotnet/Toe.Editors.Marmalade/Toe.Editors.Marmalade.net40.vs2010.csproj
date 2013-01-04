@@ -117,6 +117,10 @@
       <Project>{1D297D66-08E0-4239-9D2C-0F29F6F5A895}</Project>
       <Name>Toe.Gx.net40.vs2010</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Toe.Marmalade\Toe.Marmalade.net40.vs2010.csproj">
+      <Project>{2708D020-33C1-4A4A-BDB0-035FB9EEDFFD}</Project>
+      <Name>Toe.Marmalade.net40.vs2010</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Toe.Utils.Mesh\Toe.Utils.Mesh.net40.vs2010.csproj">
       <Project>{1AB2E074-5CE6-4CD6-A379-3D6A58116319}</Project>
       <Name>Toe.Utils.Mesh.net40.vs2010</Name>
@@ -124,10 +128,6 @@
     <ProjectReference Include="..\Toe.Resources\Toe.Resources.net40.vs2010.csproj">
       <Project>{15C85727-F6FC-4A28-BB34-84C327AEFF81}</Project>
       <Name>Toe.Resources.net40.vs2010</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Toe.Marmalade\Toe.Marmalade.net40.vs2010.csproj">
-      <Project>{2708D020-33C1-4A4A-BDB0-035FB9EEDFFD}</Project>
-      <Name>Toe.Marmalade.net40.vs2010</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -150,6 +150,9 @@
     <EmbeddedResource Include="Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SkinEditor.resx">
+      <DependentUpon>SkinEditor.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

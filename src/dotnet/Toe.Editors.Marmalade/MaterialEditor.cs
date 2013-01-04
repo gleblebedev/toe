@@ -23,6 +23,8 @@ namespace Toe.Editors.Marmalade
 
 		private readonly IEditorEnvironment editorEnvironment;
 
+		private readonly IResourceManager resourceManager;
+
 		private readonly ICommandHistory history;
 
 		private readonly ToeGraphicsContext graphicsContext;
@@ -35,9 +37,10 @@ namespace Toe.Editors.Marmalade
 
 		#region Constructors and Destructors
 
-		public MaterialEditor(IEditorEnvironment editorEnvironment, ICommandHistory history, ToeGraphicsContext graphicsContext)
+		public MaterialEditor(IEditorEnvironment editorEnvironment, IResourceManager resourceManager, ICommandHistory history, ToeGraphicsContext graphicsContext)
 		{
 			this.editorEnvironment = editorEnvironment;
+			this.resourceManager = resourceManager;
 			this.history = history;
 			this.graphicsContext = graphicsContext;
 
@@ -161,14 +164,14 @@ namespace Toe.Editors.Marmalade
 			}
 			{
 				this.stackPanel.Controls.Add(new StringView { Text = "Specify texture for stage 0 (diffuse map)" });
-				var valueCtrl = new EditTextureView(this.editorEnvironment, history) { Margin = new Padding(4) };
+				var valueCtrl = new EditTextureView(this.editorEnvironment, resourceManager, history) { Margin = new Padding(4) };
 				this.stackPanel.Controls.Add(valueCtrl);
 				new PropertyBinding<Material, ResourceReference>(valueCtrl, this.dataContext, mtl => mtl.Texture0, null);
 			}
 
 			{
 				this.stackPanel.Controls.Add(new StringView { Text = "Specify texture for stage 1" });
-				var valueCtrl = new EditTextureView(this.editorEnvironment, history) { Margin = new Padding(4) };
+				var valueCtrl = new EditTextureView(this.editorEnvironment,resourceManager, history) { Margin = new Padding(4) };
 				this.stackPanel.Controls.Add(valueCtrl);
 				new PropertyBinding<Material, ResourceReference>(valueCtrl, this.dataContext, mtl => mtl.Texture1, null);
 			}

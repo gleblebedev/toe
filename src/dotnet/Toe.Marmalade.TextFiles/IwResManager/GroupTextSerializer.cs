@@ -66,6 +66,14 @@ namespace Toe.Utils.Marmalade.IwResManager
 					group.IsShared = parser.ConsumeBool();
 					continue;
 				}
+				if (attribute == "useTemplate")
+				{
+					parser.Consume();
+					var ext = parser.ConsumeString();
+					var name = parser.ConsumeString();
+					continue;
+				}
+				
 				var relPath = attribute.Replace('/', Path.DirectorySeparatorChar);
 				if (relPath.Length > 2 && relPath[0] == '.' && relPath[1] == Path.DirectorySeparatorChar)
 				{

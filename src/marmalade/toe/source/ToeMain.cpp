@@ -165,11 +165,11 @@ int main()
 	LogFileOperations();
 	
     // Set the background colour to (opaque) blue
-    IwGxSetColClear(0, 0, 0xff, 0xff);
+    IwGxSetColClear(0, 0, 0, 0xff);
 
 	CIwResGroup* g = IwGetResManager()->LoadGroup("male_lod0.group");
-	CIwResList* texures = g->GetListNamed("CIwModel");
-	CIwModel* t = (CIwModel*)texures->m_Resources[0];
+	CIwResList* texures = g->GetListNamed("CIwAnimSkin");
+	CIwAnimSkin* t = (CIwAnimSkin*)texures->m_Resources[0];
 	//CIwModel* head = (CIwModel*)g->GetResNamed("male_head_0_lod0","CIwModel");
 	//CIwModel* torso = (CIwModel*)g->GetResNamed("male_torse_jacket0_lod0","CIwModel");
 	//CIwModel* legs = (CIwModel*)g->GetResNamed("male_legs_trousers0_lod0","CIwModel");
@@ -180,7 +180,7 @@ int main()
 	//CIwAnimSkel* skel = (CIwAnimSkel*)g->GetResNamed("male_skel_lod0","CIwAnimSkel");
 	CIwAnimPlayer* player = new CIwAnimPlayer;
   /*  player->SetSkel(skel);*/
-
+	CIwMaterial* mat  = new CIwMaterial();
     // Loop forever, until the user or the OS performs some action to quit the app
     while (!s3eDeviceCheckQuitRequest())
     {
@@ -195,17 +195,34 @@ int main()
 
         // Use the built-in font to display a string at coordinate (120, 150)
         IwGxPrintString(120, 150, "Hello, World!");
-
-
+		
 
 		CIwMat m;
 		int k = 512;
-		CIwVec3 myPos = CIwVec3(IW_GEOM_ONE*k,-IW_GEOM_ONE*k,IW_GEOM_ONE*k);
-		m.LookAt(myPos,CIwVec3(0,0,IW_GEOM_ONE*k),CIwVec3(0,0,-IW_GEOM_ONE));
+		//CIwVec3 myPos = CIwVec3(IW_GEOM_ONE*k,-IW_GEOM_ONE*k,IW_GEOM_ONE*k);
+		CIwVec3 myPos = CIwVec3(512*k, 64*k, 1024*k);
+		//m.LookAt(myPos,CIwVec3(0,0,IW_GEOM_ONE*k),CIwVec3(0,0,-IW_GEOM_ONE));
+		m.LookAt(myPos,CIwVec3(0, 0, 0),-CIwVec3::g_AxisZ);
 	    m.t = myPos;
 		CIwFMat fm(m);
-		
 		IwGxSetViewMatrix(&fm);
+
+		IwGxSetMaterial(mat);
+		static CIwFVec3 verts[6] = {CIwFVec3(0,0,0),CIwFVec3(1000,0,0),CIwFVec3(0,0,0),CIwFVec3(0,1000,0),CIwFVec3(0,0,0),CIwFVec3(0,0,1000)};
+		IwGxSetVertStream(verts,6);
+
+		static CIwColour cols[6];
+		cols[0].Set(255,0,0,255);
+		cols[1].Set(255,0,0,255);
+		cols[2].Set(0,255,0,255);
+		cols[3].Set(0,255,0,255);
+		cols[4].Set(0,0,255,255);
+		cols[5].Set(0,0,255,255);
+		IwGxSetColStream(cols,6);
+		static uint16 indices [6] = {0,1,2,3,4,5};
+		IwGxDrawPrims(IW_GX_LINE_LIST, indices,6);
+		//IwGxSetVertStream(0,0);
+		
 
 		CIwFMat fmodel;
 		fmodel.SetIdentity();
@@ -231,6 +248,7 @@ int main()
         // Sleep for 0ms to allow the OS to process events etc.
         s3eDeviceYield(0);
     }
+	delete mat;
 	delete player;
 	IwGetResManager()->DestroyGroup(g);
 

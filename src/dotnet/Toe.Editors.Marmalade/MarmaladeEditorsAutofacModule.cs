@@ -6,7 +6,6 @@ using Toe.Editors.Interfaces.Views;
 using Toe.Marmalade.IwAnim;
 using Toe.Marmalade.IwGx;
 using Toe.Resources;
-using Toe.Utils.Marmalade.IwAnim;
 using Toe.Utils.Marmalade.IwGraphics;
 using Toe.Utils.Marmalade.IwGx;
 using Toe.Utils.Marmalade.IwResManager;

@@ -4,9 +4,10 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 
+using OpenTK;
+
 using Toe.Resources;
 
-using OpenTK;
 #if WINDOWS_PHONE
 using Microsoft.Xna.Framework;
 #else
@@ -53,6 +54,19 @@ namespace Toe.Utils.Marmalade
 			get
 			{
 				return this.basePath;
+			}
+		}
+
+		public string Lexem
+		{
+			get
+			{
+				if (this.lexemReady)
+				{
+					return this.lexem;
+				}
+				this.ReadLexem();
+				return this.lexem;
 			}
 		}
 
@@ -202,8 +216,32 @@ namespace Toe.Utils.Marmalade
 		public void ConsumeResourceReference(ResourceReference resourceReference)
 		{
 			this.ConsumeResourceReference(resourceReference, null);
+		}
 
-			
+		public void ConsumeResourceReference(ResourceReference resourceReference, string folder)
+		{
+			var l = this.Lexem;
+			this.Consume();
+			if (l.IndexOfAny(new[] { '\\', '/' }, 0) >= 0)
+			{
+				resourceReference.FileReference = l;
+				return;
+			}
+			if (File.Exists(Path.Combine(this.BasePath, l)))
+			{
+				resourceReference.FileReference = l;
+				return;
+			}
+			if (folder != null)
+			{
+				var combinedPath = Path.Combine(folder, l);
+				if (File.Exists(Path.Combine(this.BasePath, combinedPath)))
+				{
+					resourceReference.FileReference = combinedPath;
+					return;
+				}
+			}
+			resourceReference.NameReference = l;
 		}
 
 		public short ConsumeShort()
@@ -238,19 +276,6 @@ namespace Toe.Utils.Marmalade
 		public void Error(string message)
 		{
 			throw new TextParserException(message);
-		}
-
-		public string Lexem
-		{
-			get
-			{
-				if (this.lexemReady)
-				{
-					return this.lexem;
-				}
-				this.ReadLexem();
-				return this.lexem;
-			}
 		}
 
 		public void Skip(string s)
@@ -339,6 +364,14 @@ namespace Toe.Utils.Marmalade
 			while (this.nextChar >= 0 && char.IsWhiteSpace((char)this.nextChar))
 			{
 				this.nextChar = this.reader.Read();
+			}
+			if (this.nextChar == '#')
+			{
+				while (this.nextChar >= 0 && this.nextChar != '\n' && this.nextChar != '\r')
+				{
+					this.nextChar = this.reader.Read();
+				}
+				goto retryToReadLexem;
 			}
 			if (this.nextChar == '/')
 			{
@@ -495,31 +528,5 @@ namespace Toe.Utils.Marmalade
 		}
 
 		#endregion
-
-		public void ConsumeResourceReference(ResourceReference resourceReference, string folder)
-		{
-			var l = this.Lexem;
-			this.Consume();
-			if (l.IndexOfAny(new[] { '\\', '/' }, 0) >= 0)
-			{
-				resourceReference.FileReference = l;
-				return;
-			}
-			if (File.Exists(Path.Combine(this.BasePath, l)))
-			{
-				resourceReference.FileReference = l;
-				return;
-			}
-			if (folder != null)
-			{
-				var combinedPath = Path.Combine(folder, l);
-				if (File.Exists(Path.Combine(this.BasePath, combinedPath)))
-				{
-					resourceReference.FileReference = combinedPath;
-					return;
-				}
-			}
-			resourceReference.NameReference = l;
-		}
 	}
 }

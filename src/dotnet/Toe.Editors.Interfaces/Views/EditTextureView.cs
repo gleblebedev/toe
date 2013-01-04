@@ -8,67 +8,19 @@ using Toe.Resources;
 
 namespace Toe.Editors.Interfaces.Views
 {
-	public class EditTextureView : SingleControlView<ButtonView>, IView
+	public class EditTextureView : EditResourceReferenceView
 	{
-		private readonly IEditorEnvironment editorEnvironment;
 
-		private readonly ICommandHistory history;
-
-		DataContextContainer dataContext = new DataContextContainer();
-
-		public EditTextureView(IEditorEnvironment editorEnvironment, ICommandHistory history)
+		public EditTextureView(IEditorEnvironment editorEnvironment, IResourceManager resourceManager, ICommandHistory history)
+			: base(editorEnvironment, resourceManager,history)
 		{
-			this.editorEnvironment = editorEnvironment;
-			this.history = history;
-			//this.label.AutoSize = true;
-			new DataContextBinding(ViewControl, this.DataContext,false);
-			this.ViewControl.Click += OnButtonClick;
-			this.dataContext.PropertyChanged += OnReferencePropertyChanged;
-			this.dataContext.DataContextChanged += OnReferencePropertyChanged;
+		
 		}
 
-		private void OnReferencePropertyChanged(object sender, EventArgs e)
+		protected override void SetNewValue(uint selectedHash, object selectedVal)
 		{
-			if (this.Reference.Resource == null && !this.Reference.IsEmpty)
-			{
-				this.BackColor = Color.Red;
-			}
-			else
-			{
-				this.BackColor = Color.FromArgb(255, 240, 240, 240);
-			}
+			base.SetNewValue(selectedHash, selectedVal);
 		}
 
-		private void OnButtonClick(object sender, EventArgs a)
-		{
-			var filePath = this.Reference.FilePath;
-			if (!string.IsNullOrEmpty(filePath))
-				editorEnvironment.Open(filePath);
-		}
-
-		#region Implementation of IView
-
-		public ResourceReference Reference
-		{
-			get
-			{
-				if (this.dataContext.Value == null) return null;
-				return this.dataContext.Value as ResourceReference;
-			}
-			set
-			{
-				this.dataContext.Value  = value;
-			}
-		}
-
-		public DataContextContainer DataContext
-		{
-			get
-			{
-				return this.dataContext;
-			}
-		}
-
-		#endregion
 	}
 }

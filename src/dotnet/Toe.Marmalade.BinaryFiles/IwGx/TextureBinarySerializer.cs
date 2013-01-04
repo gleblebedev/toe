@@ -40,7 +40,12 @@ namespace Toe.Marmalade.BinaryFiles.IwGx
 
 			texture.Image = this.ParseImage(parser);
 
-			parser.Expect(false);
+			var e = parser.ConsumeBool();
+			if (e)
+			{
+				e = e;
+			}
+			//parser.Expect(false);
 
 			return texture;
 		}
@@ -58,7 +63,7 @@ namespace Toe.Marmalade.BinaryFiles.IwGx
 			image.pitch = parser.ConsumeUInt16();
 			image.palette = parser.ConsumeUInt32();
 
-			byte[] d = new byte[image.width * image.pitch];
+			byte[] d = new byte[image.height * image.pitch];
 			parser.ConsumeArray(d);
 			image.data = d;
 
@@ -96,6 +101,14 @@ namespace Toe.Marmalade.BinaryFiles.IwGx
 				case ImageFormat.PALETTE8_RGBA_8888:
 					image.PaletteData = parser.ConsumeByteArray(256 * 4);
 				    return image;
+				case ImageFormat.PALETTE4_RGB_888:
+					image.PaletteData = parser.ConsumeByteArray(16 * 3);
+					return image;
+				case ImageFormat.PALETTE4_ABGR_8888:
+				case ImageFormat.PALETTE4_ARGB_8888:
+				case ImageFormat.PALETTE4_RGBA_8888:
+					image.PaletteData = parser.ConsumeByteArray(16 * 4);
+					return image;
 				default:
 					throw new FormatException(string.Format(CultureInfo.CurrentCulture, "Unknown image format 0x{0:x}", image.Format));
 			}

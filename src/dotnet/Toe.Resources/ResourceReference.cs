@@ -1,11 +1,12 @@
 using System;
+using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 
 namespace Toe.Resources
 {
-	public class ResourceReference : IDisposable
+	public class ResourceReference : IDisposable, INotifyPropertyChanged
 	{
 		#region Constants and Fields
 
@@ -227,16 +228,21 @@ namespace Toe.Resources
 			{
 				return this.NameReference;
 			}
-			return string.Format(CultureInfo.InvariantCulture, "0x{0:X8}", this.HashReference);
+			if (this.hashReference == 0) return string.Empty;
+			return string.Format(CultureInfo.InvariantCulture, "0x{0:X8}", this.hashReference);
 		}
 
 		#endregion
 
 		#region Methods
 
-		[SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate")]
 		protected void RaiseReferenceChanged()
 		{
+			RaisePropertyChanged("FileReference");
+			RaisePropertyChanged("NameReference");
+			RaisePropertyChanged("HashReference");
+			RaisePropertyChanged("Resource");
+
 			if (this.ReferenceChanged != null)
 			{
 				this.ReferenceChanged(this, new EventArgs());
@@ -250,6 +256,16 @@ namespace Toe.Resources
 				this.FileReference = null;
 			}
 		}
+		protected void RaisePropertyChanged(string property)
+		{
+			if (PropertyChanged != null)
+				PropertyChanged(this, new PropertyChangedEventArgs(property));
+		}
+		#endregion
+
+		#region Implementation of INotifyPropertyChanged
+
+		public event PropertyChangedEventHandler PropertyChanged;
 
 		#endregion
 	}

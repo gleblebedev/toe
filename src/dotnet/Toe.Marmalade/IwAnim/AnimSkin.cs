@@ -1,6 +1,5 @@
 using Toe.Resources;
 using Toe.Utils.Marmalade;
-using Toe.Utils.Marmalade.IwAnim;
 using Toe.Utils.Marmalade.IwGraphics;
 using Toe.Utils.Mesh;
 
@@ -21,13 +20,15 @@ namespace Toe.Marmalade.IwAnim
 
 		public static readonly uint TypeHash = Hash.Get("CIwAnimSkin");
 
-		private readonly MeshStream<VertexWeight> weights = new MeshStream<VertexWeight>();
+		private readonly MeshStream<VertexWeights> weights = new MeshStream<VertexWeights>();
 
 		private readonly BoneCollection bones = new BoneCollection();
 
 		private ResourceReference skeleton;
 
 		private ResourceReference skeletonModel;
+
+		private uint flags;
 
 		public BoneCollection Bones
 		{
@@ -37,7 +38,7 @@ namespace Toe.Marmalade.IwAnim
 			}
 		}
 
-		public MeshStream<VertexWeight> Weights
+		public MeshStream<VertexWeights> Weights
 		{
 			get
 			{
@@ -77,6 +78,18 @@ namespace Toe.Marmalade.IwAnim
 			get
 			{
 				return TypeHash;
+			}
+		}
+
+		public uint Flags
+		{
+			get
+			{
+				return flags;
+			}
+			set
+			{
+				flags = value;
 			}
 		}
 

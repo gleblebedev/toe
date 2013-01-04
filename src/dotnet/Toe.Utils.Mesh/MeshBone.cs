@@ -3,6 +3,8 @@ using Microsoft.Xna.Framework;
 #else
 using OpenTK;
 
+using Toe.Resources;
+
 #endif
 
 namespace Toe.Utils.Mesh
@@ -109,8 +111,42 @@ namespace Toe.Utils.Mesh
 			}
 		}
 
-		public string Name { get; set; }
+		private string name;
 
+		private uint nameHash;
+
+		private ushort flags;
+
+		public string Name
+		{
+			get
+			{
+				return this.name;
+			}
+			set
+			{
+				if (this.name != value)
+				{
+					this.name = value;
+					this.nameHash = Hash.Get(value);
+				}
+			}
+		}
+		public uint NameHash
+		{
+			get
+			{
+				return this.nameHash;
+			}
+			set
+			{
+				if (this.nameHash != value)
+				{
+					this.nameHash = value;
+					this.name = null;
+				}
+			}
+		}
 		public int Parent
 		{
 			get
@@ -120,6 +156,20 @@ namespace Toe.Utils.Mesh
 			set
 			{
 				this.parent = value;
+			}
+		}
+
+		public int SkelId { get; set; }
+
+		public ushort Flags
+		{
+			get
+			{
+				return this.flags;
+			}
+			set
+			{
+				this.flags = value;
 			}
 		}
 

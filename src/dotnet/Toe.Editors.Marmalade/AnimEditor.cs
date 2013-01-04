@@ -1,10 +1,11 @@
+using System;
+
 using OpenTK.Graphics.OpenGL;
 
 using Toe.Editors.Interfaces;
 using Toe.Editors.Interfaces.Bindings;
 using Toe.Marmalade.IwAnim;
 using Toe.Resources;
-using Toe.Utils.Marmalade.IwAnim;
 using Toe.Utils.Mesh;
 
 namespace Toe.Editors.Marmalade
@@ -30,6 +31,7 @@ namespace Toe.Editors.Marmalade
 			this.InitializeComponent();
 
 			this.InitializeEditor();
+			base.RenderScene += this.RenderScene;
 		}
 
 		#endregion
@@ -64,7 +66,7 @@ namespace Toe.Editors.Marmalade
 
 		#region Methods
 
-		protected override void RenderScene()
+		protected void RenderScene(object sender, EventArgs args)
 		{
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 

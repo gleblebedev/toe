@@ -70,12 +70,9 @@ namespace Toe.Marmalade.BinaryFiles
 		{
 			IList<Managed> items = this.context.Resolve<IList<Managed>>();
 
-			if (magic != parser.ConsumeByte())
-				throw new FormatException();
-			if (major != parser.ConsumeByte())
-				throw new FormatException();
-			if (minor != parser.ConsumeByte())
-				throw new FormatException();
+			parser.Expect(magic);
+			parser.Expect(major);
+			parser.Expect(minor);
 			this.rev = parser.ConsumeByte();
 
 			if (0 != parser.ConsumeUInt16())

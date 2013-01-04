@@ -134,7 +134,7 @@ namespace Toe.Marmalade.TextureFiles
 				img.height = header.height;
 				img.pitch = (ushort)(img.width * 3);
 				img.Format = ImageFormat.RGB_888;
-				img.data = new byte[img.width * img.pitch];
+				img.data = new byte[img.height * img.pitch];
 
 				int pos = 0;
 				while (pos < img.data.Length)
@@ -160,7 +160,7 @@ namespace Toe.Marmalade.TextureFiles
 				img.height = header.height;
 				img.pitch = (ushort)(img.width * 4);
 				img.Format = ImageFormat.ABGR_8888;
-				img.data = new byte[img.width * img.pitch];
+				img.data = new byte[img.height * img.pitch];
 
 				int pos = 0;
 				while (pos < img.data.Length)

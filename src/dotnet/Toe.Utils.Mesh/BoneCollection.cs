@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 using OpenTK;
 
+using Toe.Resources;
+
 namespace Toe.Utils.Mesh
 {
 	public class BoneCollection : IEnumerable<MeshBone>, IEnumerable
@@ -21,6 +23,16 @@ namespace Toe.Utils.Mesh
 				this.bones.Capacity = value;
 			}
 		}
+
+		public int Count
+		{
+			get
+			{
+				return this.bones.Count;
+			}
+			
+		}
+
 		public void UpdateAbsoluteValues()
 		{
 			for (int index = 0; index < this.bones.Count; index++)
@@ -67,6 +79,15 @@ namespace Toe.Utils.Mesh
 					return index;
 				}
 			}
+			UInt32 hash = Hash.Get(boneName);
+			for (index = 0; index < this.bones.Count; index++)
+			{
+				var bone = this.bones[index];
+				if (bone.NameHash == hash)
+				{
+					return index;
+				}
+			}
 			this.bones.Add(new MeshBone { Name = boneName });
 			return index;
 		}
@@ -94,6 +115,30 @@ namespace Toe.Utils.Mesh
 		IEnumerator IEnumerable.GetEnumerator()
 		{
 			return this.GetEnumerator();
+		}
+
+		public int EnsureBone(uint boneName)
+		{
+			int index;
+			for (index = 0; index < this.bones.Count; index++)
+			{
+				var bone = this.bones[index];
+				if (bone.NameHash == boneName)
+				{
+					return index;
+				}
+			}
+			this.bones.Add(new MeshBone { NameHash = boneName });
+			return index;
+		}
+
+		public MeshBone EnsureBoneAt(int index)
+		{
+			while (index >= this.bones.Count)
+			{
+				this.bones.Add(new MeshBone());
+			}
+			return this.bones[index];
 		}
 	}
 }

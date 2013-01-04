@@ -1,9 +1,10 @@
 using Autofac;
 
 using Toe.Marmalade.IwAnim;
+using Toe.Utils.Marmalade;
 using Toe.Utils.Mesh;
 
-namespace Toe.Utils.Marmalade.IwAnim
+namespace Toe.Marmalade.TextFiles.IwAnim
 {
 	public class AnimTextSerializer : ITextSerializer
 	{
@@ -29,7 +30,7 @@ namespace Toe.Utils.Marmalade.IwAnim
 
 		public Managed Parse(TextParser parser, string defaultName)
 		{
-			Anim mesh = context.Resolve<Anim>();
+			Anim mesh = this.context.Resolve<Anim>();
 			mesh.Name = defaultName;
 			parser.Consume("CIwAnim");
 			parser.Consume("{");

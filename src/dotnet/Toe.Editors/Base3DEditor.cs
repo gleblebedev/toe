@@ -4,19 +4,27 @@ using System.Drawing;
 using System.Windows.Forms;
 
 using OpenTK;
+using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 
+using Toe.Editors.Interfaces.Panels;
 using Toe.Gx;
 
 namespace Toe.Editors
 {
-	public abstract class Base3DEditor : UserControl
+	public class Base3DEditor : UserControl
 	{
 		#region Constants and Fields
 
 		private readonly EditorCamera camera = new EditorCamera();
 
 		private ICameraController cameraController;
+
+		private Button errButton;
+
+		private Label errMessage;
+
+		private StackPanel errPanel;
 
 		private GLControl glControl;
 
@@ -51,7 +59,15 @@ namespace Toe.Editors
 			this.glControl.MouseWheel += this.OnSceneMouseWheel;
 			this.Camera.LookAt(new Vector3(512, 64, 1024), new Vector3(0, 0, 0), this.Camera.WorldUp);
 			this.CameraController = new TargetCameraController { Camera = this.Camera };
+			this.yUpToolStripMenuItem.Click += this.SelectYUp;
+			this.zUpToolStripMenuItem.Click += this.SelectZUp;
 		}
+
+		#endregion
+
+		#region Public Events
+
+		public event EventHandler RenderScene;
 
 		#endregion
 
@@ -78,11 +94,13 @@ namespace Toe.Editors
 					if (this.cameraController != null)
 					{
 						this.cameraController.Detach(this.glControl);
+						this.cameraController.Camera = null;
 					}
 					this.cameraController = value;
 					if (this.cameraController != null)
 					{
 						this.cameraController.Attach(this.glControl);
+						this.cameraController.Camera = this.camera;
 					}
 				}
 			}
@@ -132,8 +150,6 @@ namespace Toe.Editors
 			OpenTKHelper.Assert();
 		}
 
-		protected abstract void RenderScene();
-
 		private void DrawBoxQuad(Vector3[] p, Vector3[] n, Vector2[] uv, int[] ints)
 		{
 			for (int i = 0; i < 4; ++i)
@@ -158,26 +174,45 @@ namespace Toe.Editors
 			{
 				return;
 			}
-			this.glControl.MakeCurrent();
-			GL.Enable(EnableCap.DepthTest);
+			try
+			{
+				this.glControl.MakeCurrent();
 
-			this.Camera.SetProjection();
-			this.RenderScene();
+				if (GraphicsContext.CurrentContext == null)
+				{
+					return;
+				}
 
-			GL.Disable(EnableCap.DepthTest);
-			GL.Begin(BeginMode.Lines);
-			GL.Color3(1.0f, 0, 0);
-			GL.Vertex3(0, 0, 0);
-			GL.Vertex3(1024, 0, 0);
-			GL.Color3(0, 1.0f, 0);
-			GL.Vertex3(0, 0, 0);
-			GL.Vertex3(0, 1024, 0);
-			GL.Color3(0, 0, 1.0f);
-			GL.Vertex3(0, 0, 0);
-			GL.Vertex3(0, 0, 1024);
-			GL.End();
-			GL.Flush();
-			this.glControl.SwapBuffers();
+				GL.Enable(EnableCap.DepthTest);
+
+				this.Camera.SetProjection();
+
+				if (this.RenderScene != null)
+				{
+					this.RenderScene(this, new EventArgs());
+				}
+
+				GL.Disable(EnableCap.DepthTest);
+				GL.Begin(BeginMode.Lines);
+				GL.Color3(1.0f, 0, 0);
+				GL.Vertex3(0, 0, 0);
+				GL.Vertex3(1024, 0, 0);
+				GL.Color3(0, 1.0f, 0);
+				GL.Vertex3(0, 0, 0);
+				GL.Vertex3(0, 1024, 0);
+				GL.Color3(0, 0, 1.0f);
+				GL.Vertex3(0, 0, 0);
+				GL.Vertex3(0, 0, 1024);
+				GL.End();
+				GL.Flush();
+				this.glControl.SwapBuffers();
+			}
+			catch (Exception ex)
+			{
+				this.glControl.Visible = false;
+				this.errPanel.Visible = true;
+				this.errMessage.Text = ex.ToString();
+			}
 		}
 
 		private void GLControlResize(object sender, EventArgs e)
@@ -198,7 +233,11 @@ namespace Toe.Editors
 			this.zUpToolStripMenuItem = new ToolStripMenuItem();
 			this.yUpToolStripMenuItem = new ToolStripMenuItem();
 			this.glControl = new GLControl();
+			this.errPanel = new StackPanel();
+			this.errButton = new Button();
+			this.errMessage = new Label();
 			this.toolStrip1.SuspendLayout();
+			this.errPanel.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// toolStrip1
@@ -224,16 +263,14 @@ namespace Toe.Editors
 			// zUpToolStripMenuItem
 			// 
 			this.zUpToolStripMenuItem.Name = "zUpToolStripMenuItem";
-			this.zUpToolStripMenuItem.Size = new Size(152, 22);
+			this.zUpToolStripMenuItem.Size = new Size(101, 22);
 			this.zUpToolStripMenuItem.Text = "Z-Up";
-			this.zUpToolStripMenuItem.Click += this.SelectZUp;
 			// 
 			// yUpToolStripMenuItem
 			// 
 			this.yUpToolStripMenuItem.Name = "yUpToolStripMenuItem";
-			this.yUpToolStripMenuItem.Size = new Size(152, 22);
+			this.yUpToolStripMenuItem.Size = new Size(101, 22);
 			this.yUpToolStripMenuItem.Text = "Y-Up";
-			this.yUpToolStripMenuItem.Click += this.SelectYUp;
 			// 
 			// glControl
 			// 
@@ -245,13 +282,47 @@ namespace Toe.Editors
 			this.glControl.TabIndex = 1;
 			this.glControl.VSync = false;
 			// 
+			// errPanel
+			// 
+			this.errPanel.AutoScroll = true;
+			this.errPanel.Controls.Add(this.errButton);
+			this.errPanel.Controls.Add(this.errMessage);
+			this.errPanel.Dock = DockStyle.Fill;
+			this.errPanel.Location = new Point(0, 25);
+			this.errPanel.Name = "errPanel";
+			this.errPanel.Size = new Size(150, 125);
+			this.errPanel.TabIndex = 2;
+			this.errPanel.Visible = false;
+			// 
+			// errButton
+			// 
+			this.errButton.Location = new Point(3, 3);
+			this.errButton.Name = "errButton";
+			this.errButton.Size = new Size(150, 23);
+			this.errButton.TabIndex = 1;
+			this.errButton.Text = "Retry";
+			this.errButton.UseVisualStyleBackColor = true;
+			this.errButton.Click += this.errButton_Click;
+			// 
+			// errMessage
+			// 
+			this.errMessage.AutoSize = true;
+			this.errMessage.Location = new Point(3, 29);
+			this.errMessage.Name = "errMessage";
+			this.errMessage.Size = new Size(150, 13);
+			this.errMessage.TabIndex = 0;
+			this.errMessage.Text = "Render error";
+			// 
 			// Base3DEditor
 			// 
+			this.Controls.Add(this.errPanel);
 			this.Controls.Add(this.glControl);
 			this.Controls.Add(this.toolStrip1);
 			this.Name = "Base3DEditor";
 			this.toolStrip1.ResumeLayout(false);
 			this.toolStrip1.PerformLayout();
+			this.errPanel.ResumeLayout(false);
+			this.errPanel.PerformLayout();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 		}
@@ -277,7 +348,7 @@ namespace Toe.Editors
 			if (this.CameraController != null)
 			{
 				this.CameraController.MouseMove(e.Button, e.Location);
-				this.glControl.Refresh();
+				this.RefreshScene();
 			}
 		}
 
@@ -286,7 +357,7 @@ namespace Toe.Editors
 			if (this.CameraController != null)
 			{
 				this.CameraController.MouseWheel(e.Delta, e.Location);
-				this.glControl.Refresh();
+				this.RefreshScene();
 			}
 		}
 
@@ -310,12 +381,26 @@ namespace Toe.Editors
 
 		private void SetupViewport()
 		{
-			int w = this.glControl.Width;
-			int h = this.glControl.Height;
+			if (!this.loaded)
+			{
+				return;
+			}
+			if (GraphicsContext.CurrentContext == null)
+			{
+				return;
+			}
+			int w = Math.Max(1, this.glControl.Width);
+			int h = Math.Max(1, this.glControl.Height);
 			// Use all of the glControl painting area
 			GL.Viewport(0, 0, w, h);
 
 			this.Camera.AspectRation = w / (float)h;
+		}
+
+		private void errButton_Click(object sender, EventArgs e)
+		{
+			this.glControl.Visible = true;
+			this.errPanel.Visible = false;
 		}
 
 		#endregion

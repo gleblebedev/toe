@@ -39,5 +39,10 @@ namespace Toe.Marmalade.IwAnim
 		}
 
 		#endregion
+
+		public int EnsureBone(uint boneName)
+		{
+			return this.bones.EnsureBone(boneName);
+		}
 	}
 }

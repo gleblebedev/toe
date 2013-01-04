@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 
@@ -31,6 +32,7 @@ namespace Toe.Editors.Geometry
 		{
 			this.meshReader = meshReader;
 			this.meshWriter = meshWriter;
+			base.RenderScene += this.RenderScene;
 		}
 
 		#endregion
@@ -160,7 +162,7 @@ namespace Toe.Editors.Geometry
 			//}
 		}
 
-		protected override void RenderScene()
+		protected void RenderScene(object sender, EventArgs args)
 		{
 			GL.ClearColor(Color.SkyBlue);
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 using Autofac;
 using Autofac.Core.Activators.Reflection;
@@ -114,6 +115,12 @@ namespace Toe.Resources
 				return null;
 			}
 			return item.Value;
+		}
+
+		public IList<IResourceItem> GetAllResourcesOfType(uint type)
+		{
+			var typeCollection = this.EnsureTypeCollection(type);
+			return (from i in typeCollection.Values select i).ToList();
 		}
 
 		#region Implementation of IDisposable
