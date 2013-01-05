@@ -55,7 +55,7 @@ namespace Toe.Marmalade.TextureFiles
 			throw new NotImplementedException();
 		}
 
-		public IList<IResourceFileItem> Read(string filePath)
+		public IList<IResourceFileItem> Read(string filePath, IResourceFile resourceFile)
 		{
 			IList<IResourceFileItem> items = this.context.Resolve<IList<IResourceFileItem>>();
 

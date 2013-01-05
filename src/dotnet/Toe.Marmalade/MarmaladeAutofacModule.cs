@@ -2,6 +2,8 @@ using Autofac;
 
 using Toe.Marmalade.IwAnim;
 using Toe.Marmalade.IwGx;
+using Toe.Marmalade.IwResManager;
+using Toe.Resources;
 using Toe.Utils.Marmalade.IwGraphics;
 using Toe.Utils.Marmalade.IwGx;
 using Toe.Utils.Marmalade.IwResManager;
@@ -24,6 +26,14 @@ namespace Toe.Marmalade
 			builder.RegisterType<Model>().As<Model>();
 			builder.RegisterType<ShaderTechnique>().As<ShaderTechnique>();
 
+			builder.RegisterType<ManagedResourceType<Material>>().Keyed<IResourceType>(Material.TypeHash).SingleInstance();
+			builder.RegisterType<ManagedResourceType<AnimSkin>>().Keyed<IResourceType>(AnimSkin.TypeHash).SingleInstance();
+			builder.RegisterType<ManagedResourceType<AnimSkel>>().Keyed<IResourceType>(AnimSkel.TypeHash).SingleInstance();
+			builder.RegisterType<ManagedResourceType<Anim>>().Keyed<IResourceType>(Anim.TypeHash).SingleInstance();
+			builder.RegisterType<ManagedResourceType<Texture>>().Keyed<IResourceType>(Texture.TypeHash).SingleInstance();
+			builder.RegisterType<ManagedResourceType<ResGroup>>().Keyed<IResourceType>(ResGroup.TypeHash).SingleInstance();
+			builder.RegisterType<ManagedResourceType<Model>>().Keyed<IResourceType>(Model.TypeHash).SingleInstance();
+			builder.RegisterType<ManagedResourceType<ShaderTechnique>>().Keyed<IResourceType>(ShaderTechnique.TypeHash).SingleInstance();
 		
 		}
 

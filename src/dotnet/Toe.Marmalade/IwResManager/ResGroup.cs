@@ -6,8 +6,9 @@ using System.IO;
 using Autofac;
 
 using Toe.Resources;
+using Toe.Utils.Marmalade;
 
-namespace Toe.Utils.Marmalade.IwResManager
+namespace Toe.Marmalade.IwResManager
 {
 	public class ResGroup : Managed
 	{
@@ -23,15 +24,18 @@ namespace Toe.Utils.Marmalade.IwResManager
 
 		private readonly IResourceManager resourceManager;
 
+		private readonly IResourceFile resourceFile;
+
 		private bool isShared;
 
 		#endregion
 
 		#region Constructors and Destructors
 
-		public ResGroup(IResourceManager resourceManager, IComponentContext context)
+		public ResGroup(IResourceManager resourceManager, IResourceFile resourceFile, IComponentContext context)
 		{
 			this.resourceManager = resourceManager;
+			this.resourceFile = resourceFile;
 			this.context = context;
 
 			//TODO: make public properties read-only
@@ -108,12 +112,13 @@ namespace Toe.Utils.Marmalade.IwResManager
 		#region Public Methods and Operators
 		public void AddResource(Managed item)
 		{
-			if (embeddedResources.Contains(item))
+			if (this.embeddedResources.Contains(item))
 				throw new ApplicationException("item is in collection already");
 
-			embeddedResources.Add(item);
-			SubscribeOnNameChange(item);
-			resourceManager.ProvideResource(item.ClassHashCode, item.NameHash, item);
+			this.embeddedResources.Add(item);
+			this.SubscribeOnNameChange(item);
+			//TODO: get source file reference
+			this.resourceManager.ProvideResource(item.ClassHashCode, item.NameHash, item, resourceFile);
 		}
 
 		public void AddFile(string fullPath)
@@ -175,7 +180,7 @@ namespace Toe.Utils.Marmalade.IwResManager
 			if (e.PropertyName == "NameHash")
 			{
 				var item = ((Managed)sender);
-				this.resourceManager.ProvideResource(item.ClassHashCode, item.NameHash, item);
+				this.resourceManager.ProvideResource(item.ClassHashCode, item.NameHash, item, resourceFile);
 			}
 		}
 
@@ -184,7 +189,7 @@ namespace Toe.Utils.Marmalade.IwResManager
 			if (e.PropertyName == "NameHash")
 			{
 				var item = ((Managed)sender);
-				this.resourceManager.RetractResource(item.ClassHashCode, item.NameHash, item);
+				this.resourceManager.RetractResource(item.ClassHashCode, item.NameHash, item, resourceFile);
 			}
 		}
 
@@ -198,11 +203,11 @@ namespace Toe.Utils.Marmalade.IwResManager
 		private void RemoveResourceAt(int index)
 		{
 			var item = this.embeddedResources[index];
-			embeddedResources.RemoveAt(index);
+			this.embeddedResources.RemoveAt(index);
 
 			this.UnsubscribeOnNameChange(item);
 
-			this.resourceManager.RetractResource(item.ClassHashCode, item.NameHash, item);
+			this.resourceManager.RetractResource(item.ClassHashCode, item.NameHash, item, resourceFile);
 
 			item.Dispose();
 		}

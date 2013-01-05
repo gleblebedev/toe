@@ -222,7 +222,7 @@ namespace Toe.Resources
 		{
 			if (!string.IsNullOrEmpty(this.fileReference))
 			{
-				return this.FileReference;
+				return Path.GetFileName(this.FileReference);
 			}
 			if (this.NameReference != null)
 			{
@@ -268,5 +268,29 @@ namespace Toe.Resources
 		public event PropertyChangedEventHandler PropertyChanged;
 
 		#endregion
+
+		public ResourceReference Clone()
+		{
+			var r = new ResourceReference(type, resourceManager, container);
+			r.fileReference = fileReference;
+			r.nameReference = nameReference;
+			r.hashReference = hashReference;
+			return r;
+		}
+
+		public void CopyFrom(ResourceReference newR)
+		{
+			if (!string.IsNullOrEmpty(newR.fileReference))
+			{
+				this.FileReference = newR.fileReference;
+				return;
+			}
+			if (!string.IsNullOrEmpty(newR.nameReference))
+			{
+				this.NameReference = newR.nameReference;
+				return;
+			}
+			this.HashReference = newR.hashReference;
+		}
 	}
 }

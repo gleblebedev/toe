@@ -9,11 +9,9 @@ namespace Toe.Editors.Interfaces
 
 		private readonly ARG oldValue;
 
-		private readonly ARG newValue;
+		private ARG newValue;
 
 		private readonly Action<T, ARG> setValue;
-
-		private readonly Action<T, ARG> undo;
 
 		public SetValueCommand(T target, ARG oldValue, ARG newValue, Action<T, ARG> setValue)
 		{
@@ -24,26 +22,62 @@ namespace Toe.Editors.Interfaces
 		
 		}
 
+		public T Target
+		{
+			get
+			{
+				return this.target;
+			}
+		}
+
+		public ARG OldValue
+		{
+			get
+			{
+				return this.oldValue;
+			}
+		}
+
+		public ARG NewValue
+		{
+			get
+			{
+				return this.newValue;
+			}
+			set
+			{
+				this.newValue = value;
+			}
+		}
+
+		public Action<T, ARG> SetValue
+		{
+			get
+			{
+				return this.setValue;
+			}
+		}
+
 		#region Implementation of ICommand
 
 		public void Redo()
 		{
-			Trace.WriteLine(string.Format("Redo {0}->{1} at {2}", newValue, oldValue, target));
-			setValue(target, newValue);
+			Trace.WriteLine(string.Format("Redo {0}->{1} at {2}", this.NewValue, this.OldValue, this.Target));
+			this.SetValue(this.Target, this.NewValue);
 		}
 
 		public void Undo()
 		{
-			Trace.WriteLine(string.Format("Undo {0}->{1} at {2}",newValue,oldValue,target));
-			setValue(target, oldValue);
+			Trace.WriteLine(string.Format("Undo {0}->{1} at {2}",this.NewValue,this.OldValue,this.Target));
+			this.SetValue(this.Target, this.OldValue);
 		}
 
 		#endregion
 
 		public override string ToString()
 		{
-			if (newValue != null)
-				return newValue.ToString();
+			if (this.NewValue != null)
+				return this.NewValue.ToString();
 			return "(null)";
 		}
 	}

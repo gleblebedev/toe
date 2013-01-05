@@ -4,6 +4,9 @@ using System.Drawing;
 using System.Linq.Expressions;
 using System.Windows.Forms;
 
+using Autofac;
+using Autofac.Core;
+
 using Toe.Editors.Interfaces;
 using Toe.Editors.Interfaces.Bindings;
 using Toe.Editors.Interfaces.Panels;
@@ -29,6 +32,8 @@ namespace Toe.Editors.Marmalade
 
 		private readonly ToeGraphicsContext graphicsContext;
 
+		private readonly IComponentContext context;
+
 		private SplitContainer formPreviewSplit;
 
 		private TableLayoutPanel stackPanel;
@@ -37,12 +42,13 @@ namespace Toe.Editors.Marmalade
 
 		#region Constructors and Destructors
 
-		public MaterialEditor(IEditorEnvironment editorEnvironment, IResourceManager resourceManager, ICommandHistory history, ToeGraphicsContext graphicsContext)
+		public MaterialEditor(IEditorEnvironment editorEnvironment, IResourceManager resourceManager, ICommandHistory history, ToeGraphicsContext graphicsContext, IComponentContext context)
 		{
 			this.editorEnvironment = editorEnvironment;
 			this.resourceManager = resourceManager;
 			this.history = history;
 			this.graphicsContext = graphicsContext;
+			this.context = context;
 
 			this.InitializeComponent();
 
@@ -149,7 +155,8 @@ namespace Toe.Editors.Marmalade
 			this.formPreviewSplit.Panel1.Controls.Add(sp);
 
 			//var preview = new PictureBox { Image = Resources.material, Dock = DockStyle.Fill, AutoSize = true };
-			var preview = new MaterialPreview(this,this.graphicsContext) { Dock = DockStyle.Fill };
+			var preview = context.Resolve<MaterialPreview>(new Parameter[] { TypedParameter.From(this) });
+			preview.Dock = DockStyle.Fill;
 			this.formPreviewSplit.Panel2.Controls.Add(preview);
 			this.dataContext.DataContextChanged += (s, a) => preview.RefreshScene();
 			this.dataContext.PropertyChanged += (s, a) => preview.RefreshScene();
@@ -164,14 +171,14 @@ namespace Toe.Editors.Marmalade
 			}
 			{
 				this.stackPanel.Controls.Add(new StringView { Text = "Specify texture for stage 0 (diffuse map)" });
-				var valueCtrl = new EditTextureView(this.editorEnvironment, resourceManager, history) { Margin = new Padding(4) };
+				var valueCtrl = new EditResourceReferenceView(this.editorEnvironment, resourceManager, history, context,true) { Margin = new Padding(4) };
 				this.stackPanel.Controls.Add(valueCtrl);
 				new PropertyBinding<Material, ResourceReference>(valueCtrl, this.dataContext, mtl => mtl.Texture0, null);
 			}
 
 			{
 				this.stackPanel.Controls.Add(new StringView { Text = "Specify texture for stage 1" });
-				var valueCtrl = new EditTextureView(this.editorEnvironment,resourceManager, history) { Margin = new Padding(4) };
+				var valueCtrl = new EditResourceReferenceView(this.editorEnvironment, resourceManager, history, context, true) { Margin = new Padding(4) };
 				this.stackPanel.Controls.Add(valueCtrl);
 				new PropertyBinding<Material, ResourceReference>(valueCtrl, this.dataContext, mtl => mtl.Texture1, null);
 			}
@@ -221,9 +228,9 @@ namespace Toe.Editors.Marmalade
 
 			{
 				this.stackPanel.Controls.Add(new StringView { Text = "The specular cosine power" });
-				var valueCtrl = new EditIntegerView { Margin = new Padding(4) };
+				var valueCtrl = new EditByteView { Margin = new Padding(4) };
 				this.stackPanel.Controls.Add(valueCtrl);
-				new PropertyBinding<Material, int>(
+				new PropertyBinding<Material, byte>(
 					valueCtrl, this.dataContext, mtl => mtl.SpecularPower, (mtl, value) => history.SetValue(mtl, mtl.SpecularPower, value, (a, b) => { a.SpecularPower = b; }));
 			}
 

@@ -229,10 +229,6 @@
     </VSCTCompile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Toe.Editors.Geometry\Toe.Editors.Geometry.net40.vs2010.csproj">
-      <Project>{77A71F90-B773-4C3B-871C-BB140BFEAAEC}</Project>
-      <Name>Toe.Editors.Geometry.net40.vs2010</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Toe.Editors.Interfaces\Toe.Editors.Interfaces.net40.vs2010.csproj">
       <Project>{2B25523C-AA51-43C7-B5F2-41D3F8FBA0AE}</Project>
       <Name>Toe.Editors.Interfaces.net40.vs2010</Name>
@@ -244,6 +240,10 @@
     <ProjectReference Include="..\Toe.Editors\Toe.Editors.net40.vs2010.csproj">
       <Project>{5FA4A978-FB68-4CB0-B693-FB534C76F2C9}</Project>
       <Name>Toe.Editors.net40.vs2010</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Toe.Editor\Toe.Editor.net40.vs2010.csproj">
+      <Project>{F3C887C0-FE2D-46E8-AD77-E8BAB63BFAF1}</Project>
+      <Name>Toe.Editor.net40.vs2010</Name>
     </ProjectReference>
     <ProjectReference Include="..\Toe.Gx\Toe.Gx.net40.vs2010.csproj">
       <Project>{1D297D66-08E0-4239-9D2C-0F29F6F5A895}</Project>

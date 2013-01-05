@@ -6,6 +6,8 @@ using System.Text;
 
 using OpenTK;
 
+using Toe.Resources;
+
 namespace Toe.Marmalade.BinaryFiles
 {
 	public class BinaryParser
@@ -13,6 +15,8 @@ namespace Toe.Marmalade.BinaryFiles
 		#region Constants and Fields
 
 		private readonly string basePath;
+
+		private readonly IResourceFile resourceFile;
 
 		private readonly BinaryReader source;
 
@@ -22,10 +26,11 @@ namespace Toe.Marmalade.BinaryFiles
 
 		#region Constructors and Destructors
 
-		public BinaryParser(BinaryReader source, string basePath)
+		public BinaryParser(BinaryReader source, string basePath, IResourceFile resourceFile)
 		{
 			this.source = source;
 			this.basePath = basePath;
+			this.resourceFile = resourceFile;
 		}
 
 		#endregion
@@ -49,6 +54,14 @@ namespace Toe.Marmalade.BinaryFiles
 			set
 			{
 				this.source.BaseStream.Position = value;
+			}
+		}
+
+		public IResourceFile ResourceFile
+		{
+			get
+			{
+				return this.resourceFile;
 			}
 		}
 

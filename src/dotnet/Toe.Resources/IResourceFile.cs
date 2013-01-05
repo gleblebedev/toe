@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace Toe.Resources
 {
-	public interface IResourceFile
+	public interface IResourceFile:IBasePathProvider
 	{
 		void Close();
 

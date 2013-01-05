@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
@@ -14,20 +12,17 @@ namespace Toe.Resources
 {
 	public class ResourceFile : IResourceFile
 	{
-		public override string ToString()
-		{
-			return filePath;
-		}
+		#region Constants and Fields
 
-		private readonly IResourceManager resourceManager;
+		private readonly IComponentContext context;
+
+		private readonly IResourceErrorHandler errorHandler;
 
 		private readonly string filePath;
 
 		private readonly IEnumerable<IResourceFileFormat> readers;
 
-		private readonly IResourceErrorHandler errorHandler;
-
-		private readonly IComponentContext context;
+		private readonly IResourceManager resourceManager;
 
 		private int referenceCounter;
 
@@ -35,13 +30,41 @@ namespace Toe.Resources
 
 		private IList<IResourceFileItem> resources;
 
-		public ResourceFile(IResourceManager resourceManager, string filePath, IEnumerable<IResourceFileFormat> readers, IResourceErrorHandler errorHandler)
+		#endregion
+
+		#region Constructors and Destructors
+
+		public ResourceFile(
+			IResourceManager resourceManager,
+			string filePath,
+			IEnumerable<IResourceFileFormat> readers,
+			IResourceErrorHandler errorHandler)
 		{
 			this.resourceManager = resourceManager;
 			this.filePath = filePath;
 			this.readers = readers;
 			this.errorHandler = errorHandler;
-			this.context = context;
+			this.context = this.context;
+		}
+
+		#endregion
+
+		#region Public Properties
+
+		public string BasePath
+		{
+			get
+			{
+				return Path.GetDirectoryName(this.filePath);
+			}
+		}
+
+		public string FilePath
+		{
+			get
+			{
+				return this.filePath;
+			}
 		}
 
 		public IList<IResourceFileItem> Items
@@ -56,20 +79,14 @@ namespace Toe.Resources
 			}
 		}
 
-		public string FilePath
-		{
-			get
-			{
-				return this.filePath;
-			}
-		}
+		#endregion
 
-		#region Implementation of IResourceFile
+		#region Public Methods and Operators
 
 		public void Close()
 		{
-			--referenceCounter;
-			if (referenceCounter == 0)
+			--this.referenceCounter;
+			if (this.referenceCounter == 0)
 			{
 				//TODO: notify Items property changed
 				this.DropResources(this.resources);
@@ -79,60 +96,46 @@ namespace Toe.Resources
 
 		public void Open()
 		{
-			++referenceCounter;
-			if (referenceCounter == 1)
+			++this.referenceCounter;
+			if (this.referenceCounter == 1)
 			{
-				ReadFile();
+				this.ReadFile();
 			}
+		}
+
+		public override string ToString()
+		{
+			return this.filePath;
 		}
 
 		#endregion
 
-		[SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
-		private void ReadFile()
-		{
-			try
-			{
-				this.resourceFileFormat = this.ChooseReader();
-				if (this.resourceFileFormat == null) throw new FormatException(string.Format(CultureInfo.InvariantCulture, "Can't find a reader for {0}", this.filePath));
-				this.DropResources(this.resources);
-				this.resources = this.resourceFileFormat.Read(filePath);
+		#region Methods
 
-				//TODO: subscribe on list changes
-			}
-			catch(ThreadAbortException)
-			{
-				this.DropResources(this.resources);
-				throw;
-			}
-			catch(Exception ex)
-			{
-				errorHandler.CanNotRead(filePath, ex);
-			}
-			this.ProvideResources(this.resources);
-		}
-
-		private void ProvideResources(IEnumerable<IResourceFileItem> resourceFileItems)
+		private IResourceFileFormat ChooseReader()
 		{
-			if (resourceFileItems == null)
-				return;
-			foreach (var item in resourceFileItems)
+			foreach (var reader in this.readers)
 			{
-				resourceManager.ProvideResource(item.Type, item.NameHash, item.Resource);
-				SubscribeOnNameChange(item);
+				if (reader.CanRead(this.filePath))
+				{
+					return reader;
+				}
 			}
+			return null;
 		}
 
 		private void DropResources(IEnumerable<IResourceFileItem> resourceFileItems)
 		{
 			if (resourceFileItems == null)
+			{
 				return;
+			}
 			foreach (var item in resourceFileItems)
 			{
 				this.UnsubscribeOnNameChange(item);
-				resourceManager.RetractResource(item.Type, item.NameHash, item.Resource);
+				this.resourceManager.RetractResource(item.Type, item.NameHash, item.Resource, this);
 				var disposable = item.Resource as IDisposable;
-				if (disposable!=null)
+				if (disposable != null)
 				{
 					disposable.Dispose();
 				}
@@ -140,44 +143,77 @@ namespace Toe.Resources
 			resourceFileItems = null;
 		}
 
-		private void SubscribeOnNameChange(IResourceFileItem item)
-		{
-			item.PropertyChanged += ItemPropertyChanged;
-			item.PropertyChanging += ItemPropertyChanging;
-		}
-		private void UnsubscribeOnNameChange(IResourceFileItem item)
-		{
-			item.PropertyChanged -= ItemPropertyChanged;
-			item.PropertyChanging -= ItemPropertyChanging;
-		}
-		private void ItemPropertyChanging(object sender, PropertyChangingEventArgs e)
-		{
-			if (e.PropertyName == "NameHash")
-			{
-				var item = ((IResourceFileItem)sender);
-				resourceManager.RetractResource(item.Type, item.NameHash, item.Resource);
-			}
-		}
-
 		private void ItemPropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
 			if (e.PropertyName == "NameHash")
 			{
 				var item = ((IResourceFileItem)sender);
-				resourceManager.ProvideResource(item.Type, item.NameHash, item.Resource);
+				this.resourceManager.ProvideResource(item.Type, item.NameHash, item.Resource, this);
 			}
 		}
 
-		private IResourceFileFormat ChooseReader()
+		private void ItemPropertyChanging(object sender, PropertyChangingEventArgs e)
 		{
-			foreach (var reader in this.readers)
+			if (e.PropertyName == "NameHash")
 			{
-				if (reader.CanRead(filePath))
-				{
-					return reader;
-				}
+				var item = ((IResourceFileItem)sender);
+				this.resourceManager.RetractResource(item.Type, item.NameHash, item.Resource, this);
 			}
-			return null;
 		}
+
+		private void ProvideResources(IEnumerable<IResourceFileItem> resourceFileItems)
+		{
+			if (resourceFileItems == null)
+			{
+				return;
+			}
+			foreach (var item in resourceFileItems)
+			{
+				this.resourceManager.ProvideResource(item.Type, item.NameHash, item.Resource, this);
+				this.SubscribeOnNameChange(item);
+			}
+		}
+
+		[SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
+		private void ReadFile()
+		{
+			try
+			{
+				this.resourceFileFormat = this.ChooseReader();
+				if (this.resourceFileFormat == null)
+				{
+					throw new FormatException(
+						string.Format(CultureInfo.InvariantCulture, "Can't find a reader for {0}", this.filePath));
+				}
+				this.DropResources(this.resources);
+				this.resources = this.resourceFileFormat.Read(this.filePath, this);
+
+				//TODO: subscribe on list changes
+			}
+			catch (ThreadAbortException)
+			{
+				this.DropResources(this.resources);
+				throw;
+			}
+			catch (Exception ex)
+			{
+				this.errorHandler.CanNotRead(this.filePath, ex);
+			}
+			this.ProvideResources(this.resources);
+		}
+
+		private void SubscribeOnNameChange(IResourceFileItem item)
+		{
+			item.PropertyChanged += this.ItemPropertyChanged;
+			item.PropertyChanging += this.ItemPropertyChanging;
+		}
+
+		private void UnsubscribeOnNameChange(IResourceFileItem item)
+		{
+			item.PropertyChanged -= this.ItemPropertyChanged;
+			item.PropertyChanging -= this.ItemPropertyChanging;
+		}
+
+		#endregion
 	}
 }

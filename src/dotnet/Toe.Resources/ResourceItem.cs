@@ -13,7 +13,7 @@ namespace Toe.Resources
 
 		private readonly uint hash;
 
-		private IList<object> values = new List<object>(1);
+		private IList<ResourceItemSource> values = new List<ResourceItemSource>(1);
 
 		private int referenceCounter;
 
@@ -31,9 +31,20 @@ namespace Toe.Resources
 			get
 			{
 				if (this.values.Count == 0) return null;
-				return this.values[0];
+				return this.values[0].Value;
 			}
 		}
+
+		public IResourceFile Source
+		{
+			get
+			{
+				if (this.values.Count == 0) return null;
+				return this.values[0].Source;
+			}
+		}
+
+		
 
 		public uint Hash
 		{
@@ -66,14 +77,18 @@ namespace Toe.Resources
 			return value.ToString();
 		}
 
-		public void Provide(object value)
+		public void Provide(object value, IResourceFile sourceFile)
 		{
-			this.values.Add(value);
+			if (value == null)
+				throw new ArgumentNullException("value is null");
+			if (sourceFile == null)
+				throw new ArgumentNullException("sourceFile is null");
+			this.values.Add(new ResourceItemSource(value,sourceFile));
 			RaisePropertyChanged("Value");
 		}
-		public void Retract(object value)
+		public void Retract(object value, IResourceFile sourceFile)
 		{
-			if (!this.values.Remove(value))
+			if (!this.values.Remove(new ResourceItemSource(value, sourceFile)))
 				throw new ApplicationException("Can't retract resource - it wasn't provided");
 			RaisePropertyChanged("Value");
 		}

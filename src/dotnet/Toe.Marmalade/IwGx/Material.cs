@@ -118,8 +118,6 @@ namespace Toe.Marmalade.IwGx
 
 		private ShadeMode shadeMode = ShadeMode.GOURAUD;
 
-		private int specularPower = 10;
-
 		private string vertexShader;
 
 		private int zDepthOfs;
@@ -284,17 +282,22 @@ namespace Toe.Marmalade.IwGx
 			}
 		}
 
+		public Color SpecularCombined { get
+		{
+			return colSpecular;
+		} }
+
 		public Color ColSpecular
 		{
 			get
 			{
-				return this.colSpecular;
+				return Color.FromArgb(255, colSpecular.R, colSpecular.G, colSpecular.B); ;
 			}
 			set
 			{
 				if (this.colSpecular != value)
 				{
-					this.colSpecular = value;
+					this.colSpecular = Color.FromArgb(this.SpecularPower, value.R, value.G, value.B);
 					this.RaisePropertyChanged("ColSpecular");
 				}
 			}
@@ -524,18 +527,19 @@ namespace Toe.Marmalade.IwGx
 			}
 		}
 
-		public int SpecularPower
+		public byte SpecularPower
 		{
 			get
 			{
-				return this.specularPower;
+				return this.colSpecular.A;
 			}
 			set
 			{
-				if (this.specularPower != value)
+				if (this.SpecularPower != value)
 				{
-					this.specularPower = value;
+					this.colSpecular = Color.FromArgb(value, this.colSpecular.R, this.colSpecular.G, this.colSpecular.B);
 					this.RaisePropertyChanged("SpecularPower");
+					this.RaisePropertyChanged("ColSpecular");
 				}
 			}
 		}
@@ -737,11 +741,14 @@ namespace Toe.Marmalade.IwGx
 
 			GL.Enable(EnableCap.ColorMaterial);
 
-			//GL.Material(MaterialFace.Front, MaterialParameter.Specular, mat_specular);
-			//GL.Material(MaterialFace.Front, MaterialParameter.Shininess, mat_shininess);
+			if (colSpecular.A > 0 && (colSpecular.R > 0 || colSpecular.G > 0 || colSpecular.B > 0))
+			{
+				GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Specular, ColSpecular);
+				GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Shininess, SpecularPower / 255.0f);
+			}
 			GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Diffuse, this.ColDiffuse);
 			GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Emission, this.ColEmissive);
-			GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Specular, this.ColSpecular);
+			GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Ambient, this.ColAmbient);
 
 			var technique = this.shaderTechnique.Resource as ShaderTechnique;
 			if (this.graphicsContext.IsShadersEnabled && technique != null)

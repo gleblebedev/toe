@@ -45,6 +45,7 @@ namespace Toe.Editor
 			
 
 			cb.RegisterGeneric(typeof(BindingList<>)).UsingConstructor(new Type[] { }).As(typeof(IList<>));
+			cb.RegisterGeneric(typeof(EditorConfiguration<>)).As(typeof(IEditorOptions<>)).SingleInstance();
 			cb.RegisterType<EditorEnvironment>().As<IEditorEnvironment>().SingleInstance();
 			cb.RegisterType<ResourceManager>().As<IResourceManager>().SingleInstance();
 			cb.RegisterType<ResourceFile>().As<IResourceFile>().InstancePerDependency();

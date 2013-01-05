@@ -3,10 +3,13 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
+using Autofac;
+
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 
+using Toe.Editors.Interfaces;
 using Toe.Editors.Interfaces.Panels;
 using Toe.Gx;
 
@@ -14,9 +17,11 @@ namespace Toe.Editors
 {
 	public class Base3DEditor : UserControl
 	{
+		protected readonly IEditorOptions<Base3DEditorOptions> options;
+
 		#region Constants and Fields
 
-		private readonly EditorCamera camera = new EditorCamera();
+		private readonly EditorCamera camera;
 
 		private ICameraController cameraController;
 
@@ -32,9 +37,10 @@ namespace Toe.Editors
 
 		private ToolStrip toolStrip1;
 
-		private ToolStripDropDownButton toolStripDropDownButton1;
+		private ToolStripDropDownButton coordinateSystemButton;
 
 		private ToolStripMenuItem yUpToolStripMenuItem;
+		private ToolStripButton lightingButton;
 
 		private ToolStripMenuItem zUpToolStripMenuItem;
 
@@ -44,8 +50,10 @@ namespace Toe.Editors
 
 		#region Constructors and Destructors
 
-		public Base3DEditor()
+		public Base3DEditor(IComponentContext context, IEditorOptions<Base3DEditorOptions> options)
 		{
+			this.options = options;
+			camera = new EditorCamera(context.Resolve<IEditorOptions<EditorCameraOptions>>());
 			this.InitializeComponent();
 			//this.glControl = new GLControl(GraphicsMode.Default, 1, 0, GraphicsContextFlags.Default);
 			//this.glControl.Dock = DockStyle.Fill;
@@ -57,10 +65,27 @@ namespace Toe.Editors
 			this.glControl.MouseEnter += this.OnSceneMouseEnter;
 			this.glControl.MouseLeave += this.OnSceneMouseLeave;
 			this.glControl.MouseWheel += this.OnSceneMouseWheel;
-			this.Camera.LookAt(new Vector3(512, 64, 1024), new Vector3(0, 0, 0), this.Camera.WorldUp);
+			this.Camera.LookAt(new Vector3(512, 64, 1024), new Vector3(0, 0, 0));
 			this.CameraController = new TargetCameraController { Camera = this.Camera };
 			this.yUpToolStripMenuItem.Click += this.SelectYUp;
 			this.zUpToolStripMenuItem.Click += this.SelectZUp;
+			UpdateCoordinateSystemIcon();
+			UpdateLighingIcon();
+		}
+
+		private void UpdateCoordinateSystemIcon()
+		{
+			switch (this.Camera.CoordinateSystem)
+			{
+				case CoordinateSystem.ZUp:
+					coordinateSystemButton.Image = Toe.Editors.Properties.Resources.zup;
+					break;
+				case CoordinateSystem.YUp:
+					coordinateSystemButton.Image = Toe.Editors.Properties.Resources.yup;
+					break;
+				default:
+					throw new ArgumentOutOfRangeException();
+			}
 		}
 
 		#endregion
@@ -227,58 +252,72 @@ namespace Toe.Editors
 
 		private void InitializeComponent()
 		{
-			ComponentResourceManager resources = new ComponentResourceManager(typeof(Base3DEditor));
-			this.toolStrip1 = new ToolStrip();
-			this.toolStripDropDownButton1 = new ToolStripDropDownButton();
-			this.zUpToolStripMenuItem = new ToolStripMenuItem();
-			this.yUpToolStripMenuItem = new ToolStripMenuItem();
-			this.glControl = new GLControl();
-			this.errPanel = new StackPanel();
-			this.errButton = new Button();
-			this.errMessage = new Label();
+			this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+			this.coordinateSystemButton = new System.Windows.Forms.ToolStripDropDownButton();
+			this.zUpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.yUpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.lightingButton = new System.Windows.Forms.ToolStripButton();
+			this.glControl = new OpenTK.GLControl();
+			this.errPanel = new Toe.Editors.Interfaces.Panels.StackPanel();
+			this.errButton = new System.Windows.Forms.Button();
+			this.errMessage = new System.Windows.Forms.Label();
 			this.toolStrip1.SuspendLayout();
 			this.errPanel.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// toolStrip1
 			// 
-			this.toolStrip1.Items.AddRange(new ToolStripItem[] { this.toolStripDropDownButton1 });
-			this.toolStrip1.Location = new Point(0, 0);
+			this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.coordinateSystemButton,
+            this.lightingButton});
+			this.toolStrip1.Location = new System.Drawing.Point(0, 0);
 			this.toolStrip1.Name = "toolStrip1";
-			this.toolStrip1.Size = new Size(150, 25);
+			this.toolStrip1.Size = new System.Drawing.Size(150, 25);
 			this.toolStrip1.TabIndex = 0;
 			this.toolStrip1.Text = "toolStrip1";
 			// 
-			// toolStripDropDownButton1
+			// coordinateSystemButton
 			// 
-			this.toolStripDropDownButton1.DisplayStyle = ToolStripItemDisplayStyle.Image;
-			this.toolStripDropDownButton1.DropDownItems.AddRange(
-				new ToolStripItem[] { this.zUpToolStripMenuItem, this.yUpToolStripMenuItem });
-			this.toolStripDropDownButton1.Image = ((Image)(resources.GetObject("toolStripDropDownButton1.Image")));
-			this.toolStripDropDownButton1.ImageTransparentColor = Color.Magenta;
-			this.toolStripDropDownButton1.Name = "toolStripDropDownButton1";
-			this.toolStripDropDownButton1.Size = new Size(29, 22);
-			this.toolStripDropDownButton1.Text = "toolStripDropDownButton1";
+			this.coordinateSystemButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.coordinateSystemButton.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.zUpToolStripMenuItem,
+            this.yUpToolStripMenuItem});
+			this.coordinateSystemButton.Image = global::Toe.Editors.Properties.Resources.zup;
+			this.coordinateSystemButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.coordinateSystemButton.Name = "coordinateSystemButton";
+			this.coordinateSystemButton.Size = new System.Drawing.Size(29, 22);
+			this.coordinateSystemButton.Text = "toolStripDropDownButton1";
 			// 
 			// zUpToolStripMenuItem
 			// 
+			this.zUpToolStripMenuItem.Image = global::Toe.Editors.Properties.Resources.zup;
 			this.zUpToolStripMenuItem.Name = "zUpToolStripMenuItem";
-			this.zUpToolStripMenuItem.Size = new Size(101, 22);
+			this.zUpToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.zUpToolStripMenuItem.Text = "Z-Up";
 			// 
 			// yUpToolStripMenuItem
 			// 
+			this.yUpToolStripMenuItem.Image = global::Toe.Editors.Properties.Resources.yup;
 			this.yUpToolStripMenuItem.Name = "yUpToolStripMenuItem";
-			this.yUpToolStripMenuItem.Size = new Size(101, 22);
+			this.yUpToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.yUpToolStripMenuItem.Text = "Y-Up";
+			// 
+			// lightingButton
+			// 
+			this.lightingButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.lightingButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.lightingButton.Name = "lightingButton";
+			this.lightingButton.Size = new System.Drawing.Size(23, 22);
+			this.lightingButton.Text = "lighingButton";
+			this.lightingButton.Click += new System.EventHandler(this.ToggleLightingClick);
 			// 
 			// glControl
 			// 
-			this.glControl.BackColor = Color.Black;
-			this.glControl.Dock = DockStyle.Fill;
-			this.glControl.Location = new Point(0, 25);
+			this.glControl.BackColor = System.Drawing.Color.Black;
+			this.glControl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.glControl.Location = new System.Drawing.Point(0, 25);
 			this.glControl.Name = "glControl";
-			this.glControl.Size = new Size(150, 125);
+			this.glControl.Size = new System.Drawing.Size(150, 125);
 			this.glControl.TabIndex = 1;
 			this.glControl.VSync = false;
 			// 
@@ -287,29 +326,29 @@ namespace Toe.Editors
 			this.errPanel.AutoScroll = true;
 			this.errPanel.Controls.Add(this.errButton);
 			this.errPanel.Controls.Add(this.errMessage);
-			this.errPanel.Dock = DockStyle.Fill;
-			this.errPanel.Location = new Point(0, 25);
+			this.errPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.errPanel.Location = new System.Drawing.Point(0, 25);
 			this.errPanel.Name = "errPanel";
-			this.errPanel.Size = new Size(150, 125);
+			this.errPanel.Size = new System.Drawing.Size(150, 125);
 			this.errPanel.TabIndex = 2;
 			this.errPanel.Visible = false;
 			// 
 			// errButton
 			// 
-			this.errButton.Location = new Point(3, 3);
+			this.errButton.Location = new System.Drawing.Point(3, 3);
 			this.errButton.Name = "errButton";
-			this.errButton.Size = new Size(150, 23);
+			this.errButton.Size = new System.Drawing.Size(150, 23);
 			this.errButton.TabIndex = 1;
 			this.errButton.Text = "Retry";
 			this.errButton.UseVisualStyleBackColor = true;
-			this.errButton.Click += this.errButton_Click;
+			this.errButton.Click += new System.EventHandler(this.errButton_Click);
 			// 
 			// errMessage
 			// 
 			this.errMessage.AutoSize = true;
-			this.errMessage.Location = new Point(3, 29);
+			this.errMessage.Location = new System.Drawing.Point(3, 29);
 			this.errMessage.Name = "errMessage";
-			this.errMessage.Size = new Size(150, 13);
+			this.errMessage.Size = new System.Drawing.Size(150, 13);
 			this.errMessage.TabIndex = 0;
 			this.errMessage.Text = "Render error";
 			// 
@@ -325,6 +364,7 @@ namespace Toe.Editors
 			this.errPanel.PerformLayout();
 			this.ResumeLayout(false);
 			this.PerformLayout();
+
 		}
 
 		private void OnSceneMouseEnter(object sender, EventArgs e)
@@ -366,7 +406,7 @@ namespace Toe.Editors
 			if (this.Camera.CoordinateSystem != CoordinateSystem.YUp)
 			{
 				this.Camera.CoordinateSystem = CoordinateSystem.YUp;
-				this.Camera.LookAt(new Vector3(512, 64, 1024), new Vector3(0, 0, 0), this.Camera.WorldUp);
+				UpdateCoordinateSystemIcon();
 			}
 		}
 
@@ -375,7 +415,7 @@ namespace Toe.Editors
 			if (this.Camera.CoordinateSystem != CoordinateSystem.ZUp)
 			{
 				this.Camera.CoordinateSystem = CoordinateSystem.ZUp;
-				this.Camera.LookAt(new Vector3(512, 64, 1024), new Vector3(0, 0, 0), this.Camera.WorldUp);
+				UpdateCoordinateSystemIcon();
 			}
 		}
 
@@ -404,5 +444,20 @@ namespace Toe.Editors
 		}
 
 		#endregion
+
+		private void ToggleLightingClick(object sender, EventArgs e)
+		{
+			options.Options.Lighting = !options.Options.Lighting;
+			UpdateLighingIcon();
+			this.RefreshScene();
+		}
+
+		private void UpdateLighingIcon()
+		{
+			if (options.Options.Lighting)
+				lightingButton.Image =Toe.Editors.Properties.Resources.light_on; 
+			else
+				lightingButton.Image = Toe.Editors.Properties.Resources.light_off;
+		}
 	}
 }

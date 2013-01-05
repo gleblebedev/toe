@@ -6,7 +6,7 @@ namespace Toe.Resources
 	{
 		bool CanRead(string filePath);
 
-		IList<IResourceFileItem> Read(string filePath);
+		IList<IResourceFileItem> Read(string filePath, IResourceFile resourceFile);
 
 		bool CanWrite(string filePath);
 

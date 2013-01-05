@@ -7,5 +7,7 @@ namespace Toe.Resources
 		uint Type { get; }
 
 		object Value { get; }
+
+		IResourceFile Source { get; }
 	}
 }

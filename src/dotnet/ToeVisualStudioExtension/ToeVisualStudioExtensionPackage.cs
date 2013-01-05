@@ -10,7 +10,7 @@ using Autofac;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 
-using Toe.Editors.Geometry;
+using Toe.Editor;
 using Toe.Editors.Interfaces;
 using Toe.Editors.Marmalade;
 using Toe.Gx;
@@ -107,6 +107,7 @@ namespace TinyOpenEngine.ToeVisualStudioExtension
 			cb.RegisterModule<MarmaladeTextureFilesAutofacModule>();
 
 			cb.RegisterGeneric(typeof(BindingList<>)).UsingConstructor(new Type[] { }).As(typeof(IList<>));
+			cb.RegisterGeneric(typeof(EditorConfiguration<>)).As(typeof(IEditorOptions<>)).SingleInstance();
 			cb.RegisterType<VsEditorEnvironment>().As<IEditorEnvironment>().SingleInstance();
 			cb.RegisterType<ResourceManager>().As<IResourceManager>().SingleInstance();
 			cb.RegisterType<ResourceFile>().As<IResourceFile>().InstancePerDependency();

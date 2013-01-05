@@ -5,6 +5,7 @@ using Toe.Editors.Interfaces.Bindings;
 using Toe.Editors.Interfaces.Views;
 using Toe.Marmalade.IwAnim;
 using Toe.Marmalade.IwGx;
+using Toe.Marmalade.IwResManager;
 using Toe.Resources;
 using Toe.Utils.Marmalade.IwGraphics;
 using Toe.Utils.Marmalade.IwGx;
@@ -31,6 +32,8 @@ namespace Toe.Editors.Marmalade
 
 			builder.RegisterType<ResourceFileEditor>().As<ResourceFileEditor>().InstancePerDependency();
 			builder.RegisterType<ResourceEditorFactory>().As<IResourceEditorFactory>().SingleInstance();
+			builder.RegisterType<MaterialPreview>().As<MaterialPreview>().InstancePerDependency();
+			
 		}
 
 		#endregion

@@ -170,16 +170,16 @@ int main()
 	CIwResGroup* g = IwGetResManager()->LoadGroup("male_lod0.group");
 	CIwResList* texures = g->GetListNamed("CIwAnimSkin");
 	CIwAnimSkin* t = (CIwAnimSkin*)texures->m_Resources[0];
-	//CIwModel* head = (CIwModel*)g->GetResNamed("male_head_0_lod0","CIwModel");
-	//CIwModel* torso = (CIwModel*)g->GetResNamed("male_torse_jacket0_lod0","CIwModel");
-	//CIwModel* legs = (CIwModel*)g->GetResNamed("male_legs_trousers0_lod0","CIwModel");
-	//CIwAnimSkin* headSkin = (CIwAnimSkin*)g->GetResNamed("male_head_0_lod0","CIwAnimSkin");
-	//CIwAnimSkin* torsoSkin = (CIwAnimSkin*)g->GetResNamed("male_torse_jacket0_lod0","CIwAnimSkin");
-	//CIwAnimSkin* legsSkin = (CIwAnimSkin*)g->GetResNamed("male_legs_trousers0_lod0","CIwAnimSkin");
+	CIwModel* head = (CIwModel*)g->GetResNamed("male_head_0_lod0","CIwModel");
+	CIwModel* torso = (CIwModel*)g->GetResNamed("male_torse_jacket0_lod0","CIwModel");
+	CIwModel* legs = (CIwModel*)g->GetResNamed("male_legs_trousers0_lod0","CIwModel");
+	CIwAnimSkin* headSkin = (CIwAnimSkin*)g->GetResNamed("male_head_0_lod0","CIwAnimSkin");
+	CIwAnimSkin* torsoSkin = (CIwAnimSkin*)g->GetResNamed("male_torse_jacket0_lod0","CIwAnimSkin");
+	CIwAnimSkin* legsSkin = (CIwAnimSkin*)g->GetResNamed("male_legs_trousers0_lod0","CIwAnimSkin");
 
-	//CIwAnimSkel* skel = (CIwAnimSkel*)g->GetResNamed("male_skel_lod0","CIwAnimSkel");
+	CIwAnimSkel* skel = (CIwAnimSkel*)g->GetResNamed("male_skel_lod0","CIwAnimSkel");
 	CIwAnimPlayer* player = new CIwAnimPlayer;
-  /*  player->SetSkel(skel);*/
+    player->SetSkel(skel);
 	CIwMaterial* mat  = new CIwMaterial();
     // Loop forever, until the user or the OS performs some action to quit the app
     while (!s3eDeviceCheckQuitRequest())
@@ -191,23 +191,42 @@ int main()
 		IwGxSetPerspMul(IwGxGetScreenWidth() / 1.0f);
 
 		// Set near and far planes
-	    //IwGxSetFarZNearZ(0x4010, 0x10);
+	    IwGxSetFarZNearZ(0x4010, 0x10);
 
         // Use the built-in font to display a string at coordinate (120, 150)
-        IwGxPrintString(120, 150, "Hello, World!");
+        //IwGxPrintString(120, 150, "Hello, World!");
 		
 
-		CIwMat m;
-		int k = 512;
+		CIwFMat m;
+		float k = 1.5f;
 		//CIwVec3 myPos = CIwVec3(IW_GEOM_ONE*k,-IW_GEOM_ONE*k,IW_GEOM_ONE*k);
-		CIwVec3 myPos = CIwVec3(512*k, 64*k, 1024*k);
+		CIwFVec3 myPos = CIwFVec3(512*k, 64*k, 1024*k);
 		//m.LookAt(myPos,CIwVec3(0,0,IW_GEOM_ONE*k),CIwVec3(0,0,-IW_GEOM_ONE));
-		m.LookAt(myPos,CIwVec3(0, 0, 0),-CIwVec3::g_AxisZ);
+		m.LookAt(myPos,CIwFVec3(0, 0, 0),-CIwFVec3::g_AxisZ);
 	    m.t = myPos;
 		CIwFMat fm(m);
 		IwGxSetViewMatrix(&fm);
 
-		IwGxSetMaterial(mat);
+	
+		//IwGxSetVertStream(0,0);
+		
+
+		CIwFMat fmodel;
+		fmodel.SetIdentity();
+		IwGxSetModelMatrix(&fmodel);
+
+		IwAnimSetSkelContext(player->GetSkel());
+		IwAnimSetSkinContext(headSkin);
+		head->Render();
+		IwAnimSetSkinContext(torsoSkin);
+		torso->Render();
+		IwAnimSetSkinContext(legsSkin);
+		legs->Render();
+
+	    IwAnimSetSkelContext(NULL);
+	    IwAnimSetSkinContext(NULL);
+
+			IwGxSetMaterial(mat);
 		static CIwFVec3 verts[6] = {CIwFVec3(0,0,0),CIwFVec3(1000,0,0),CIwFVec3(0,0,0),CIwFVec3(0,1000,0),CIwFVec3(0,0,0),CIwFVec3(0,0,1000)};
 		IwGxSetVertStream(verts,6);
 
@@ -221,23 +240,6 @@ int main()
 		IwGxSetColStream(cols,6);
 		static uint16 indices [6] = {0,1,2,3,4,5};
 		IwGxDrawPrims(IW_GX_LINE_LIST, indices,6);
-		//IwGxSetVertStream(0,0);
-		
-
-		CIwFMat fmodel;
-		fmodel.SetIdentity();
-		IwGxSetModelMatrix(&fmodel);
-
-	/*	IwAnimSetSkelContext(player->GetSkel());
-		IwAnimSetSkinContext(headSkin);
-		head->Render();
-		IwAnimSetSkinContext(torsoSkin);
-		torso->Render();
-		IwAnimSetSkinContext(legsSkin);
-		legs->Render();*/
-
-	    IwAnimSetSkelContext(NULL);
-	    IwAnimSetSkinContext(NULL);
 
         // Standard EGL-style flush of drawing to the surface
         IwGxFlush();

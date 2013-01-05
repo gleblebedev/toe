@@ -12,8 +12,8 @@ namespace Toe.Resources
 		IResourceItem ConsumeResource(uint type, uint nameHash);
 		void ReleaseResource(uint type, uint nameHash);
 
-		void ProvideResource(uint type, uint nameHash, object item);
-		void RetractResource(uint type, uint nameHash, object item);
+		void ProvideResource(uint type, uint nameHash, object item, IResourceFile source);
+		void RetractResource(uint type, uint nameHash, object item, IResourceFile source);
 
 		object FindResource(uint type, uint hashReference);
 

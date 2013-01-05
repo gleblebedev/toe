@@ -4,7 +4,7 @@ using System.Globalization;
 
 using Toe.Resources;
 
-namespace Toe.Utils.Marmalade
+namespace Toe.Marmalade
 {
 	public abstract class Managed : INotifyPropertyChanging, INotifyPropertyChanged, IDisposable, IBasePathProvider
 	{

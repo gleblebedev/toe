@@ -36,6 +36,7 @@
     <AssemblyOriginatorKeyFile>Toe.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac, Version=2.6.3.862, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -45,6 +46,7 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="Toe.Editors.Interfaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=689994cf56ce2a3e, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bindings\DataContextBinding.cs" />
@@ -61,15 +63,10 @@
     <Compile Include="Dialogs\ResourcePickerDialog.Designer.cs">
       <DependentUpon>ResourcePickerDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="Dialogs\TexturePickerDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Dialogs\TexturePickerDialog.Designer.cs">
-      <DependentUpon>TexturePickerDialog.cs</DependentUpon>
-    </Compile>
     <Compile Include="ICommand.cs" />
     <Compile Include="ICommandHistory.cs" />
     <Compile Include="IEditorEnvironment.cs" />
+    <Compile Include="IEditorOptions.cs" />
     <Compile Include="IResourceEditor.cs" />
     <Compile Include="IResourceEditorFactory.cs" />
     <Compile Include="Panels\DelayedLayout.cs" />
@@ -91,10 +88,10 @@
     <Compile Include="Views\CollectionView.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Views\ColorPickerDialog.cs">
+    <Compile Include="Dialogs\ColorPickerDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\ColorPickerDialog.Designer.cs">
+    <Compile Include="Dialogs\ColorPickerDialog.Designer.cs">
       <DependentUpon>ColorPickerDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\ColorView.cs">
@@ -128,9 +125,6 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Panels\Panel.cs" />
-    <Compile Include="Views\EditTextureView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
     <Compile Include="Views\EnumValueOptions.cs" />
     <Compile Include="Views\EnumWellKnownValues.cs" />
     <Compile Include="Views\ResourceFileEditor.cs">
@@ -164,6 +158,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Dialogs\ColorPickerDialog.resx">
+      <DependentUpon>ColorPickerDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\ResourcePickerDialog.resx">
       <DependentUpon>ResourcePickerDialog.cs</DependentUpon>
     </EmbeddedResource>

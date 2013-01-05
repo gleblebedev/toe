@@ -36,6 +36,7 @@
     <AssemblyOriginatorKeyFile>Toe.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac, Version=2.6.3.862, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL" />
     <Reference Include="OpenTK">
       <HintPath>..\packages\OpenTK\OpenTK.dll</HintPath>
     </Reference>
@@ -53,7 +54,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Base3DEditorOptions.cs" />
+    <Compile Include="EditorCameraOptions.cs" />
     <Compile Include="GameCameraController.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="TargetCameraController.cs" />
     <Compile Include="Base3DEditor.cs">
       <SubType>UserControl</SubType>
@@ -68,11 +76,6 @@
     <Compile Include="EditorCamera.cs" />
     <Compile Include="ICameraController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Toe.snk" />
@@ -95,6 +98,18 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\yup.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\zup.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\light_off.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\light_on.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

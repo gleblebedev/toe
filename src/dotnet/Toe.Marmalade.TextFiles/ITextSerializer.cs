@@ -1,3 +1,5 @@
+using Toe.Marmalade;
+
 namespace Toe.Utils.Marmalade
 {
 	public interface ITextSerializer

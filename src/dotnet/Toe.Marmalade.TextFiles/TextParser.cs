@@ -34,13 +34,16 @@ namespace Toe.Utils.Marmalade
 
 		private int nextChar = -1;
 
+		private IResourceFile resourceFile;
+
 		#endregion
 
 		#region Constructors and Destructors
 
-		public TextParser(TextReader reader, string basePath)
+		public TextParser(TextReader reader, IResourceFile resourceFile, string basePath)
 		{
 			this.reader = reader;
+			this.resourceFile = resourceFile;
 			this.basePath = basePath;
 			this.nextChar = reader.Read();
 		}
@@ -67,6 +70,14 @@ namespace Toe.Utils.Marmalade
 				}
 				this.ReadLexem();
 				return this.lexem;
+			}
+		}
+
+		public IResourceFile ResourceFile
+		{
+			get
+			{
+				return resourceFile;
 			}
 		}
 

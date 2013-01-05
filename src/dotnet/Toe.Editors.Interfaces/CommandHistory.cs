@@ -64,10 +64,8 @@ namespace Toe.Editors.Interfaces
 		public ICommand RegisterAction(ICommand action)
 		{
 			if (IsLocked) return action;
-			while (position > commands.Count)
-			{
-				commands.RemoveAt(commands.Count-1);
-			}
+			this.DropRedo();
+			
 			commands.Add(action);
 			++position;
 			this.RaisePropertyChanged("CanUndo");
@@ -98,6 +96,27 @@ namespace Toe.Editors.Interfaces
 			get
 			{
 				return lockCounter > 0;
+			}
+		}
+
+		public ICommand Top
+		{
+			get
+			{
+				if (position > 0 && position <= commands.Count) return commands[position-1];
+				return null;
+			}
+		}
+
+		public void DropRedo()
+		{
+			if (position < commands.Count)
+			{
+				while (position < commands.Count)
+				{
+					commands.RemoveAt(commands.Count - 1);
+				}
+				this.RaisePropertyChanged("CanRedo");
 			}
 		}
 

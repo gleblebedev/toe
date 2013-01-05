@@ -4,6 +4,8 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 
+using Autofac;
+
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 
@@ -28,6 +30,8 @@ namespace Toe.Editors.Marmalade
 
 		private readonly ICommandHistory history;
 
+		private readonly IComponentContext context;
+
 		private readonly IResourceManager resourceManager;
 
 		private EditResourceReferenceView animButton;
@@ -42,11 +46,12 @@ namespace Toe.Editors.Marmalade
 
 		#region Constructors and Destructors
 
-		public SkinEditor(IEditorEnvironment editorEnvironment, IResourceManager resourceManager, ICommandHistory history)
+		public SkinEditor(IEditorEnvironment editorEnvironment, IResourceManager resourceManager, ICommandHistory history, IComponentContext context)
 		{
 			this.editorEnvironment = editorEnvironment;
 			this.resourceManager = resourceManager;
 			this.history = history;
+			this.context = context;
 			this.InitializeComponent();
 
 			this.InitializeEditor();
@@ -151,7 +156,7 @@ namespace Toe.Editors.Marmalade
 			ComponentResourceManager resources = new ComponentResourceManager(typeof(SkinEditor));
 			this.split = new SplitContainer();
 			this.stackPanel1 = new StackPanel();
-			this.base3DEditor1 = new Base3DEditor();
+			this.base3DEditor1 = new Base3DEditor(context, context.Resolve<IEditorOptions<Base3DEditorOptions>>());
 			var i = this.split as ISupportInitialize;
 			if (i != null)
 			{
@@ -214,15 +219,15 @@ namespace Toe.Editors.Marmalade
 		private void InitializeEditor()
 		{
 			this.stackPanel1.Controls.Add(new Label { Text = "Skeleton:" });
-			var skel = new EditResourceReferenceView(this.editorEnvironment, this.resourceManager, this.history);
+			var skel = new EditResourceReferenceView(this.editorEnvironment, this.resourceManager, this.history, context, false);
 			new PropertyBinding<AnimSkin, ResourceReference>(skel, this.dataContext, a => a.Skeleton, null);
 			this.stackPanel1.Controls.Add(skel);
 			this.stackPanel1.Controls.Add(new Label { Text = "Model:" });
-			var model = new EditResourceReferenceView(this.editorEnvironment, this.resourceManager, this.history);
+			var model = new EditResourceReferenceView(this.editorEnvironment, this.resourceManager, this.history, context, false);
 			new PropertyBinding<AnimSkin, ResourceReference>(model, this.dataContext, a => a.SkeletonModel, null);
 			this.stackPanel1.Controls.Add(model);
 			this.stackPanel1.Controls.Add(new Label { Text = "Animation preview:" });
-			this.animButton = new EditResourceReferenceView(this.editorEnvironment, this.resourceManager, this.history);
+			this.animButton = new EditResourceReferenceView(this.editorEnvironment, this.resourceManager, this.history, context, true);
 			this.animButton.DataContext.Value = new ResourceReference(Anim.TypeHash, this.resourceManager, this);
 			this.stackPanel1.Controls.Add(this.animButton);
 		}

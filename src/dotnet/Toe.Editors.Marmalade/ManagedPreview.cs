@@ -3,6 +3,7 @@ using System.Windows.Forms;
 
 using Toe.Editors.Interfaces.Bindings;
 using Toe.Editors.Interfaces.Views;
+using Toe.Marmalade;
 using Toe.Utils.Marmalade;
 
 namespace Toe.Editors.Marmalade

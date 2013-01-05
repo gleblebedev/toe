@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Windows.Forms;
 
 using Toe.Editors.Interfaces.Bindings;
+using Toe.Editors.Interfaces.Dialogs;
 
 namespace Toe.Editors.Interfaces.Views
 {
@@ -20,10 +21,11 @@ namespace Toe.Editors.Interfaces.Views
 
 		private void OpenColorPicker(object sender, EventArgs e)
 		{
-			var cpd = new ColorPickerDialog();
+			var value = (Color)dataContext.Value;
+			var cpd = new ColorPickerDialog(value);
 			if (cpd.ShowDialog() == DialogResult.OK)
 			{
-				
+				dataContext.Value = cpd.SelectedColor;
 			}
 		}
 

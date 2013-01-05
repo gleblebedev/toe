@@ -1,4 +1,5 @@
 using System;
+using System.Drawing;
 
 using Autofac;
 
@@ -36,8 +37,9 @@ namespace Toe.Marmalade.BinaryFiles.IwGx
 				material.ColEmissive = parser.ConsumeColor();
 				material.ColAmbient = parser.ConsumeColor();
 				material.ColDiffuse = parser.ConsumeColor();
-				material.ColSpecular = parser.ConsumeColor();
-				material.SpecularPower = material.ColSpecular.A;
+				Color specular = parser.ConsumeColor();
+				material.ColSpecular = specular;
+				material.SpecularPower = specular.A;
 				parser.Expect((uint)4);
 			}
 			material.Texture0.HashReference = parser.ConsumeUInt32();

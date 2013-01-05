@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 
 using Autofac;
+using Autofac.Core;
+using Autofac.Core.Activators.Reflection;
 
+using Toe.Marmalade.IwResManager;
 using Toe.Resources;
 using Toe.Utils.Marmalade;
 using Toe.Utils.Marmalade.IwResManager;
@@ -57,11 +60,11 @@ namespace Toe.Marmalade.BinaryFiles
 			return false;
 		}
 
-		public IList<Managed> Load(Stream stream, string basePath)
+		public IList<Managed> Load(Stream stream, string basePath, IResourceFile resourceFile)
 		{
 			using (var source = new BinaryReader(stream))
 			{
-				var parser = new BinaryParser(source, basePath);
+				var parser = new BinaryParser(source, basePath, resourceFile);
 				return this.ParseGroupBin(parser);
 			}
 		}
@@ -78,7 +81,7 @@ namespace Toe.Marmalade.BinaryFiles
 			if (0 != parser.ConsumeUInt16())
 				throw new FormatException();
 
-			var resGroup = this.context.Resolve<ResGroup>();
+			var resGroup = this.context.Resolve<ResGroup>(new Parameter[]{TypedParameter.From(parser.ResourceFile)});
 			resGroup.BasePath = parser.BasePath;
 			items.Add(resGroup);
 
@@ -192,13 +195,13 @@ namespace Toe.Marmalade.BinaryFiles
 			resGroup.Flags = parser.ConsumeUInt32();
 		}
 
-		public IList<IResourceFileItem> Read(string filePath)
+		public IList<IResourceFileItem> Read(string filePath, IResourceFile resourceFile)
 		{
 			var items = this.context.Resolve<IList<IResourceFileItem>>();
 
 			using (var fileStream = File.OpenRead(filePath))
 			{
-				var resources = this.Load(fileStream, Path.GetDirectoryName(Path.GetFullPath(filePath)));
+				var resources = this.Load(fileStream, Path.GetDirectoryName(Path.GetFullPath(filePath)), resourceFile);
 				foreach (var resource in resources)
 				{
 					items.Add(new ResourceFileItem(resource.ClassHashCode, resource));

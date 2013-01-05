@@ -1,4 +1,5 @@
 using System;
+using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
 
@@ -18,9 +19,15 @@ namespace Toe.Editors.Interfaces.Views
 
 		private void UpdateDataContext(object sender, EventArgs e)
 		{
-			if (!Equals(this.DataContext.Value, this.ViewControl.Text))
+			int v;
+			if (!int.TryParse(this.ViewControl.Text, out v))
 			{
-				this.DataContext.Value = int.Parse(this.ViewControl.Text, CultureInfo.InvariantCulture);
+				BackColor = Color.Red;
+			}
+			BackColor = Color.Transparent;
+			if (!Equals(this.DataContext.Value, v))
+			{
+				this.DataContext.Value = v;
 			}
 		}
 

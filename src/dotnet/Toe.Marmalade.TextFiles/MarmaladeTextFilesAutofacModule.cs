@@ -2,6 +2,7 @@ using Autofac;
 
 using Toe.Marmalade.IwAnim;
 using Toe.Marmalade.IwGx;
+using Toe.Marmalade.IwResManager;
 using Toe.Marmalade.TextFiles.IwAnim;
 using Toe.Marmalade.TextFiles.IwGraphics;
 using Toe.Resources;

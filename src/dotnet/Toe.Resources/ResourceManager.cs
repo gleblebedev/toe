@@ -84,16 +84,16 @@ namespace Toe.Resources
 			consumeResource.Release();
 		}
 
-		public void ProvideResource(uint type, uint nameHash, object item)
+		public void ProvideResource(uint type, uint nameHash, object item, IResourceFile source)
 		{
 			var consumeResource = (ResourceItem)EnsureItem(type, nameHash);
-			consumeResource.Provide(item);
+			consumeResource.Provide(item,source);
 		}
 
-		public void RetractResource(uint type, uint nameHash, object item)
+		public void RetractResource(uint type, uint nameHash, object item, IResourceFile source)
 		{
 			var consumeResource = (ResourceItem)EnsureItem(type, nameHash);
-			consumeResource.Retract(item);
+			consumeResource.Retract(item,source);
 			TryToRemoveResource(consumeResource);
 		}
 

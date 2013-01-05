@@ -5,6 +5,8 @@ using Toe.Editors.Interfaces;
 using Toe.Editors.Interfaces.Bindings;
 using Toe.Editors.Interfaces.Panels;
 using Toe.Editors.Interfaces.Views;
+using Toe.Marmalade;
+using Toe.Marmalade.IwResManager;
 using Toe.Resources;
 using Toe.Utils.Marmalade;
 using Toe.Utils.Marmalade.IwResManager;

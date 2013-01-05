@@ -1,24 +1,25 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Toe.Editor\Program.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Toe.Editors\Base3DEditor.cs">
     <Files>
-      <File FileName="Toe.mono\Main.cs" Line="10" Column="2" />
-      <File FileName="Toe\MainWindow.cs" Line="15" Column="40" />
-      <File FileName="c:\GitHub\toe\src\dotnet\Toe.Editor\MainEditorWindow.cs" Line="5" Column="1" />
-      <File FileName="c:\GitHub\toe\src\dotnet\Toe.Editors.Marmalade\MaterialEditor.cs" Line="195" Column="5" />
-      <File FileName="Toe.Editor\Program.cs" Line="52" Column="58" />
-      <File FileName="c:\GitHub\toe\src\dotnet\Toe.Editors.Marmalade\MaterialPreview.cs" Line="1" Column="7" />
-      <File FileName="c:\GitHub\toe\src\dotnet\Toe.Editor\MainEditorWindow.Designer.cs" Line="265" Column="47" />
-      <File FileName="Toe.Editor\Resources.resx" Line="17" Column="46" />
-      <File FileName="Toe.Editor\Resources.Designer.cs" Line="33" Column="10" />
+      <File FileName="Toe.Editors.Marmalade\SkinEditor.resx" Line="120" Column="3" />
+      <File FileName="c:\GitHub\toe\src\dotnet\Toe.Editor\EditorEnvironment.cs" Line="37" Column="21" />
+      <File FileName="Toe.Editors.Marmalade\SkinEditor.cs" Line="201" Column="11" />
+      <File FileName="Toe.Editors\Base3DEditor.cs" Line="43" Column="33" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
           <Node name="Toe.Editor.mono" expanded="True">
-            <Node name="References" expanded="True" selected="True" />
+            <Node name="References" expanded="True" />
           </Node>
-          <Node name="Toe.Editors.Marmalade.net40.vs2010" expanded="True" />
+          <Node name="Toe.Editors.Marmalade.net40.vs2010" expanded="True">
+            <Node name="Resources" expanded="True" />
+            <Node name="SkinEditor.cs" expanded="True" />
+          </Node>
+          <Node name="Toe.Editors.net40.vs2010" expanded="True">
+            <Node name="Base3DEditor.cs" selected="True" />
+          </Node>
           <Node name="Toe.Gx.net40.vs2010" expanded="True" />
           <Node name="Toe.Marmalade.BinaryFiles" expanded="True" />
           <Node name="Toe.Marmalade.net40.vs2010" expanded="True" />

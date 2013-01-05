@@ -15,31 +15,38 @@ namespace Toe.Editors.Interfaces.Dialogs
 	{
 		private readonly IResourceManager resourceManager;
 
-		public ResourcePickerDialog(IResourceManager resourceManager, uint type)
+		private readonly IEditorEnvironment editorEnvironment;
+
+		private readonly uint type;
+
+		private readonly bool fileReferencesAllowed;
+
+		public ResourcePickerDialog(IResourceManager resourceManager,IEditorEnvironment editorEnvironment, uint type, bool fileReferencesAllowed)
 		{
 			this.resourceManager = resourceManager;
+			this.editorEnvironment = editorEnvironment;
+			this.type = type;
+			this.fileReferencesAllowed = fileReferencesAllowed;
 			InitializeComponent();
 			
 			foreach (var i in resourceManager.GetAllResourcesOfType(type))
 			{
 				list.Items.Add(i);
 			} 
+			if (fileReferencesAllowed)
+			{
+				btnOpenFile.Visible = true;
+			}
 		}
-
-		public uint SelectedHash
+		public IResourceItem SelectedItem
 		{
 			get
 			{
-				return ((IResourceItem)list.SelectedItems[0]).Hash;
+				if (list.SelectedItems.Count == 0) return null;
+				return ((IResourceItem)list.SelectedItems[0]);
 			}
 		}
-		public object Selected
-		{
-			get
-			{
-				return ((IResourceItem)list.SelectedItems[0]).Value;
-			}
-		}
+		
 		private void btnOk_Click(object sender, EventArgs e)
 		{
 			this.DialogResult = DialogResult.OK;
@@ -48,6 +55,30 @@ namespace Toe.Editors.Interfaces.Dialogs
 		private void btnCancel_Click(object sender, EventArgs e)
 		{
 			this.DialogResult = DialogResult.Cancel;
+		}
+
+		private void btnOpenFile_Click(object sender, EventArgs e)
+		{
+			var d = new OpenFileDialog();
+			if (DialogResult.OK == d.ShowDialog())
+			{
+				string safeFileName = d.FileName;
+				editorEnvironment.Open(safeFileName);
+
+				var f = resourceManager.EnsureFile(safeFileName);
+				if (f != null)
+				{
+					foreach (var i in f.Items)
+					{
+						if(i.Type == type)
+						{
+							list.Items.Add(i);
+							list.SelectedItem = i;
+							this.DialogResult = DialogResult.OK;
+						}
+					}
+				}
+			}
 		}
 	}
 }

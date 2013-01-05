@@ -1,7 +1,10 @@
 using System;
 
+using Autofac;
+
 using OpenTK.Graphics.OpenGL;
 
+using Toe.Editors.Interfaces;
 using Toe.Gx;
 
 namespace Toe.Editors.Marmalade
@@ -18,7 +21,8 @@ namespace Toe.Editors.Marmalade
 
 		#region Constructors and Destructors
 
-		public MaterialPreview(MaterialEditor editor, ToeGraphicsContext graphicsContext)
+		public MaterialPreview(MaterialEditor editor, ToeGraphicsContext graphicsContext, IComponentContext context, IEditorOptions<Base3DEditorOptions> options)
+			: base(context, options)
 		{
 			this.editor = editor;
 			this.graphicsContext = graphicsContext;
@@ -32,7 +36,7 @@ namespace Toe.Editors.Marmalade
 
 		#region Methods
 
-		protected void RenderScene(object sender, EventArgs args)
+		protected new void RenderScene(object sender, EventArgs args)
 		{
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
@@ -47,10 +51,17 @@ namespace Toe.Editors.Marmalade
 
 			GL.PushAttrib(AttribMask.AllAttribBits);
 
-			GL.Enable(EnableCap.Lighting);
-			GL.Enable(EnableCap.Light0);
-			GL.Light(LightName.Light0, LightParameter.Position, new[] { this.Camera.Pos.X, this.Camera.Pos.Y, this.Camera.Pos.Z, 1.0f });
-
+			if (options.Options.Lighting)
+			{
+				GL.Enable(EnableCap.Lighting);
+				GL.Enable(EnableCap.Light0);
+				GL.Light(
+					LightName.Light0, LightParameter.Position, new[] { this.Camera.Pos.X, this.Camera.Pos.Y, this.Camera.Pos.Z, 1.0f });
+			}
+			else
+			{
+				GL.Disable(EnableCap.Lighting);
+			}
 			this.editor.Material.ApplyOpenGL();
 			this.RenderBox(250);
 

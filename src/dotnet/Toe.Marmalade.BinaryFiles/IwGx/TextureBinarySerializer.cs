@@ -70,8 +70,8 @@ namespace Toe.Marmalade.BinaryFiles.IwGx
 			switch (image.Format)
 			{
 				case ImageFormat.ABGR_8888:
-					return image;
 				case ImageFormat.BGR_888:
+				case ImageFormat.RGB_888:
 					return image;
 				//case Image.PALETTE4_ABGR_1555:
 				//    format = (new Palette4Abgr1555(image.width, image.height, image.pitch));

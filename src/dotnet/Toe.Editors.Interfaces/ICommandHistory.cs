@@ -21,5 +21,9 @@ namespace Toe.Editors.Interfaces
 		void Unlock();
 
 		bool IsLocked { get; }
+
+		ICommand Top { get; }
+
+		void DropRedo();
 	}
 }

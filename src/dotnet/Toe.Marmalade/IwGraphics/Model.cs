@@ -3,6 +3,7 @@
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 
+using Toe.Marmalade;
 using Toe.Marmalade.IwGx;
 using Toe.Resources;
 using Toe.Utils.Marmalade.IwGx;

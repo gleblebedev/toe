@@ -4,10 +4,20 @@ using System.Diagnostics;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 
+using Toe.Editors.Interfaces;
+
 namespace Toe.Editors
 {
 	public class EditorCamera
 	{
+		private readonly IEditorOptions<EditorCameraOptions> cameraOptions;
+
+		public EditorCamera(IEditorOptions<EditorCameraOptions> cameraOptions)
+		{
+			this.cameraOptions = cameraOptions;
+			coordinateSystem = cameraOptions.Options.CoordinateSystem;
+		}
+
 		#region Constants and Fields
 
 		private float aspectRation = 1;
@@ -169,7 +179,13 @@ namespace Toe.Editors
 			}
 			set
 			{
-				this.coordinateSystem = value;
+				if (this.coordinateSystem != value)
+				{
+					this.coordinateSystem = value;
+					this.cameraOptions.Options.CoordinateSystem = value;
+					this.cameraOptions.Save();
+					this.LookAt(pos,pos+Forward);
+				}
 			}
 		}
 
@@ -319,8 +335,9 @@ namespace Toe.Editors
 		/// <param name="target">Target position in world space</param>
 		/// <param name="up">Up vector in world space (should not be parallel to the camera direction, that is target - eye)</param>
 		/// <returns>A Matrix4 that transforms world space to camera space</returns>
-		public void LookAt(Vector3 eye, Vector3 target, Vector3 up)
+		public void LookAt(Vector3 eye, Vector3 target)
 		{
+			var up = WorldUp;
 			this.pos = eye;
 			//Vector3 z = Vector3.Normalize(eye - target);
 			//Vector3 x = Vector3.Normalize(Vector3.Cross(up, z));

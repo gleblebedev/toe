@@ -1,5 +1,7 @@
 using System;
 
+using Autofac;
+
 using OpenTK.Graphics.OpenGL;
 
 using Toe.Editors.Interfaces;
@@ -24,7 +26,8 @@ namespace Toe.Editors.Marmalade
 
 		#region Constructors and Destructors
 
-		public TextureEditor(IEditorEnvironment editorEnvironment, IResourceManager resourceManager)
+		public TextureEditor(IEditorEnvironment editorEnvironment, IResourceManager resourceManager, IComponentContext context, IEditorOptions<Base3DEditorOptions> options)
+			: base(context,options)
 		{
 			this.editorEnvironment = editorEnvironment;
 			this.resourceManager = resourceManager;

@@ -1,5 +1,6 @@
 ﻿using Autofac;
 
+using Toe.Marmalade;
 using Toe.Marmalade.IwGx;
 using Toe.Resources;
 
@@ -101,7 +102,7 @@ namespace Toe.Utils.Marmalade.IwGx
 				if (attribute == "specularPower")
 				{
 					parser.Consume();
-					material.SpecularPower = parser.ConsumeInt();
+					material.SpecularPower = parser.ConsumeByte();
 					continue;
 				}
 				if (attribute == "celNum")

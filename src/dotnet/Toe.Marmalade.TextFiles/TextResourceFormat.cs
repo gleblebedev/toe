@@ -70,13 +70,13 @@ namespace Toe.Marmalade.TextFiles
 			return false;
 		}
 
-		public IList<Managed> Load(Stream stream, string defaultName, string basePath)
+		public IList<Managed> Load(Stream stream, string defaultName, IResourceFile resourceFile, string basePath)
 		{
 			IList<Managed> items = this.context.Resolve<IList<Managed>>();
 
 			using (var source = new StreamReader(stream))
 			{
-				var parser = new TextParser(source, basePath);
+				var parser = new TextParser(source, resourceFile, basePath);
 
 				for (;;)
 				{
@@ -98,13 +98,13 @@ namespace Toe.Marmalade.TextFiles
 			return items;
 		}
 
-		public IList<IResourceFileItem> Read(string filePath)
+		public IList<IResourceFileItem> Read(string filePath, IResourceFile resourceFile)
 		{
 			var items = this.context.Resolve<IList<IResourceFileItem>>();
 
 			using (var fileStream = File.OpenRead(filePath))
 			{
-				var resources = this.Load(fileStream, Path.GetFileNameWithoutExtension(filePath), Path.GetDirectoryName(Path.GetFullPath(filePath)));
+				var resources = this.Load(fileStream, Path.GetFileNameWithoutExtension(filePath), resourceFile, Path.GetDirectoryName(Path.GetFullPath(filePath)));
 				foreach (var resource in resources)
 				{
 					items.Add(new ResourceFileItem(resource.ClassHashCode, resource));

@@ -2,6 +2,8 @@ using System.IO;
 
 using Autofac;
 
+using Toe.Marmalade;
+using Toe.Marmalade.IwResManager;
 using Toe.Resources;
 
 namespace Toe.Utils.Marmalade.IwResManager
@@ -42,7 +44,7 @@ namespace Toe.Utils.Marmalade.IwResManager
 
 		public Managed Parse(TextParser parser, string defaultName)
 		{
-			ResGroup group = new ResGroup(this.context.Resolve<IResourceManager>(), this.context) { BasePath = parser.BasePath };
+			ResGroup group = new ResGroup(this.context.Resolve<IResourceManager>(), parser.ResourceFile, this.context) { BasePath = parser.BasePath };
 			group.Name = defaultName;
 			parser.Consume("CIwResGroup");
 			parser.Consume("{");
@@ -68,6 +70,7 @@ namespace Toe.Utils.Marmalade.IwResManager
 				}
 				if (attribute == "useTemplate")
 				{
+					//TODO: make a template handler
 					parser.Consume();
 					var ext = parser.ConsumeString();
 					var name = parser.ConsumeString();
@@ -89,27 +92,40 @@ namespace Toe.Utils.Marmalade.IwResManager
 						fullPath = Path.Combine(searchPath, subpath);
 						if (File.Exists(fullPath))
 						{
-							group.AddFile(fullPath);
-							parser.ConsumeString();
+							ParseFileReference(parser, @group, fullPath);
 							continue;
 						}
 						searchPath = Path.GetDirectoryName(searchPath);
 					}
-					while (true);
+					while (!string.IsNullOrEmpty(searchPath));
+
+					//fullPath = Path.Combine(searchPath, parser.BasePath);
+					//ParseFileReference(parser, @group, fullPath);
+					//continue;
 				}
 				else
 				{
 					fullPath = Path.Combine(parser.BasePath, relPath);
 					//if (File.Exists(fullPath))
 					{
-						group.AddFile(fullPath);
-						parser.ConsumeString();
+						ParseFileReference(parser, @group, fullPath);
 						continue;
 					}
 				}
 				parser.UnknownLexem();
 			}
 			return group;
+		}
+
+		private static void ParseFileReference(TextParser parser, ResGroup @group, string fullPath)
+		{
+			@group.AddFile(fullPath);
+			parser.ConsumeString();
+			if (parser.Lexem == "{")
+			{
+				//TODO: make a block handler
+				parser.ConsumeBlock();
+			}
 		}
 
 		#endregion
