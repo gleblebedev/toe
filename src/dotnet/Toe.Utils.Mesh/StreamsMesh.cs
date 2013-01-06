@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Drawing;
 
 using OpenTK;
+
 #if WINDOWS_PHONE
 using Microsoft.Xna.Framework;
 #else
@@ -117,7 +118,7 @@ namespace Toe.Utils.Mesh
 
 		public int EnsureBone(string boneName)
 		{
-			return bones.EnsureBone(boneName);
+			return this.bones.EnsureBone(boneName);
 		}
 
 		public MeshStream<Vector2> EnsureUVStream(int setId)

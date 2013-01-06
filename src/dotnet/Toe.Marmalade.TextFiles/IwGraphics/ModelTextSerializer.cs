@@ -19,12 +19,20 @@ namespace Toe.Marmalade.TextFiles.IwGraphics
 	/// </summary>
 	public class ModelTextSerializer : ITextSerializer
 	{
+		#region Constants and Fields
+
 		private readonly IComponentContext context;
+
+		#endregion
+
+		#region Constructors and Destructors
 
 		public ModelTextSerializer(IComponentContext context)
 		{
 			this.context = context;
 		}
+
+		#endregion
 
 		#region Public Properties
 

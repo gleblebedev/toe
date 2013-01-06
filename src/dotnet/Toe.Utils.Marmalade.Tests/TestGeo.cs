@@ -1,6 +1,4 @@
 using System;
-using System.IO;
-using System.Resources;
 
 using Autofac;
 
@@ -18,7 +16,7 @@ namespace Toe.Utils.Mesh.Marmalade.Tests
 		[Test]
 		public void TestLegs()
 		{
-			using (var rm = Container.Resolve<IResourceManager>())
+			using (var rm = this.Container.Resolve<IResourceManager>())
 			{
 				var f = rm.EnsureFile("male_legs_trousers0_lod0.geo");
 				f.Open();
@@ -29,7 +27,7 @@ namespace Toe.Utils.Mesh.Marmalade.Tests
 		[Test]
 		public void TestMarmaladeFolder()
 		{
-			using (var rm = Container.Resolve<IResourceManager>())
+			using (var rm = this.Container.Resolve<IResourceManager>())
 			{
 				var s = new FolderTreeSearch(@"C:\Marmalade\6.2\examples\", "*.geo");
 				foreach (var file in s)

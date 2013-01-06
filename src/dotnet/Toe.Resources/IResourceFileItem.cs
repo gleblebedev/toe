@@ -2,13 +2,18 @@ using System.ComponentModel;
 
 namespace Toe.Resources
 {
-	public interface IResourceFileItem: INotifyPropertyChanging, INotifyPropertyChanged
+	public interface IResourceFileItem : INotifyPropertyChanging, INotifyPropertyChanged
 	{
-		object Resource { get; }
+		#region Public Properties
 
 		string Name { get; }
+
 		uint NameHash { get; }
 
+		object Resource { get; }
+
 		uint Type { get; }
+
+		#endregion
 	}
 }

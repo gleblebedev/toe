@@ -1,4 +1,5 @@
 using System;
+using System.Drawing;
 using System.Windows.Forms;
 
 using Toe.Editors.Interfaces.Bindings;
@@ -7,90 +8,35 @@ namespace Toe.Editors.Interfaces.Views
 {
 	public class EditEnumView : UserControl, IView
 	{
-		readonly DataContextContainer dataContext = new DataContextContainer();
+		#region Constants and Fields
 
-		private ComboBox comboBox;
+		private readonly ComboBox comboBox;
 
-		private EnumWellKnownValues wellKnownValues;
+		private readonly DataContextContainer dataContext = new DataContextContainer();
 
 		private bool suppressValueChangeEvent;
 
-		public override System.Drawing.Size GetPreferredSize(System.Drawing.Size proposedSize)
-		{
-			return comboBox.GetPreferredSize(proposedSize);
-		}
+		private EnumWellKnownValues wellKnownValues;
+
+		#endregion
+
+		#region Constructors and Destructors
+
 		public EditEnumView()
 		{
 			this.dataContext.DataContextChanged += this.UpdateTextBox;
 			this.Height = 16;
 
-			comboBox = new ComboBox();
-			comboBox.DropDownStyle = ComboBoxStyle.DropDownList;
-			comboBox.SelectedIndexChanged += UpdateDataContext;
+			this.comboBox = new ComboBox();
+			this.comboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+			this.comboBox.SelectedIndexChanged += this.UpdateDataContext;
 			this.BindKnownValues();
-			this.Controls.Add(comboBox);
+			this.Controls.Add(this.comboBox);
 		}
 
-		private void UpdateDataContext(object sender, EventArgs e)
-		{
-			if (suppressValueChangeEvent)
-				return;
-			suppressValueChangeEvent = true;
-			try
-			{
-				var item = comboBox.SelectedItem;
-				dataContext.Value = item;
-			}
-			finally
-			{
-				suppressValueChangeEvent = false;
-			}
-		}
+		#endregion
 
-		private void BindKnownValues()
-		{
-			var v = comboBox.SelectedItem;
-
-			suppressValueChangeEvent = true;
-			try
-			{
-
-				this.comboBox.Items.Clear();
-				if (wellKnownValues != null)
-				{
-					foreach (var enumWellKnownValue in wellKnownValues)
-					{
-						this.comboBox.Items.Add(enumWellKnownValue.Key);
-					}
-				}
-				comboBox.SelectedItem = v;
-			}
-			finally
-			{
-				suppressValueChangeEvent = false;
-			}
-		}
-
-		private void UpdateTextBox(object sender, DataContextChangedEventArgs e)
-		{
-			if (suppressValueChangeEvent)
-				return;
-			if (this.dataContext.Value != null)
-			{
-				suppressValueChangeEvent = true;
-				try
-				{
-					comboBox.SelectedItem = this.dataContext.Value;
-				}
-				finally
-				{
-					suppressValueChangeEvent = false;
-				}
-			}
-		}
-
-
-		#region Implementation of IView
+		#region Public Properties
 
 		public DataContextContainer DataContext
 		{
@@ -112,6 +58,80 @@ namespace Toe.Editors.Interfaces.Views
 				{
 					this.wellKnownValues = value;
 					this.BindKnownValues();
+				}
+			}
+		}
+
+		#endregion
+
+		#region Public Methods and Operators
+
+		public override Size GetPreferredSize(Size proposedSize)
+		{
+			return this.comboBox.GetPreferredSize(proposedSize);
+		}
+
+		#endregion
+
+		#region Methods
+
+		private void BindKnownValues()
+		{
+			var v = this.comboBox.SelectedItem;
+
+			this.suppressValueChangeEvent = true;
+			try
+			{
+				this.comboBox.Items.Clear();
+				if (this.wellKnownValues != null)
+				{
+					foreach (var enumWellKnownValue in this.wellKnownValues)
+					{
+						this.comboBox.Items.Add(enumWellKnownValue.Key);
+					}
+				}
+				this.comboBox.SelectedItem = v;
+			}
+			finally
+			{
+				this.suppressValueChangeEvent = false;
+			}
+		}
+
+		private void UpdateDataContext(object sender, EventArgs e)
+		{
+			if (this.suppressValueChangeEvent)
+			{
+				return;
+			}
+			this.suppressValueChangeEvent = true;
+			try
+			{
+				var item = this.comboBox.SelectedItem;
+				this.dataContext.Value = item;
+			}
+			finally
+			{
+				this.suppressValueChangeEvent = false;
+			}
+		}
+
+		private void UpdateTextBox(object sender, DataContextChangedEventArgs e)
+		{
+			if (this.suppressValueChangeEvent)
+			{
+				return;
+			}
+			if (this.dataContext.Value != null)
+			{
+				this.suppressValueChangeEvent = true;
+				try
+				{
+					this.comboBox.SelectedItem = this.dataContext.Value;
+				}
+				finally
+				{
+					this.suppressValueChangeEvent = false;
 				}
 			}
 		}

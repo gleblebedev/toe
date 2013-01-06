@@ -2,12 +2,16 @@ using Toe.Editors.Interfaces;
 
 namespace Toe.Editor
 {
-	public class EditorConfiguration<T>:IEditorOptions<T>
+	public class EditorConfiguration<T> : IEditorOptions<T>
 		where T : new()
 	{
-		#region Implementation of IEditorOptions<T>
+		#region Constants and Fields
 
 		private T options;
+
+		#endregion
+
+		#region Public Properties
 
 		public T Options
 		{
@@ -22,14 +26,16 @@ namespace Toe.Editor
 			}
 		}
 
+		#endregion
+
+		#region Public Methods and Operators
+
 		public void Load()
 		{
-			
 		}
 
 		public void Save()
 		{
-			
 		}
 
 		#endregion

@@ -2,28 +2,36 @@ using System.ComponentModel;
 
 namespace Toe.Editors.Interfaces
 {
-	public interface ICommandHistory: INotifyPropertyChanged
+	public interface ICommandHistory : INotifyPropertyChanged
 	{
-		void Redo();
-
-		void Undo();
+		#region Public Properties
 
 		bool CanRedo { get; }
 
 		bool CanUndo { get; }
 
-		ICommand RegisterAction(ICommand action);
-
-		void Clear();
-
-		void Lock();
-
-		void Unlock();
-
 		bool IsLocked { get; }
 
 		ICommand Top { get; }
 
+		#endregion
+
+		#region Public Methods and Operators
+
+		void Clear();
+
 		void DropRedo();
+
+		void Lock();
+
+		void Redo();
+
+		ICommand RegisterAction(ICommand action);
+
+		void Undo();
+
+		void Unlock();
+
+		#endregion
 	}
 }

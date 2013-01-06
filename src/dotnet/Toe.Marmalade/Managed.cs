@@ -54,6 +54,8 @@ namespace Toe.Marmalade
 			}
 		}
 
+		public abstract uint ClassHashCode { get; }
+
 		/// <summary>
 		/// Object name.
 		/// </summary>
@@ -111,11 +113,13 @@ namespace Toe.Marmalade
 			GC.SuppressFinalize(this);
 		}
 
-		public abstract uint ClassHashCode { get; }
-
 		public override string ToString()
 		{
-			return string.Format(CultureInfo.InvariantCulture, "{0} ({1})", string.IsNullOrEmpty(this.Name) ? string.Format(CultureInfo.InvariantCulture, "0x{0:X8}", this.nameHash) : this.name, this.GetType().Name);
+			return string.Format(
+				CultureInfo.InvariantCulture,
+				"{0} ({1})",
+				string.IsNullOrEmpty(this.Name) ? string.Format(CultureInfo.InvariantCulture, "0x{0:X8}", this.nameHash) : this.name,
+				this.GetType().Name);
 		}
 
 		#endregion

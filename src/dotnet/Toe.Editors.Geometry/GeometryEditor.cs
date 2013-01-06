@@ -162,7 +162,7 @@ namespace Toe.Editors.Geometry
 			//}
 		}
 
-		protected void RenderScene(object sender, EventArgs args)
+		protected new void RenderScene(object sender, EventArgs args)
 		{
 			GL.ClearColor(Color.SkyBlue);
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);

@@ -44,7 +44,8 @@ namespace Toe.Utils.Marmalade.IwResManager
 
 		public Managed Parse(TextParser parser, string defaultName)
 		{
-			ResGroup group = new ResGroup(this.context.Resolve<IResourceManager>(), parser.ResourceFile, this.context) { BasePath = parser.BasePath };
+			ResGroup group = new ResGroup(this.context.Resolve<IResourceManager>(), parser.ResourceFile, this.context)
+				{ BasePath = parser.BasePath };
 			group.Name = defaultName;
 			parser.Consume("CIwResGroup");
 			parser.Consume("{");
@@ -76,7 +77,7 @@ namespace Toe.Utils.Marmalade.IwResManager
 					var name = parser.ConsumeString();
 					continue;
 				}
-				
+
 				var relPath = attribute.Replace('/', Path.DirectorySeparatorChar);
 				if (relPath.Length > 2 && relPath[0] == '.' && relPath[1] == Path.DirectorySeparatorChar)
 				{
@@ -116,6 +117,10 @@ namespace Toe.Utils.Marmalade.IwResManager
 			}
 			return group;
 		}
+
+		#endregion
+
+		#region Methods
 
 		private static void ParseFileReference(TextParser parser, ResGroup @group, string fullPath)
 		{

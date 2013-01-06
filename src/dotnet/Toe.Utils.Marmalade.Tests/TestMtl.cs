@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 
 using Autofac;
 
@@ -10,14 +9,14 @@ using Toe.Resources;
 namespace Toe.Utils.Mesh.Marmalade.Tests
 {
 	[TestFixture]
-	public class TestMtl:BaseTest
+	public class TestMtl : BaseTest
 	{
 		#region Public Methods and Operators
 
 		[Test]
 		public void TestMarmaladeFolder()
 		{
-			using (var rm = Container.Resolve<IResourceManager>())
+			using (var rm = this.Container.Resolve<IResourceManager>())
 			{
 				var s = new FolderTreeSearch(@"C:\Marmalade\6.2\examples\", "*.mtl");
 				foreach (var file in s)

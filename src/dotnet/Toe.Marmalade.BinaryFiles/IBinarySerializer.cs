@@ -1,5 +1,3 @@
-using Toe.Utils.Marmalade;
-
 namespace Toe.Marmalade.BinaryFiles
 {
 	public interface IBinarySerializer

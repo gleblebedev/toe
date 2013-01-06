@@ -10,7 +10,13 @@ namespace Toe.Utils.Mesh
 {
 	public class BoneCollection : IEnumerable<MeshBone>, IEnumerable
 	{
+		#region Constants and Fields
+
 		private readonly List<MeshBone> bones = new List<MeshBone>();
+
+		#endregion
+
+		#region Public Properties
 
 		public int Capacity
 		{
@@ -30,43 +36,23 @@ namespace Toe.Utils.Mesh
 			{
 				return this.bones.Count;
 			}
-			
 		}
 
-		public void UpdateAbsoluteValues()
+		#endregion
+
+		#region Public Indexers
+
+		public MeshBone this[int index]
 		{
-			for (int index = 0; index < this.bones.Count; index++)
+			get
 			{
-				this.UpdateBoneAbsoluteValues(index);
+				return this.bones[index];
 			}
 		}
 
-		private void UpdateBoneAbsoluteValues(int index)
-		{
-			var meshBone = this.bones[index];
-			var pos = meshBone.ActualPos;
-			var rot = meshBone.ActualRot;
-			rot = new Quaternion(rot.X,rot.Y,rot.Z,rot.W);
-			if (meshBone.Parent >= 0)
-			{
-				if (index < meshBone.Parent)
-				{
-					// TODO: this isn't efficient way
-					this.UpdateBoneAbsoluteValues(meshBone.Parent);
-				}
-				var parent = this.bones[meshBone.Parent];
-				var ppos = parent.AbsolutePos;
-				var prot = parent.AbsoluteRot;
+		#endregion
 
-				meshBone.AbsolutePos = Vector3.Transform(pos, prot) + ppos;
-				meshBone.AbsoluteRot = Quaternion.Multiply(prot, rot);
-			}
-			else
-			{
-				meshBone.AbsolutePos = pos;
-				meshBone.AbsoluteRot = rot;
-			}
-		}
+		#region Public Methods and Operators
 
 		public int EnsureBone(string boneName)
 		{
@@ -92,31 +78,6 @@ namespace Toe.Utils.Mesh
 			return index;
 		}
 
-		public MeshBone this[int index]
-		{
-			get
-			{
-				return this.bones[index];
-			}
-		}
-
-		/// <summary>
-		/// Returns an enumerator that iterates through the collection.
-		/// </summary>
-		/// <returns>
-		/// A <see cref="T:System.Collections.Generic.IEnumerator`1"/> that can be used to iterate through the collection.
-		/// </returns>
-		/// <filterpriority>1</filterpriority>
-		public IEnumerator<MeshBone> GetEnumerator()
-		{
-			return bones.GetEnumerator();
-		}
-
-		IEnumerator IEnumerable.GetEnumerator()
-		{
-			return this.GetEnumerator();
-		}
-
 		public int EnsureBone(uint boneName)
 		{
 			int index;
@@ -140,5 +101,67 @@ namespace Toe.Utils.Mesh
 			}
 			return this.bones[index];
 		}
+
+		/// <summary>
+		/// Returns an enumerator that iterates through the collection.
+		/// </summary>
+		/// <returns>
+		/// A <see cref="T:System.Collections.Generic.IEnumerator`1"/> that can be used to iterate through the collection.
+		/// </returns>
+		/// <filterpriority>1</filterpriority>
+		public IEnumerator<MeshBone> GetEnumerator()
+		{
+			return this.bones.GetEnumerator();
+		}
+
+		public void UpdateAbsoluteValues()
+		{
+			for (int index = 0; index < this.bones.Count; index++)
+			{
+				this.UpdateBoneAbsoluteValues(index);
+			}
+		}
+
+		#endregion
+
+		#region Explicit Interface Methods
+
+		IEnumerator IEnumerable.GetEnumerator()
+		{
+			return this.GetEnumerator();
+		}
+
+		#endregion
+
+		#region Methods
+
+		private void UpdateBoneAbsoluteValues(int index)
+		{
+			var meshBone = this.bones[index];
+			var pos = meshBone.ActualPos;
+			var rot = meshBone.ActualRot;
+			rot = new Quaternion(rot.X, rot.Y, rot.Z, rot.W);
+			if (meshBone.Parent >= 0)
+			{
+				if (index < meshBone.Parent)
+				{
+					// TODO: this isn't efficient way
+					this.UpdateBoneAbsoluteValues(meshBone.Parent);
+				}
+				var parent = this.bones[meshBone.Parent];
+				var ppos = parent.AbsolutePos;
+				var prot = parent.AbsoluteRot;
+
+				meshBone.AbsolutePos = Vector3.Transform(pos, prot) + ppos;
+				meshBone.AbsoluteRot = Quaternion.Multiply(prot, rot);
+			}
+			else
+			{
+				meshBone.AbsolutePos = pos;
+				meshBone.AbsoluteRot = rot;
+			}
+		}
+
+		#endregion
 	}
 }

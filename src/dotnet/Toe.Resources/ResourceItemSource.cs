@@ -2,15 +2,34 @@ namespace Toe.Resources
 {
 	public struct ResourceItemSource
 	{
-		private readonly object value;
+		#region Constants and Fields
+
+		public static ResourceItemSource Null = new ResourceItemSource(null, null);
 
 		private readonly IResourceFile source;
 
-		public static ResourceItemSource Null = new ResourceItemSource(null,null);
+		private readonly object value;
+
+		#endregion
+
+		#region Constructors and Destructors
+
 		public ResourceItemSource(object value, IResourceFile source)
 		{
 			this.value = value;
 			this.source = source;
+		}
+
+		#endregion
+
+		#region Public Properties
+
+		public IResourceFile Source
+		{
+			get
+			{
+				return this.source;
+			}
 		}
 
 		public object Value
@@ -21,12 +40,18 @@ namespace Toe.Resources
 			}
 		}
 
-		public IResourceFile Source
+		#endregion
+
+		#region Public Methods and Operators
+
+		public static bool operator ==(ResourceItemSource left, ResourceItemSource right)
 		{
-			get
-			{
-				return this.source;
-			}
+			return left.Equals(right);
+		}
+
+		public static bool operator !=(ResourceItemSource left, ResourceItemSource right)
+		{
+			return !left.Equals(right);
 		}
 
 		public bool Equals(ResourceItemSource other)
@@ -51,7 +76,7 @@ namespace Toe.Resources
 			{
 				return false;
 			}
-			return Equals((ResourceItemSource)obj);
+			return this.Equals((ResourceItemSource)obj);
 		}
 
 		/// <summary>
@@ -65,18 +90,11 @@ namespace Toe.Resources
 		{
 			unchecked
 			{
-				return ((this.Value != null ? this.Value.GetHashCode() : 0) * 397) ^ (this.Source != null ? this.Source.GetHashCode() : 0);
+				return ((this.Value != null ? this.Value.GetHashCode() : 0) * 397)
+				       ^ (this.Source != null ? this.Source.GetHashCode() : 0);
 			}
 		}
 
-		public static bool operator ==(ResourceItemSource left, ResourceItemSource right)
-		{
-			return left.Equals(right);
-		}
-
-		public static bool operator !=(ResourceItemSource left, ResourceItemSource right)
-		{
-			return !left.Equals(right);
-		}
+		#endregion
 	}
 }

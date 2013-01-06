@@ -1,5 +1,4 @@
 using System;
-using System.Windows.Forms;
 
 using Toe.Editors.Interfaces.Bindings;
 using Toe.Resources;
@@ -8,30 +7,44 @@ namespace Toe.Editors.Interfaces.Views
 {
 	public class ResourceFileReferenceEditor : SingleControlView<ButtonView>, IView
 	{
+		#region Constants and Fields
+
+		private readonly DataContextContainer dataContext = new DataContextContainer();
+
 		private readonly IEditorEnvironment editorEnvironment;
+
+		#endregion
+
+		#region Constructors and Destructors
 
 		public ResourceFileReferenceEditor(IEditorEnvironment editorEnvironment)
 		{
 			this.editorEnvironment = editorEnvironment;
 			//this.label.AutoSize = true;
-			new DataContextBinding(ViewControl, this.DataContext,false);
-			this.ViewControl.Click += OnButtonClick;
+			new DataContextBinding(this.ViewControl, this.DataContext, false);
+			this.ViewControl.Click += this.OnButtonClick;
 		}
 
-		private void OnButtonClick(object sender, EventArgs a)
-		{
-			editorEnvironment.Open(Text.FilePath);
-		}
+		#endregion
 
-		DataContextContainer dataContext = new DataContextContainer();
+		#region Public Properties
 
-		#region Implementation of IView
-
-		public IResourceFile Text
+		public DataContextContainer DataContext
 		{
 			get
 			{
-				if (this.dataContext.Value == null) return null;
+				return this.dataContext;
+			}
+		}
+
+		public new IResourceFile Text
+		{
+			get
+			{
+				if (this.dataContext.Value == null)
+				{
+					return null;
+				}
 				return this.dataContext.Value as IResourceFile;
 			}
 			set
@@ -40,12 +53,13 @@ namespace Toe.Editors.Interfaces.Views
 			}
 		}
 
-		public DataContextContainer DataContext
+		#endregion
+
+		#region Methods
+
+		private void OnButtonClick(object sender, EventArgs a)
 		{
-			get
-			{
-				return this.dataContext;
-			}
+			this.editorEnvironment.Open(this.Text.FilePath);
 		}
 
 		#endregion

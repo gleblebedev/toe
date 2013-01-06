@@ -4,9 +4,15 @@ namespace Toe.Editors.Interfaces
 {
 	public static class CommandExt
 	{
-		public static ICommand SetValue<T,ARG>(this ICommandHistory history, T target, ARG oldValue, ARG newValue, Action<T, ARG> setValue)
+		#region Public Methods and Operators
+
+		public static ICommand SetValue<T, ARG>(
+			this ICommandHistory history, T target, ARG oldValue, ARG newValue, Action<T, ARG> setValue)
 		{
-			if (Equals(oldValue, newValue)) return null;
+			if (Equals(oldValue, newValue))
+			{
+				return null;
+			}
 
 			history.DropRedo();
 			var lastCommand = history.Top;
@@ -15,9 +21,9 @@ namespace Toe.Editors.Interfaces
 				if (lastCommand is SetValueCommand<T, ARG>)
 				{
 					var sv = (SetValueCommand<T, ARG>)lastCommand;
-					if (Equals(target,sv.Target))
+					if (Equals(target, sv.Target))
 					{
-						if (Equals(sv.SetValue,setValue))
+						if (Equals(sv.SetValue, setValue))
 						{
 							//if (Equals(sv.NewValue, oldValue))
 							{
@@ -35,5 +41,7 @@ namespace Toe.Editors.Interfaces
 			setValueCommand.Redo();
 			return setValueCommand;
 		}
+
+		#endregion
 	}
 }

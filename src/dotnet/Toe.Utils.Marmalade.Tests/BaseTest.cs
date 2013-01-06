@@ -6,6 +6,7 @@ using Autofac;
 
 using NUnit.Framework;
 
+using Toe.Editors;
 using Toe.Editors.Marmalade;
 using Toe.Gx;
 using Toe.Marmalade;
@@ -13,7 +14,6 @@ using Toe.Marmalade.BinaryFiles;
 using Toe.Marmalade.TextFiles;
 using Toe.Marmalade.TextureFiles;
 using Toe.Resources;
-using Toe.Utils.Marmalade;
 
 using IContainer = Autofac.IContainer;
 using ResourceFileItem = Toe.Marmalade.TextFiles.ResourceFileItem;
@@ -22,9 +22,15 @@ namespace Toe.Utils.Mesh.Marmalade.Tests
 {
 	public class BaseTest
 	{
+		#region Constants and Fields
+
 		private ContainerBuilder builder;
 
 		private IContainer container;
+
+		#endregion
+
+		#region Public Properties
 
 		public IContainer Container
 		{
@@ -34,17 +40,22 @@ namespace Toe.Utils.Mesh.Marmalade.Tests
 			}
 		}
 
+		#endregion
+
+		#region Public Methods and Operators
+
 		[TestFixtureSetUp]
 		public void TestFixtureSetUp()
 		{
-			this.builder = new Autofac.ContainerBuilder();
-			this.builder.RegisterGeneric(typeof(BindingList<>)).UsingConstructor(new Type[]{}).As(typeof(IList<>)).InstancePerDependency();
+			this.builder = new ContainerBuilder();
+			this.builder.RegisterGeneric(typeof(BindingList<>)).UsingConstructor(new Type[] { }).As(typeof(IList<>)).
+				InstancePerDependency();
+			this.builder.RegisterModule<BaseEditorsAutofacModule>();
 			this.builder.RegisterModule<MarmaladeEditorsAutofacModule>();
-			builder.RegisterModule<MarmaladeAutofacModule>();
-			builder.RegisterModule<MarmaladeTextFilesAutofacModule>();
-			builder.RegisterModule<MarmaladeBinaryFilesAutofacModule>();
-			builder.RegisterModule<MarmaladeTextureFilesAutofacModule>();
-
+			this.builder.RegisterModule<MarmaladeAutofacModule>();
+			this.builder.RegisterModule<MarmaladeTextFilesAutofacModule>();
+			this.builder.RegisterModule<MarmaladeBinaryFilesAutofacModule>();
+			this.builder.RegisterModule<MarmaladeTextureFilesAutofacModule>();
 
 			this.builder.RegisterType<ToeGraphicsContext>().As<ToeGraphicsContext>().SingleInstance();
 			this.builder.RegisterType<ResourceErrorHandler>().As<IResourceErrorHandler>().SingleInstance();
@@ -53,12 +64,15 @@ namespace Toe.Utils.Mesh.Marmalade.Tests
 			this.builder.RegisterType<ResourceFileItem>().As<IResourceFileItem>().InstancePerDependency();
 			this.container = this.builder.Build();
 
-			var l = container.Resolve<IList<int>>();
+			var l = this.container.Resolve<IList<int>>();
 		}
+
 		[TestFixtureTearDown]
 		public void TestFixtureTearDown()
 		{
 			this.Container.Dispose();
 		}
+
+		#endregion
 	}
 }

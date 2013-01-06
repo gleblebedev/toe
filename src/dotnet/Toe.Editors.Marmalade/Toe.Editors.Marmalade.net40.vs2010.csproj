@@ -59,6 +59,7 @@
     <Reference Include="OpenTK.GLControl">
       <HintPath>..\packages\OpenTK\OpenTK.GLControl.dll</HintPath>
     </Reference>
+    <Reference Include="Toe.Editors.Marmalade, Version=1.0.0.0, Culture=neutral, PublicKeyToken=689994cf56ce2a3e, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AnimEditor.cs">
@@ -103,6 +104,9 @@
     <Compile Include="TextureEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Views\EditNameView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Toe.Editors.Interfaces\Toe.Editors.Interfaces.net40.vs2010.csproj">
@@ -143,6 +147,9 @@
   <ItemGroup>
     <EmbeddedResource Include="MaterialEditor.resx">
       <DependentUpon>MaterialEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ModelEditor.resx">
+      <DependentUpon>ModelEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ResourceFileEditor.resx">
       <DependentUpon>ResourceFileEditor.cs</DependentUpon>

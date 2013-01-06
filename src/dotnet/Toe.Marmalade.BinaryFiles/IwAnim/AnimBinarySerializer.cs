@@ -1,48 +1,54 @@
 ﻿using System;
-using System.Globalization;
 
 using Autofac;
 
 using Toe.Marmalade.IwAnim;
-using Toe.Marmalade.IwGx;
 using Toe.Resources;
-using Toe.Utils.Marmalade;
 
 namespace Toe.Marmalade.BinaryFiles.IwAnim
 {
-	public class AnimBinarySerializer:IBinarySerializer
+	public class AnimBinarySerializer : IBinarySerializer
 	{
+		#region Constants and Fields
+
 		private readonly IComponentContext context;
+
+		#endregion
+
+		#region Constructors and Destructors
 
 		public AnimBinarySerializer(IComponentContext context)
 		{
 			this.context = context;
 		}
 
+		#endregion
+
+		#region Public Methods and Operators
+
 		/// <summary>
 		/// Parse binary block.
 		/// </summary>
 		public Managed Parse(BinaryParser parser)
 		{
-			var anim = context.Resolve<Anim>();
+			var anim = this.context.Resolve<Anim>();
 			anim.NameHash = parser.ConsumeUInt32();
 
 			anim.Skeleton.HashReference = parser.ConsumeUInt32();
 			var numBones = parser.ConsumeUInt32();
 			var boneFlags = parser.ConsumeUInt32();
 
-			for (var numFrames = parser.ConsumeUInt32();numFrames > 0;--numFrames)
+			for (var numFrames = parser.ConsumeUInt32(); numFrames > 0; --numFrames)
 			{
-
 				var frameId = parser.ConsumeUInt32();
 				if (frameId == Hash.Get("CIwAnimKeyFrame"))
 				{
 					var frame = new AnimKeyFrame();
 					parser.Expect((uint)0x0);
-					frame.Time= parser.ConsumeFloat();
+					frame.Time = parser.ConsumeFloat();
 					var type = parser.ConsumeByte();
-					var someVec =  parser.ConsumeVector3();
-					parser.Expect((byte)0x01);
+					var someVec = parser.ConsumeVector3();
+					parser.Expect(0x01);
 
 					anim.AddFrame(frame);
 
@@ -58,7 +64,7 @@ namespace Toe.Marmalade.BinaryFiles.IwAnim
 							{
 								b = b;
 							}
-							for (uint index=0; index<num;++index)
+							for (uint index = 0; index < num; ++index)
 							{
 								var bone = frame.Bones.EnsureBoneAt((int)index);
 								bone.BindingPos = parser.ConsumeVector3();
@@ -93,6 +99,6 @@ namespace Toe.Marmalade.BinaryFiles.IwAnim
 			//serialise.DebugWrite(256);
 		}
 
-	
+		#endregion
 	}
 }

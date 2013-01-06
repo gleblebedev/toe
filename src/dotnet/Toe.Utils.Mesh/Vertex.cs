@@ -1,6 +1,7 @@
 ﻿using System;
 
 using OpenTK;
+
 #if WINDOWS_PHONE
 using Microsoft.Xna.Framework;
 #else

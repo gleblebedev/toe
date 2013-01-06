@@ -1,34 +1,41 @@
 ﻿using System;
 using System.Drawing;
-using System.Globalization;
 
 using Autofac;
 
 using OpenTK;
 
-using Toe.Marmalade.IwGx;
 using Toe.Resources;
-using Toe.Utils.Marmalade;
 using Toe.Utils.Marmalade.IwGraphics;
 using Toe.Utils.Mesh;
 
 namespace Toe.Marmalade.BinaryFiles.IwGraphics
 {
-	public class ModelBinarySerializer:IBinarySerializer
+	public class ModelBinarySerializer : IBinarySerializer
 	{
+		#region Constants and Fields
+
 		private readonly IComponentContext context;
+
+		#endregion
+
+		#region Constructors and Destructors
 
 		public ModelBinarySerializer(IComponentContext context)
 		{
 			this.context = context;
 		}
 
+		#endregion
+
+		#region Public Methods and Operators
+
 		/// <summary>
 		/// Parse binary block.
 		/// </summary>
 		public Managed Parse(BinaryParser parser)
 		{
-			var model = context.Resolve<Model>();
+			var model = this.context.Resolve<Model>();
 			model.NameHash = parser.ConsumeUInt32();
 			model.Flags = parser.ConsumeUInt32();
 			var numVerts = parser.ConsumeUInt32();
@@ -42,10 +49,10 @@ namespace Toe.Marmalade.BinaryFiles.IwGraphics
 			//parser.Expect((uint)0x466dbf2a);
 
 			var num = parser.ConsumeUInt32();
-			for (; num>0;--num)
+			for (; num > 0; --num)
 			{
 				var type = parser.ConsumeUInt32();
-			
+
 				var name = parser.ConsumeUInt32();
 				var size = parser.ConsumeUInt32();
 				var numItems = parser.ConsumeUInt32();
@@ -126,7 +133,7 @@ namespace Toe.Marmalade.BinaryFiles.IwGraphics
 					throw new NotImplementedException();
 					continue;
 				}
-				
+
 				if (type == Hash.Get("CIwModelBlockGLTriStrip"))
 				{
 					throw new NotImplementedException();
@@ -142,7 +149,7 @@ namespace Toe.Marmalade.BinaryFiles.IwGraphics
 					throw new NotImplementedException();
 					continue;
 				}
-				
+
 				if (type == Hash.Get("CIwModelBlockPrimBase"))
 				{
 					throw new NotImplementedException();
@@ -223,7 +230,7 @@ namespace Toe.Marmalade.BinaryFiles.IwGraphics
 					throw new NotImplementedException();
 					continue;
 				}
-				
+
 				throw new FormatException("Unknown element");
 			}
 
@@ -264,13 +271,13 @@ namespace Toe.Marmalade.BinaryFiles.IwGraphics
 					throw new NotImplementedException();
 					continue;
 				}
-				
+
 				throw new FormatException("Unknown element");
 			}
 
 			num = parser.ConsumeUInt32();
 			uint[] materials = new uint[num];
-			for (uint matIndex=0;matIndex<num; ++matIndex)
+			for (uint matIndex = 0; matIndex < num; ++matIndex)
 			{
 				materials[matIndex] = parser.ConsumeUInt32();
 			}
@@ -286,51 +293,36 @@ namespace Toe.Marmalade.BinaryFiles.IwGraphics
 			return model;
 		}
 
-		private void ParseModelExtSelSetFace(BinaryParser parser, Model model, uint name, uint flags)
-		{
-			var m_Flags = parser.ConsumeByte();
-			var m_FlagsSW = parser.ConsumeByte();
-			var m_FlagsHW = parser.ConsumeByte();
-			var m_OTZOfsSW = parser.ConsumeSByte();
-			var m_NumFaces = parser.ConsumeUInt32();
-			var m_FaceIDs = parser.ConsumeUInt16Array((int)m_NumFaces);
-			//bool m_WorldSet;     /** True if this set is a world file only set */
-		}
+		#endregion
 
-		private void ParseModelExtSelSetVert(BinaryParser parser, Model model, uint name, uint flags)
-		{
-			throw new NotImplementedException();
-		}
+		#region Methods
 
-		private void ParseModelBlockNorms(BinaryParser parser, Model model, uint name, uint size, uint numItems, ushort flags)
+		private void ParseModelBlockCols(BinaryParser parser, Model model, uint name, uint size, uint numItems, ushort flags)
 		{
 			var streamMesh = ((StreamMesh)model.Meshes[0]);
-			streamMesh.Normals.Clear();
 			int num = (int)numItems;
-			streamMesh.Normals.Capacity = num;
-			for (int i = 0; i < num; ++i)
+			streamMesh.Colors.Clear();
+			streamMesh.Colors.Capacity = num;
+			if (parser.ConsumeBool())
 			{
-				streamMesh.Normals.Add(parser.ConsumeVector3());
+				for (int i = 0; i < num; ++i)
+				{
+					byte b = parser.ConsumeByte();
+					streamMesh.Colors.Add(Color.FromArgb(255, b, b, b));
+				}
+			}
+			else
+			{
+				var c = parser.ConsumeByteArray(num * 4);
+				for (int i = 0; i < num; ++i)
+				{
+					streamMesh.Colors.Add(Color.FromArgb(c[i + num * 3], c[i + num * 0], c[i + num * 1], c[i + num * 2]));
+				}
 			}
 		}
 
-		private void ParseModelBlockGLUVs(BinaryParser parser, Model model, uint name, uint size, uint numItems, ushort flags)
-		{
-			var streamMesh = ((StreamMesh)model.Meshes[0]);
-			while (streamMesh.UV.Count < 1)
-			{
-				streamMesh.UV.Add(new MeshStream<Vector2>());
-			}
-			int num = (int)numItems;
-			streamMesh.UV[0].Clear();
-			streamMesh.UV[0].Capacity = num;
-			for (int i = 0; i < num; ++i)
-			{
-				streamMesh.UV[0].Add(parser.ConsumeVector2());
-			}
-		}
-
-		private void ParseModelBlockGLTriList(BinaryParser parser, Model model, uint name, uint size, uint numItems, ushort flags)
+		private void ParseModelBlockGLTriList(
+			BinaryParser parser, Model model, uint name, uint size, uint numItems, ushort flags)
 		{
 			var streamMesh = ((StreamMesh)model.Meshes[0]);
 			var streamSubmesh = new StreamSubmesh(streamMesh);
@@ -339,7 +331,7 @@ namespace Toe.Marmalade.BinaryFiles.IwGraphics
 			streamSubmesh.MaterialHash = parser.ConsumeUInt32();
 
 			var indices = parser.ConsumeUInt16Array((int)numItems);
-			for (int i = 0; i < indices.Length; )
+			for (int i = 0; i < indices.Length;)
 			{
 				var tiangle = new StreamSubmeshTriangle();
 				UInt16 index = indices[i++];
@@ -362,38 +354,34 @@ namespace Toe.Marmalade.BinaryFiles.IwGraphics
 			//{
 			//    this.prims[i].Serialise(serialise);
 			//}
-
-		
 		}
 
-		private void ParseModelBlockCols(BinaryParser parser, Model model, uint name, uint size, uint numItems, ushort flags)
+		private void ParseModelBlockGLUVs(BinaryParser parser, Model model, uint name, uint size, uint numItems, ushort flags)
 		{
 			var streamMesh = ((StreamMesh)model.Meshes[0]);
-			int num = (int)numItems;
-			streamMesh.Colors.Clear();
-			streamMesh.Colors.Capacity = num;
-			if (parser.ConsumeBool())
+			while (streamMesh.UV.Count < 1)
 			{
-				for (int i = 0; i < num; ++i)
-				{
-					byte b = parser.ConsumeByte();
-					streamMesh.Colors.Add(Color.FromArgb(255,b,b,b));
-				}
+				streamMesh.UV.Add(new MeshStream<Vector2>());
 			}
-			else
+			int num = (int)numItems;
+			streamMesh.UV[0].Clear();
+			streamMesh.UV[0].Capacity = num;
+			for (int i = 0; i < num; ++i)
 			{
-				var c = parser.ConsumeByteArray(num * 4);
-				for (int i = 0; i < num; ++i)
-				{
-					streamMesh.Colors.Add(Color.FromArgb(c[i+num*3],c[i+num*0],c[i+num*1],c[i+num*2]));
-				}
-			
+				streamMesh.UV[0].Add(parser.ConsumeVector2());
 			}
 		}
 
-		private void ParseModelBlockVerts2D(BinaryParser parser, Model model, uint name, uint size, uint numItems, ushort flags)
+		private void ParseModelBlockNorms(BinaryParser parser, Model model, uint name, uint size, uint numItems, ushort flags)
 		{
-			throw new NotImplementedException("Can't read ModelBlockVerts2D");
+			var streamMesh = ((StreamMesh)model.Meshes[0]);
+			streamMesh.Normals.Clear();
+			int num = (int)numItems;
+			streamMesh.Normals.Capacity = num;
+			for (int i = 0; i < num; ++i)
+			{
+				streamMesh.Normals.Add(parser.ConsumeVector3());
+			}
 		}
 
 		private void ParseModelBlockVerts(BinaryParser parser, Model model, uint name, uint size, uint numItems, ushort flags)
@@ -403,22 +391,25 @@ namespace Toe.Marmalade.BinaryFiles.IwGraphics
 			streamMesh.Vertices.Clear();
 			var itemsToRead = (int)uniqueValues;
 			streamMesh.Vertices.EnsureAt((int)numItems - 1);
-			for (int i = 0; i < itemsToRead;++i)
+			for (int i = 0; i < itemsToRead; ++i)
 			{
-				float x = parser.ConsumeFloat(); parser.Skip(1);
-				streamMesh.Vertices[i] = new Vector3(x,0,0);
+				float x = parser.ConsumeFloat();
+				parser.Skip(1);
+				streamMesh.Vertices[i] = new Vector3(x, 0, 0);
 			}
 			for (int i = 0; i < itemsToRead; ++i)
 			{
-				float x = parser.ConsumeFloat(); parser.Skip(1);
+				float x = parser.ConsumeFloat();
+				parser.Skip(1);
 				streamMesh.Vertices[i] = new Vector3(streamMesh.Vertices[i].X, x, 0);
 			}
 			for (int i = 0; i < itemsToRead; ++i)
 			{
-				float x = parser.ConsumeFloat(); parser.Skip(1);
+				float x = parser.ConsumeFloat();
+				parser.Skip(1);
 				streamMesh.Vertices[i] = new Vector3(streamMesh.Vertices[i].X, streamMesh.Vertices[i].Y, x);
 			}
-			while (itemsToRead<numItems)
+			while (itemsToRead < numItems)
 			{
 				streamMesh.Vertices[itemsToRead] = streamMesh.Vertices[parser.ConsumeUInt16()];
 				++itemsToRead;
@@ -460,7 +451,30 @@ namespace Toe.Marmalade.BinaryFiles.IwGraphics
 			//{
 			//    this.verts[i] = this.verts[links[i - this.uniqueValues]];
 			//}
-
 		}
+
+		private void ParseModelBlockVerts2D(
+			BinaryParser parser, Model model, uint name, uint size, uint numItems, ushort flags)
+		{
+			throw new NotImplementedException("Can't read ModelBlockVerts2D");
+		}
+
+		private void ParseModelExtSelSetFace(BinaryParser parser, Model model, uint name, uint flags)
+		{
+			var m_Flags = parser.ConsumeByte();
+			var m_FlagsSW = parser.ConsumeByte();
+			var m_FlagsHW = parser.ConsumeByte();
+			var m_OTZOfsSW = parser.ConsumeSByte();
+			var m_NumFaces = parser.ConsumeUInt32();
+			var m_FaceIDs = parser.ConsumeUInt16Array((int)m_NumFaces);
+			//bool m_WorldSet;     /** True if this set is a world file only set */
+		}
+
+		private void ParseModelExtSelSetVert(BinaryParser parser, Model model, uint name, uint flags)
+		{
+			throw new NotImplementedException();
+		}
+
+		#endregion
 	}
 }

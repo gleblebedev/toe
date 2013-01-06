@@ -34,8 +34,8 @@ namespace Toe.Editors.Marmalade
 			    || fileName.EndsWith(".anim", StringComparison.InvariantCultureIgnoreCase)
 			    || fileName.EndsWith(".itx", StringComparison.InvariantCultureIgnoreCase)
 			    || fileName.EndsWith(".bmp", StringComparison.InvariantCultureIgnoreCase)
-				|| fileName.EndsWith(".png", StringComparison.InvariantCultureIgnoreCase)
-				|| fileName.EndsWith(".tga", StringComparison.InvariantCultureIgnoreCase)
+			    || fileName.EndsWith(".png", StringComparison.InvariantCultureIgnoreCase)
+			    || fileName.EndsWith(".tga", StringComparison.InvariantCultureIgnoreCase)
 			    || fileName.EndsWith(".group", StringComparison.InvariantCultureIgnoreCase)
 			    || fileName.EndsWith(".group.bin", StringComparison.InvariantCultureIgnoreCase))
 			{

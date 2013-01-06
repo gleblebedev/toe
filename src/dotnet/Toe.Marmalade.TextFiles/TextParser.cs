@@ -26,6 +26,8 @@ namespace Toe.Utils.Marmalade
 
 		private readonly TextReader reader;
 
+		private readonly IResourceFile resourceFile;
+
 		private readonly StringBuilder sb = new StringBuilder(32);
 
 		private string lexem;
@@ -33,8 +35,6 @@ namespace Toe.Utils.Marmalade
 		private bool lexemReady;
 
 		private int nextChar = -1;
-
-		private IResourceFile resourceFile;
 
 		#endregion
 
@@ -77,7 +77,7 @@ namespace Toe.Utils.Marmalade
 		{
 			get
 			{
-				return resourceFile;
+				return this.resourceFile;
 			}
 		}
 

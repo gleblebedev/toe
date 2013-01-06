@@ -1,12 +1,9 @@
-using System.Linq;
-using System.Windows.Forms;
-
 namespace Toe.Editors.Interfaces.Views
 {
 	public class FormRowPanel : HorisontalStackPanel
 	{
-		
 	}
+
 	//public class FormRowPanel : Panel
 	//{
 	//    protected override void OnControlAdded(ControlEventArgs e)

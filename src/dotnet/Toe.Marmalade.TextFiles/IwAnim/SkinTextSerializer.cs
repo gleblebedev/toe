@@ -10,12 +10,20 @@ namespace Toe.Marmalade.TextFiles.IwAnim
 {
 	public class SkinTextSerializer : ITextSerializer
 	{
+		#region Constants and Fields
+
 		private readonly IComponentContext context;
+
+		#endregion
+
+		#region Constructors and Destructors
 
 		public SkinTextSerializer(IComponentContext context)
 		{
 			this.context = context;
 		}
+
+		#endregion
 
 		#region Public Properties
 
@@ -38,7 +46,7 @@ namespace Toe.Marmalade.TextFiles.IwAnim
 			parser.Consume("CIwAnimSkin");
 			parser.Consume("{");
 
-			for (; ; )
+			for (;;)
 			{
 				var attribute = parser.Lexem;
 				if (attribute == "}")

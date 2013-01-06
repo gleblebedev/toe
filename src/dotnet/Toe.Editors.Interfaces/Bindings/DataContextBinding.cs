@@ -1,12 +1,16 @@
-using System;
-
 namespace Toe.Editors.Interfaces.Bindings
 {
 	public class DataContextBinding : IBinding
 	{
-		private readonly IView target;
+		#region Constants and Fields
 
 		private readonly DataContextContainer source;
+
+		private readonly IView target;
+
+		#endregion
+
+		#region Constructors and Destructors
 
 		public DataContextBinding(IView target, DataContextContainer source, bool twoWay)
 		{
@@ -14,8 +18,13 @@ namespace Toe.Editors.Interfaces.Bindings
 			this.source = source;
 			this.source.DataContextChanged += this.OnSourceChanged;
 			if (twoWay)
+			{
 				target.DataContext.DataContextChanged += this.OnTargetDataContextChanged;
+			}
 		}
+
+		#endregion
+
 		//public DataContextBinding(IView target, DataContextContainer source, Func<object, object> setValue, Func<object, object> updateValue)
 		//{
 		//    this.target = target;
@@ -23,6 +32,8 @@ namespace Toe.Editors.Interfaces.Bindings
 		//    this.source.DataContextChanged += this.OnSourceChanged;
 		//    target.DataContext.DataContextChanged += this.OnTargetDataContextChanged;
 		//}
+
+		#region Public Properties
 
 		public IView Target
 		{
@@ -32,13 +43,20 @@ namespace Toe.Editors.Interfaces.Bindings
 			}
 		}
 
+		#endregion
+
+		#region Methods
+
 		private void OnSourceChanged(object sender, DataContextChangedEventArgs e)
 		{
 			this.Target.DataContext.Value = e.NewValue;
 		}
+
 		private void OnTargetDataContextChanged(object sender, DataContextChangedEventArgs e)
 		{
-			source.Value = e.NewValue;
+			this.source.Value = e.NewValue;
 		}
+
+		#endregion
 	}
 }

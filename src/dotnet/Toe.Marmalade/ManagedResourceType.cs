@@ -1,20 +1,30 @@
-using Toe.Marmalade.IwGx;
 using Toe.Resources;
 
 namespace Toe.Marmalade
 {
-	public class ManagedResourceType<T>:IResourceType where T:Managed
+	public class ManagedResourceType<T> : IResourceType
+		where T : Managed
 	{
+		#region Constants and Fields
+
 		private readonly IResourceManager resourceManager;
+
+		#endregion
+
+		#region Constructors and Destructors
 
 		public ManagedResourceType(IResourceManager resourceManager)
 		{
 			this.resourceManager = resourceManager;
 		}
 
+		#endregion
+
+		#region Public Methods and Operators
+
 		public ResourceReference BuildReference(IResourceItem item, bool fileReferencesAllowed)
 		{
-			var r = new ResourceReference(item.Type, resourceManager, item.Source);
+			var r = new ResourceReference(item.Type, this.resourceManager, item.Source);
 			var val = item.Value as T;
 			if (val == null)
 			{
@@ -36,5 +46,7 @@ namespace Toe.Marmalade
 			r.HashReference = val.NameHash;
 			return r;
 		}
+
+		#endregion
 	}
 }

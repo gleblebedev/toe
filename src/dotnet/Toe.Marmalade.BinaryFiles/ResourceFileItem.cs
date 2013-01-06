@@ -1,7 +1,6 @@
 using System.ComponentModel;
 
 using Toe.Resources;
-using Toe.Utils.Marmalade;
 
 namespace Toe.Marmalade.BinaryFiles
 {

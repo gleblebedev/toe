@@ -2,7 +2,13 @@ namespace Toe.Editors
 {
 	public class Base3DEditorOptions
 	{
+		#region Constants and Fields
+
 		private bool lighting = true;
+
+		#endregion
+
+		#region Public Properties
 
 		public bool Lighting
 		{
@@ -15,5 +21,7 @@ namespace Toe.Editors
 				this.lighting = value;
 			}
 		}
+
+		#endregion
 	}
 }

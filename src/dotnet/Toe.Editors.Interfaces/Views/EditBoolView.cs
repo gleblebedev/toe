@@ -7,7 +7,13 @@ namespace Toe.Editors.Interfaces.Views
 {
 	public class EditBoolView : SingleControlView<CheckBox>, IView
 	{
-		readonly DataContextContainer dataContext = new DataContextContainer();
+		#region Constants and Fields
+
+		private readonly DataContextContainer dataContext = new DataContextContainer();
+
+		#endregion
+
+		#region Constructors and Destructors
 
 		public EditBoolView()
 		{
@@ -15,18 +21,9 @@ namespace Toe.Editors.Interfaces.Views
 			this.ViewControl.CheckedChanged += this.UpdateDataContext;
 		}
 
-		private void UpdateDataContext(object sender, EventArgs e)
-		{
-			this.DataContext.Value = this.ViewControl.Checked;
-		}
+		#endregion
 
-
-		private void UpdateTextBox(object sender, DataContextChangedEventArgs e)
-		{
-			this.ViewControl.Checked = (bool)e.NewValue;
-		}
-
-		#region Implementation of IView
+		#region Public Properties
 
 		public DataContextContainer DataContext
 		{
@@ -38,5 +35,18 @@ namespace Toe.Editors.Interfaces.Views
 
 		#endregion
 
+		#region Methods
+
+		private void UpdateDataContext(object sender, EventArgs e)
+		{
+			this.DataContext.Value = this.ViewControl.Checked;
+		}
+
+		private void UpdateTextBox(object sender, DataContextChangedEventArgs e)
+		{
+			this.ViewControl.Checked = (bool)e.NewValue;
+		}
+
+		#endregion
 	}
 }

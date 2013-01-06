@@ -2,30 +2,37 @@ using System;
 
 using Autofac;
 
-using OpenTK;
-
 using Toe.Marmalade.IwAnim;
 using Toe.Resources;
-using Toe.Utils.Marmalade;
 using Toe.Utils.Mesh;
 
 namespace Toe.Marmalade.BinaryFiles.IwAnim
 {
 	public class SkinBinarySerializer : IBinarySerializer
 	{
+		#region Constants and Fields
+
 		private readonly IComponentContext context;
+
+		#endregion
+
+		#region Constructors and Destructors
 
 		public SkinBinarySerializer(IComponentContext context)
 		{
 			this.context = context;
 		}
 
+		#endregion
+
+		#region Public Methods and Operators
+
 		/// <summary>
 		/// Parse binary block.
 		/// </summary>
 		public Managed Parse(BinaryParser parser)
 		{
-			var skin = context.Resolve<AnimSkin>();
+			var skin = this.context.Resolve<AnimSkin>();
 			skin.NameHash = parser.ConsumeUInt32();
 			skin.Flags = parser.ConsumeUInt32();
 			skin.SkeletonModel.HashReference = parser.ConsumeUInt32();
@@ -45,12 +52,16 @@ namespace Toe.Marmalade.BinaryFiles.IwAnim
 			return skin;
 		}
 
+		#endregion
+
+		#region Methods
+
 		private void ParseSkinSet(BinaryParser parser, AnimSkin skin)
 		{
 			var name = parser.ConsumeUInt32();
 			var numVerts = parser.ConsumeUInt32();
 			var numBones = parser.ConsumeByte();
-			parser.Expect((byte)1);
+			parser.Expect(1);
 			var boneIds = parser.ConsumeByteArray(numBones);
 			var vertIds = parser.ConsumeUInt16Array((int)numVerts);
 			var preMultipliedPositions = parser.ConsumeVector3Array((int)numVerts * numBones);
@@ -63,7 +74,7 @@ namespace Toe.Marmalade.BinaryFiles.IwAnim
 				var vertexWeights = new VertexWeights { };
 				if (numBones > 0)
 				{
-					vertexWeights.Bone0 = new VertexWeight { BoneIndex = boneIds[0], Weight = weights[0 + index*numBones] };
+					vertexWeights.Bone0 = new VertexWeight { BoneIndex = boneIds[0], Weight = weights[0 + index * numBones] };
 				}
 				if (numBones > 1)
 				{
@@ -80,5 +91,7 @@ namespace Toe.Marmalade.BinaryFiles.IwAnim
 				skin.Weights[id] = vertexWeights;
 			}
 		}
+
+		#endregion
 	}
 }

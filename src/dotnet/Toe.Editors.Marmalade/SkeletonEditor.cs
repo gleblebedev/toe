@@ -26,8 +26,12 @@ namespace Toe.Editors.Marmalade
 
 		#region Constructors and Destructors
 
-		public SkeletonEditor(IEditorEnvironment editorEnvironment, IResourceManager resourceManager, IComponentContext context, IEditorOptions<Base3DEditorOptions> options)
-			: base(context,options)
+		public SkeletonEditor(
+			IEditorEnvironment editorEnvironment,
+			IResourceManager resourceManager,
+			IComponentContext context,
+			IEditorOptions<Base3DEditorOptions> options)
+			: base(context, options)
 		{
 			this.editorEnvironment = editorEnvironment;
 			this.resourceManager = resourceManager;

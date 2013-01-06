@@ -490,193 +490,200 @@ namespace Toe.Marmalade.IwGx
 			OpenTKHelper.Assert();
 		}
 
+		#endregion
+
+		#region Methods
+
 		private Image ConvertToAbgr8888()
 		{
 			var image = new Image();
-			image.height = height;
-			image.width = width;
+			image.height = this.height;
+			image.width = this.width;
 			image.format = ImageFormat.ABGR_8888;
-			image.pitch = width * 4;
-			image.data = new byte[image.pitch*image.height];
-			switch (format)
+			image.pitch = this.width * 4;
+			image.data = new byte[image.pitch * image.height];
+			switch (this.format)
 			{
 				case ImageFormat.FORMAT_UNDEFINED:
 					throw new FormatException("Can't convert undefined format");
 					break;
-				//case ImageFormat.RGB_332:
-				//    break;
-				//case ImageFormat.BGR_332:
-				//    break;
-				//case ImageFormat.RGB_565:
-				//    break;
-				//case ImageFormat.BGR_565:
-				//    break;
-				//case ImageFormat.RGBA_4444:
-				//    break;
-				//case ImageFormat.ABGR_4444:
-				//    break;
-				//case ImageFormat.RGBA_5551:
-				//    break;
-				//case ImageFormat.ABGR_1555:
-				//    break;
-				//case ImageFormat.RGB_888:
-				//    break;
-				//case ImageFormat.BGR_888:
-				//    break;
-				//case ImageFormat.RGBA_6666:
-				//    break;
-				//case ImageFormat.ABGR_6666:
-				//    break;
-				//case ImageFormat.RGBA_8888:
-				//    break;
-				//case ImageFormat.ABGR_8888:
-				//    break;
-				//case ImageFormat.RGBA_AAA2:
-				//    break;
-				//case ImageFormat.ABGR_2AAA:
-				//    break;
+					//case ImageFormat.RGB_332:
+					//    break;
+					//case ImageFormat.BGR_332:
+					//    break;
+					//case ImageFormat.RGB_565:
+					//    break;
+					//case ImageFormat.BGR_565:
+					//    break;
+					//case ImageFormat.RGBA_4444:
+					//    break;
+					//case ImageFormat.ABGR_4444:
+					//    break;
+					//case ImageFormat.RGBA_5551:
+					//    break;
+					//case ImageFormat.ABGR_1555:
+					//    break;
+					//case ImageFormat.RGB_888:
+					//    break;
+					//case ImageFormat.BGR_888:
+					//    break;
+					//case ImageFormat.RGBA_6666:
+					//    break;
+					//case ImageFormat.ABGR_6666:
+					//    break;
+					//case ImageFormat.RGBA_8888:
+					//    break;
+					//case ImageFormat.ABGR_8888:
+					//    break;
+					//case ImageFormat.RGBA_AAA2:
+					//    break;
+					//case ImageFormat.ABGR_2AAA:
+					//    break;
 				case ImageFormat.PALETTE4_RGB_888:
-					Palette4Rgb888ToAbgr8888(image);
-				    break;
-				//case ImageFormat.PALETTE4_RGBA_8888:
-				//    break;
-				//case ImageFormat.PALETTE4_RGB_565:
-				//    break;
-				//case ImageFormat.PALETTE4_RGBA_4444:
-				//    break;
-				//case ImageFormat.PALETTE4_RGBA_5551:
-				//    break;
-				//case ImageFormat.PALETTE4_ABGR_1555:
-				//    break;
+					this.Palette4Rgb888ToAbgr8888(image);
+					break;
+					//case ImageFormat.PALETTE4_RGBA_8888:
+					//    break;
+					//case ImageFormat.PALETTE4_RGB_565:
+					//    break;
+					//case ImageFormat.PALETTE4_RGBA_4444:
+					//    break;
+					//case ImageFormat.PALETTE4_RGBA_5551:
+					//    break;
+					//case ImageFormat.PALETTE4_ABGR_1555:
+					//    break;
 				case ImageFormat.PALETTE8_RGB_888:
-					Palette8Rgb888ToAbgr8888(image);
-				    break;
+					this.Palette8Rgb888ToAbgr8888(image);
+					break;
 				case ImageFormat.PALETTE8_RGBA_8888:
-					Palette8Rgba8888ToAbgr8888(image);
-				    break;
-				//case ImageFormat.PALETTE8_RGB_565:
-				//    break;
-				//case ImageFormat.PALETTE8_RGBA_4444:
-				//    break;
-				//case ImageFormat.PALETTE8_RGBA_5551:
-				//    break;
-				//case ImageFormat.PALETTE8_ABGR_1555:
-				//    break;
-				//case ImageFormat.PALETTE7_ABGR_1555:
-				//    break;
-				//case ImageFormat.PALETTE6_ABGR_1555:
-				//    break;
-				//case ImageFormat.PALETTE5_ABGR_1555:
-				//    break;
-				//case ImageFormat.PVRTC_2:
-				//    break;
-				//case ImageFormat.PVRTC_4:
-				//    break;
-				//case ImageFormat.ATITC:
-				//    break;
-				//case ImageFormat.COMPRESSED:
-				//    break;
-				//case ImageFormat.PALETTE4_ABGR_4444:
-				//    break;
-				//case ImageFormat.PALETTE8_ABGR_4444:
-				//    break;
-				//case ImageFormat.A_8:
-				//    break;
-				//case ImageFormat.ETC:
-				//    break;
-				//case ImageFormat.ARGB_8888:
-				//    break;
-				//case ImageFormat.PALETTE4_ARGB_8888:
-				//    break;
-				//case ImageFormat.PALETTE8_ARGB_8888:
-				//    break;
-				//case ImageFormat.DXT3:
-				//    break;
-				//case ImageFormat.PALETTE4_BGR555:
-				//    break;
-				//case ImageFormat.PALETTE8_BGR555:
-				//    break;
-				//case ImageFormat.A5_PALETTE3_BGR_555:
-				//    break;
-				//case ImageFormat.A3_PALETTE5_BGR_555:
-				//    break;
-				//case ImageFormat.PALETTE4_BGR_565:
-				//    break;
-				//case ImageFormat.PALETTE4_ABGR_8888:
-				//    break;
-				//case ImageFormat.PALETTE8_BGR_565:
-				//    break;
-				//case ImageFormat.PALETTE8_ABGR_8888:
-				//    break;
-				//case ImageFormat.DXT1:
-				//    break;
-				//case ImageFormat.DXT5:
-				//    break;
-				//case ImageFormat.FORMAT_MAX:
-				//    break;
+					this.Palette8Rgba8888ToAbgr8888(image);
+					break;
+					//case ImageFormat.PALETTE8_RGB_565:
+					//    break;
+					//case ImageFormat.PALETTE8_RGBA_4444:
+					//    break;
+					//case ImageFormat.PALETTE8_RGBA_5551:
+					//    break;
+					//case ImageFormat.PALETTE8_ABGR_1555:
+					//    break;
+					//case ImageFormat.PALETTE7_ABGR_1555:
+					//    break;
+					//case ImageFormat.PALETTE6_ABGR_1555:
+					//    break;
+					//case ImageFormat.PALETTE5_ABGR_1555:
+					//    break;
+					//case ImageFormat.PVRTC_2:
+					//    break;
+					//case ImageFormat.PVRTC_4:
+					//    break;
+					//case ImageFormat.ATITC:
+					//    break;
+					//case ImageFormat.COMPRESSED:
+					//    break;
+					//case ImageFormat.PALETTE4_ABGR_4444:
+					//    break;
+					//case ImageFormat.PALETTE8_ABGR_4444:
+					//    break;
+					//case ImageFormat.A_8:
+					//    break;
+					//case ImageFormat.ETC:
+					//    break;
+					//case ImageFormat.ARGB_8888:
+					//    break;
+					//case ImageFormat.PALETTE4_ARGB_8888:
+					//    break;
+					//case ImageFormat.PALETTE8_ARGB_8888:
+					//    break;
+					//case ImageFormat.DXT3:
+					//    break;
+					//case ImageFormat.PALETTE4_BGR555:
+					//    break;
+					//case ImageFormat.PALETTE8_BGR555:
+					//    break;
+					//case ImageFormat.A5_PALETTE3_BGR_555:
+					//    break;
+					//case ImageFormat.A3_PALETTE5_BGR_555:
+					//    break;
+					//case ImageFormat.PALETTE4_BGR_565:
+					//    break;
+					//case ImageFormat.PALETTE4_ABGR_8888:
+					//    break;
+					//case ImageFormat.PALETTE8_BGR_565:
+					//    break;
+					//case ImageFormat.PALETTE8_ABGR_8888:
+					//    break;
+					//case ImageFormat.DXT1:
+					//    break;
+					//case ImageFormat.DXT5:
+					//    break;
+					//case ImageFormat.FORMAT_MAX:
+					//    break;
 				default:
 					throw new FormatException("Can't convert to ABGR 8888");
 			}
 			return image;
 		}
 
-		private void Palette8Rgba8888ToAbgr8888(Image image)
-		{
-			for (var y=0;y<height;++y)
-			{
-				int dstIndex = image.pitch * y;
-				int srcIndex = pitch * y;
-				for (var x = 0; x < width; ++x)
-				{
-					var i = data[srcIndex]*4;
-					++srcIndex;
-					image.data[dstIndex++] = PaletteData[i+3];
-					image.data[dstIndex++] = PaletteData[i + 2];
-					image.data[dstIndex++] = PaletteData[i + 1];
-					image.data[dstIndex++] = PaletteData[i + 0];
-				}
-			}
-		}
 		private void Palette4Rgb888ToAbgr8888(Image image)
 		{
-			for (var y = 0; y < height; ++y)
+			for (var y = 0; y < this.height; ++y)
 			{
 				int dstIndex = image.pitch * y;
-				int srcIndex = pitch * y;
-				for (var x = 0; x < width; x+=2)
+				int srcIndex = this.pitch * y;
+				for (var x = 0; x < this.width; x += 2)
 				{
-					byte byteIndex = data[srcIndex];
+					byte byteIndex = this.data[srcIndex];
 					++srcIndex;
 					var i = (byteIndex >> 4) * 3;
-					image.data[dstIndex++] = PaletteData[i + 2];
-					image.data[dstIndex++] = PaletteData[i + 1];
-					image.data[dstIndex++] = PaletteData[i + 0];
+					image.data[dstIndex++] = this.PaletteData[i + 2];
+					image.data[dstIndex++] = this.PaletteData[i + 1];
+					image.data[dstIndex++] = this.PaletteData[i + 0];
 					image.data[dstIndex++] = 255;
-					i = (byteIndex &0x0F) * 3;
-					image.data[dstIndex++] = PaletteData[i + 2];
-					image.data[dstIndex++] = PaletteData[i + 1];
-					image.data[dstIndex++] = PaletteData[i + 0];
+					i = (byteIndex & 0x0F) * 3;
+					image.data[dstIndex++] = this.PaletteData[i + 2];
+					image.data[dstIndex++] = this.PaletteData[i + 1];
+					image.data[dstIndex++] = this.PaletteData[i + 0];
 					image.data[dstIndex++] = 255;
 				}
 			}
 		}
+
 		private void Palette8Rgb888ToAbgr8888(Image image)
 		{
-			for (var y = 0; y < height; ++y)
+			for (var y = 0; y < this.height; ++y)
 			{
 				int dstIndex = image.pitch * y;
-				int srcIndex = pitch * y;
-				for (var x = 0; x < width; ++x)
+				int srcIndex = this.pitch * y;
+				for (var x = 0; x < this.width; ++x)
 				{
-					var i = data[srcIndex] * 3;
+					var i = this.data[srcIndex] * 3;
 					++srcIndex;
-					image.data[dstIndex++] = PaletteData[i + 2];
-					image.data[dstIndex++] = PaletteData[i + 1];
-					image.data[dstIndex++] = PaletteData[i + 0];
+					image.data[dstIndex++] = this.PaletteData[i + 2];
+					image.data[dstIndex++] = this.PaletteData[i + 1];
+					image.data[dstIndex++] = this.PaletteData[i + 0];
 					image.data[dstIndex++] = 255;
 				}
 			}
 		}
+
+		private void Palette8Rgba8888ToAbgr8888(Image image)
+		{
+			for (var y = 0; y < this.height; ++y)
+			{
+				int dstIndex = image.pitch * y;
+				int srcIndex = this.pitch * y;
+				for (var x = 0; x < this.width; ++x)
+				{
+					var i = this.data[srcIndex] * 4;
+					++srcIndex;
+					image.data[dstIndex++] = this.PaletteData[i + 3];
+					image.data[dstIndex++] = this.PaletteData[i + 2];
+					image.data[dstIndex++] = this.PaletteData[i + 1];
+					image.data[dstIndex++] = this.PaletteData[i + 0];
+				}
+			}
+		}
+
 		#endregion
 	}
 }

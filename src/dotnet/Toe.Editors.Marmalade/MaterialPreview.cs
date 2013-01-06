@@ -21,7 +21,11 @@ namespace Toe.Editors.Marmalade
 
 		#region Constructors and Destructors
 
-		public MaterialPreview(MaterialEditor editor, ToeGraphicsContext graphicsContext, IComponentContext context, IEditorOptions<Base3DEditorOptions> options)
+		public MaterialPreview(
+			MaterialEditor editor,
+			ToeGraphicsContext graphicsContext,
+			IComponentContext context,
+			IEditorOptions<Base3DEditorOptions> options)
 			: base(context, options)
 		{
 			this.editor = editor;
@@ -51,7 +55,7 @@ namespace Toe.Editors.Marmalade
 
 			GL.PushAttrib(AttribMask.AllAttribBits);
 
-			if (options.Options.Lighting)
+			if (this.options.Options.Lighting)
 			{
 				GL.Enable(EnableCap.Lighting);
 				GL.Enable(EnableCap.Light0);

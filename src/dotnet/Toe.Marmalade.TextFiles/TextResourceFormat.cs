@@ -104,7 +104,11 @@ namespace Toe.Marmalade.TextFiles
 
 			using (var fileStream = File.OpenRead(filePath))
 			{
-				var resources = this.Load(fileStream, Path.GetFileNameWithoutExtension(filePath), resourceFile, Path.GetDirectoryName(Path.GetFullPath(filePath)));
+				var resources = this.Load(
+					fileStream,
+					Path.GetFileNameWithoutExtension(filePath),
+					resourceFile,
+					Path.GetDirectoryName(Path.GetFullPath(filePath)));
 				foreach (var resource in resources)
 				{
 					items.Add(new ResourceFileItem(resource.ClassHashCode, resource));

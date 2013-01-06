@@ -4,46 +4,75 @@ using System.IO;
 using System.Linq;
 
 using Autofac;
-using Autofac.Core.Activators.Reflection;
 
 namespace Toe.Resources
 {
 	public class ResourceManager : IResourceManager
 	{
-		~ResourceManager()
-		{
-			this.Dispose(false);
-		}
-
-		protected virtual void Dispose(bool disposing)
-		{
-			
-		}
+		#region Constants and Fields
 
 		private readonly IComponentContext context;
+
+		private readonly Dictionary<string, IResourceFile> files = new Dictionary<string, IResourceFile>();
+
+		private readonly Dictionary<uint, Dictionary<uint, IResourceItem>> resources =
+			new Dictionary<uint, Dictionary<uint, IResourceItem>>();
+
+		#endregion
+
+		#region Constructors and Destructors
 
 		public ResourceManager(IComponentContext context)
 		{
 			this.context = context;
 		}
 
-		readonly Dictionary<string,IResourceFile> files = new Dictionary<string, IResourceFile>();
+		~ResourceManager()
+		{
+			this.Dispose(false);
+		}
 
-		readonly Dictionary<uint, Dictionary<uint, IResourceItem>> resources = new Dictionary<uint, Dictionary<uint, IResourceItem>>();
+		#endregion
+
+		#region Public Methods and Operators
+
+		public IResourceItem ConsumeResource(uint type, uint nameHash)
+		{
+			var consumeResource = (ResourceItem)this.EnsureItem(type, nameHash);
+			consumeResource.Consume();
+			return consumeResource;
+		}
+
+		/// <summary>
+		/// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+		/// </summary>
+		/// <filterpriority>2</filterpriority>
+		public void Dispose()
+		{
+			this.Dispose(true);
+			GC.SuppressFinalize(this);
+		}
 
 		public IResourceFile EnsureFile(string filePath)
 		{
 			var fullPath = Path.GetFullPath(filePath);
 			var key = fullPath.ToLower();
 			IResourceFile resourceFile;
-			if (files.TryGetValue(key, out resourceFile))
+			if (this.files.TryGetValue(key, out resourceFile))
 			{
 				return resourceFile;
 			}
-			resourceFile = context.Resolve<IResourceFile>(new[] { TypedParameter.From<IResourceManager>(this), TypedParameter.From(fullPath) });
-			files.Add(key, resourceFile);
+			resourceFile =
+				this.context.Resolve<IResourceFile>(
+					new[] { TypedParameter.From<IResourceManager>(this), TypedParameter.From(fullPath) });
+			this.files.Add(key, resourceFile);
 
 			return resourceFile;
+		}
+
+		public IResourceItem EnsureItem(uint type, uint hash)
+		{
+			return this.EnsureItem(this.EnsureTypeCollection(type), type, hash);
 		}
 
 		public Dictionary<uint, IResourceItem> EnsureTypeCollection(uint type)
@@ -55,55 +84,6 @@ namespace Toe.Resources
 				this.resources.Add(type, typeCollection);
 			}
 			return typeCollection;
-		}
-		public IResourceItem EnsureItem(uint type, uint hash)
-		{
-			return EnsureItem(this.EnsureTypeCollection(type),type, hash);
-		}
-		internal IResourceItem EnsureItem(Dictionary<uint, IResourceItem> typeCollection, uint type, uint hash)
-		{
-			IResourceItem item;
-			if (!typeCollection.TryGetValue(hash, out item))
-			{
-				item = new ResourceItem(this, type, hash);
-				typeCollection.Add(hash, item);
-			}
-			return item;
-		}
-
-		public IResourceItem ConsumeResource(uint type, uint nameHash)
-		{
-			var consumeResource = (ResourceItem)EnsureItem(type, nameHash);
-			consumeResource.Consume();
-			return consumeResource;
-		}
-
-		public void ReleaseResource(uint type, uint nameHash)
-		{
-			var consumeResource = (ResourceItem)EnsureItem(type, nameHash);
-			consumeResource.Release();
-		}
-
-		public void ProvideResource(uint type, uint nameHash, object item, IResourceFile source)
-		{
-			var consumeResource = (ResourceItem)EnsureItem(type, nameHash);
-			consumeResource.Provide(item,source);
-		}
-
-		public void RetractResource(uint type, uint nameHash, object item, IResourceFile source)
-		{
-			var consumeResource = (ResourceItem)EnsureItem(type, nameHash);
-			consumeResource.Retract(item,source);
-			TryToRemoveResource(consumeResource);
-		}
-
-		private void TryToRemoveResource(ResourceItem resourceItem)
-		{
-			if (!resourceItem.IsInUse)
-			{
-				var typeCollection = this.EnsureTypeCollection(resourceItem.Type);
-				typeCollection.Remove(resourceItem.Hash);
-			}
 		}
 
 		public object FindResource(uint type, uint hash)
@@ -123,16 +103,51 @@ namespace Toe.Resources
 			return (from i in typeCollection.Values select i).ToList();
 		}
 
-		#region Implementation of IDisposable
-
-		/// <summary>
-		/// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-		/// </summary>
-		/// <filterpriority>2</filterpriority>
-		public void Dispose()
+		public void ProvideResource(uint type, uint nameHash, object item, IResourceFile source)
 		{
-			this.Dispose(true);
-			GC.SuppressFinalize(this);
+			var consumeResource = (ResourceItem)this.EnsureItem(type, nameHash);
+			consumeResource.Provide(item, source);
+		}
+
+		public void ReleaseResource(uint type, uint nameHash)
+		{
+			var consumeResource = (ResourceItem)this.EnsureItem(type, nameHash);
+			consumeResource.Release();
+		}
+
+		public void RetractResource(uint type, uint nameHash, object item, IResourceFile source)
+		{
+			var consumeResource = (ResourceItem)this.EnsureItem(type, nameHash);
+			consumeResource.Retract(item, source);
+			this.TryToRemoveResource(consumeResource);
+		}
+
+		#endregion
+
+		#region Methods
+
+		internal IResourceItem EnsureItem(Dictionary<uint, IResourceItem> typeCollection, uint type, uint hash)
+		{
+			IResourceItem item;
+			if (!typeCollection.TryGetValue(hash, out item))
+			{
+				item = new ResourceItem(this, type, hash);
+				typeCollection.Add(hash, item);
+			}
+			return item;
+		}
+
+		protected virtual void Dispose(bool disposing)
+		{
+		}
+
+		private void TryToRemoveResource(ResourceItem resourceItem)
+		{
+			if (!resourceItem.IsInUse)
+			{
+				var typeCollection = this.EnsureTypeCollection(resourceItem.Type);
+				typeCollection.Remove(resourceItem.Hash);
+			}
 		}
 
 		#endregion

@@ -13,6 +13,10 @@ namespace Toe.Utils.Mesh
 
 		#region Public Properties
 
+		public string Name { get; set; }
+
+		public uint NameHash { get; set; }
+
 		public IList<ISubMesh> Submeshes
 		{
 			get
@@ -21,21 +25,6 @@ namespace Toe.Utils.Mesh
 			}
 		}
 
-		public string Name
-		{
-			get
-			{
-				return this.name;
-			}
-			set
-			{
-				this.name = value;
-			}
-		}
-
-		public uint NameHash { get; set; }
-
-		private string name;
 		#endregion
 
 		#region Public Methods and Operators

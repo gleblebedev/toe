@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.ComponentModel;
 using System.Drawing;
@@ -9,7 +10,7 @@ using Toe.Resources;
 
 namespace Toe.Editors.Marmalade
 {
-	public class ResourceFileEditor : UserControl, IResourceEditor,INotifyPropertyChanged
+	public class ResourceFileEditor : UserControl, IResourceEditor, INotifyPropertyChanged
 	{
 		#region Constants and Fields
 
@@ -17,9 +18,9 @@ namespace Toe.Editors.Marmalade
 
 		private readonly IEditorEnvironment editorEnvironment;
 
-		private readonly IResourceManager resourceManager;
-
 		private readonly ICommandHistory history;
+
+		private readonly IResourceManager resourceManager;
 
 		private SplitContainer itemsPropertiesSplitter;
 
@@ -34,12 +35,18 @@ namespace Toe.Editors.Marmalade
 			this.history = new CommandHistory();
 			this.editorEnvironment = editorEnvironment;
 			this.resourceManager = resourceManager;
-			this.history = history;
+			this.history = this.history;
 			this.Dock = DockStyle.Fill;
-			history.PropertyChanged += NotifyHistoryChanged;
+			this.history.PropertyChanged += this.NotifyHistoryChanged;
 			this.InitializeComponent();
 			this.InitializeEditor();
 		}
+
+		#endregion
+
+		#region Public Events
+
+		public event PropertyChangedEventHandler PropertyChanged;
 
 		#endregion
 
@@ -73,7 +80,7 @@ namespace Toe.Editors.Marmalade
 		{
 			get
 			{
-				return history.CanRedo;
+				return this.history.CanRedo;
 			}
 		}
 
@@ -81,7 +88,7 @@ namespace Toe.Editors.Marmalade
 		{
 			get
 			{
-				return history.CanUndo;
+				return this.history.CanUndo;
 			}
 		}
 
@@ -117,7 +124,7 @@ namespace Toe.Editors.Marmalade
 
 		public void Delete()
 		{
-			throw new System.NotImplementedException();
+			throw new NotImplementedException();
 		}
 
 		public void LoadFile(string filename)
@@ -136,7 +143,7 @@ namespace Toe.Editors.Marmalade
 
 		public void Redo()
 		{
-			history.Redo();
+			this.history.Redo();
 		}
 
 		public void SaveFile(string filename)
@@ -155,10 +162,6 @@ namespace Toe.Editors.Marmalade
 			//    }
 			//}
 		}
-		private void NotifyHistoryChanged(object sender, PropertyChangedEventArgs e)
-		{
-			if (PropertyChanged != null) PropertyChanged(this, e);
-		}
 
 		public void StopRecorder()
 		{
@@ -166,12 +169,11 @@ namespace Toe.Editors.Marmalade
 
 		public void Undo()
 		{
-			history.Undo();
+			this.history.Undo();
 		}
 
 		public void onSelectAll()
 		{
-			
 		}
 
 		#endregion
@@ -248,6 +250,14 @@ namespace Toe.Editors.Marmalade
 			//itemsPropertiesSplitter.Panel2Collapsed = true;
 		}
 
+		private void NotifyHistoryChanged(object sender, PropertyChangedEventArgs e)
+		{
+			if (this.PropertyChanged != null)
+			{
+				this.PropertyChanged(this, e);
+			}
+		}
+
 		private void ShowEditorFor(IResourceFileItem managed)
 		{
 			var controlCollection = this.itemsPropertiesSplitter.Panel2.Controls;
@@ -287,7 +297,7 @@ namespace Toe.Editors.Marmalade
 				c.Dispose();
 			}
 
-			var view = this.editorEnvironment.EditorFor(managed.Resource, history);
+			var view = this.editorEnvironment.EditorFor(managed.Resource, this.history);
 			view.DataContext.Value = managed.Resource;
 			var v = view as Control;
 			v.Dock = DockStyle.Fill;
@@ -295,12 +305,6 @@ namespace Toe.Editors.Marmalade
 
 			this.itemsPropertiesSplitter.Panel2Collapsed = false;
 		}
-
-		#endregion
-
-		#region Implementation of INotifyPropertyChanged
-
-		public event PropertyChangedEventHandler PropertyChanged;
 
 		#endregion
 	}

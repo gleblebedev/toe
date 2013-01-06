@@ -65,7 +65,6 @@ namespace Toe.Editors
 
 		public void MouseWheel(float delta, Point location)
 		{
-			
 		}
 
 		#endregion

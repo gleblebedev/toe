@@ -8,9 +8,13 @@ namespace Toe.Utils.Marmalade.IwResManager
 
 		#endregion
 
+		#region Public Methods and Operators
+
 		public override string ToString()
 		{
-			return Path;
+			return this.Path;
 		}
+
+		#endregion
 	}
 }

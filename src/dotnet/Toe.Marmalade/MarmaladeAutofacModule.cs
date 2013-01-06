@@ -6,7 +6,6 @@ using Toe.Marmalade.IwResManager;
 using Toe.Resources;
 using Toe.Utils.Marmalade.IwGraphics;
 using Toe.Utils.Marmalade.IwGx;
-using Toe.Utils.Marmalade.IwResManager;
 
 namespace Toe.Marmalade
 {
@@ -33,8 +32,8 @@ namespace Toe.Marmalade
 			builder.RegisterType<ManagedResourceType<Texture>>().Keyed<IResourceType>(Texture.TypeHash).SingleInstance();
 			builder.RegisterType<ManagedResourceType<ResGroup>>().Keyed<IResourceType>(ResGroup.TypeHash).SingleInstance();
 			builder.RegisterType<ManagedResourceType<Model>>().Keyed<IResourceType>(Model.TypeHash).SingleInstance();
-			builder.RegisterType<ManagedResourceType<ShaderTechnique>>().Keyed<IResourceType>(ShaderTechnique.TypeHash).SingleInstance();
-		
+			builder.RegisterType<ManagedResourceType<ShaderTechnique>>().Keyed<IResourceType>(ShaderTechnique.TypeHash).
+				SingleInstance();
 		}
 
 		#endregion

@@ -4,7 +4,7 @@ namespace Toe.Resources
 {
 	public class ResourceErrorHandler : IResourceErrorHandler
 	{
-		#region Implementation of IResourceErrorHandler
+		#region Public Methods and Operators
 
 		public virtual void CanNotRead(string filePath, Exception exception)
 		{

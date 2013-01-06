@@ -1,6 +1,7 @@
 #if WINDOWS_PHONE
 using Microsoft.Xna.Framework;
 #else
+
 using OpenTK;
 
 using Toe.Resources;
@@ -24,6 +25,10 @@ namespace Toe.Utils.Mesh
 		private Vector3 bindingPos = Vector3.Zero;
 
 		private Quaternion bindingRot = Quaternion.Identity;
+
+		private string name;
+
+		private uint nameHash;
 
 		private int parent = -1;
 
@@ -111,11 +116,7 @@ namespace Toe.Utils.Mesh
 			}
 		}
 
-		private string name;
-
-		private uint nameHash;
-
-		private ushort flags;
+		public ushort Flags { get; set; }
 
 		public string Name
 		{
@@ -132,6 +133,7 @@ namespace Toe.Utils.Mesh
 				}
 			}
 		}
+
 		public uint NameHash
 		{
 			get
@@ -147,6 +149,7 @@ namespace Toe.Utils.Mesh
 				}
 			}
 		}
+
 		public int Parent
 		{
 			get
@@ -160,18 +163,6 @@ namespace Toe.Utils.Mesh
 		}
 
 		public int SkelId { get; set; }
-
-		public ushort Flags
-		{
-			get
-			{
-				return this.flags;
-			}
-			set
-			{
-				this.flags = value;
-			}
-		}
 
 		#endregion
 	}

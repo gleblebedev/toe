@@ -1,7 +1,6 @@
 using Autofac;
 
 using Toe.Resources;
-using Toe.Utils.Marmalade;
 
 namespace Toe.Marmalade.TextureFiles
 {

@@ -1,16 +1,31 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
 
 namespace Toe.Editors.Interfaces.Bindings
 {
 	public class DataContextContainer : INotifyPropertyChanging, INotifyPropertyChanged, INotifyCollectionChanged
 	{
+		#region Constants and Fields
+
 		private object value;
+
+		#endregion
+
+		#region Public Events
+
+		public event NotifyCollectionChangedEventHandler CollectionChanged;
+
+		public event EventHandler<DataContextChangedEventArgs> DataContextChanged;
+
+		public event PropertyChangedEventHandler PropertyChanged;
+
+		public event PropertyChangingEventHandler PropertyChanging;
+
+		#endregion
+
+		#region Public Properties
 
 		public object Value
 		{
@@ -22,32 +37,44 @@ namespace Toe.Editors.Interfaces.Bindings
 			{
 				if (!Equals(this.value, value))
 				{
-					Unsubscribe();
+					this.Unsubscribe();
 					var oldValue = this.value;
 					this.value = value;
-					if (DataContextChanged != null) DataContextChanged(this, new DataContextChangedEventArgs(oldValue, value));
-					Subscribe();
+					if (this.DataContextChanged != null)
+					{
+						this.DataContextChanged(this, new DataContextChangedEventArgs(oldValue, value));
+					}
+					this.Subscribe();
 				}
 			}
 		}
 
-		private void Subscribe()
+		#endregion
+
+		#region Methods
+
+		protected virtual void RaiseDataCollectionChanged(NotifyCollectionChangedEventArgs args)
 		{
-			if (this.value == null)
-				return;
+			if (this.CollectionChanged != null)
+			{
+				this.CollectionChanged(this.value, args);
+			}
+		}
 
-			var notifyCollectionChanged = this.value as INotifyCollectionChanged;
-			if (notifyCollectionChanged != null) notifyCollectionChanged.CollectionChanged += OnDataCollectionChanged;
+		protected virtual void RaiseDataPropertyChanged(string propertyName)
+		{
+			if (this.PropertyChanged != null)
+			{
+				this.PropertyChanged(this.value, new PropertyChangedEventArgs(propertyName));
+			}
+		}
 
-			var bindingList = this.value as IBindingList;
-			if (bindingList != null) bindingList.ListChanged += OnBindingListChanged;
-			
-
-			var notifyPropertyChanged = this.value as INotifyPropertyChanged;
-			if (notifyPropertyChanged != null) notifyPropertyChanged.PropertyChanged += OnDataPropertyChanged;
-
-			var notifyPropertyChanging = this.value as INotifyPropertyChanging;
-			if (notifyPropertyChanging != null) notifyPropertyChanging.PropertyChanging += OnDataPropertyChanging;
+		protected virtual void RaiseDataPropertyChanging(string propertyName)
+		{
+			if (this.PropertyChanging != null)
+			{
+				this.PropertyChanging(this.value, new PropertyChangingEventArgs(propertyName));
+			}
 		}
 
 		private void OnBindingListChanged(object sender, ListChangedEventArgs e)
@@ -58,14 +85,17 @@ namespace Toe.Editors.Interfaces.Bindings
 					this.RaiseDataCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
 					break;
 				case ListChangedType.ItemAdded:
-					this.RaiseDataCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, ((IList)sender)[e.NewIndex], e.NewIndex));
+					this.RaiseDataCollectionChanged(
+						new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, ((IList)sender)[e.NewIndex], e.NewIndex));
 					break;
 				case ListChangedType.ItemDeleted:
 					//TODO: implement conversion
 					this.RaiseDataCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
 					break;
 				case ListChangedType.ItemMoved:
-					this.RaiseDataCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Move, ((IList)sender)[e.NewIndex], e.NewIndex, e.OldIndex));
+					this.RaiseDataCollectionChanged(
+						new NotifyCollectionChangedEventArgs(
+							NotifyCollectionChangedAction.Move, ((IList)sender)[e.NewIndex], e.NewIndex, e.OldIndex));
 					break;
 				case ListChangedType.ItemChanged:
 					//TODO: implement conversion
@@ -82,24 +112,9 @@ namespace Toe.Editors.Interfaces.Bindings
 			}
 		}
 
-		private void Unsubscribe()
+		private void OnDataCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
 		{
-			if (this.value == null)
-				return;
-
-			var notifyCollectionChanged = this.value as INotifyCollectionChanged;
-			if (notifyCollectionChanged != null) notifyCollectionChanged.CollectionChanged -= OnDataCollectionChanged;
-
-			var notifyPropertyChanged = this.value as INotifyPropertyChanged;
-			if (notifyPropertyChanged != null) notifyPropertyChanged.PropertyChanged -= OnDataPropertyChanged;
-
-			var notifyPropertyChanging = this.value as INotifyPropertyChanging;
-			if (notifyPropertyChanging != null) notifyPropertyChanging.PropertyChanging -= OnDataPropertyChanging;
-		}
-
-		private void OnDataPropertyChanging(object sender, PropertyChangingEventArgs e)
-		{
-			this.RaiseDataPropertyChanging(e.PropertyName);
+			this.RaiseDataCollectionChanged(e);
 		}
 
 		private void OnDataPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -107,43 +122,68 @@ namespace Toe.Editors.Interfaces.Bindings
 			this.RaiseDataPropertyChanged(e.PropertyName);
 		}
 
-		private void OnDataCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+		private void OnDataPropertyChanging(object sender, PropertyChangingEventArgs e)
 		{
-			this.RaiseDataCollectionChanged(e);
+			this.RaiseDataPropertyChanging(e.PropertyName);
 		}
 
-		protected virtual void RaiseDataPropertyChanging(string propertyName)
+		private void Subscribe()
 		{
-			if (PropertyChanging != null)
-				PropertyChanging(this.value, new PropertyChangingEventArgs(propertyName));
+			if (this.value == null)
+			{
+				return;
+			}
+
+			var notifyCollectionChanged = this.value as INotifyCollectionChanged;
+			if (notifyCollectionChanged != null)
+			{
+				notifyCollectionChanged.CollectionChanged += this.OnDataCollectionChanged;
+			}
+
+			var bindingList = this.value as IBindingList;
+			if (bindingList != null)
+			{
+				bindingList.ListChanged += this.OnBindingListChanged;
+			}
+
+			var notifyPropertyChanged = this.value as INotifyPropertyChanged;
+			if (notifyPropertyChanged != null)
+			{
+				notifyPropertyChanged.PropertyChanged += this.OnDataPropertyChanged;
+			}
+
+			var notifyPropertyChanging = this.value as INotifyPropertyChanging;
+			if (notifyPropertyChanging != null)
+			{
+				notifyPropertyChanging.PropertyChanging += this.OnDataPropertyChanging;
+			}
 		}
-		protected virtual void RaiseDataPropertyChanged(string propertyName)
+
+		private void Unsubscribe()
 		{
-			if (PropertyChanged != null)
-				PropertyChanged(this.value, new PropertyChangedEventArgs(propertyName));
+			if (this.value == null)
+			{
+				return;
+			}
+
+			var notifyCollectionChanged = this.value as INotifyCollectionChanged;
+			if (notifyCollectionChanged != null)
+			{
+				notifyCollectionChanged.CollectionChanged -= this.OnDataCollectionChanged;
+			}
+
+			var notifyPropertyChanged = this.value as INotifyPropertyChanged;
+			if (notifyPropertyChanged != null)
+			{
+				notifyPropertyChanged.PropertyChanged -= this.OnDataPropertyChanged;
+			}
+
+			var notifyPropertyChanging = this.value as INotifyPropertyChanging;
+			if (notifyPropertyChanging != null)
+			{
+				notifyPropertyChanging.PropertyChanging -= this.OnDataPropertyChanging;
+			}
 		}
-		protected virtual void RaiseDataCollectionChanged(NotifyCollectionChangedEventArgs args)
-		{
-			if (CollectionChanged != null)
-				CollectionChanged(this.value, args);
-		}
-		#region Implementation of INotifyPropertyChanging
-
-		public event EventHandler<DataContextChangedEventArgs> DataContextChanged;
-
-		public event PropertyChangingEventHandler PropertyChanging;
-
-		#endregion
-
-		#region Implementation of INotifyPropertyChanged
-
-		public event PropertyChangedEventHandler PropertyChanged;
-
-		#endregion
-
-		#region Implementation of INotifyCollectionChanged
-
-		public event NotifyCollectionChangedEventHandler CollectionChanged;
 
 		#endregion
 	}

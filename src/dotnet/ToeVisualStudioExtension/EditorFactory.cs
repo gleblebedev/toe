@@ -12,8 +12,6 @@ using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 
-using TinyOpenEngine.ToeVisualStudioExtension;
-
 using Toe.Editors;
 using Toe.Editors.Interfaces;
 
@@ -29,9 +27,9 @@ namespace Toe.ToeVsExt
 	{
 		#region Constants and Fields
 
-		private readonly Package editorPackage;
-
 		private readonly IComponentContext context;
+
+		private readonly Package editorPackage;
 
 		private ServiceProvider vsServiceProvider;
 
@@ -109,7 +107,6 @@ namespace Toe.ToeVsExt
 			pgrfCDW = 0;
 			pbstrEditorCaption = null;
 
-			
 			var e = this.CreateEditor(pszMkDocument);
 			if (e == null)
 			{
@@ -133,19 +130,6 @@ namespace Toe.ToeVsExt
 			ppunkDocData = Marshal.GetIUnknownForObject(NewEditor);
 			pbstrEditorCaption = "";
 			return VSConstants.S_OK;
-		}
-
-		private IResourceEditor CreateEditor(string filename)
-		{
-			foreach (var ef in this.context.Resolve<IEnumerable<IResourceEditorFactory>>())
-			{
-				var e = ef.CreateEditor(filename);
-				if (e != null)
-				{
-					return e;
-				}
-			}
-			return new DefaultEditor(context.Resolve<IEditorEnvironment>());
 		}
 
 		/// <summary>
@@ -220,6 +204,23 @@ namespace Toe.ToeVsExt
 		{
 			this.vsServiceProvider = new ServiceProvider(psp);
 			return VSConstants.S_OK;
+		}
+
+		#endregion
+
+		#region Methods
+
+		private IResourceEditor CreateEditor(string filename)
+		{
+			foreach (var ef in this.context.Resolve<IEnumerable<IResourceEditorFactory>>())
+			{
+				var e = ef.CreateEditor(filename);
+				if (e != null)
+				{
+					return e;
+				}
+			}
+			return new DefaultEditor(this.context.Resolve<IEditorEnvironment>());
 		}
 
 		#endregion

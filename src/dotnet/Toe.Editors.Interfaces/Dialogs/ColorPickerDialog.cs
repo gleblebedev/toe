@@ -1,75 +1,98 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
 using Toe.Editors.Interfaces.Bindings;
-using Toe.Editors.Interfaces.Views;
 
 namespace Toe.Editors.Interfaces.Dialogs
 {
 	public partial class ColorPickerDialog : Form
 	{
-		public class RGBA:INotifyPropertyChanged
+		#region Constants and Fields
+
+		private readonly DataContextContainer dataContext;
+
+		#endregion
+
+		#region Constructors and Destructors
+
+		public ColorPickerDialog(Color c)
 		{
-			public RGBA(Color c)
-			{
-				r = c.R;
-				g = c.G;
-				b = c.B;
-				a = c.A;
-			}
-			private byte r;
+			this.InitializeComponent();
+			this.originalColor.DataContext.Value = c;
+			this.dataContext = new DataContextContainer();
+			new PropertyBinding<RGBA, Color>(this.newColor, this.dataContext, (m) => m.Color, null);
+			new PropertyBinding<RGBA, byte>(this.editR, this.dataContext, (m) => m.R, (m, v) => m.R = v);
+			new PropertyBinding<RGBA, byte>(this.editG, this.dataContext, (m) => m.G, (m, v) => m.G = v);
+			new PropertyBinding<RGBA, byte>(this.editB, this.dataContext, (m) => m.B, (m, v) => m.B = v);
+			new PropertyBinding<RGBA, byte>(this.editA, this.dataContext, (m) => m.A, (m, v) => m.A = v);
+			this.dataContext.Value = new RGBA(c);
+		}
 
-			public byte R
-			{
-				get
-				{
-					return this.r;
-				}
-				set
-				{
-					if (this.r != value)
-					{
-						this.r = value;
-						this.RaisePropertyChanged("R");
-					}
-				}
-			}
-			private byte g;
+		#endregion
 
-			public byte G
+		#region Public Properties
+
+		public Color SelectedColor
+		{
+			get
 			{
-				get
-				{
-					return this.g;
-				}
-				set
-				{
-					if (this.g != value)
-					{
-						this.g = value;
-						this.RaisePropertyChanged("G");
-					}
-				}
+				return ((RGBA)this.dataContext.Value).Color;
 			}
+		}
+
+		#endregion
+
+		#region Methods
+
+		private void btnCancel_Click(object sender, EventArgs e)
+		{
+			this.DialogResult = DialogResult.Cancel;
+		}
+
+		private void btnOk_Click(object sender, EventArgs e)
+		{
+			this.DialogResult = DialogResult.OK;
+		}
+
+		#endregion
+
+		public class RGBA : INotifyPropertyChanged
+		{
+			#region Constants and Fields
+
+			private readonly PropertyChangedEventArgs colorChangedEventArgs = new PropertyChangedEventArgs("Color");
+
+			private byte a;
+
 			private byte b;
 
-			public byte B
+			private byte g;
+
+			private byte r;
+
+			#endregion
+
+			#region Constructors and Destructors
+
+			public RGBA(Color c)
 			{
-				get
-				{
-					return this.b;
-				}
-				set
-				{
-					if (this.b != value)
-					{
-						this.b = value;
-						this.RaisePropertyChanged("B");
-					}
-				}
+				this.r = c.R;
+				this.g = c.G;
+				this.b = c.B;
+				this.a = c.A;
 			}
-			private byte a;
+
+			#endregion
+
+			#region Public Events
+
+			public event PropertyChangedEventHandler PropertyChanged;
+
+			#endregion
+
+			#region Public Properties
 
 			public byte A
 			{
@@ -87,59 +110,76 @@ namespace Toe.Editors.Interfaces.Dialogs
 				}
 			}
 
-			public Color Color { get
+			public byte B
 			{
-				return Color.FromArgb(a, r, g, b);
-			} }
-
-			PropertyChangedEventArgs colorChangedEventArgs = new PropertyChangedEventArgs("Color");
-
-			protected void RaisePropertyChanged(string property)
-			{
-				if (PropertyChanged != null)
+				get
 				{
-					PropertyChanged(this, new PropertyChangedEventArgs(property));
-					PropertyChanged(this, colorChangedEventArgs);
+					return this.b;
+				}
+				set
+				{
+					if (this.b != value)
+					{
+						this.b = value;
+						this.RaisePropertyChanged("B");
+					}
 				}
 			}
 
-			#region Implementation of INotifyPropertyChanged
+			public Color Color
+			{
+				get
+				{
+					return Color.FromArgb(this.a, this.r, this.g, this.b);
+				}
+			}
 
-			public event PropertyChangedEventHandler PropertyChanged;
+			public byte G
+			{
+				get
+				{
+					return this.g;
+				}
+				set
+				{
+					if (this.g != value)
+					{
+						this.g = value;
+						this.RaisePropertyChanged("G");
+					}
+				}
+			}
+
+			public byte R
+			{
+				get
+				{
+					return this.r;
+				}
+				set
+				{
+					if (this.r != value)
+					{
+						this.r = value;
+						this.RaisePropertyChanged("R");
+					}
+				}
+			}
+
+			#endregion
+
+			#region Methods
+
+			protected void RaisePropertyChanged(string property)
+			{
+				if (this.PropertyChanged != null)
+				{
+					this.PropertyChanged(this, new PropertyChangedEventArgs(property));
+					this.PropertyChanged(this, this.colorChangedEventArgs);
+				}
+			}
 
 			#endregion
 		}
-		private DataContextContainer dataContext;
-		public ColorPickerDialog(Color c)
-		{
-			this.InitializeComponent();
-			originalColor.DataContext.Value = c;
-			dataContext = new DataContextContainer();
-			new PropertyBinding<RGBA, Color>(newColor, dataContext, (m)=>m.Color,null);
-			new PropertyBinding<RGBA, byte>(editR,dataContext,(m)=>m.R,(m,v)=>m.R=v);
-			new PropertyBinding<RGBA, byte>(editG, dataContext, (m) => m.G, (m, v) => m.G = v);
-			new PropertyBinding<RGBA, byte>(editB, dataContext, (m) => m.B, (m, v) => m.B = v);
-			new PropertyBinding<RGBA, byte>(editA, dataContext, (m) => m.A, (m, v) => m.A = v);
-			dataContext.Value = new RGBA(c);
-		}
-
-		public Color SelectedColor
-		{
-			get
-			{
-				return ((RGBA)dataContext.Value).Color;
-			}
-		}
-
-		private void btnOk_Click(object sender, System.EventArgs e)
-		{
-			DialogResult = DialogResult.OK;
-		}
-
-		private void btnCancel_Click(object sender, System.EventArgs e)
-		{
-			DialogResult = DialogResult.Cancel;
-		}
-
 	}
 }

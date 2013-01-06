@@ -6,7 +6,6 @@ using System.IO;
 using Autofac;
 
 using Toe.Resources;
-using Toe.Utils.Marmalade;
 
 namespace Toe.Marmalade.IwResManager
 {
@@ -22,9 +21,11 @@ namespace Toe.Marmalade.IwResManager
 
 		private readonly IList<IResourceFile> externalResources;
 
+		private readonly IResourceFile resourceFile;
+
 		private readonly IResourceManager resourceManager;
 
-		private readonly IResourceFile resourceFile;
+		private uint flags;
 
 		private bool isShared;
 
@@ -71,25 +72,6 @@ namespace Toe.Marmalade.IwResManager
 			}
 		}
 
-		public bool IsShared
-		{
-			get
-			{
-				return this.isShared;
-			}
-			set
-			{
-				if (this.isShared != value)
-				{
-					this.RaisePropertyChanging("IsShared");
-					this.isShared = value;
-					this.RaisePropertyChanged("IsShared");
-				}
-			}
-		}
-
-		private uint flags;
-
 		public uint Flags
 		{
 			get
@@ -107,19 +89,26 @@ namespace Toe.Marmalade.IwResManager
 			}
 		}
 
+		public bool IsShared
+		{
+			get
+			{
+				return this.isShared;
+			}
+			set
+			{
+				if (this.isShared != value)
+				{
+					this.RaisePropertyChanging("IsShared");
+					this.isShared = value;
+					this.RaisePropertyChanged("IsShared");
+				}
+			}
+		}
+
 		#endregion
 
 		#region Public Methods and Operators
-		public void AddResource(Managed item)
-		{
-			if (this.embeddedResources.Contains(item))
-				throw new ApplicationException("item is in collection already");
-
-			this.embeddedResources.Add(item);
-			this.SubscribeOnNameChange(item);
-			//TODO: get source file reference
-			this.resourceManager.ProvideResource(item.ClassHashCode, item.NameHash, item, resourceFile);
-		}
 
 		public void AddFile(string fullPath)
 		{
@@ -148,6 +137,19 @@ namespace Toe.Marmalade.IwResManager
 					}
 				}
 			}
+		}
+
+		public void AddResource(Managed item)
+		{
+			if (this.embeddedResources.Contains(item))
+			{
+				throw new ApplicationException("item is in collection already");
+			}
+
+			this.embeddedResources.Add(item);
+			this.SubscribeOnNameChange(item);
+			//TODO: get source file reference
+			this.resourceManager.ProvideResource(item.ClassHashCode, item.NameHash, item, this.resourceFile);
 		}
 
 		#endregion
@@ -180,7 +182,7 @@ namespace Toe.Marmalade.IwResManager
 			if (e.PropertyName == "NameHash")
 			{
 				var item = ((Managed)sender);
-				this.resourceManager.ProvideResource(item.ClassHashCode, item.NameHash, item, resourceFile);
+				this.resourceManager.ProvideResource(item.ClassHashCode, item.NameHash, item, this.resourceFile);
 			}
 		}
 
@@ -189,7 +191,7 @@ namespace Toe.Marmalade.IwResManager
 			if (e.PropertyName == "NameHash")
 			{
 				var item = ((Managed)sender);
-				this.resourceManager.RetractResource(item.ClassHashCode, item.NameHash, item, resourceFile);
+				this.resourceManager.RetractResource(item.ClassHashCode, item.NameHash, item, this.resourceFile);
 			}
 		}
 
@@ -207,7 +209,7 @@ namespace Toe.Marmalade.IwResManager
 
 			this.UnsubscribeOnNameChange(item);
 
-			this.resourceManager.RetractResource(item.ClassHashCode, item.NameHash, item, resourceFile);
+			this.resourceManager.RetractResource(item.ClassHashCode, item.NameHash, item, this.resourceFile);
 
 			item.Dispose();
 		}

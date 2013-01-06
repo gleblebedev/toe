@@ -10,21 +10,17 @@ namespace Toe.Editors
 {
 	public class EditorCamera
 	{
-		private readonly IEditorOptions<EditorCameraOptions> cameraOptions;
-
-		public EditorCamera(IEditorOptions<EditorCameraOptions> cameraOptions)
-		{
-			this.cameraOptions = cameraOptions;
-			coordinateSystem = cameraOptions.Options.CoordinateSystem;
-		}
-
 		#region Constants and Fields
+
+		private readonly IEditorOptions<EditorCameraOptions> cameraOptions;
 
 		private float aspectRation = 1;
 
+		private CoordinateSystem coordinateSystem = CoordinateSystem.ZUp;
+
 		private float fovy = (float)Math.PI / 2.0f;
 
-		private bool ortho = false;
+		private bool ortho;
 
 		private Vector3 pos = new Vector3(0, 0, 1024);
 
@@ -34,7 +30,15 @@ namespace Toe.Editors
 
 		private float zNear = 1.0f;
 
-		private CoordinateSystem coordinateSystem = CoordinateSystem.ZUp;
+		#endregion
+
+		#region Constructors and Destructors
+
+		public EditorCamera(IEditorOptions<EditorCameraOptions> cameraOptions)
+		{
+			this.cameraOptions = cameraOptions;
+			this.coordinateSystem = cameraOptions.Options.CoordinateSystem;
+		}
 
 		#endregion
 
@@ -49,6 +53,32 @@ namespace Toe.Editors
 			set
 			{
 				this.aspectRation = value;
+			}
+		}
+
+		public CoordinateSystem CoordinateSystem
+		{
+			get
+			{
+				return this.coordinateSystem;
+			}
+			set
+			{
+				if (this.coordinateSystem != value)
+				{
+					this.coordinateSystem = value;
+					this.cameraOptions.Options.CoordinateSystem = value;
+					this.cameraOptions.Save();
+					this.LookAt(this.pos, this.pos + this.Forward);
+				}
+			}
+		}
+
+		public Vector3 Forward
+		{
+			get
+			{
+				return Vector3.Transform(new Vector3(0, 0, -1), this.rot);
 			}
 		}
 
@@ -76,6 +106,14 @@ namespace Toe.Editors
 			}
 		}
 
+		public Vector3 Right
+		{
+			get
+			{
+				return Vector3.Transform(new Vector3(1, 0, 0), this.rot);
+			}
+		}
+
 		public Quaternion Rot
 		{
 			get
@@ -85,6 +123,68 @@ namespace Toe.Editors
 			set
 			{
 				this.rot = value;
+			}
+		}
+
+		public Vector3 Up
+		{
+			get
+			{
+				return Vector3.Transform(new Vector3(0, 1, 0), this.rot);
+			}
+		}
+
+		public Vector3 WorldForward
+		{
+			get
+			{
+				switch (this.coordinateSystem)
+				{
+					case CoordinateSystem.ZUp:
+						return new Vector3(0, 1, 0);
+						break;
+					case CoordinateSystem.YUp:
+						return new Vector3(0, 0, -1);
+						break;
+					default:
+						throw new ArgumentOutOfRangeException();
+				}
+			}
+		}
+
+		public Vector3 WorldRight
+		{
+			get
+			{
+				switch (this.coordinateSystem)
+				{
+					case CoordinateSystem.ZUp:
+						return new Vector3(1, 0, 0);
+						break;
+					case CoordinateSystem.YUp:
+						return new Vector3(1, 0, 0);
+						break;
+					default:
+						throw new ArgumentOutOfRangeException();
+				}
+			}
+		}
+
+		public Vector3 WorldUp
+		{
+			get
+			{
+				switch (this.coordinateSystem)
+				{
+					case CoordinateSystem.ZUp:
+						return new Vector3(0, 0, 1);
+						break;
+					case CoordinateSystem.YUp:
+						return new Vector3(0, 1, 0);
+						break;
+					default:
+						throw new ArgumentOutOfRangeException();
+				}
 			}
 		}
 
@@ -110,100 +210,6 @@ namespace Toe.Editors
 			{
 				this.zNear = value;
 			}
-		}
-
-		public Vector3 WorldUp
-		{
-			get
-			{
-				switch (coordinateSystem)
-				{
-					case CoordinateSystem.ZUp:
-						return new Vector3(0, 0, 1);
-						break;
-					case CoordinateSystem.YUp:
-						return new Vector3(0, 1, 0);
-						break;
-					default:
-						throw new ArgumentOutOfRangeException();
-				}
-			}
-		}
-		public Vector3 WorldRight
-		{
-			get
-			{
-				switch (coordinateSystem)
-				{
-					case CoordinateSystem.ZUp:
-						return new Vector3(1, 0, 0);
-						break;
-					case CoordinateSystem.YUp:
-						return new Vector3(1, 0, 0);
-						break;
-					default:
-						throw new ArgumentOutOfRangeException();
-				}
-			}
-		}
-		public Vector3 WorldForward
-		{
-			get
-			{
-				switch (coordinateSystem)
-				{
-					case CoordinateSystem.ZUp:
-						return new Vector3(0, 1, 0);
-						break;
-					case CoordinateSystem.YUp:
-						return new Vector3(0, 0, -1);
-						break;
-					default:
-						throw new ArgumentOutOfRangeException();
-				}
-			}
-		}
-		public Vector3 Forward
-		{
-			get
-			{
-				return Vector3.Transform(new Vector3(0, 0, -1), rot);
-			}
-		}
-
-		public CoordinateSystem CoordinateSystem
-		{
-			get
-			{
-				return this.coordinateSystem;
-			}
-			set
-			{
-				if (this.coordinateSystem != value)
-				{
-					this.coordinateSystem = value;
-					this.cameraOptions.Options.CoordinateSystem = value;
-					this.cameraOptions.Save();
-					this.LookAt(pos,pos+Forward);
-				}
-			}
-		}
-
-		public Vector3 Right
-		{
-			get
-			{
-				return Vector3.Transform(new Vector3(1, 0, 0), rot);
-			}
-			
-		}
-		public Vector3 Up
-		{
-			get
-			{
-				return Vector3.Transform(new Vector3(0, 1, 0), rot);
-			}
-
 		}
 
 		#endregion
@@ -337,7 +343,7 @@ namespace Toe.Editors
 		/// <returns>A Matrix4 that transforms world space to camera space</returns>
 		public void LookAt(Vector3 eye, Vector3 target)
 		{
-			var up = WorldUp;
+			var up = this.WorldUp;
 			this.pos = eye;
 			//Vector3 z = Vector3.Normalize(eye - target);
 			//Vector3 x = Vector3.Normalize(Vector3.Cross(up, z));
@@ -370,7 +376,6 @@ namespace Toe.Editors
 			GL.LoadMatrix(ref projection);
 
 			GL.MatrixMode(MatrixMode.Modelview);
-			Trace.WriteLine(string.Format("Camera rot {0}", this.rot));
 			Matrix4 view = Matrix4.Rotate(this.rot) * Matrix4.CreateTranslation(this.pos);
 			view.Invert();
 			GL.LoadMatrix(ref view);

@@ -3,53 +3,31 @@ using System.ComponentModel;
 
 namespace Toe.Editors.Interfaces
 {
-	public class CommandHistory:ICommandHistory
+	public class CommandHistory : ICommandHistory
 	{
-		readonly List<ICommand> commands = new List<ICommand>();
+		#region Constants and Fields
 
-		private int position = 0;
+		private readonly List<ICommand> commands = new List<ICommand>();
 
 		private int lockCounter;
 
-		public void Redo()
-		{
-			if (position < commands.Count)
-			{
-				commands[position].Redo();
-				++position;
-				if (position == commands.Count)
-				{
-					this.RaisePropertyChanged("CanRedo");
-				}
-				if (position == 1)
-				{
-					this.RaisePropertyChanged("CanUndo");
-				}
-			}
-		}
+		private int position;
 
-		public void Undo()
-		{
-			if (position > 0)
-			{
-				--position;
-				commands[position].Undo();
-				if (position == 0)
-				{
-					this.RaisePropertyChanged("CanUndo");
-				}
-				if (position == commands.Count-1)
-				{
-					this.RaisePropertyChanged("CanRedo");
-				}
-			}
-		}
+		#endregion
+
+		#region Public Events
+
+		public event PropertyChangedEventHandler PropertyChanged;
+
+		#endregion
+
+		#region Public Properties
 
 		public bool CanRedo
 		{
 			get
 			{
-				return (position < commands.Count);
+				return (this.position < this.commands.Count);
 			}
 		}
 
@@ -57,45 +35,15 @@ namespace Toe.Editors.Interfaces
 		{
 			get
 			{
-				return (position > 0 && commands.Count > 0);
+				return (this.position > 0 && this.commands.Count > 0);
 			}
-		}
-
-		public ICommand RegisterAction(ICommand action)
-		{
-			if (IsLocked) return action;
-			this.DropRedo();
-			
-			commands.Add(action);
-			++position;
-			this.RaisePropertyChanged("CanUndo");
-			this.RaisePropertyChanged("CanRedo");
-			return action;
-		}
-
-		public void Clear()
-		{
-			position = 0;
-			commands.Clear();
-			this.RaisePropertyChanged("CanUndo");
-			this.RaisePropertyChanged("CanRedo");
-		}
-
-		public void Lock()
-		{
-			++this.lockCounter;
-		}
-
-		public void Unlock()
-		{
-			--lockCounter;
 		}
 
 		public bool IsLocked
 		{
 			get
 			{
-				return lockCounter > 0;
+				return this.lockCounter > 0;
 			}
 		}
 
@@ -103,22 +51,100 @@ namespace Toe.Editors.Interfaces
 		{
 			get
 			{
-				if (position > 0 && position <= commands.Count) return commands[position-1];
+				if (this.position > 0 && this.position <= this.commands.Count)
+				{
+					return this.commands[this.position - 1];
+				}
 				return null;
 			}
 		}
 
+		#endregion
+
+		#region Public Methods and Operators
+
+		public void Clear()
+		{
+			this.position = 0;
+			this.commands.Clear();
+			this.RaisePropertyChanged("CanUndo");
+			this.RaisePropertyChanged("CanRedo");
+		}
+
 		public void DropRedo()
 		{
-			if (position < commands.Count)
+			if (this.position < this.commands.Count)
 			{
-				while (position < commands.Count)
+				while (this.position < this.commands.Count)
 				{
-					commands.RemoveAt(commands.Count - 1);
+					this.commands.RemoveAt(this.commands.Count - 1);
 				}
 				this.RaisePropertyChanged("CanRedo");
 			}
 		}
+
+		public void Lock()
+		{
+			++this.lockCounter;
+		}
+
+		public void Redo()
+		{
+			if (this.position < this.commands.Count)
+			{
+				this.commands[this.position].Redo();
+				++this.position;
+				if (this.position == this.commands.Count)
+				{
+					this.RaisePropertyChanged("CanRedo");
+				}
+				if (this.position == 1)
+				{
+					this.RaisePropertyChanged("CanUndo");
+				}
+			}
+		}
+
+		public ICommand RegisterAction(ICommand action)
+		{
+			if (this.IsLocked)
+			{
+				return action;
+			}
+			this.DropRedo();
+
+			this.commands.Add(action);
+			++this.position;
+			this.RaisePropertyChanged("CanUndo");
+			this.RaisePropertyChanged("CanRedo");
+			return action;
+		}
+
+		public void Undo()
+		{
+			if (this.position > 0)
+			{
+				--this.position;
+				this.commands[this.position].Undo();
+				if (this.position == 0)
+				{
+					this.RaisePropertyChanged("CanUndo");
+				}
+				if (this.position == this.commands.Count - 1)
+				{
+					this.RaisePropertyChanged("CanRedo");
+				}
+			}
+		}
+
+		public void Unlock()
+		{
+			--this.lockCounter;
+		}
+
+		#endregion
+
+		#region Methods
 
 		private void RaisePropertyChanged(string property)
 		{
@@ -127,10 +153,6 @@ namespace Toe.Editors.Interfaces
 				this.PropertyChanged(this, new PropertyChangedEventArgs(property));
 			}
 		}
-
-		#region Implementation of INotifyPropertyChanged
-
-		public event PropertyChangedEventHandler PropertyChanged;
 
 		#endregion
 	}

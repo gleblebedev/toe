@@ -4,12 +4,16 @@ namespace Toe.Resources
 {
 	public interface IResourceFileFormat
 	{
-		bool CanRead(string filePath);
+		#region Public Methods and Operators
 
-		IList<IResourceFileItem> Read(string filePath, IResourceFile resourceFile);
+		bool CanRead(string filePath);
 
 		bool CanWrite(string filePath);
 
+		IList<IResourceFileItem> Read(string filePath, IResourceFile resourceFile);
+
 		void Write(string filePath, IList<IResourceFileItem> items);
+
+		#endregion
 	}
 }

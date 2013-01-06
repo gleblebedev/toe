@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 
 using Autofac;
 
@@ -13,10 +12,11 @@ namespace Toe.Utils.Mesh.Marmalade.Tests
 	public class TestGroup : BaseTest
 	{
 		#region Public Methods and Operators
+
 		[Test]
 		public void TestGroupBin()
 		{
-			using (var rm = Container.Resolve<IResourceManager>())
+			using (var rm = this.Container.Resolve<IResourceManager>())
 			{
 				var file = @"C:\GitHub\toe\src\marmalade\data-ram\data-gles1\male_lod0.group.bin";
 				Console.WriteLine(file);
@@ -25,10 +25,11 @@ namespace Toe.Utils.Mesh.Marmalade.Tests
 				f.Close();
 			}
 		}
+
 		[Test]
 		public void TestMarmaladeFolder()
 		{
-			using (var rm = Container.Resolve<IResourceManager>())
+			using (var rm = this.Container.Resolve<IResourceManager>())
 			{
 				var s = new FolderTreeSearch(@"C:\Marmalade\6.2\examples\", "*.group");
 				foreach (var file in s)
@@ -40,10 +41,11 @@ namespace Toe.Utils.Mesh.Marmalade.Tests
 				}
 			}
 		}
+
 		[Test]
 		public void TestMarmaladeFolderForBinary()
 		{
-			using (var rm = Container.Resolve<IResourceManager>())
+			using (var rm = this.Container.Resolve<IResourceManager>())
 			{
 				var s = new FolderTreeSearch(@"C:\Marmalade\6.2\examples\", "*.group.bin");
 				foreach (var file in s)
@@ -55,6 +57,7 @@ namespace Toe.Utils.Mesh.Marmalade.Tests
 				}
 			}
 		}
+
 		#endregion
 	}
 }

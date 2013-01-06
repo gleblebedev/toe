@@ -6,9 +6,13 @@ namespace Toe.Editors
 {
 	public partial class DefaultEditor : UserControl, IResourceEditor
 	{
+		#region Constants and Fields
+
 		private readonly IEditorEnvironment editorEnvironment;
 
 		private string currentFileName;
+
+		#endregion
 
 		#region Constructors and Destructors
 
@@ -21,17 +25,18 @@ namespace Toe.Editors
 
 		#endregion
 
-		#region Implementation of IResourceEditor
+		#region Public Properties
 
 		public string CurrentFileName
 		{
 			get
 			{
-				return currentFileName;
+				return this.currentFileName;
 			}
 		}
 
 		#endregion
+
 		#region Explicit Interface Properties
 
 		Control IResourceEditor.Control

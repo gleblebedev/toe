@@ -18,8 +18,6 @@ using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.TextManager.Interop;
 
-using TinyOpenEngine.ToeVisualStudioExtension;
-
 using Toe.Editors.Interfaces;
 
 using IDataObject = Microsoft.VisualStudio.OLE.Interop.IDataObject;
@@ -145,8 +143,7 @@ namespace Toe.ToeVsExt
 		/// our initialization functions.
 		/// </summary>
 		/// <param name="package">Our Package instance.</param>
-		public EditorPane(
-			Package package, string getExtension, IResourceEditor editor)
+		public EditorPane(Package package, string getExtension, IResourceEditor editor)
 			: base(null)
 		{
 			this._getExtension = getExtension;
@@ -1799,7 +1796,7 @@ namespace Toe.ToeVsExt
 		/// </summary>
 		private void onDelete(object sender, EventArgs e)
 		{
-			editorControl.Delete();
+			this.editorControl.Delete();
 			this.editorControl.RecordCommand("Delete");
 		}
 
@@ -1859,7 +1856,7 @@ namespace Toe.ToeVsExt
 		private void onQueryCopy(object sender, EventArgs e)
 		{
 			OleMenuCommand command = (OleMenuCommand)sender;
-			command.Enabled = editorControl.CanCopy;
+			command.Enabled = this.editorControl.CanCopy;
 		}
 
 		/// <summary>
@@ -1872,7 +1869,7 @@ namespace Toe.ToeVsExt
 		private void onQueryCutOrDelete(object sender, EventArgs e)
 		{
 			OleMenuCommand command = (OleMenuCommand)sender;
-			command.Enabled = editorControl.CanCut;
+			command.Enabled = this.editorControl.CanCut;
 		}
 
 		/// <summary>
@@ -1883,7 +1880,7 @@ namespace Toe.ToeVsExt
 		private void onQueryPaste(object sender, EventArgs e)
 		{
 			OleMenuCommand command = (OleMenuCommand)sender;
-			command.Enabled = editorControl.CanPaste;
+			command.Enabled = this.editorControl.CanPaste;
 			//command.Enabled = editorControl.RichTextBoxControl.CanPaste(DataFormats.GetFormat(DataFormats.Text));
 		}
 
@@ -1912,7 +1909,7 @@ namespace Toe.ToeVsExt
 		private void onQueryRedo(object sender, EventArgs e)
 		{
 			OleMenuCommand command = (OleMenuCommand)sender;
-			command.Enabled = editorControl.CanRedo;
+			command.Enabled = this.editorControl.CanRedo;
 		}
 
 		/// <summary>
@@ -1923,7 +1920,7 @@ namespace Toe.ToeVsExt
 		private void onQueryUndo(object sender, EventArgs e)
 		{
 			OleMenuCommand command = (OleMenuCommand)sender;
-			command.Enabled = editorControl.CanUndo;
+			command.Enabled = this.editorControl.CanUndo;
 		}
 
 		/// <summary>
@@ -1933,7 +1930,7 @@ namespace Toe.ToeVsExt
 		/// <param name="e">  Not used.</param>
 		private void onRedo(object sender, EventArgs e)
 		{
-			editorControl.Redo();
+			this.editorControl.Redo();
 			//editorControl.RichTextBoxControl.Redo();
 		}
 
@@ -1944,7 +1941,7 @@ namespace Toe.ToeVsExt
 		/// <param name="e">  Not used.</param>
 		private void onSelectAll(object sender, EventArgs e)
 		{
-			editorControl.onSelectAll();
+			this.editorControl.onSelectAll();
 		}
 
 		/// <summary>
@@ -1954,7 +1951,7 @@ namespace Toe.ToeVsExt
 		/// <param name="e">  Not used.</param>
 		private void onUndo(object sender, EventArgs e)
 		{
-			editorControl.Undo();
+			this.editorControl.Undo();
 			//editorControl.RichTextBoxControl.Undo();
 		}
 

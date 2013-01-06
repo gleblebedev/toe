@@ -24,8 +24,8 @@ namespace Toe.Marmalade.TextFiles
 			builder.RegisterType<SkinTextSerializer>().Keyed<ITextSerializer>(AnimSkin.TypeHash).SingleInstance();
 			builder.RegisterType<AnimTextSerializer>().Keyed<ITextSerializer>(Anim.TypeHash).SingleInstance();
 			builder.RegisterType<SkelTextSerializer>().Keyed<ITextSerializer>(AnimSkel.TypeHash).SingleInstance();
-			builder.RegisterType<ModelTextSerializer>().Keyed<ITextSerializer>(Model.TypeHash).Keyed<ITextSerializer>(Hash.Get("CMesh"))
-				.SingleInstance();
+			builder.RegisterType<ModelTextSerializer>().Keyed<ITextSerializer>(Model.TypeHash).Keyed<ITextSerializer>(
+				Hash.Get("CMesh")).SingleInstance();
 			builder.RegisterType<ShaderTextSerializer>().Keyed<ITextSerializer>(ShaderTechnique.TypeHash).SingleInstance();
 			builder.RegisterType<GroupTextSerializer>().Keyed<ITextSerializer>(ResGroup.TypeHash).SingleInstance();
 

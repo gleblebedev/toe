@@ -1,40 +1,35 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 using OpenTK.Graphics;
 
 namespace Toe.Gx
 {
-	public class ToeGraphicsContext:IDisposable
+	public class ToeGraphicsContext : IDisposable
 	{
+		#region Constants and Fields
+
+		private GraphicsContext context;
+
+		private bool flipCulling = true;
+
+		#endregion
+
+		#region Constructors and Destructors
+
 		public ToeGraphicsContext()
 		{
-			OpenTK.Graphics.GraphicsContext.ShareContexts = true;
+			GraphicsContext.ShareContexts = true;
 			//context = OpenTK.Graphics.GraphicsContext.CreateDummyContext();
 		}
+
 		~ToeGraphicsContext()
 		{
 			this.Dispose(false);
 		}
-		private bool flipCulling = true;
 
-		private bool isShadersEnabled = false;
+		#endregion
 
-		private GraphicsContext context;
-
-		public bool IsShadersEnabled
-		{
-			get
-			{
-				return isShadersEnabled;
-			}
-			set
-			{
-				isShadersEnabled = value;
-			}
-		}
+		#region Public Properties
 
 		public bool FlipCulling
 		{
@@ -48,7 +43,11 @@ namespace Toe.Gx
 			}
 		}
 
-		#region Implementation of IDisposable
+		public bool IsShadersEnabled { get; set; }
+
+		#endregion
+
+		#region Public Methods and Operators
 
 		/// <summary>
 		/// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
@@ -60,14 +59,18 @@ namespace Toe.Gx
 			GC.SuppressFinalize(this);
 		}
 
-		protected  virtual void Dispose(bool disposing)
+		#endregion
+
+		#region Methods
+
+		protected virtual void Dispose(bool disposing)
 		{
 			if (disposing)
 			{
-				if (context != null)
+				if (this.context != null)
 				{
-					context.Dispose();
-					context = null;
+					this.context.Dispose();
+					this.context = null;
 				}
 			}
 		}

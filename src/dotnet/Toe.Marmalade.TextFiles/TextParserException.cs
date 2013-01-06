@@ -8,9 +8,6 @@ namespace Toe.Utils.Marmalade
 	{
 		#region Constructors and Destructors
 
-
-
-
 		public TextParserException()
 		{
 		}

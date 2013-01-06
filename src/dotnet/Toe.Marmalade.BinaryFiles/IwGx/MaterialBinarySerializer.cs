@@ -1,35 +1,43 @@
-using System;
 using System.Drawing;
 
 using Autofac;
 
 using Toe.Marmalade.IwGx;
-using Toe.Utils.Marmalade;
 using Toe.Utils.Marmalade.IwGx;
 
 namespace Toe.Marmalade.BinaryFiles.IwGx
 {
 	public class MaterialBinarySerializer : IBinarySerializer
 	{
+		#region Constants and Fields
+
 		private readonly IComponentContext context;
+
+		#endregion
+
+		#region Constructors and Destructors
 
 		public MaterialBinarySerializer(IComponentContext context)
 		{
 			this.context = context;
 		}
 
+		#endregion
+
+		#region Public Methods and Operators
+
 		/// <summary>
 		/// Parse binary block.
 		/// </summary>
 		public Managed Parse(BinaryParser parser)
 		{
-			var material = context.Resolve<Material>();
+			var material = this.context.Resolve<Material>();
 			material.NameHash = parser.ConsumeUInt32();
 
 			var isShort = parser.ConsumeBool();
 
 			material.Flags = parser.ConsumeUInt32();
-			
+
 			if (!isShort)
 			{
 				material.ZDepthOfs = parser.ConsumeInt16();
@@ -53,7 +61,7 @@ namespace Toe.Marmalade.BinaryFiles.IwGx
 				if (animated)
 				{
 					material.MatAnim = new MatAnim();
-					parser.Expect((byte)0);
+					parser.Expect(0);
 					material.MatAnim.CelNum = parser.ConsumeByte();
 					material.MatAnim.CelNumU = parser.ConsumeByte();
 					material.MatAnim.CelW = parser.ConsumeByte();
@@ -66,7 +74,6 @@ namespace Toe.Marmalade.BinaryFiles.IwGx
 			return material;
 		}
 
-
-
+		#endregion
 	}
 }

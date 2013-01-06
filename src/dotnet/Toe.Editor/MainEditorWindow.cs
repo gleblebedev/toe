@@ -13,68 +13,63 @@ namespace Toe.Editor
 {
 	public partial class MainEditorWindow : Form
 	{
+		#region Constants and Fields
+
 		private readonly IComponentContext context;
 
-		private IResourceEditor lastEditor = null;
+		private readonly IResourceEditor lastEditor;
+
+		#endregion
 
 		#region Constructors and Destructors
 
-		public MainEditorWindow(Autofac.IComponentContext context )
+		public MainEditorWindow(IComponentContext context)
 		{
 			this.context = context;
 			this.InitializeComponent();
-			fileTabs.SelectedIndexChanged += RebindToEditor;
-
+			this.fileTabs.SelectedIndexChanged += this.RebindToEditor;
 		}
 
-		private void RebindToEditor(object sender, EventArgs e)
+		#endregion
+
+		#region Public Methods and Operators
+
+		public void OpenFile(string filename)
 		{
-			var tab = this.fileTabs.SelectedTab;
-			if (tab == null)
+			foreach (TabPage fileTab in this.fileTabs.TabPages)
+			{
+				var tag = fileTab.Tag as IResourceEditor;
+				if (tag != null)
+				{
+					if (string.Compare(tag.CurrentFileName, filename, StringComparison.InvariantCultureIgnoreCase) == 0)
+					{
+						this.fileTabs.SelectedTab = fileTab;
+						return;
+					}
+				}
+			}
+
+			var resourceEditor = this.CreateEditor(filename);
+			if (resourceEditor == null)
+			{
 				return;
-			var editor = tab.Tag as IResourceEditor;
-			if (editor == null)
-				return;
-
-			if (lastEditor != editor)
-			{
-				UnbindEditor(lastEditor);
-				BindEditor(editor);
 			}
 
+			resourceEditor.Control.Dock = DockStyle.Fill;
+			resourceEditor.LoadFile(filename);
+
+			var tabPage = new TabPage(Path.GetFileName(filename));
+			tabPage.Controls.Add(resourceEditor.Control);
+			tabPage.Tag = resourceEditor;
+			this.fileTabs.TabPages.Add(tabPage);
+			this.fileTabs.SelectedTab = tabPage;
 		}
 
-		private void BindEditor(IResourceEditor editor)
-		{
-			var notifyPropertyChanged = editor as INotifyPropertyChanged;
-			if (notifyPropertyChanged != null)
-			{
-				notifyPropertyChanged.PropertyChanged += EditorPropertyChanged;
-			}
-			UpdateMenuButtons(editor);
-		}
+		#endregion
 
-		private void EditorPropertyChanged(object sender, PropertyChangedEventArgs e)
-		{
-			UpdateMenuButtons(sender as IResourceEditor);
-		}
+		#region Methods
 
-		private void UpdateMenuButtons(IResourceEditor editor)
-		{
-			undoMenuItem.Enabled = undoButton.Enabled = editor.CanUndo;
-			redoButton.Enabled = redoButton.Enabled = editor.CanRedo;
-		}
-
-		private void UnbindEditor(IResourceEditor editor)
-		{
-			var notifyPropertyChanged = editor as INotifyPropertyChanged;
-			if (notifyPropertyChanged != null)
-			{
-				notifyPropertyChanged.PropertyChanged -= EditorPropertyChanged;
-			}
-		}
-
-		protected override void OnLoad(System.EventArgs e)
+		protected override void OnLoad(EventArgs e)
 		{
 			base.OnLoad(e);
 
@@ -84,33 +79,14 @@ namespace Toe.Editor
 			//OpenFile(@"C:\GitHub\toe\testcontent\FunkyVicGLES2.mtl");
 		}
 
-		public void OpenFile(string filename)
+		private void BindEditor(IResourceEditor editor)
 		{
-			foreach (TabPage fileTab in fileTabs.TabPages)
+			var notifyPropertyChanged = editor as INotifyPropertyChanged;
+			if (notifyPropertyChanged != null)
 			{
-				var tag = fileTab.Tag as IResourceEditor;
-				if (tag != null)
-				{
-					if (string.Compare(tag.CurrentFileName, filename, StringComparison.InvariantCultureIgnoreCase) == 0)
-					{
-						fileTabs.SelectedTab = fileTab;
-						return;
-					}
-				}
+				notifyPropertyChanged.PropertyChanged += this.EditorPropertyChanged;
 			}
-
-			var resourceEditor = CreateEditor(filename);
-			if (resourceEditor == null)
-				return;
-
-			resourceEditor.Control.Dock = DockStyle.Fill;
-			resourceEditor.LoadFile(filename);
-
-			var tabPage = new TabPage(Path.GetFileName(filename));
-			tabPage.Controls.Add(resourceEditor.Control);
-			tabPage.Tag = resourceEditor;
-			this.fileTabs.TabPages.Add(tabPage);
-			fileTabs.SelectedTab = tabPage;
+			this.UpdateMenuButtons(editor);
 		}
 
 		private IResourceEditor CreateEditor(string filename)
@@ -123,17 +99,31 @@ namespace Toe.Editor
 					return e;
 				}
 			}
-			return new DefaultEditor(context.Resolve<IEditorEnvironment>());
+			return new DefaultEditor(this.context.Resolve<IEditorEnvironment>());
 		}
 
-		#endregion
+		private void EditorPropertyChanged(object sender, PropertyChangedEventArgs e)
+		{
+			this.UpdateMenuButtons(sender as IResourceEditor);
+		}
 
-		private void OnEditMenuOption(object sender, System.EventArgs e)
+		private void OnCloseMenuOption(object sender, EventArgs e)
+		{
+			var tab = this.fileTabs.SelectedTab;
+			if (tab == null)
+			{
+				return;
+			}
+			this.fileTabs.TabPages.Remove(tab);
+			tab.Dispose();
+		}
+
+		private void OnEditMenuOption(object sender, EventArgs e)
 		{
 			this.Close();
 		}
 
-		private void OnOpenMenuOption(object sender, System.EventArgs e)
+		private void OnOpenMenuOption(object sender, EventArgs e)
 		{
 			var fd = new OpenFileDialog();
 			var r = fd.ShowDialog();
@@ -146,20 +136,78 @@ namespace Toe.Editor
 			}
 		}
 
-		private void OnSaveMenuOption(object sender, System.EventArgs e)
+		private void OnSaveMenuOption(object sender, EventArgs e)
 		{
 			var tab = this.fileTabs.SelectedTab;
 			if (tab == null)
+			{
 				return;
+			}
 		}
 
-		private void OnCloseMenuOption(object sender, System.EventArgs e)
+		private void RebindToEditor(object sender, EventArgs e)
 		{
 			var tab = this.fileTabs.SelectedTab;
 			if (tab == null)
+			{
 				return;
-			fileTabs.TabPages.Remove(tab);
-			tab.Dispose();
+			}
+			var editor = tab.Tag as IResourceEditor;
+			if (editor == null)
+			{
+				return;
+			}
+
+			if (this.lastEditor != editor)
+			{
+				this.UnbindEditor(this.lastEditor);
+				this.BindEditor(editor);
+			}
+		}
+
+		private void RedoClick(object sender, EventArgs e)
+		{
+			var tab = this.fileTabs.SelectedTab;
+			if (tab == null)
+			{
+				return;
+			}
+			var editor = tab.Tag as IResourceEditor;
+			if (editor == null)
+			{
+				return;
+			}
+			editor.Redo();
+		}
+
+		private void UnbindEditor(IResourceEditor editor)
+		{
+			var notifyPropertyChanged = editor as INotifyPropertyChanged;
+			if (notifyPropertyChanged != null)
+			{
+				notifyPropertyChanged.PropertyChanged -= this.EditorPropertyChanged;
+			}
+		}
+
+		private void UndoClick(object sender, EventArgs e)
+		{
+			var tab = this.fileTabs.SelectedTab;
+			if (tab == null)
+			{
+				return;
+			}
+			var editor = tab.Tag as IResourceEditor;
+			if (editor == null)
+			{
+				return;
+			}
+			editor.Undo();
+		}
+
+		private void UpdateMenuButtons(IResourceEditor editor)
+		{
+			this.undoMenuItem.Enabled = this.undoButton.Enabled = editor.CanUndo;
+			this.redoButton.Enabled = this.redoButton.Enabled = editor.CanRedo;
 		}
 
 		private void combatEvagroupToolStripMenuItem_Click(object sender, EventArgs e)
@@ -167,28 +215,6 @@ namespace Toe.Editor
 			this.OpenFile(@"C:\GitHub\toe\src\marmalade\data\male_lod0.group");
 		}
 
-		private void UndoClick(object sender, EventArgs e)
-		{
-			var tab = this.fileTabs.SelectedTab;
-			if (tab == null)
-				return;
-			var editor = tab.Tag as IResourceEditor;
-			if (editor == null)
-				return;
-			editor.Undo();
-		}
-
-		private void RedoClick(object sender, EventArgs e)
-		{
-			var tab = this.fileTabs.SelectedTab;
-			if (tab == null)
-				return;
-			var editor = tab.Tag as IResourceEditor;
-			if (editor == null)
-				return;
-			editor.Redo();
-		}
-
-	
+		#endregion
 	}
 }

@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 using Toe.Resources;
@@ -13,48 +7,67 @@ namespace Toe.Editors.Interfaces.Dialogs
 {
 	public partial class ResourcePickerDialog : Form
 	{
-		private readonly IResourceManager resourceManager;
+		#region Constants and Fields
 
 		private readonly IEditorEnvironment editorEnvironment;
 
-		private readonly uint type;
-
 		private readonly bool fileReferencesAllowed;
 
-		public ResourcePickerDialog(IResourceManager resourceManager,IEditorEnvironment editorEnvironment, uint type, bool fileReferencesAllowed)
+		private readonly IResourceManager resourceManager;
+
+		private readonly uint type;
+
+		#endregion
+
+		#region Constructors and Destructors
+
+		public ResourcePickerDialog(
+			IResourceManager resourceManager, IEditorEnvironment editorEnvironment, uint type, bool fileReferencesAllowed)
 		{
 			this.resourceManager = resourceManager;
 			this.editorEnvironment = editorEnvironment;
 			this.type = type;
 			this.fileReferencesAllowed = fileReferencesAllowed;
-			InitializeComponent();
-			
+			this.InitializeComponent();
+
 			foreach (var i in resourceManager.GetAllResourcesOfType(type))
 			{
-				list.Items.Add(i);
-			} 
+				this.list.Items.Add(i);
+			}
 			if (fileReferencesAllowed)
 			{
-				btnOpenFile.Visible = true;
+				this.btnOpenFile.Visible = true;
 			}
 		}
+
+		#endregion
+
+		#region Public Properties
+
 		public IResourceItem SelectedItem
 		{
 			get
 			{
-				if (list.SelectedItems.Count == 0) return null;
-				return ((IResourceItem)list.SelectedItems[0]);
+				if (this.list.SelectedItems.Count == 0)
+				{
+					return null;
+				}
+				return ((IResourceItem)this.list.SelectedItems[0]);
 			}
 		}
-		
-		private void btnOk_Click(object sender, EventArgs e)
-		{
-			this.DialogResult = DialogResult.OK;
-		}
+
+		#endregion
+
+		#region Methods
 
 		private void btnCancel_Click(object sender, EventArgs e)
 		{
 			this.DialogResult = DialogResult.Cancel;
+		}
+
+		private void btnOk_Click(object sender, EventArgs e)
+		{
+			this.DialogResult = DialogResult.OK;
 		}
 
 		private void btnOpenFile_Click(object sender, EventArgs e)
@@ -63,22 +76,24 @@ namespace Toe.Editors.Interfaces.Dialogs
 			if (DialogResult.OK == d.ShowDialog())
 			{
 				string safeFileName = d.FileName;
-				editorEnvironment.Open(safeFileName);
+				this.editorEnvironment.Open(safeFileName);
 
-				var f = resourceManager.EnsureFile(safeFileName);
+				var f = this.resourceManager.EnsureFile(safeFileName);
 				if (f != null)
 				{
 					foreach (var i in f.Items)
 					{
-						if(i.Type == type)
+						if (i.Type == this.type)
 						{
-							list.Items.Add(i);
-							list.SelectedItem = i;
+							this.list.Items.Add(i);
+							this.list.SelectedItem = i;
 							this.DialogResult = DialogResult.OK;
 						}
 					}
 				}
 			}
 		}
+
+		#endregion
 	}
 }

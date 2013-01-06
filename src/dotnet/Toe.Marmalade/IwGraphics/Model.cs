@@ -6,43 +6,36 @@ using OpenTK.Graphics.OpenGL;
 using Toe.Marmalade;
 using Toe.Marmalade.IwGx;
 using Toe.Resources;
-using Toe.Utils.Marmalade.IwGx;
 using Toe.Utils.Mesh;
 
 namespace Toe.Utils.Marmalade.IwGraphics
 {
 	public class Model : Managed
 	{
-		private readonly IResourceManager resourceManager;
-
-		public Model(IResourceManager resourceManager)
-		{
-			this.resourceManager = resourceManager;
-		}
-
 		#region Constants and Fields
 
 		public static readonly uint TypeHash = Hash.Get("CIwModel");
 
 		private readonly IList<IMesh> meshes = new List<IMesh>();
 
+		private readonly IResourceManager resourceManager;
+
 		private uint flags;
+
+		#endregion
+
+		#region Constructors and Destructors
+
+		public Model(IResourceManager resourceManager)
+		{
+			this.resourceManager = resourceManager;
+		}
 
 		#endregion
 
 		#region Public Properties
 
-		public IList<IMesh> Meshes
-		{
-			get
-			{
-				return this.meshes;
-			}
-		}
-
-		#endregion
-
-		#region Public Methods and Operators
+		public Vector3 Center { get; set; }
 
 		public override uint ClassHashCode
 		{
@@ -56,24 +49,32 @@ namespace Toe.Utils.Marmalade.IwGraphics
 		{
 			get
 			{
-				return flags;
+				return this.flags;
 			}
 			set
 			{
-				if (flags != value)
+				if (this.flags != value)
 				{
 					this.RaisePropertyChanging("Flags");
-					flags = value;
+					this.flags = value;
 					this.RaisePropertyChanged("Flags");
 				}
 			}
 		}
 
-		public Vector3 Center { get; set; }
+		public IList<IMesh> Meshes
+		{
+			get
+			{
+				return this.meshes;
+			}
+		}
 
 		public float Radius { get; set; }
 
 		#endregion
+
+		#region Public Methods and Operators
 
 		public void RenderOpenGL()
 		{
@@ -86,7 +87,10 @@ namespace Toe.Utils.Marmalade.IwGraphics
 					if (!string.IsNullOrEmpty(submesh.Material))
 					{
 						m = this.resourceManager.FindResource(Material.TypeHash, Hash.Get(mesh.Name + "/" + submesh.Material)) as Material;
-						if (m == null) m = resourceManager.FindResource(Material.TypeHash, Hash.Get(submesh.Material)) as Material;
+						if (m == null)
+						{
+							m = this.resourceManager.FindResource(Material.TypeHash, Hash.Get(submesh.Material)) as Material;
+						}
 					}
 					else
 					{
@@ -101,5 +105,7 @@ namespace Toe.Utils.Marmalade.IwGraphics
 				}
 			}
 		}
+
+		#endregion
 	}
 }

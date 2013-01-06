@@ -43,6 +43,14 @@ namespace Toe.Utils.Marmalade.IwGx
 
 		#region Public Properties
 
+		public override uint ClassHashCode
+		{
+			get
+			{
+				return TypeHash;
+			}
+		}
+
 		public string FragmentShaderSource
 		{
 			get
@@ -155,14 +163,6 @@ namespace Toe.Utils.Marmalade.IwGx
 			foreach (var param in this.shaderParams)
 			{
 				param.ApplyOpenGL(this.shaderProgramHandle);
-			}
-		}
-
-		public override uint ClassHashCode
-		{
-			get
-			{
-				return TypeHash;
 			}
 		}
 

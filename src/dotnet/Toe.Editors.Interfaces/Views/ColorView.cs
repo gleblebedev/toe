@@ -7,29 +7,40 @@ namespace Toe.Editors.Interfaces.Views
 {
 	public class ColorView : UserControl, IView
 	{
-		readonly DataContextContainer dataContext = new DataContextContainer();
+		#region Constants and Fields
+
+		private readonly DataContextContainer dataContext = new DataContextContainer();
+
+		#endregion
+
+		#region Constructors and Destructors
 
 		public ColorView()
 		{
 			this.dataContext.DataContextChanged += this.UpdateTextBox;
 		}
 
-		private void UpdateTextBox(object sender, DataContextChangedEventArgs e)
-		{
-			if (this.dataContext.Value != null)
-			{
-				this.BackColor = (Color)this.dataContext.Value;
-			}
-		}
+		#endregion
 
-
-		#region Implementation of IView
+		#region Public Properties
 
 		public DataContextContainer DataContext
 		{
 			get
 			{
 				return this.dataContext;
+			}
+		}
+
+		#endregion
+
+		#region Methods
+
+		private void UpdateTextBox(object sender, DataContextChangedEventArgs e)
+		{
+			if (this.dataContext.Value != null)
+			{
+				this.BackColor = (Color)this.dataContext.Value;
 			}
 		}
 

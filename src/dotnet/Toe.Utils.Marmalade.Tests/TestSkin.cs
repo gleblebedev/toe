@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 
 using Autofac;
 
@@ -17,7 +16,7 @@ namespace Toe.Utils.Mesh.Marmalade.Tests
 		[Test]
 		public void TestLegs()
 		{
-			using (IResourceManager rm = Container.Resolve<IResourceManager>())
+			using (IResourceManager rm = this.Container.Resolve<IResourceManager>())
 			{
 				var fileName = "male_legs_trousers0_lod0.skin";
 				var f = rm.EnsureFile(fileName);
@@ -30,7 +29,7 @@ namespace Toe.Utils.Mesh.Marmalade.Tests
 		[Test]
 		public void TestMarmaladeFolder()
 		{
-			using (IResourceManager rm = Container.Resolve<IResourceManager>())
+			using (IResourceManager rm = this.Container.Resolve<IResourceManager>())
 			{
 				var s = new FolderTreeSearch(@"C:\Marmalade\6.2\examples\", "*.skin");
 				foreach (var file in s)
@@ -44,8 +43,5 @@ namespace Toe.Utils.Mesh.Marmalade.Tests
 		}
 
 		#endregion
-
-
 	}
-
 }

@@ -1,34 +1,39 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
-using System.Linq;
-using System.Text;
 
 using Autofac;
 
 using OpenTK;
 
 using Toe.Marmalade.IwGx;
-using Toe.Utils.Marmalade;
 
 namespace Toe.Marmalade.BinaryFiles.IwGx
 {
-	public class TextureBinarySerializer:IBinarySerializer
+	public class TextureBinarySerializer : IBinarySerializer
 	{
+		#region Constants and Fields
+
 		private readonly IComponentContext context;
+
+		#endregion
+
+		#region Constructors and Destructors
 
 		public TextureBinarySerializer(IComponentContext context)
 		{
 			this.context = context;
 		}
 
+		#endregion
+
+		#region Public Methods and Operators
+
 		/// <summary>
 		/// Parse binary block.
 		/// </summary>
 		public Managed Parse(BinaryParser parser)
 		{
-			var texture = context.Resolve<Texture>();
+			var texture = this.context.Resolve<Texture>();
 			texture.NameHash = parser.ConsumeUInt32();
 			texture.Flags = parser.ConsumeUInt32();
 			texture.FormatSW = (ImageFormat)parser.ConsumeByte();
@@ -49,6 +54,10 @@ namespace Toe.Marmalade.BinaryFiles.IwGx
 
 			return texture;
 		}
+
+		#endregion
+
+		#region Methods
 
 		private Image ParseImage(BinaryParser parser)
 		{
@@ -73,26 +82,26 @@ namespace Toe.Marmalade.BinaryFiles.IwGx
 				case ImageFormat.BGR_888:
 				case ImageFormat.RGB_888:
 					return image;
-				//case Image.PALETTE4_ABGR_1555:
-				//    format = (new Palette4Abgr1555(image.width, image.height, image.pitch));
-				//    Debug.WriteLine(string.Format("Image PALETTE4_ABGR_1555 {0}x{1}", image.width, image.height));
-				//    break;
-				//case Image.PALETTE4_RGB_888:
-				//    format = (new Palette4Rgb888(image.width, image.height, image.pitch));
-				//    Debug.WriteLine(string.Format("Image PALETTE4_RGB_888 {0}x{1}", image.width, image.height));
-				//    break;
-				//case Image.PALETTE8_ABGR_1555:
-				//    format = (new Palette8Abgr1555(image.width, image.height, image.pitch));
-				//    Debug.WriteLine(string.Format("Image PALETTE8_ABGR_1555 {0}x{1}", image.width, image.height));
-				//    break;
-				//case Image.ABGR_1555:
-				//    Debug.WriteLine(string.Format("Image ABGR_1555 {0}x{1}", image.width, image.height));
-				//    LoadABGR1555(serialise);
-				//    return;
-				//case Image.RGBA_6666:
-				//    Debug.WriteLine(string.Format("Image RGBA_6666 {0}x{1}", image.width, image.height));
-				//    LoadRgba6666(serialise);
-				//    return;
+					//case Image.PALETTE4_ABGR_1555:
+					//    format = (new Palette4Abgr1555(image.width, image.height, image.pitch));
+					//    Debug.WriteLine(string.Format("Image PALETTE4_ABGR_1555 {0}x{1}", image.width, image.height));
+					//    break;
+					//case Image.PALETTE4_RGB_888:
+					//    format = (new Palette4Rgb888(image.width, image.height, image.pitch));
+					//    Debug.WriteLine(string.Format("Image PALETTE4_RGB_888 {0}x{1}", image.width, image.height));
+					//    break;
+					//case Image.PALETTE8_ABGR_1555:
+					//    format = (new Palette8Abgr1555(image.width, image.height, image.pitch));
+					//    Debug.WriteLine(string.Format("Image PALETTE8_ABGR_1555 {0}x{1}", image.width, image.height));
+					//    break;
+					//case Image.ABGR_1555:
+					//    Debug.WriteLine(string.Format("Image ABGR_1555 {0}x{1}", image.width, image.height));
+					//    LoadABGR1555(serialise);
+					//    return;
+					//case Image.RGBA_6666:
+					//    Debug.WriteLine(string.Format("Image RGBA_6666 {0}x{1}", image.width, image.height));
+					//    LoadRgba6666(serialise);
+					//    return;
 				case ImageFormat.PALETTE8_RGB_888:
 					image.PaletteData = parser.ConsumeByteArray(256 * 3);
 					return image;
@@ -100,7 +109,7 @@ namespace Toe.Marmalade.BinaryFiles.IwGx
 				case ImageFormat.PALETTE8_ARGB_8888:
 				case ImageFormat.PALETTE8_RGBA_8888:
 					image.PaletteData = parser.ConsumeByteArray(256 * 4);
-				    return image;
+					return image;
 				case ImageFormat.PALETTE4_RGB_888:
 					image.PaletteData = parser.ConsumeByteArray(16 * 3);
 					return image;
@@ -112,9 +121,9 @@ namespace Toe.Marmalade.BinaryFiles.IwGx
 				default:
 					throw new FormatException(string.Format(CultureInfo.CurrentCulture, "Unknown image format 0x{0:x}", image.Format));
 			}
-		
 		}
 
+		#endregion
 
 		//private void Load256ColourPalettised(IwSerialise serialise)
 		//{
@@ -215,6 +224,5 @@ namespace Toe.Marmalade.BinaryFiles.IwGx
 
 		//    this.data = d;
 		//}
-
 	}
 }

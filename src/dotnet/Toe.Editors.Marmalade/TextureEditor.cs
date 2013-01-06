@@ -8,7 +8,6 @@ using Toe.Editors.Interfaces;
 using Toe.Editors.Interfaces.Bindings;
 using Toe.Marmalade.IwGx;
 using Toe.Resources;
-using Toe.Utils.Marmalade.IwGx;
 
 namespace Toe.Editors.Marmalade
 {
@@ -26,8 +25,12 @@ namespace Toe.Editors.Marmalade
 
 		#region Constructors and Destructors
 
-		public TextureEditor(IEditorEnvironment editorEnvironment, IResourceManager resourceManager, IComponentContext context, IEditorOptions<Base3DEditorOptions> options)
-			: base(context,options)
+		public TextureEditor(
+			IEditorEnvironment editorEnvironment,
+			IResourceManager resourceManager,
+			IComponentContext context,
+			IEditorOptions<Base3DEditorOptions> options)
+			: base(context, options)
 		{
 			this.editorEnvironment = editorEnvironment;
 			this.resourceManager = resourceManager;

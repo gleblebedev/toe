@@ -9,12 +9,17 @@ namespace Toe.Editors.Interfaces.Views
 {
 	public class ButtonView : UserControl, IView
 	{
-		DataContextContainer dataContext = new DataContextContainer();
+		#region Constants and Fields
 
-		private Button label;
+		private readonly DataContextContainer dataContext = new DataContextContainer();
+
+		private readonly Button label;
+
+		#endregion
+
+		#region Constructors and Destructors
 
 		public ButtonView()
-			: base()
 		{
 			this.label = new Button();
 			this.label.Click += (s, a) => this.OnClick(a);
@@ -26,36 +31,26 @@ namespace Toe.Editors.Interfaces.Views
 			this.dataContext.DataContextChanged += this.UpdateLabel;
 		}
 
-		protected override void OnResize(EventArgs e)
-		{
-			this.label.Width = Width;
-			base.OnResize(e);
-		}
-		public override Size GetPreferredSize(Size proposedSize)
-		{
-			var preferredSize = label.GetPreferredSize(proposedSize);
-			if (proposedSize.Width < int.MaxValue && proposedSize.Width > preferredSize.Width) preferredSize = new Size(proposedSize.Width, preferredSize.Height);
-			return preferredSize;
-		}
+		#endregion
 
-		private void LabelSizeChanged(object sender, EventArgs e)
-		{
-			if (this.Height != this.label.Height)
-				this.Height = this.label.Height;
-		}
+		#region Public Properties
 
-		private void UpdateLabel(object sender, DataContextChangedEventArgs e)
-		{
-			this.label.Text = string.Format(CultureInfo.InvariantCulture, "{0}", e.NewValue);
-		}
-
-		#region Implementation of IView
-
-		public string Text
+		public DataContextContainer DataContext
 		{
 			get
 			{
-				if (this.dataContext.Value == null) return null;
+				return this.dataContext;
+			}
+		}
+
+		public new string Text
+		{
+			get
+			{
+				if (this.dataContext.Value == null)
+				{
+					return null;
+				}
 				return this.dataContext.Value.ToString();
 			}
 			set
@@ -64,12 +59,41 @@ namespace Toe.Editors.Interfaces.Views
 			}
 		}
 
-		public DataContextContainer DataContext
+		#endregion
+
+		#region Public Methods and Operators
+
+		public override Size GetPreferredSize(Size proposedSize)
 		{
-			get
+			var preferredSize = this.label.GetPreferredSize(proposedSize);
+			if (proposedSize.Width < int.MaxValue && proposedSize.Width > preferredSize.Width)
 			{
-				return this.dataContext;
+				preferredSize = new Size(proposedSize.Width, preferredSize.Height);
 			}
+			return preferredSize;
+		}
+
+		#endregion
+
+		#region Methods
+
+		protected override void OnResize(EventArgs e)
+		{
+			this.label.Width = this.Width;
+			base.OnResize(e);
+		}
+
+		private void LabelSizeChanged(object sender, EventArgs e)
+		{
+			if (this.Height != this.label.Height)
+			{
+				this.Height = this.label.Height;
+			}
+		}
+
+		private void UpdateLabel(object sender, DataContextChangedEventArgs e)
+		{
+			this.label.Text = string.Format(CultureInfo.InvariantCulture, "{0}", e.NewValue);
 		}
 
 		#endregion

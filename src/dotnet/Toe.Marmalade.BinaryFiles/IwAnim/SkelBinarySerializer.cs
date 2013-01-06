@@ -1,28 +1,35 @@
-using System;
-
 using Autofac;
 
 using Toe.Marmalade.IwAnim;
 using Toe.Resources;
-using Toe.Utils.Marmalade;
 
 namespace Toe.Marmalade.BinaryFiles.IwAnim
 {
 	public class SkelBinarySerializer : IBinarySerializer
 	{
+		#region Constants and Fields
+
 		private readonly IComponentContext context;
+
+		#endregion
+
+		#region Constructors and Destructors
 
 		public SkelBinarySerializer(IComponentContext context)
 		{
 			this.context = context;
 		}
 
+		#endregion
+
+		#region Public Methods and Operators
+
 		/// <summary>
 		/// Parse binary block.
 		/// </summary>
 		public Managed Parse(BinaryParser parser)
 		{
-			var skel = context.Resolve<AnimSkel>();
+			var skel = this.context.Resolve<AnimSkel>();
 			skel.NameHash = parser.ConsumeUInt32();
 
 			var numBones = parser.ConsumeUInt32();
@@ -45,6 +52,6 @@ namespace Toe.Marmalade.BinaryFiles.IwAnim
 			return skel;
 		}
 
-
+		#endregion
 	}
 }

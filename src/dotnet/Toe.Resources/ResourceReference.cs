@@ -1,6 +1,5 @@
 using System;
 using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 
@@ -15,6 +14,10 @@ namespace Toe.Resources
 		private readonly IResourceManager resourceManager;
 
 		private readonly uint type;
+
+		private IResourceFileItem consumedFileResource;
+
+		private IResourceItem consumedResource;
 
 		private IResourceFile file;
 
@@ -43,6 +46,8 @@ namespace Toe.Resources
 		#endregion
 
 		#region Public Events
+
+		public event PropertyChangedEventHandler PropertyChanged;
 
 		public event EventHandler ReferenceChanged;
 
@@ -115,7 +120,7 @@ namespace Toe.Resources
 						this.nameReference = null;
 						this.hashReference = 0;
 					}
-					this.RaiseReferenceChanged();
+					this.UpdateConsumedResource();
 				}
 			}
 		}
@@ -132,8 +137,16 @@ namespace Toe.Resources
 				{
 					this.FileReference = null;
 					this.hashReference = value;
-					this.RaiseReferenceChanged();
+					this.UpdateConsumedResource();
 				}
+			}
+		}
+
+		public bool IsEmpty
+		{
+			get
+			{
+				return string.IsNullOrEmpty(this.fileReference) && this.hashReference == 0;
 			}
 		}
 
@@ -156,7 +169,7 @@ namespace Toe.Resources
 					{
 						this.hashReference = Hash.Get(this.nameReference);
 					}
-					this.RaiseReferenceChanged();
+					this.UpdateConsumedResource();
 				}
 			}
 		}
@@ -165,26 +178,15 @@ namespace Toe.Resources
 		{
 			get
 			{
-				if (this.file != null)
+				if (this.consumedFileResource != null)
 				{
-					if (this.file.Items == null)
-					{
-						return null;
-					}
-					foreach (IResourceFileItem resourceFileItem in this.file.Items)
-					{
-						if (resourceFileItem.Type == this.type)
-						{
-							return resourceFileItem.Resource;
-						}
-					}
-					return null;
+					return this.consumedFileResource.Resource;
 				}
-				if (this.hashReference == 0)
+				if (this.consumedResource == null)
 				{
 					return null;
 				}
-				return this.resourceManager.FindResource(this.type, this.hashReference);
+				return this.consumedResource.Value;
 			}
 		}
 
@@ -196,18 +198,33 @@ namespace Toe.Resources
 			}
 		}
 
-		public bool IsEmpty
-		{
-			get
-			{
-				return string.IsNullOrEmpty(fileReference) && hashReference == 0;
-			}
-		
-		}
-
 		#endregion
 
 		#region Public Methods and Operators
+
+		public ResourceReference Clone()
+		{
+			var r = new ResourceReference(this.type, this.resourceManager, this.container);
+			r.fileReference = this.fileReference;
+			r.nameReference = this.nameReference;
+			r.hashReference = this.hashReference;
+			return r;
+		}
+
+		public void CopyFrom(ResourceReference newR)
+		{
+			if (!string.IsNullOrEmpty(newR.fileReference))
+			{
+				this.FileReference = newR.fileReference;
+				return;
+			}
+			if (!string.IsNullOrEmpty(newR.nameReference))
+			{
+				this.NameReference = newR.nameReference;
+				return;
+			}
+			this.HashReference = newR.hashReference;
+		}
 
 		/// <summary>
 		/// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
@@ -228,7 +245,10 @@ namespace Toe.Resources
 			{
 				return this.NameReference;
 			}
-			if (this.hashReference == 0) return string.Empty;
+			if (this.hashReference == 0)
+			{
+				return string.Empty;
+			}
 			return string.Format(CultureInfo.InvariantCulture, "0x{0:X8}", this.hashReference);
 		}
 
@@ -236,17 +256,30 @@ namespace Toe.Resources
 
 		#region Methods
 
+		protected void RaisePropertyChanged(string property)
+		{
+			if (this.PropertyChanged != null)
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(property));
+			}
+		}
+
 		protected void RaiseReferenceChanged()
 		{
-			RaisePropertyChanged("FileReference");
-			RaisePropertyChanged("NameReference");
-			RaisePropertyChanged("HashReference");
-			RaisePropertyChanged("Resource");
+			this.RaisePropertyChanged("FileReference");
+			this.RaisePropertyChanged("NameReference");
+			this.RaisePropertyChanged("HashReference");
+			this.RaisePropertyChanged("Resource");
 
 			if (this.ReferenceChanged != null)
 			{
 				this.ReferenceChanged(this, new EventArgs());
 			}
+		}
+
+		private void ConsumedResourcePropertyChanged(object sender, PropertyChangedEventArgs e)
+		{
+			this.RaiseReferenceChanged();
 		}
 
 		private void Dispose(bool disposing)
@@ -256,41 +289,80 @@ namespace Toe.Resources
 				this.FileReference = null;
 			}
 		}
-		protected void RaisePropertyChanged(string property)
+
+		private void ReleaseConsumedResource()
 		{
-			if (PropertyChanged != null)
-				PropertyChanged(this, new PropertyChangedEventArgs(property));
-		}
-		#endregion
-
-		#region Implementation of INotifyPropertyChanged
-
-		public event PropertyChangedEventHandler PropertyChanged;
-
-		#endregion
-
-		public ResourceReference Clone()
-		{
-			var r = new ResourceReference(type, resourceManager, container);
-			r.fileReference = fileReference;
-			r.nameReference = nameReference;
-			r.hashReference = hashReference;
-			return r;
-		}
-
-		public void CopyFrom(ResourceReference newR)
-		{
-			if (!string.IsNullOrEmpty(newR.fileReference))
+			if (this.consumedResource != null)
 			{
-				this.FileReference = newR.fileReference;
+				var np = this.consumedResource as INotifyPropertyChanged;
+				if (np != null)
+				{
+					np.PropertyChanged -= this.ConsumedResourcePropertyChanged;
+				}
+				this.resourceManager.ReleaseResource(this.consumedResource.Type, this.consumedResource.Hash);
+				this.consumedResource = null;
+			}
+			this.consumedFileResource = null;
+		}
+
+		private void SetConsumedResource(IResourceFileItem resource)
+		{
+			var obj = this.Resource;
+			this.ReleaseConsumedResource();
+			this.consumedFileResource = resource;
+			if (!Equals(obj, this.Resource))
+			{
+				this.RaiseReferenceChanged();
+			}
+		}
+
+		private void SetConsumedResource(IResourceItem resource)
+		{
+			var obj = this.Resource;
+			this.ReleaseConsumedResource();
+			this.consumedResource = resource;
+			if (this.consumedResource != null)
+			{
+				var np = this.consumedResource as INotifyPropertyChanged;
+				if (np != null)
+				{
+					np.PropertyChanged += this.ConsumedResourcePropertyChanged;
+				}
+			}
+			if (!Equals(obj, this.Resource))
+			{
+				this.RaiseReferenceChanged();
+			}
+		}
+
+		private void UpdateConsumedResource()
+		{
+			if (this.file != null)
+			{
+				if (this.file.Items == null)
+				{
+					this.SetConsumedResource((IResourceItem)null);
+					return;
+				}
+				foreach (IResourceFileItem resourceFileItem in this.file.Items)
+				{
+					if (resourceFileItem.Type == this.type)
+					{
+						SetConsumedResource(resourceFileItem);
+						return;
+					}
+				}
+				this.SetConsumedResource((IResourceItem)null);
 				return;
 			}
-			if (!string.IsNullOrEmpty(newR.nameReference))
+			if (this.hashReference == 0)
 			{
-				this.NameReference = newR.nameReference;
+				this.SetConsumedResource((IResourceItem)null);
 				return;
 			}
-			this.HashReference = newR.hashReference;
+			this.SetConsumedResource(this.resourceManager.ConsumeResource(this.type, this.hashReference));
 		}
+
+		#endregion
 	}
 }

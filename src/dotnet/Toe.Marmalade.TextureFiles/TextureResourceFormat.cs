@@ -176,14 +176,14 @@ namespace Toe.Marmalade.TextureFiles
 				{
 					img.FlipVerticaly();
 				}
-				for (int i = 0; i< img.data.Length; i+=4)
+				for (int i = 0; i < img.data.Length; i += 4)
 				{
 					byte b = img.data[i];
-					img.data[i ] = img.data[i+2];
+					img.data[i] = img.data[i + 2];
 					img.data[i + 2] = b;
 				}
 
-					return img;
+				return img;
 			}
 			throw new FormatException();
 		}

@@ -8,8 +8,6 @@ using Toe.Editors.Interfaces.Views;
 using Toe.Marmalade;
 using Toe.Marmalade.IwResManager;
 using Toe.Resources;
-using Toe.Utils.Marmalade;
-using Toe.Utils.Marmalade.IwResManager;
 
 namespace Toe.Editors.Marmalade
 {
@@ -23,7 +21,7 @@ namespace Toe.Editors.Marmalade
 
 		private readonly ICommandHistory history;
 
-		private SplitContainer split;
+		private readonly SplitContainer split;
 
 		#endregion
 
@@ -38,20 +36,21 @@ namespace Toe.Editors.Marmalade
 
 			this.SuspendLayout();
 
-			split = new SplitContainer() { Dock = DockStyle.Fill };
-			split.Panel2Collapsed = true;
-			this.Controls.Add(split);
+			this.split = new SplitContainer { Dock = DockStyle.Fill };
+			this.split.Panel2Collapsed = true;
+			this.Controls.Add(this.split);
 
-			var sp = new StackPanel() { Dock = DockStyle.Fill, AutoSize = true };
-			split.Panel1.Controls.Add(sp);
+			var sp = new StackPanel { Dock = DockStyle.Fill, AutoSize = true };
+			this.split.Panel1.Controls.Add(sp);
 
-			var collectionView = new CollectionView<IResourceFile>(a => editorEnvironment.EditorFor(a, history)) { AutoSize = true };
+			var collectionView = new CollectionView<IResourceFile>(a => editorEnvironment.EditorFor(a, history))
+				{ AutoSize = true };
 			collectionView.ItemsPanel.AutoSize = true;
 			collectionView.ItemsPanel.AutoScroll = false;
 			new PropertyBinding<ResGroup, IList<IResourceFile>>(collectionView, this.dataContext, m => m.ExternalResources, null);
 			sp.Controls.Add(collectionView);
 
-			var embCollectionView = new CollectionView<Managed>(a => CreateButtonForResource(a)) { AutoSize = true};
+			var embCollectionView = new CollectionView<Managed>(a => this.CreateButtonForResource(a)) { AutoSize = true };
 			embCollectionView.ItemsPanel.AutoSize = true;
 			embCollectionView.ItemsPanel.AutoScroll = false;
 			new PropertyBinding<ResGroup, IList<Managed>>(embCollectionView, this.dataContext, m => m.EmbeddedResources, null);
@@ -59,24 +58,6 @@ namespace Toe.Editors.Marmalade
 
 			this.ResumeLayout();
 			this.PerformLayout();
-		}
-
-		private IView CreateButtonForResource(Managed managed)
-		{
-			var buttonForResource = new ButtonView();
-			buttonForResource.Click += (s, a) => OpenEditorForResource(managed);
-			return buttonForResource;
-		}
-
-		private void OpenEditorForResource(Managed managed)
-		{
-			split.Panel2Collapsed = false;
-			split.Panel2.Controls.Clear();
-			IView editorFor = editorEnvironment.EditorFor(managed, history);
-			editorFor.DataContext.Value = managed;
-			var control = (Control)editorFor;
-			control.Dock = DockStyle.Fill;
-			split.Panel2.Controls.Add(control);
 		}
 
 		#endregion
@@ -105,6 +86,28 @@ namespace Toe.Editors.Marmalade
 			{
 				this.dataContext.Value = value;
 			}
+		}
+
+		#endregion
+
+		#region Methods
+
+		private IView CreateButtonForResource(Managed managed)
+		{
+			var buttonForResource = new ButtonView();
+			buttonForResource.Click += (s, a) => this.OpenEditorForResource(managed);
+			return buttonForResource;
+		}
+
+		private void OpenEditorForResource(Managed managed)
+		{
+			this.split.Panel2Collapsed = false;
+			this.split.Panel2.Controls.Clear();
+			IView editorFor = this.editorEnvironment.EditorFor(managed, this.history);
+			editorFor.DataContext.Value = managed;
+			var control = (Control)editorFor;
+			control.Dock = DockStyle.Fill;
+			this.split.Panel2.Controls.Add(control);
 		}
 
 		#endregion

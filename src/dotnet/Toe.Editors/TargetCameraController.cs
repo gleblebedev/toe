@@ -11,13 +11,13 @@ namespace Toe.Editors
 
 		private Point? lastKnownMousePosition;
 
+		private float targetDistance = 1024;
+
 		#endregion
 
 		#region Public Properties
 
 		public EditorCamera Camera { get; set; }
-
-		private float targetDistance = 1024;
 
 		public float TargetDistance
 		{
@@ -59,7 +59,7 @@ namespace Toe.Editors
 			{
 				float dx = location.X - this.lastKnownMousePosition.Value.X;
 				float dy = location.Y - this.lastKnownMousePosition.Value.Y;
-				var target = this.Camera.Pos + this.Camera.Forward * targetDistance;
+				var target = this.Camera.Pos + this.Camera.Forward * this.targetDistance;
 				if (MouseButtons.Left == (button & MouseButtons.Left))
 				{
 					if (dx != 0)

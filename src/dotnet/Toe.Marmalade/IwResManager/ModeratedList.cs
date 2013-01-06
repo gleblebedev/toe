@@ -1,10 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.ComponentModel;
-
 namespace Toe.Utils.Marmalade.IwResManager
 {
 	//public class ModeratedList<T>: IList<T>, INotifyCollectionChanged,INotifyPropertyChanged, IBindingList
@@ -92,8 +85,6 @@ namespace Toe.Utils.Marmalade.IwResManager
 	//        return IndexOf(value) >= 0;
 	//    }
 
-	
-
 	//    /// <summary>
 	//    /// Determines the index of a specific item in the <see cref="T:System.Collections.IList"/>.
 	//    /// </summary>
@@ -124,7 +115,6 @@ namespace Toe.Utils.Marmalade.IwResManager
 	//        int index = impl.IndexOf((T)value);
 	//        if (index >= 0) RemoveAt(index);
 	//    }
-
 
 	//    /// <summary>
 	//    /// Removes the <see cref="T:System.Collections.IList"/> item at the specified index.
@@ -190,8 +180,6 @@ namespace Toe.Utils.Marmalade.IwResManager
 	//        }
 	//    }
 
-		
-
 	//    /// <summary>
 	//    /// Gets a value indicating whether the <see cref="T:System.Collections.IList"/> is read-only.
 	//    /// </summary>
@@ -229,8 +217,6 @@ namespace Toe.Utils.Marmalade.IwResManager
 	//    public void Clear()
 	//    {
 	//    }
-
-	
 
 	//    /// <summary>
 	//    /// Determines whether the <see cref="T:System.Collections.Generic.ICollection`1"/> contains a specific value.

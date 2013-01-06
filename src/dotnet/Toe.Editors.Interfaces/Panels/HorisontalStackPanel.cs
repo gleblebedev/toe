@@ -1,17 +1,21 @@
-using System.Linq;
 using System.Windows.Forms;
 
 namespace Toe.Editors.Interfaces.Views
 {
 	public class HorisontalStackPanel : FlowLayoutPanel
 	{
+		#region Constructors and Destructors
+
 		public HorisontalStackPanel()
 		{
-			AutoScroll = true;
+			this.AutoScroll = true;
 			this.FlowDirection = FlowDirection.LeftToRight;
 			this.WrapContents = false;
 		}
+
+		#endregion
 	}
+
 	//public class HorisontalStackPanel : Panel
 	//{
 	//    public HorisontalStackPanel()

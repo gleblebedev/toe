@@ -8,13 +8,35 @@ namespace Toe.Editors.Interfaces.Views
 {
 	public class EditShortView : SingleControlView<TextBox>, IView
 	{
-		readonly DataContextContainer dataContext = new DataContextContainer();
+		#region Constants and Fields
+
+		private readonly DataContextContainer dataContext = new DataContextContainer();
+
+		#endregion
+
+		#region Constructors and Destructors
 
 		public EditShortView()
 		{
 			this.dataContext.DataContextChanged += this.UpdateTextBox;
 			this.ViewControl.TextChanged += this.UpdateDataContext;
 		}
+
+		#endregion
+
+		#region Public Properties
+
+		public DataContextContainer DataContext
+		{
+			get
+			{
+				return this.dataContext;
+			}
+		}
+
+		#endregion
+
+		#region Methods
 
 		private void UpdateDataContext(object sender, EventArgs e)
 		{
@@ -24,13 +46,33 @@ namespace Toe.Editors.Interfaces.Views
 			}
 		}
 
-
 		private void UpdateTextBox(object sender, DataContextChangedEventArgs e)
 		{
 			this.ViewControl.Text = string.Format(CultureInfo.InvariantCulture, "{0}", e.NewValue);
 		}
 
-		#region Implementation of IView
+		#endregion
+	}
+
+	public class EditFloatView : SingleControlView<TextBox>, IView
+	{
+		#region Constants and Fields
+
+		private readonly DataContextContainer dataContext = new DataContextContainer();
+
+		#endregion
+
+		#region Constructors and Destructors
+
+		public EditFloatView()
+		{
+			this.dataContext.DataContextChanged += this.UpdateTextBox;
+			this.ViewControl.TextChanged += this.UpdateDataContext;
+		}
+
+		#endregion
+
+		#region Public Properties
 
 		public DataContextContainer DataContext
 		{
@@ -42,16 +84,7 @@ namespace Toe.Editors.Interfaces.Views
 
 		#endregion
 
-	}
-	public class EditFloatView : SingleControlView<TextBox>, IView
-	{
-		readonly DataContextContainer dataContext = new DataContextContainer();
-
-		public EditFloatView()
-		{
-			this.dataContext.DataContextChanged += this.UpdateTextBox;
-			this.ViewControl.TextChanged += this.UpdateDataContext;
-		}
+		#region Methods
 
 		private void UpdateDataContext(object sender, EventArgs e)
 		{
@@ -61,23 +94,11 @@ namespace Toe.Editors.Interfaces.Views
 			}
 		}
 
-
 		private void UpdateTextBox(object sender, DataContextChangedEventArgs e)
 		{
 			this.ViewControl.Text = string.Format(CultureInfo.InvariantCulture, "{0}", e.NewValue);
 		}
 
-		#region Implementation of IView
-
-		public DataContextContainer DataContext
-		{
-			get
-			{
-				return this.dataContext;
-			}
-		}
-
 		#endregion
-
 	}
 }

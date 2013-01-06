@@ -1,5 +1,6 @@
 using System.Drawing;
 using System.Windows.Forms;
+using System.Windows.Forms.Layout;
 
 using Toe.Editors.Interfaces.Views;
 
@@ -7,17 +8,36 @@ namespace Toe.Editors.Interfaces.Panels
 {
 	public class StackPanel : Panel //FlowLayoutPanel
 	{
+		#region Constructors and Destructors
+
 		public StackPanel()
 		{
 			this.AutoScroll = true;
-			
+
 			//this.FlowDirection = FlowDirection.TopDown;
 			//this.WrapContents = false;
 		}
-		public override System.Drawing.Size GetPreferredSize(System.Drawing.Size proposedSize)
+
+		#endregion
+
+		#region Public Properties
+
+		public override LayoutEngine LayoutEngine
 		{
-			int h=0;
-			foreach (Control c in Controls)
+			get
+			{
+				return VerticalStackPanelLayout.Instance;
+			}
+		}
+
+		#endregion
+
+		#region Public Methods and Operators
+
+		public override Size GetPreferredSize(Size proposedSize)
+		{
+			int h = 0;
+			foreach (Control c in this.Controls)
 			{
 				// Only apply layout to visible controls.
 				if (!c.Visible)
@@ -28,16 +48,12 @@ namespace Toe.Editors.Interfaces.Panels
 				var preferredSize = c.GetPreferredSize(proposedSize);
 				h += preferredSize.Height + c.Height + c.Margin.Bottom;
 			}
-			return new Size(proposedSize.Width,h);
+			return new Size(proposedSize.Width, h);
 		}
-		public override System.Windows.Forms.Layout.LayoutEngine LayoutEngine
-		{
-			get
-			{
-				return VerticalStackPanelLayout.Instance;
-			}
-		}
+
+		#endregion
 	}
+
 	//public class StackPanel : Panel
 	//{
 	//    protected override void ReorderControls()

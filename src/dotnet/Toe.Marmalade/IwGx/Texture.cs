@@ -1,15 +1,9 @@
-using System.Drawing;
-using System.Drawing.Imaging;
-
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 
 using Toe.Gx;
 using Toe.Resources;
-using Toe.Utils.Marmalade;
-
-using PixelFormat = System.Drawing.Imaging.PixelFormat;
 
 namespace Toe.Marmalade.IwGx
 {
@@ -19,15 +13,11 @@ namespace Toe.Marmalade.IwGx
 
 		public static readonly uint TypeHash = Hash.Get("CIwTexture");
 
+		public Vector2 UVScale;
+
 		//private Bitmap bitmap;
 
-		private uint textureId;
-
 		private IGraphicsContext context;
-
-		#endregion
-
-		#region Public Properties
 
 		//public Bitmap Bitmap
 		//{
@@ -44,6 +34,92 @@ namespace Toe.Marmalade.IwGx
 		//        }
 		//    }
 		//}
+
+		private uint flags;
+
+		private ImageFormat formatHw = ImageFormat.FORMAT_UNDEFINED;
+
+		private ImageFormat formatSw = ImageFormat.FORMAT_UNDEFINED;
+
+		private Image image;
+
+		private uint textureId;
+
+		#endregion
+
+		#region Public Properties
+
+		public override uint ClassHashCode
+		{
+			get
+			{
+				return TypeHash;
+			}
+		}
+
+		public uint Flags
+		{
+			get
+			{
+				return this.flags;
+			}
+			set
+			{
+				if (this.flags != value)
+				{
+					this.flags = value;
+					this.RaisePropertyChanged("Flags");
+				}
+			}
+		}
+
+		public ImageFormat FormatHW
+		{
+			get
+			{
+				return this.formatHw;
+			}
+			set
+			{
+				if (this.formatHw != value)
+				{
+					this.formatHw = value;
+					this.RaisePropertyChanged("FormatHW");
+				}
+			}
+		}
+
+		public ImageFormat FormatSW
+		{
+			get
+			{
+				return this.formatSw;
+			}
+			set
+			{
+				if (this.formatSw != value)
+				{
+					this.formatSw = value;
+					this.RaisePropertyChanged("FormatSW");
+				}
+			}
+		}
+
+		public Image Image
+		{
+			get
+			{
+				return this.image;
+			}
+			set
+			{
+				if (this.image != value)
+				{
+					this.image = value;
+					this.RaisePropertyChanged("Image");
+				}
+			}
+		}
 
 		#endregion
 
@@ -68,92 +144,6 @@ namespace Toe.Marmalade.IwGx
 			OpenTKHelper.Assert();
 		}
 
-		private void GenTexture()
-		{
-			this.context = GraphicsContext.CurrentContext;
-
-			GL.GenTextures(1, out this.textureId);
-			OpenTKHelper.Assert();
-			GL.PushAttrib(AttribMask.TextureBit);
-			try
-			{
-				GL.BindTexture(TextureTarget.Texture2D, this.textureId);
-				OpenTKHelper.Assert();
-				Image.OpenGLUpload();
-				
-
-				GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
-				GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
-				OpenTKHelper.Assert();
-				GL.Finish();
-				OpenTKHelper.Assert();
-			}
-			finally
-			{
-				GL.PopAttrib();
-			}
-		}
-
-		public override uint ClassHashCode
-		{
-			get
-			{
-				return TypeHash;
-			}
-		}
-
-		private uint flags;
-
-		private ImageFormat formatSw = ImageFormat.FORMAT_UNDEFINED;
-
-		private ImageFormat formatHw = ImageFormat.FORMAT_UNDEFINED;
-
-		public uint Flags
-		{
-			get
-			{
-				return this.flags;
-			}
-			set
-			{
-				if (this.flags != value)
-				{
-					this.flags = value;
-					this.RaisePropertyChanged("Flags");
-				}
-			}
-		}
-
-		public ImageFormat FormatSW
-		{
-			get
-			{
-				return formatSw;
-			}
-			set
-			{
-				if (this.formatSw != value)
-				{
-					this.formatSw = value;
-					this.RaisePropertyChanged("FormatSW");
-				}
-			}
-		}
-		public ImageFormat FormatHW
-		{
-			get
-			{
-				return formatHw;
-			}
-			set
-			{
-				if (this.formatHw != value)
-				{
-					this.formatHw = value;
-					this.RaisePropertyChanged("FormatHW");
-				}
-			}
-		}
 		#endregion
 
 		#region Methods
@@ -170,26 +160,31 @@ namespace Toe.Marmalade.IwGx
 			}
 		}
 
-		#endregion
-
-		private Image image;
-
-		public Vector2 UVScale;
-
-		public Image Image
+		private void GenTexture()
 		{
-			get
+			this.context = GraphicsContext.CurrentContext;
+
+			GL.GenTextures(1, out this.textureId);
+			OpenTKHelper.Assert();
+			GL.PushAttrib(AttribMask.TextureBit);
+			try
 			{
-				return this.image;
+				GL.BindTexture(TextureTarget.Texture2D, this.textureId);
+				OpenTKHelper.Assert();
+				this.Image.OpenGLUpload();
+
+				GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
+				GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+				OpenTKHelper.Assert();
+				GL.Finish();
+				OpenTKHelper.Assert();
 			}
-			set
+			finally
 			{
-				if (this.image != value)
-				{
-					this.image = value;
-					this.RaisePropertyChanged("Image");
-				}				
+				GL.PopAttrib();
 			}
 		}
+
+		#endregion
 	}
 }

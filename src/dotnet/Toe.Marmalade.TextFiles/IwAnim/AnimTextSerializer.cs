@@ -8,14 +8,22 @@ namespace Toe.Marmalade.TextFiles.IwAnim
 {
 	public class AnimTextSerializer : ITextSerializer
 	{
+		#region Constants and Fields
+
 		private readonly IComponentContext context;
+
+		#endregion
+
+		#region Constructors and Destructors
 
 		public AnimTextSerializer(IComponentContext context)
 		{
 			this.context = context;
 		}
 
-		#region Implementation of ITextSerializer
+		#endregion
+
+		#region Public Properties
 
 		/// <summary>
 		/// Default file extension for text resource file for this particular resource.
@@ -28,6 +36,10 @@ namespace Toe.Marmalade.TextFiles.IwAnim
 			}
 		}
 
+		#endregion
+
+		#region Public Methods and Operators
+
 		public Managed Parse(TextParser parser, string defaultName)
 		{
 			Anim mesh = this.context.Resolve<Anim>();
@@ -35,7 +47,7 @@ namespace Toe.Marmalade.TextFiles.IwAnim
 			parser.Consume("CIwAnim");
 			parser.Consume("{");
 
-			for (; ; )
+			for (;;)
 			{
 				var attribute = parser.Lexem;
 				if (attribute == "}")
@@ -65,6 +77,10 @@ namespace Toe.Marmalade.TextFiles.IwAnim
 			return mesh;
 		}
 
+		#endregion
+
+		#region Methods
+
 		private void ParseKeyFrame(TextParser parser, Anim mesh)
 		{
 			var frame = new AnimKeyFrame();
@@ -72,7 +88,7 @@ namespace Toe.Marmalade.TextFiles.IwAnim
 			parser.Consume("{");
 
 			MeshBone bone = null;
-			for (; ; )
+			for (;;)
 			{
 				var attribute = parser.Lexem;
 				if (attribute == "}")

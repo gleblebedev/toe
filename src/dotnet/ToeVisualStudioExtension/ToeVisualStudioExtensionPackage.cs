@@ -7,10 +7,13 @@ using System.Runtime.InteropServices;
 
 using Autofac;
 
+using EnvDTE80;
+
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 
 using Toe.Editor;
+using Toe.Editors;
 using Toe.Editors.Interfaces;
 using Toe.Editors.Marmalade;
 using Toe.Gx;
@@ -20,7 +23,6 @@ using Toe.Marmalade.TextFiles;
 using Toe.Marmalade.TextureFiles;
 using Toe.Resources;
 using Toe.ToeVsExt;
-using Toe.Utils.Marmalade;
 
 using IContainer = Autofac.IContainer;
 using ResourceFileItem = Toe.Marmalade.TextFiles.ResourceFileItem;
@@ -68,6 +70,12 @@ namespace TinyOpenEngine.ToeVisualStudioExtension
 	[Guid(GuidList.guidToeVisualStudioExtensionPkgString)]
 	public sealed class ToeVisualStudioExtensionPackage : Package
 	{
+		#region Constants and Fields
+
+		private static IContainer container;
+
+		#endregion
+
 		#region Constructors and Destructors
 
 		/// <summary>
@@ -84,10 +92,40 @@ namespace TinyOpenEngine.ToeVisualStudioExtension
 
 		#endregion
 
-		/////////////////////////////////////////////////////////////////////////////
-		// Overriden Package Implementation
+		//public IEditorEnvironment CreateEditorEnvironmentProxy()
+		//{
+		//    return new VsEditorEnvironment(this, container.Resolve<IResourceManager>());
+		//}
+
+		#region Public Methods and Operators
+
+		public void OpenFile(string filePath)
+		{
+			DTE2 dte = (DTE2)this.GetService(typeof(SDTE));
+			// http://msdn.microsoft.com/en-us/library/microsoft.visualstudio.shell.logicalview.aspx
+
+			var primary = "{00000000-0000-0000-0000-000000000000}";
+			var any = "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}";
+			var window = dte.OpenFile(primary, filePath);
+			window.Activate();
+		}
+
+		#endregion
 
 		#region Methods
+
+		protected override void Dispose(bool disposing)
+		{
+			base.Dispose(disposing);
+			if (disposing)
+			{
+				if (container != null)
+				{
+					container.Dispose();
+					container = null;
+				}
+			}
+		}
 
 		/// <summary>
 		/// Initialization of the package; this method is called right after the package is sited, so this is the place
@@ -98,8 +136,8 @@ namespace TinyOpenEngine.ToeVisualStudioExtension
 			Trace.WriteLine(string.Format(CultureInfo.CurrentCulture, "Entering Initialize() of: {0}", this));
 			base.Initialize();
 
-			var cb = new Autofac.ContainerBuilder();
-
+			var cb = new ContainerBuilder();
+			cb.RegisterModule<BaseEditorsAutofacModule>();
 			cb.RegisterModule<MarmaladeEditorsAutofacModule>();
 			cb.RegisterModule<MarmaladeAutofacModule>();
 			cb.RegisterModule<MarmaladeTextFilesAutofacModule>();
@@ -129,36 +167,5 @@ namespace TinyOpenEngine.ToeVisualStudioExtension
 		}
 
 		#endregion
-
-		private static IContainer container;
-
-		protected override void Dispose(bool disposing)
-		{
-			base.Dispose(disposing);
-			if (disposing)
-			{
-				if (container != null)
-				{
-					container.Dispose();
-					container = null;
-				}
-			}
-		}
-
-		//public IEditorEnvironment CreateEditorEnvironmentProxy()
-		//{
-		//    return new VsEditorEnvironment(this, container.Resolve<IResourceManager>());
-		//}
-
-		public void OpenFile(string filePath)
-		{
-			EnvDTE80.DTE2 dte = (EnvDTE80.DTE2)this.GetService(typeof(SDTE));
-			// http://msdn.microsoft.com/en-us/library/microsoft.visualstudio.shell.logicalview.aspx
-
-			var primary = "{00000000-0000-0000-0000-000000000000}";
-			var any = "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}";
-			var window = dte.OpenFile(primary, filePath);
-			window.Activate();
-		}
 	}
 }

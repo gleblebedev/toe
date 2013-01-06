@@ -9,23 +9,45 @@ namespace Toe.Editors.Interfaces.Views
 {
 	public class EditColorView : UserControl, IView
 	{
-		readonly DataContextContainer dataContext = new DataContextContainer();
+		#region Constants and Fields
+
+		private readonly DataContextContainer dataContext = new DataContextContainer();
+
+		#endregion
+
+		#region Constructors and Destructors
 
 		public EditColorView()
 		{
 			this.dataContext.DataContextChanged += this.UpdateTextBox;
 			this.Height = 16;
 			this.Cursor = Cursors.Hand;
-			this.Click += OpenColorPicker;
+			this.Click += this.OpenColorPicker;
 		}
+
+		#endregion
+
+		#region Public Properties
+
+		public DataContextContainer DataContext
+		{
+			get
+			{
+				return this.dataContext;
+			}
+		}
+
+		#endregion
+
+		#region Methods
 
 		private void OpenColorPicker(object sender, EventArgs e)
 		{
-			var value = (Color)dataContext.Value;
+			var value = (Color)this.dataContext.Value;
 			var cpd = new ColorPickerDialog(value);
 			if (cpd.ShowDialog() == DialogResult.OK)
 			{
-				dataContext.Value = cpd.SelectedColor;
+				this.dataContext.Value = cpd.SelectedColor;
 			}
 		}
 
@@ -34,17 +56,6 @@ namespace Toe.Editors.Interfaces.Views
 			if (this.dataContext.Value != null)
 			{
 				this.BackColor = (Color)this.dataContext.Value;
-			}
-		}
-
-
-		#region Implementation of IView
-
-		public DataContextContainer DataContext
-		{
-			get
-			{
-				return this.dataContext;
 			}
 		}
 

@@ -4,21 +4,13 @@ namespace Toe.Marmalade.IwAnim
 {
 	public class AnimKeyFrame
 	{
-		private float time;
+		#region Constants and Fields
 
 		private BoneCollection bones = new BoneCollection();
 
-		public float Time
-		{
-			get
-			{
-				return this.time;
-			}
-			set
-			{
-				this.time = value;
-			}
-		}
+		#endregion
+
+		#region Public Properties
 
 		public BoneCollection Bones
 		{
@@ -31,5 +23,9 @@ namespace Toe.Marmalade.IwAnim
 				this.bones = value;
 			}
 		}
+
+		public float Time { get; set; }
+
+		#endregion
 	}
 }

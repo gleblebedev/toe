@@ -38,8 +38,6 @@ namespace Toe.Utils.Marmalade.IwGx
 
 		#endregion
 
-		#region Public Methods and Operators
-
 		//public IList<Material> Load(Stream stream)
 		//{
 		//    IList<Material> materials = new List<Material>();
@@ -50,6 +48,8 @@ namespace Toe.Utils.Marmalade.IwGx
 		//    }
 		//    return materials;
 		//}
+
+		#region Public Methods and Operators
 
 		public Managed Parse(TextParser parser, string defaultName)
 		{

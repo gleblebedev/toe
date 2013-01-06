@@ -4,20 +4,27 @@ using System.IO;
 
 namespace Toe.Utils.Mesh.Marmalade.Tests
 {
-	class FolderTreeSearch:IEnumerable<string>
+	internal class FolderTreeSearch : IEnumerable<string>
 	{
+		#region Constants and Fields
+
 		private readonly string path;
 
 		private readonly string searchPattern;
+
+		#endregion
+
+		#region Constructors and Destructors
 
 		public FolderTreeSearch(string path, string searchPattern)
 		{
 			this.path = path;
 			this.searchPattern = searchPattern;
-	
 		}
 
-		#region Implementation of IEnumerable
+		#endregion
+
+		#region Public Methods and Operators
 
 		/// <summary>
 		/// Returns an enumerator that iterates through the collection.
@@ -29,7 +36,9 @@ namespace Toe.Utils.Mesh.Marmalade.Tests
 		public IEnumerator<string> GetEnumerator()
 		{
 			if (!Directory.Exists(this.path))
+			{
 				yield break;
+			}
 
 			foreach (var fileName in Directory.GetFiles(this.path, this.searchPattern))
 			{
@@ -43,6 +52,10 @@ namespace Toe.Utils.Mesh.Marmalade.Tests
 				}
 			}
 		}
+
+		#endregion
+
+		#region Explicit Interface Methods
 
 		/// <summary>
 		/// Returns an enumerator that iterates through a collection.

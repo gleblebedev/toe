@@ -1,74 +1,91 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 using Toe.Editors.Interfaces.Bindings;
 
 namespace Toe.Editors.Interfaces.Views
 {
-	public class StringView: UserControl, IView
+	public class StringView : UserControl, IView
 	{
-		DataContextContainer dataContext = new DataContextContainer();
+		#region Constants and Fields
 
-		private Label label;
+		private readonly DataContextContainer dataContext = new DataContextContainer();
+
+		private readonly Label label;
+
+		#endregion
+
+		#region Constructors and Destructors
 
 		public StringView()
 		{
-			label = new Label();
-			label.AutoSize = true;
-			label.SizeChanged += LabelSizeChanged;
+			this.label = new Label();
+			this.label.AutoSize = true;
+			this.label.SizeChanged += this.LabelSizeChanged;
 			this.UpdateMaxWidth();
-			this.Controls.Add(label);
-			dataContext.DataContextChanged += UpdateLabel;
+			this.Controls.Add(this.label);
+			this.dataContext.DataContextChanged += this.UpdateLabel;
 		}
 
-		private void UpdateMaxWidth()
+		#endregion
+
+		#region Public Properties
+
+		public DataContextContainer DataContext
 		{
-			var maximumSize = new Size(this.Width, short.MaxValue);
-			if (this.label.MaximumSize != maximumSize)
-			this.label.MaximumSize = maximumSize;
+			get
+			{
+				return this.dataContext;
+			}
 		}
+
+		public new string Text
+		{
+			get
+			{
+				if (this.dataContext.Value == null)
+				{
+					return null;
+				}
+				return this.dataContext.Value.ToString();
+			}
+			set
+			{
+				this.dataContext.Value = value;
+			}
+		}
+
+		#endregion
+
+		#region Methods
 
 		protected override void OnResize(EventArgs e)
 		{
 			base.OnResize(e);
 			this.UpdateMaxWidth();
 		}
+
 		private void LabelSizeChanged(object sender, EventArgs e)
 		{
-			if (this.Height != label.Height)
-			this.Height = label.Height;
+			if (this.Height != this.label.Height)
+			{
+				this.Height = this.label.Height;
+			}
 		}
 
 		private void UpdateLabel(object sender, DataContextChangedEventArgs e)
 		{
-			label.Text = string.Format(CultureInfo.InvariantCulture, "{0}", e.NewValue);
+			this.label.Text = string.Format(CultureInfo.InvariantCulture, "{0}", e.NewValue);
 		}
 
-		#region Implementation of IView
-
-		public string Text
+		private void UpdateMaxWidth()
 		{
-			get
+			var maximumSize = new Size(this.Width, short.MaxValue);
+			if (this.label.MaximumSize != maximumSize)
 			{
-				if (dataContext.Value == null) return null;
-				return dataContext.Value.ToString();
-			}
-			set
-			{
-				dataContext.Value  = value;
-			}
-		}
-
-		public DataContextContainer DataContext
-		{
-			get
-			{
-				return dataContext;
+				this.label.MaximumSize = maximumSize;
 			}
 		}
 

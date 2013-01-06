@@ -1,6 +1,3 @@
-using System;
-using System.Windows.Forms;
-
 namespace Toe.Editors.Interfaces.Views
 {
 	//public class Panel:UserControl

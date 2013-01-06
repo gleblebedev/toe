@@ -1,5 +1,4 @@
 using Toe.Resources;
-using Toe.Utils.Marmalade;
 using Toe.Utils.Mesh;
 
 namespace Toe.Marmalade.IwAnim
@@ -12,6 +11,10 @@ namespace Toe.Marmalade.IwAnim
 
 		private readonly BoneCollection bones = new BoneCollection();
 
+		#endregion
+
+		#region Public Properties
+
 		public BoneCollection Bones
 		{
 			get
@@ -19,16 +22,6 @@ namespace Toe.Marmalade.IwAnim
 				return this.bones;
 			}
 		}
-
-
-		public int EnsureBone(string boneName)
-		{
-			return this.bones.EnsureBone(boneName);
-		}
-
-		#endregion
-
-		#region Public Methods and Operators
 
 		public override uint ClassHashCode
 		{
@@ -40,9 +33,18 @@ namespace Toe.Marmalade.IwAnim
 
 		#endregion
 
+		#region Public Methods and Operators
+
+		public int EnsureBone(string boneName)
+		{
+			return this.bones.EnsureBone(boneName);
+		}
+
 		public int EnsureBone(uint boneName)
 		{
 			return this.bones.EnsureBone(boneName);
 		}
+
+		#endregion
 	}
 }
