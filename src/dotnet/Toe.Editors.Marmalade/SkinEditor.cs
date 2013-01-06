@@ -13,6 +13,7 @@ using Toe.Editors.Interfaces.Bindings;
 using Toe.Editors.Interfaces.Panels;
 using Toe.Editors.Interfaces.Views;
 using Toe.Marmalade.IwAnim;
+using Toe.Marmalade.IwGraphics;
 using Toe.Resources;
 using Toe.Utils.Marmalade.IwGraphics;
 using Toe.Utils.Mesh;

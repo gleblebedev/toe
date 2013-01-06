@@ -11,6 +11,7 @@ using Toe.Editors.Interfaces;
 using Toe.Editors.Interfaces.Bindings;
 using Toe.Editors.Interfaces.Panels;
 using Toe.Editors.Marmalade.Views;
+using Toe.Marmalade.IwGraphics;
 using Toe.Resources;
 using Toe.Utils.Marmalade.IwGraphics;
 

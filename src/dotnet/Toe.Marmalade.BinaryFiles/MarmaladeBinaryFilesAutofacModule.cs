@@ -4,6 +4,7 @@ using Toe.Marmalade.BinaryFiles.IwAnim;
 using Toe.Marmalade.BinaryFiles.IwGraphics;
 using Toe.Marmalade.BinaryFiles.IwGx;
 using Toe.Marmalade.IwAnim;
+using Toe.Marmalade.IwGraphics;
 using Toe.Marmalade.IwGx;
 using Toe.Resources;
 using Toe.Utils.Marmalade.IwGraphics;

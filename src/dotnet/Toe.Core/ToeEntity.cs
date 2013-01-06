@@ -1,5 +1,9 @@
 namespace Toe.Core
 {
+	/// <summary>
+	/// Game entity.
+	/// This class designed to produce as less garbage as possible.
+	/// </summary>
 	public struct ToeEntity
 	{
 		#region Constants and Fields

@@ -1,6 +1,7 @@
 using Autofac;
 
 using Toe.Marmalade.IwAnim;
+using Toe.Marmalade.IwGraphics;
 using Toe.Marmalade.IwGx;
 using Toe.Marmalade.IwResManager;
 using Toe.Marmalade.TextFiles.IwAnim;

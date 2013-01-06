@@ -3,12 +3,11 @@
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 
-using Toe.Marmalade;
 using Toe.Marmalade.IwGx;
 using Toe.Resources;
 using Toe.Utils.Mesh;
 
-namespace Toe.Utils.Marmalade.IwGraphics
+namespace Toe.Marmalade.IwGraphics
 {
 	public class Model : Managed
 	{
