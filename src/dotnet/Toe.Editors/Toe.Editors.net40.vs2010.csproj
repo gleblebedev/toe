@@ -13,9 +13,9 @@
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
+    <DebugSymbols>True</DebugSymbols>
     <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
+    <Optimize>False</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -23,14 +23,14 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
+    <Optimize>True</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>True</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>Toe.snk</AssemblyOriginatorKeyFile>
@@ -104,13 +104,13 @@
       <Project>{15C85727-F6FC-4A28-BB34-84C327AEFF81}</Project>
       <Name>Toe.Resources.net40.vs2010</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Toe.Utils.Mesh.Ase\Toe.Utils.Mesh.Ase.csproj">
-      <Project>{9D139D7D-CFAD-4B6A-9862-EB856B36A83E}</Project>
-      <Name>Toe.Utils.Mesh.Ase</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Toe.Utils.Mesh\Toe.Utils.Mesh.net40.vs2010.csproj">
       <Project>{1AB2E074-5CE6-4CD6-A379-3D6A58116319}</Project>
       <Name>Toe.Utils.Mesh.net40.vs2010</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Toe.Utils.Mesh.Ase\Toe.Utils.Mesh.Ase.csproj">
+      <Project>{9D139D7D-CFAD-4B6A-9862-EB856B36A83E}</Project>
+      <Name>Toe.Utils.Mesh.Ase</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

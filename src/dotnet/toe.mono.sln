@@ -25,6 +25,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toe.Marmalade.TextFiles", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toe.Marmalade.TextureFiles", "Toe.Marmalade.TextureFiles\Toe.Marmalade.TextureFiles.csproj", "{D9ADA8FC-21F7-471D-ABE4-9E289DCBDDC8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toe.Utils.TextParser", "Toe.Utils.TextParser\Toe.Utils.TextParser.csproj", "{91EF330C-981F-49F0-8BD6-5D8FA36B2871}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toe.Utils.Mesh.Ase", "Toe.Utils.Mesh.Ase\Toe.Utils.Mesh.Ase.csproj", "{9D139D7D-CFAD-4B6A-9862-EB856B36A83E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -71,6 +75,14 @@ Global
 		{84832595-B318-4C2B-A3D1-AD8DFD8AB566}.Debug|x86.Build.0 = Debug|x86
 		{84832595-B318-4C2B-A3D1-AD8DFD8AB566}.Release|x86.ActiveCfg = Release|x86
 		{84832595-B318-4C2B-A3D1-AD8DFD8AB566}.Release|x86.Build.0 = Release|x86
+		{91EF330C-981F-49F0-8BD6-5D8FA36B2871}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{91EF330C-981F-49F0-8BD6-5D8FA36B2871}.Debug|x86.Build.0 = Debug|Any CPU
+		{91EF330C-981F-49F0-8BD6-5D8FA36B2871}.Release|x86.ActiveCfg = Release|Any CPU
+		{91EF330C-981F-49F0-8BD6-5D8FA36B2871}.Release|x86.Build.0 = Release|Any CPU
+		{9D139D7D-CFAD-4B6A-9862-EB856B36A83E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{9D139D7D-CFAD-4B6A-9862-EB856B36A83E}.Debug|x86.Build.0 = Debug|Any CPU
+		{9D139D7D-CFAD-4B6A-9862-EB856B36A83E}.Release|x86.ActiveCfg = Release|Any CPU
+		{9D139D7D-CFAD-4B6A-9862-EB856B36A83E}.Release|x86.Build.0 = Release|Any CPU
 		{D9ADA8FC-21F7-471D-ABE4-9E289DCBDDC8}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{D9ADA8FC-21F7-471D-ABE4-9E289DCBDDC8}.Debug|x86.Build.0 = Debug|Any CPU
 		{D9ADA8FC-21F7-471D-ABE4-9E289DCBDDC8}.Release|x86.ActiveCfg = Release|Any CPU

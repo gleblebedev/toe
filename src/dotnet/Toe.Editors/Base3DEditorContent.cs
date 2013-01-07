@@ -17,11 +17,14 @@ namespace Toe.Editors
 
 		private Texture cubeTex;
 
-		public Base3DEditorContent()
+		public Base3DEditorContent ()
 		{
-			this.cube = (new AseReader()).Load(new MemoryStream(Toe.Editors.Properties.Resources.xyzcube));
-			this.cubeTex = new Toe.Marmalade.IwGx.Texture();
-			cubeTex.Image = new Toe.Marmalade.IwGx.Image(Toe.Editors.Properties.Resources.xyzcube1);
+			var cubeBytes = Toe.Editors.Properties.Resources.xyzcube;
+			if (cubeBytes != null) {
+				this.cube = (new AseReader ()).Load (new MemoryStream (cubeBytes));
+				this.cubeTex = new Toe.Marmalade.IwGx.Texture ();
+				cubeTex.Image = new Toe.Marmalade.IwGx.Image (Toe.Editors.Properties.Resources.xyzcube1);
+			}
 
 		}
 		~Base3DEditorContent()
@@ -89,7 +92,11 @@ namespace Toe.Editors
 		{
 			if(disposing)
 			{
-				cubeTex.Dispose();
+				if (cubeTex != null)
+				{
+					cubeTex.Dispose();
+					cubeTex = null;
+				}
 			}
 		}
 
