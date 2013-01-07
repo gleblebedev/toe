@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaseSubmesh.cs" />
     <Compile Include="BoneCollection.cs" />
     <Compile Include="IMesh.cs" />
     <Compile Include="IMeshReader.cs" />
@@ -65,6 +66,7 @@
     <Compile Include="Vertex.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VertexBufferMesh.cs" />
+    <Compile Include="VertexBufferSubmesh.cs" />
     <Compile Include="VertexWeight.cs" />
     <Compile Include="VertexWeights.cs" />
   </ItemGroup>

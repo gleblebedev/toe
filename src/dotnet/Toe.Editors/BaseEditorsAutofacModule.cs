@@ -10,6 +10,7 @@ namespace Toe.Editors
 		{
 			base.Load(builder);
 			builder.RegisterType<Base3DEditor>().InstancePerDependency();
+			builder.RegisterType<Base3DEditorContent>().SingleInstance();
 		}
 
 		#endregion

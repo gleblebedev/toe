@@ -1,9 +1,10 @@
 using System.Globalization;
 
-using Toe.Marmalade;
 using Toe.Resources;
+using Toe.Utils.Marmalade;
+using Toe.Utils.Marmalade.IwGx;
 
-namespace Toe.Utils.Marmalade.IwGx
+namespace Toe.Marmalade.TextFiles.IwGx
 {
 	public class ShaderTextSerializer : ITextSerializer
 	{
@@ -81,11 +82,11 @@ namespace Toe.Utils.Marmalade.IwGx
 					}
 					else
 					{
-						parser.UnknownLexem();
+						parser.UnknownLexemError();
 					}
 					continue;
 				}
-				parser.UnknownLexem();
+				parser.UnknownLexemError();
 			}
 			return shader;
 		}

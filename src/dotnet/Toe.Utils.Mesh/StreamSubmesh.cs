@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 
-using Toe.Resources;
-
 #if WINDOWS_PHONE
 using Microsoft.Xna.Framework;
 #else
@@ -13,11 +11,11 @@ using Microsoft.Xna.Framework;
 
 namespace Toe.Utils.Mesh
 {
-	public class StreamSubmesh : ISubMesh
+	public class StreamSubmesh :BaseSubmesh, ISubMesh
 	{
 		private readonly StreamMesh mesh;
 
-		public StreamSubmesh(StreamMesh mesh)
+		internal StreamSubmesh(StreamMesh mesh)
 		{
 			this.mesh = mesh;
 		}
@@ -36,9 +34,10 @@ namespace Toe.Utils.Mesh
 
 #if WINDOWS_PHONE
 #else
-		public void RenderOpenGL()
+		public override void RenderOpenGL()
 		{
 			GL.Begin(BeginMode.Triangles);
+			GL.Color3(1.0f, 1.0f, 1.0f);
 			foreach (var streamSubmeshTiangle in this.Tris)
 			{
 				this.RenderVertex(streamSubmeshTiangle.A);
@@ -81,55 +80,7 @@ namespace Toe.Utils.Mesh
 		}
 #endif
 
-		private string material;
-
-		public string Material
-		{
-			get
-			{
-				return this.material;
-			}
-			set
-			{
-				if (this.material != value)
-				{
-					this.material = value;
-					this.materialHash = Hash.Get(value);
-				}
-			}
-		}
-
-		private string name;
-
-		public string Name
-		{
-			get
-			{
-				return this.name;
-			}
-			set
-			{
-				if (this.name != value)
-				{
-					this.name = value;
-				}
-			}
-		}
-
-		private uint materialHash;
-
-		public uint MaterialHash
-		{
-			get
-			{
-				return this.materialHash;
-			}
-			set
-			{
-				this.materialHash = value;
-				this.material = null;
-			}
-		}
+		
 
 		#endregion
 	}

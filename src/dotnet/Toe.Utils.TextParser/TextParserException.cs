@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.Serialization;
 
-namespace Toe.Utils.Marmalade
+namespace Toe.Utils.TextParser
 {
 	[Serializable]
 	public class TextParserException : Exception

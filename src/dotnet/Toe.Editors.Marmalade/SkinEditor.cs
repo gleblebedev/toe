@@ -160,7 +160,7 @@ namespace Toe.Editors.Marmalade
 			ComponentResourceManager resources = new ComponentResourceManager(typeof(SkinEditor));
 			this.split = new SplitContainer();
 			this.stackPanel1 = new StackPanel();
-			this.base3DEditor1 = new Base3DEditor(this.context, this.context.Resolve<IEditorOptions<Base3DEditorOptions>>());
+			this.base3DEditor1 = new Base3DEditor(this.context, this.context.Resolve<IEditorOptions<Base3DEditorOptions>>(), this.context.Resolve<Base3DEditorContent>());
 			var i = this.split as ISupportInitialize;
 			if (i != null)
 			{

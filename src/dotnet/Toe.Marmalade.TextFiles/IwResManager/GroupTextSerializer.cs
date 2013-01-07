@@ -2,11 +2,10 @@ using System.IO;
 
 using Autofac;
 
-using Toe.Marmalade;
 using Toe.Marmalade.IwResManager;
 using Toe.Resources;
 
-namespace Toe.Utils.Marmalade.IwResManager
+namespace Toe.Marmalade.TextFiles.IwResManager
 {
 	public class GroupTextSerializer : ITextSerializer
 	{
@@ -113,7 +112,7 @@ namespace Toe.Utils.Marmalade.IwResManager
 						continue;
 					}
 				}
-				parser.UnknownLexem();
+				parser.UnknownLexemError();
 			}
 			return group;
 		}

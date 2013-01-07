@@ -6,6 +6,8 @@ using Toe.Marmalade.IwGx;
 using Toe.Marmalade.IwResManager;
 using Toe.Marmalade.TextFiles.IwAnim;
 using Toe.Marmalade.TextFiles.IwGraphics;
+using Toe.Marmalade.TextFiles.IwGx;
+using Toe.Marmalade.TextFiles.IwResManager;
 using Toe.Resources;
 using Toe.Utils.Marmalade;
 using Toe.Utils.Marmalade.IwGraphics;

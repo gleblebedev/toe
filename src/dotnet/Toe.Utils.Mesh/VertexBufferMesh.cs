@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
 
+using OpenTK;
+using OpenTK.Graphics.OpenGL;
+
 namespace Toe.Utils.Mesh
 {
 	public class VertexBufferMesh : IMesh
@@ -13,6 +16,8 @@ namespace Toe.Utils.Mesh
 
 		#region Public Properties
 
+		private readonly List<ISubMesh> submeshes = new List<ISubMesh>();
+
 		public string Name { get; set; }
 
 		public uint NameHash { get; set; }
@@ -21,7 +26,15 @@ namespace Toe.Utils.Mesh
 		{
 			get
 			{
-				throw new NotImplementedException();
+				return submeshes;
+			}
+		}
+
+		public OptimizedList<Vertex> VertexBuffer
+		{
+			get
+			{
+				return this.vertexBuffer;
 			}
 		}
 
@@ -29,11 +42,32 @@ namespace Toe.Utils.Mesh
 
 		#region Public Methods and Operators
 
+		public ISubMesh CreateSubmesh()
+		{
+			var streamSubmesh = new VertexBufferSubmesh(this);
+			this.Submeshes.Add(streamSubmesh);
+			return streamSubmesh;
+		}
+
 		public void RenderOpenGL()
 		{
-			throw new NotImplementedException();
+			var subMeshes = this.submeshes;
+			foreach (ISubMesh subMesh in subMeshes)
+			{
+				subMesh.RenderOpenGL();
+			}
 		}
 
 		#endregion
+
+		public void RenderOpenGLVertex(int index)
+		{
+			GL.Normal3(vertexBuffer[index].Normal);
+			Vector3 vector3 = vertexBuffer[index].UV0;
+			GL.MultiTexCoord3(TextureUnit.Texture0, ref vector3);
+			vector3 = vertexBuffer[index].UV1;
+			GL.MultiTexCoord3(TextureUnit.Texture1, ref vector3);
+			GL.Vertex3(vertexBuffer[index].Position);
+		}
 	}
 }

@@ -68,7 +68,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResourceFileItem.cs" />
     <Compile Include="TextParser.cs" />
-    <Compile Include="TextParserException.cs" />
     <Compile Include="TextResourceFormat.cs" />
     <Compile Include="TextResourceWriter.cs" />
   </ItemGroup>
@@ -88,6 +87,10 @@
     <ProjectReference Include="..\Toe.Utils.Mesh\Toe.Utils.Mesh.net40.vs2010.csproj">
       <Project>{1AB2E074-5CE6-4CD6-A379-3D6A58116319}</Project>
       <Name>Toe.Utils.Mesh.net40.vs2010</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Toe.Utils.TextParser\Toe.Utils.TextParser.csproj">
+      <Project>{91EF330C-981F-49F0-8BD6-5D8FA36B2871}</Project>
+      <Name>Toe.Utils.TextParser</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -40,7 +40,7 @@ namespace Toe.Utils.Mesh
 		{
 			get
 			{
-				return this[index];
+				return list[index];
 			}
 			set
 			{

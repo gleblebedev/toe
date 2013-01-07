@@ -7,6 +7,8 @@ using System.Text;
 using OpenTK;
 
 using Toe.Resources;
+using Toe.Utils.Marmalade;
+using Toe.Utils.TextParser;
 
 #if WINDOWS_PHONE
 using Microsoft.Xna.Framework;
@@ -14,9 +16,9 @@ using Microsoft.Xna.Framework;
 
 #endif
 
-namespace Toe.Utils.Marmalade
+namespace Toe.Marmalade.TextFiles
 {
-	public class TextParser
+	public class TextParser: BaseTextParser
 	{
 		#region Constants and Fields
 
@@ -29,10 +31,6 @@ namespace Toe.Utils.Marmalade
 		private readonly IResourceFile resourceFile;
 
 		private readonly StringBuilder sb = new StringBuilder(32);
-
-		private string lexem;
-
-		private bool lexemReady;
 
 		private int nextChar = -1;
 
@@ -60,19 +58,6 @@ namespace Toe.Utils.Marmalade
 			}
 		}
 
-		public string Lexem
-		{
-			get
-			{
-				if (this.lexemReady)
-				{
-					return this.lexem;
-				}
-				this.ReadLexem();
-				return this.lexem;
-			}
-		}
-
 		public IResourceFile ResourceFile
 		{
 			get
@@ -85,37 +70,26 @@ namespace Toe.Utils.Marmalade
 
 		#region Public Methods and Operators
 
-		public void Consume(string text)
-		{
-			if (0 != string.Compare(this.Lexem, text, StringComparison.InvariantCulture))
-			{
-				throw new TextParserException(
-					string.Format(CultureInfo.InvariantCulture, "Expected \"{0}\", but there was \"{1}\"", text, this.Lexem));
-			}
-			this.Consume();
-		}
 
-		public void Consume()
-		{
-			this.lexemReady = false;
-		}
+
 
 		public string ConsumeBlock()
 		{
 			this.Consume("{");
 			int depth = 1;
 			this.sb.Clear();
-			if (this.lexemReady)
+			if (this.IsLexemReady)
 			{
-				this.sb.Append(this.lexem);
+				this.sb.Append(this.Lexem);
 			}
 			for (;;)
 			{
 				if (this.nextChar < 0)
 				{
-					this.lexem = this.sb.ToString();
-					this.lexemReady = false;
-					return this.lexem;
+					string res = this.sb.ToString();
+					this.Lexem = res;
+					this.Consume();
+					return res;
 				}
 				if (this.nextChar == '{')
 				{
@@ -126,39 +100,20 @@ namespace Toe.Utils.Marmalade
 					--depth;
 					if (depth == 0)
 					{
-						this.nextChar = this.reader.Read();
-						this.lexem = this.sb.ToString();
-						this.lexemReady = false;
-						return this.lexem;
+						this.ReadNextChar();
+
+						string res = this.sb.ToString();
+						this.Lexem = res;
+						this.Consume();
+						return res;
 					}
 				}
 				this.sb.Append((char)this.nextChar);
-				this.nextChar = this.reader.Read();
+				this.ReadNextChar();
 			}
 		}
 
-		public bool ConsumeBool()
-		{
-			var lexem = this.Lexem;
-			if (0 == string.Compare(lexem, "true", StringComparison.InvariantCultureIgnoreCase))
-			{
-				this.Consume();
-				return true;
-			}
-			if (0 == string.Compare(lexem, "false", StringComparison.InvariantCultureIgnoreCase))
-			{
-				this.Consume();
-				return false;
-			}
-			return this.ConsumeInt() != 0;
-		}
-
-		public byte ConsumeByte()
-		{
-			var f = byte.Parse(this.Lexem, CultureInfo.InvariantCulture);
-			this.Consume();
-			return f;
-		}
+		
 
 		public Color ConsumeColor()
 		{
@@ -198,29 +153,10 @@ namespace Toe.Utils.Marmalade
 			throw new NotImplementedException();
 		}
 
-		public T ConsumeEnum<T>()
-		{
-			return (T)Enum.Parse(typeof(T), this.ConsumeString());
-		}
-
-		public float ConsumeFloat()
-		{
-			var f = float.Parse(this.Lexem, CultureInfo.InvariantCulture);
-			this.Consume();
-			return f;
-		}
-
-		public int ConsumeInt()
-		{
-			var f = int.Parse(this.Lexem, CultureInfo.InvariantCulture);
-			this.Consume();
-			return f;
-		}
 
 		public Quaternion ConsumeQuaternion()
 		{
-			int maxItems = 4;
-			this.ConsumeVector(maxItems);
+			this.ConsumeVector(4);
 			return new Quaternion(this.floatBuf[1], this.floatBuf[2], this.floatBuf[3], this.floatBuf[0]);
 		}
 
@@ -255,12 +191,7 @@ namespace Toe.Utils.Marmalade
 			resourceReference.NameReference = l;
 		}
 
-		public short ConsumeShort()
-		{
-			var f = short.Parse(this.Lexem, CultureInfo.InvariantCulture);
-			this.Consume();
-			return f;
-		}
+		
 
 		public string ConsumeString()
 		{
@@ -272,47 +203,17 @@ namespace Toe.Utils.Marmalade
 
 		public Vector2 ConsumeVector2()
 		{
-			int maxItems = 2;
-			this.ConsumeVector(maxItems);
+			this.ConsumeVector(2);
 			return new Vector2(this.floatBuf[0], this.floatBuf[1]);
 		}
 
 		public Vector3 ConsumeVector3()
 		{
-			int maxItems = 3;
-			this.ConsumeVector(maxItems);
+			this.ConsumeVector(3);
 			return new Vector3(this.floatBuf[0], this.floatBuf[1], this.floatBuf[2]);
 		}
 
-		public void Error(string message)
-		{
-			throw new TextParserException(message);
-		}
-
-		public void Skip(string s)
-		{
-			if (this.Lexem == s)
-			{
-				this.Consume();
-			}
-		}
-
-		public void UnknownLexem()
-		{
-			var where = "input stream";
-			var textReader = this.reader;
-			if (textReader is StreamReader)
-			{
-				var baseStream = ((StreamReader)textReader).BaseStream;
-				if (baseStream is FileStream)
-				{
-					where = ((FileStream)baseStream).Name;
-				}
-			}
-			throw new TextParserException(
-				string.Format(CultureInfo.InvariantCulture, "Unknown element \"{0}\" in {1}", this.lexem, where));
-		}
-
+	
 		#endregion
 
 		#region Methods
@@ -321,7 +222,22 @@ namespace Toe.Utils.Marmalade
 		{
 			return Math.Max(0, Math.Min(255, (int)(f * 255)));
 		}
-
+		protected override string GetSourceName()
+		{
+			var where = "input stream";
+			var textReader = this.reader;
+			var streamReader = textReader as StreamReader;
+			if (streamReader != null)
+			{
+				var baseStream = (streamReader).BaseStream;
+				var fileStream = baseStream as FileStream;
+				if (fileStream != null)
+				{
+					@where = (fileStream).Name;
+				}
+			}
+			return @where;
+		}
 		private int ConsumeVector(int maxItems)
 		{
 			this.Consume("{");
@@ -350,9 +266,8 @@ namespace Toe.Utils.Marmalade
 
 		private void OnTerminalSymbol(string val)
 		{
-			this.lexem = val;
-			this.lexemReady = true;
-			this.nextChar = this.reader.Read();
+			this.Lexem = val;
+			this.ReadNextChar();
 		}
 
 		private void ReadId()
@@ -363,34 +278,32 @@ namespace Toe.Utils.Marmalade
 			       && this.nextChar != ';')
 			{
 				this.sb.Append((char)this.nextChar);
-				this.nextChar = this.reader.Read();
+				this.ReadNextChar();
 			}
-			this.lexem = this.sb.ToString();
-			this.lexemReady = true;
+			this.Lexem = this.sb.ToString();
 		}
 
-		private void ReadLexem()
+		protected override void ReadLexem()
 		{
 			retryToReadLexem:
 			while (this.nextChar >= 0 && char.IsWhiteSpace((char)this.nextChar))
 			{
-				this.nextChar = this.reader.Read();
+				this.ReadNextChar();
 			}
 			if (this.nextChar == '#')
 			{
 				while (this.nextChar >= 0 && this.nextChar != '\n' && this.nextChar != '\r')
 				{
-					this.nextChar = this.reader.Read();
+					this.ReadNextChar();
 				}
 				goto retryToReadLexem;
 			}
 			if (this.nextChar == '/')
 			{
-				this.nextChar = this.reader.Read();
+				this.ReadNextChar();
 				if (this.nextChar != '/' && this.nextChar != '*')
 				{
-					this.lexem = "/";
-					this.lexemReady = true;
+					this.Lexem = "/";
 					return;
 				}
 
@@ -398,13 +311,13 @@ namespace Toe.Utils.Marmalade
 				{
 					for (;;)
 					{
-						this.nextChar = this.reader.Read();
+						this.ReadNextChar();
 						if (this.nextChar == '*')
 						{
-							this.nextChar = this.reader.Read();
+							this.ReadNextChar();
 							if (this.nextChar == '/')
 							{
-								this.nextChar = this.reader.Read();
+								this.ReadNextChar();
 								break;
 							}
 						}
@@ -414,7 +327,7 @@ namespace Toe.Utils.Marmalade
 				{
 					while (this.nextChar >= 0 && this.nextChar != '\n' && this.nextChar != '\r')
 					{
-						this.nextChar = this.reader.Read();
+						this.ReadNextChar();
 					}
 				}
 				goto retryToReadLexem;
@@ -422,8 +335,7 @@ namespace Toe.Utils.Marmalade
 			switch (this.nextChar)
 			{
 				case -1:
-					this.lexem = null;
-					this.lexemReady = true;
+					this.Lexem = null;
 					return;
 				case '{':
 					this.OnTerminalSymbol("{");
@@ -470,58 +382,62 @@ namespace Toe.Utils.Marmalade
 			}
 		}
 
+		private int ReadNextChar()
+		{
+			return this.nextChar = this.reader.Read();
+		}
+
 		private void ReadNumber()
 		{
 			this.sb.Clear();
 			if (this.nextChar >= 0 && (this.nextChar == '-' || this.nextChar == '+'))
 			{
 				this.sb.Append((char)this.nextChar);
-				this.nextChar = this.reader.Read();
+				this.ReadNextChar();
 			}
 			while (this.nextChar >= 0 && this.nextChar >= '0' && this.nextChar <= '9')
 			{
 				this.sb.Append((char)this.nextChar);
-				this.nextChar = this.reader.Read();
+				this.ReadNextChar();
 			}
 			if (this.nextChar == '.')
 			{
 				this.sb.Append((char)this.nextChar);
-				this.nextChar = this.reader.Read();
+				this.ReadNextChar();
 				while (this.nextChar >= 0 && this.nextChar >= '0' && this.nextChar <= '9')
 				{
 					this.sb.Append((char)this.nextChar);
-					this.nextChar = this.reader.Read();
+					this.ReadNextChar();
 				}
 			}
 			if (this.nextChar == 'E' || this.nextChar == 'e')
 			{
 				this.sb.Append((char)this.nextChar);
-				this.nextChar = this.reader.Read();
+				this.ReadNextChar();
 				if (this.nextChar == '-' || this.nextChar == '+')
 				{
 					this.sb.Append((char)this.nextChar);
-					this.nextChar = this.reader.Read();
+					this.ReadNextChar();
 				}
 				while (this.nextChar >= 0 && this.nextChar >= '0' && this.nextChar <= '9')
 				{
 					this.sb.Append((char)this.nextChar);
-					this.nextChar = this.reader.Read();
+					this.ReadNextChar();
 				}
 			}
-			this.lexem = this.sb.ToString();
-			this.lexemReady = true;
+			this.Lexem = this.sb.ToString();
 		}
 
 		private void ReadString()
 		{
 			var term = this.nextChar;
-			this.nextChar = this.reader.Read();
+			this.ReadNextChar();
 			this.sb.Clear();
 			while (this.nextChar >= 0 && this.nextChar != term)
 			{
 				//if (this.nextChar == '\\')
 				//{
-				//    this.nextChar = this.reader.Read();
+				//    this.ReadNextChar();
 				//    switch (this.nextChar)
 				//    {
 				//        default:
@@ -533,7 +449,7 @@ namespace Toe.Utils.Marmalade
 				{
 					this.sb.Append((char)this.nextChar);
 				}
-				this.nextChar = this.reader.Read();
+				this.ReadNextChar();
 			}
 			this.OnTerminalSymbol(this.sb.ToString());
 		}

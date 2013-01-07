@@ -5,6 +5,7 @@ using Autofac;
 using Toe.Marmalade.IwAnim;
 using Toe.Utils.Marmalade;
 using Toe.Utils.Mesh;
+using Toe.Utils.TextParser;
 
 namespace Toe.Marmalade.TextFiles.IwAnim
 {
@@ -79,7 +80,7 @@ namespace Toe.Marmalade.TextFiles.IwAnim
 					continue;
 				}
 
-				parser.UnknownLexem();
+				parser.UnknownLexemError();
 			}
 			return skin;
 		}
@@ -129,7 +130,7 @@ namespace Toe.Marmalade.TextFiles.IwAnim
 					ParseVertWeights(parser, bones, mesh);
 					continue;
 				}
-				parser.UnknownLexem();
+				parser.UnknownLexemError();
 			}
 		}
 

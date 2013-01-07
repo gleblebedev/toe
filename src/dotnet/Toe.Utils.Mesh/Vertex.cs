@@ -40,9 +40,9 @@ namespace Toe.Utils.Mesh
 		/// </summary>
 		public Vector3 Tangent { get; set; }
 
-		public Vector2 UV0 { get; set; }
+		public Vector3 UV0 { get; set; }
 
-		public Vector2 UV1 { get; set; }
+		public Vector3 UV1 { get; set; }
 
 		public VertexWeights Weights { get; set; }
 

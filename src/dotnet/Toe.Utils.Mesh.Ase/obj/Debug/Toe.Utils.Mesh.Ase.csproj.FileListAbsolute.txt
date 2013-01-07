@@ -1,0 +1,13 @@
+C:\GitHub\toe\src\dotnet\Toe.Utils.Mesh.Ase\obj\Debug\Toe.Utils.Mesh.Ase.csprojResolveAssemblyReference.cache
+C:\GitHub\toe\src\dotnet\Toe.Utils.Mesh.Ase\bin\Debug\Toe.Utils.Mesh.Ase.dll
+C:\GitHub\toe\src\dotnet\Toe.Utils.Mesh.Ase\bin\Debug\Toe.Utils.Mesh.Ase.pdb
+C:\GitHub\toe\src\dotnet\Toe.Utils.Mesh.Ase\bin\Debug\Toe.Utils.Mesh.dll
+C:\GitHub\toe\src\dotnet\Toe.Utils.Mesh.Ase\bin\Debug\Toe.Utils.TextParser.dll
+C:\GitHub\toe\src\dotnet\Toe.Utils.Mesh.Ase\bin\Debug\Toe.Resources.dll
+C:\GitHub\toe\src\dotnet\Toe.Utils.Mesh.Ase\bin\Debug\Autofac.dll
+C:\GitHub\toe\src\dotnet\Toe.Utils.Mesh.Ase\bin\Debug\Toe.Utils.Mesh.pdb
+C:\GitHub\toe\src\dotnet\Toe.Utils.Mesh.Ase\bin\Debug\Toe.Utils.TextParser.pdb
+C:\GitHub\toe\src\dotnet\Toe.Utils.Mesh.Ase\bin\Debug\Toe.Resources.pdb
+C:\GitHub\toe\src\dotnet\Toe.Utils.Mesh.Ase\bin\Debug\Autofac.xml
+C:\GitHub\toe\src\dotnet\Toe.Utils.Mesh.Ase\obj\Debug\Toe.Utils.Mesh.Ase.dll
+C:\GitHub\toe\src\dotnet\Toe.Utils.Mesh.Ase\obj\Debug\Toe.Utils.Mesh.Ase.pdb

@@ -1,5 +1,6 @@
 using System;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 
 using Autofac;
@@ -12,6 +13,12 @@ using Toe.Editors.Interfaces;
 using Toe.Editors.Interfaces.Panels;
 using Toe.Editors.Properties;
 using Toe.Gx;
+using Toe.Marmalade.IwGx;
+using Toe.Resources;
+using Toe.Utils.Mesh;
+using Toe.Utils.Mesh.Ase;
+
+using Resources=Toe.Editors.Properties.Resources;
 
 namespace Toe.Editors
 {
@@ -20,6 +27,8 @@ namespace Toe.Editors
 		#region Constants and Fields
 
 		protected readonly IEditorOptions<Base3DEditorOptions> options;
+
+		private readonly Base3DEditorContent content;
 
 		private readonly EditorCamera camera;
 
@@ -45,16 +54,19 @@ namespace Toe.Editors
 
 		private ToolStripMenuItem zUpToolStripMenuItem;
 
+
 		#endregion
 
 		//private GLControl glControl;
 
 		#region Constructors and Destructors
 
-		public Base3DEditor(IComponentContext context, IEditorOptions<Base3DEditorOptions> options)
+		public Base3DEditor(IComponentContext context, IEditorOptions<Base3DEditorOptions> options,Base3DEditorContent content)
 		{
 			this.options = options;
+			this.content = content;
 			this.camera = new EditorCamera(context.Resolve<IEditorOptions<EditorCameraOptions>>());
+
 			this.InitializeComponent();
 			this.Dock = DockStyle.Fill;
 			//this.glControl = new GLControl(GraphicsMode.Default, 1, 0, GraphicsContextFlags.Default);
@@ -195,8 +207,9 @@ namespace Toe.Editors
 					return;
 				}
 
-				GL.Enable(EnableCap.DepthTest);
+				this.SetupViewport();
 
+				GL.Enable(EnableCap.DepthTest);
 				this.Camera.SetProjection();
 
 				if (this.options.Options.Lighting)
@@ -228,8 +241,14 @@ namespace Toe.Editors
 				GL.Color3(0, 0, 1.0f);
 				GL.Vertex3(0, 0, 0);
 				GL.Vertex3(0, 0, 1024);
+
 				GL.End();
+				OpenTKHelper.Assert();
+
+				content.RenderXyzCube(glControl,Camera);
+
 				GL.Flush();
+				OpenTKHelper.Assert();
 				this.glControl.SwapBuffers();
 			}
 			catch (Exception ex)
@@ -239,6 +258,8 @@ namespace Toe.Editors
 				this.errMessage.Text = ex.ToString();
 			}
 		}
+
+	
 
 		private void GLControlResize(object sender, EventArgs e)
 		{
@@ -279,7 +300,7 @@ namespace Toe.Editors
 			this.coordinateSystemButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
 			this.coordinateSystemButton.DropDownItems.AddRange(
 				new ToolStripItem[] { this.zUpToolStripMenuItem, this.yUpToolStripMenuItem });
-			this.coordinateSystemButton.Image = Resources.zup;
+			this.coordinateSystemButton.Image = Toe.Editors.Properties.Resources.zup;
 			this.coordinateSystemButton.ImageTransparentColor = Color.Magenta;
 			this.coordinateSystemButton.Name = "coordinateSystemButton";
 			this.coordinateSystemButton.Size = new Size(29, 22);
@@ -287,14 +308,14 @@ namespace Toe.Editors
 			// 
 			// zUpToolStripMenuItem
 			// 
-			this.zUpToolStripMenuItem.Image = Resources.zup;
+			this.zUpToolStripMenuItem.Image = Toe.Editors.Properties.Resources.zup;
 			this.zUpToolStripMenuItem.Name = "zUpToolStripMenuItem";
 			this.zUpToolStripMenuItem.Size = new Size(152, 22);
 			this.zUpToolStripMenuItem.Text = "Z-Up";
 			// 
 			// yUpToolStripMenuItem
 			// 
-			this.yUpToolStripMenuItem.Image = Resources.yup;
+			this.yUpToolStripMenuItem.Image = Toe.Editors.Properties.Resources.yup;
 			this.yUpToolStripMenuItem.Name = "yUpToolStripMenuItem";
 			this.yUpToolStripMenuItem.Size = new Size(152, 22);
 			this.yUpToolStripMenuItem.Text = "Y-Up";
@@ -445,10 +466,10 @@ namespace Toe.Editors
 			switch (this.Camera.CoordinateSystem)
 			{
 				case CoordinateSystem.ZUp:
-					this.coordinateSystemButton.Image = Resources.zup;
+					this.coordinateSystemButton.Image = Toe.Editors.Properties.Resources.zup;
 					break;
 				case CoordinateSystem.YUp:
-					this.coordinateSystemButton.Image = Resources.yup;
+					this.coordinateSystemButton.Image = Toe.Editors.Properties.Resources.yup;
 					break;
 				default:
 					throw new ArgumentOutOfRangeException();
@@ -459,11 +480,11 @@ namespace Toe.Editors
 		{
 			if (this.options.Options.Lighting)
 			{
-				this.lightingButton.Image = Resources.light_on;
+				this.lightingButton.Image = Toe.Editors.Properties.Resources.light_on;
 			}
 			else
 			{
-				this.lightingButton.Image = Resources.light_off;
+				this.lightingButton.Image = Toe.Editors.Properties.Resources.light_off;
 			}
 		}
 

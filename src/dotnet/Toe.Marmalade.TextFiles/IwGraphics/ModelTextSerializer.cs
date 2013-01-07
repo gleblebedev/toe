@@ -82,7 +82,7 @@ namespace Toe.Marmalade.TextFiles.IwGraphics
 					model.Meshes.Add(this.ParseMesh(parser));
 					continue;
 				}
-				parser.UnknownLexem();
+				parser.UnknownLexemError();
 			}
 
 			return model;
@@ -172,7 +172,7 @@ namespace Toe.Marmalade.TextFiles.IwGraphics
 					continue;
 				}
 
-				parser.UnknownLexem();
+				parser.UnknownLexemError();
 			}
 			return mesh;
 		}
@@ -284,7 +284,7 @@ namespace Toe.Marmalade.TextFiles.IwGraphics
 					uvs.Add(parser.ConsumeVector2());
 					continue;
 				}
-				parser.UnknownLexem();
+				parser.UnknownLexemError();
 			}
 		}
 
@@ -310,7 +310,7 @@ namespace Toe.Marmalade.TextFiles.IwGraphics
 					mesh.Colors.Add(parser.ConsumeColor());
 					continue;
 				}
-				parser.UnknownLexem();
+				parser.UnknownLexemError();
 			}
 		}
 
@@ -336,7 +336,7 @@ namespace Toe.Marmalade.TextFiles.IwGraphics
 					vertices.Add(parser.ConsumeVector3());
 					continue;
 				}
-				parser.UnknownLexem();
+				parser.UnknownLexemError();
 			}
 		}
 
@@ -362,7 +362,7 @@ namespace Toe.Marmalade.TextFiles.IwGraphics
 					vertices.Add(parser.ConsumeVector3());
 					continue;
 				}
-				parser.UnknownLexem();
+				parser.UnknownLexemError();
 			}
 		}
 
@@ -397,7 +397,7 @@ namespace Toe.Marmalade.TextFiles.IwGraphics
 					sel.F.Add(parser.ConsumeInt());
 					continue;
 				}
-				parser.UnknownLexem();
+				parser.UnknownLexemError();
 			}
 			return sel;
 		}
@@ -428,7 +428,7 @@ namespace Toe.Marmalade.TextFiles.IwGraphics
 						new StreamSubmeshTriangle { A = streamSubmeshQuad.A, B = streamSubmeshQuad.C, C = streamSubmeshQuad.D });
 					continue;
 				}
-				parser.UnknownLexem();
+				parser.UnknownLexemError();
 			}
 		}
 
@@ -462,7 +462,7 @@ namespace Toe.Marmalade.TextFiles.IwGraphics
 					this.ParseQuads(parser, (StreamSubmesh)submesh);
 					continue;
 				}
-				parser.UnknownLexem();
+				parser.UnknownLexemError();
 			}
 		}
 
@@ -488,7 +488,7 @@ namespace Toe.Marmalade.TextFiles.IwGraphics
 					submesh.Tris.Add(ParseTriangle(parser));
 					continue;
 				}
-				parser.UnknownLexem();
+				parser.UnknownLexemError();
 			}
 		}
 

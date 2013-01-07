@@ -92,7 +92,7 @@ namespace Toe.Marmalade.TextFiles
 						continue;
 					}
 
-					parser.UnknownLexem();
+					parser.UnknownLexemError();
 				}
 			}
 			return items;

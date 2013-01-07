@@ -1,10 +1,11 @@
 ﻿using Autofac;
 
-using Toe.Marmalade;
 using Toe.Marmalade.IwGx;
 using Toe.Resources;
+using Toe.Utils.Marmalade.IwGx;
+using Toe.Utils.TextParser;
 
-namespace Toe.Utils.Marmalade.IwGx
+namespace Toe.Marmalade.TextFiles.IwGx
 {
 	public class MaterialTextSerializer : ITextSerializer
 	{
@@ -211,32 +212,7 @@ namespace Toe.Utils.Marmalade.IwGx
 				if (attribute == "blendMode")
 				{
 					parser.Consume();
-					switch (parser.ConsumeString())
-					{
-						case "ADD":
-							material.BlendMode = BlendMode.ADD;
-							break;
-						case "BLEND":
-							material.BlendMode = BlendMode.BLEND;
-							break;
-						case "DECAL":
-							material.BlendMode = BlendMode.DECAL;
-							break;
-						case "MODULATE":
-							material.BlendMode = BlendMode.MODULATE;
-							break;
-						case "MODULATE_2X":
-							material.BlendMode = BlendMode.MODULATE_2X;
-							break;
-						case "MODULATE_4X":
-							material.BlendMode = BlendMode.MODULATE_4X;
-							break;
-						case "REPLACE":
-							material.BlendMode = BlendMode.REPLACE;
-							break;
-						default:
-							throw new TextParserException("Unknown blendMode");
-					}
+					material.BlendMode = parser.ConsumeEnum<BlendMode>();
 					continue;
 				}
 				if (attribute == "shaderTechnique")
@@ -252,7 +228,7 @@ namespace Toe.Utils.Marmalade.IwGx
 					continue;
 				}
 
-				parser.UnknownLexem();
+				parser.UnknownLexemError();
 			}
 			return material;
 		}

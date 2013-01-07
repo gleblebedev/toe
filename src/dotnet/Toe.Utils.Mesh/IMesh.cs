@@ -9,6 +9,8 @@ namespace Toe.Utils.Mesh
 	{
 		IList<ISubMesh> Submeshes { get; }
 
+		ISubMesh CreateSubmesh();
+
 		string Name { get; }
 
 		uint NameHash { get; }

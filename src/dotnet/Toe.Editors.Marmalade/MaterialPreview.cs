@@ -25,8 +25,8 @@ namespace Toe.Editors.Marmalade
 			MaterialEditor editor,
 			ToeGraphicsContext graphicsContext,
 			IComponentContext context,
-			IEditorOptions<Base3DEditorOptions> options)
-			: base(context, options)
+			IEditorOptions<Base3DEditorOptions> options, Base3DEditorContent content)
+			: base(context, options, content)
 		{
 			this.editor = editor;
 			this.graphicsContext = graphicsContext;

@@ -326,7 +326,7 @@ namespace Toe.Marmalade.BinaryFiles.IwGraphics
 			BinaryParser parser, Model model, uint name, uint size, uint numItems, ushort flags)
 		{
 			var streamMesh = ((StreamMesh)model.Meshes[0]);
-			var streamSubmesh = new StreamSubmesh(streamMesh);
+			var streamSubmesh = (StreamSubmesh)streamMesh.CreateSubmesh();
 			streamMesh.Submeshes.Add(streamSubmesh);
 
 			streamSubmesh.MaterialHash = parser.ConsumeUInt32();

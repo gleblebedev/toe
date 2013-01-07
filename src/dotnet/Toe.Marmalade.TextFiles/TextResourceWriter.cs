@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 
 using Toe.Marmalade;
+using Toe.Utils.TextParser;
 
 namespace Toe.Utils.Marmalade
 {
@@ -13,7 +14,7 @@ namespace Toe.Utils.Marmalade
 		{
 			foreach (var managed in items)
 			{
-				throw new TextParserException("Unknown resource " + managed.GetType().Name);
+				throw new TextParserException(string.Format("Unknown resource {0}", managed.GetType().Name));
 			}
 		}
 

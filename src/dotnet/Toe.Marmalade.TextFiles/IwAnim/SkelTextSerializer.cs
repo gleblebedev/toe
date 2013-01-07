@@ -54,7 +54,7 @@ namespace Toe.Marmalade.TextFiles.IwAnim
 					ParseBone(parser, skel);
 					continue;
 				}
-				parser.UnknownLexem();
+				parser.UnknownLexemError();
 			}
 			return skel;
 		}
@@ -99,7 +99,7 @@ namespace Toe.Marmalade.TextFiles.IwAnim
 					bone.BindingRot = parser.ConsumeQuaternion();
 					continue;
 				}
-				parser.UnknownLexem();
+				parser.UnknownLexemError();
 			}
 		}
 
