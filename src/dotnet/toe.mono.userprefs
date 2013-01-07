@@ -1,33 +1,26 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Toe.Editors.Interfaces\Properties\AssemblyInfo.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Toe.Editors\Properties\Resources.Designer.cs">
     <Files>
-      <File FileName="Toe.Editors.Marmalade\SkinEditor.resx" Line="120" Column="3" />
-      <File FileName="c:\GitHub\toe\src\dotnet\Toe.Editor\EditorEnvironment.cs" Line="37" Column="21" />
-      <File FileName="Toe.Editors.Marmalade\SkinEditor.cs" Line="201" Column="11" />
-      <File FileName="Toe.Editors\Base3DEditor.cs" Line="43" Column="1" />
-      <File FileName="c:\GitHub\toe\src\dotnet\Toe.Editor\Program.cs" Line="59" Column="29" />
-      <File FileName="c:\GitHub\toe\src\dotnet\Toe.Editors.Interfaces\Views\EditResourceReferenceView.cs" Line="9" Column="21" />
-      <File FileName="c:\GitHub\toe\src\dotnet\Toe.Marmalade.BinaryFiles\BinaryParser.cs" Line="7" Column="7" />
-      <File FileName="c:\GitHub\toe\src\dotnet\Toe.Editors.Interfaces\Views\ButtonView.cs" Line="61" Column="3" />
-      <File FileName="c:\GitHub\toe\src\dotnet\Toe.Editors.Interfaces\Views\EditShaderView.cs" Line="44" Column="5" />
-      <File FileName="c:\GitHub\toe\src\dotnet\Toe.Editors.Interfaces\Views\ResourceFileEditor.cs" Line="40" Column="13" />
-      <File FileName="c:\GitHub\toe\src\dotnet\Toe.Editors.Interfaces\Views\StringView.cs" Line="44" Column="13" />
-      <File FileName="c:\GitHub\toe\src\dotnet\Toe.Editors.Interfaces\Dialogs\ResourcePickerDialog.cs" Line="25" Column="76" />
-      <File FileName="Toe.Editors.Interfaces\Properties\AssemblyInfo.cs" Line="41" Column="3" />
+      <File FileName="Toe.Editors\Properties\Resources.Designer.cs" Line="88" Column="83" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
           <Node name="Toe.Editor.mono" expanded="True" />
-          <Node name="Toe.Editors.Interfaces.net40.vs2010" expanded="True" selected="True">
+          <Node name="Toe.Editors.Interfaces.net40.vs2010" expanded="True">
             <Node name="Dialogs" expanded="True" />
             <Node name="Properties" expanded="True" />
-            <Node name="Views" expanded="True" />
           </Node>
-          <Node name="Toe.Marmalade.BinaryFiles" expanded="True">
-            <Node name="References" expanded="True" />
+          <Node name="Toe.Editors.net40.vs2010" expanded="True">
+            <Node name="Properties" expanded="True">
+              <Node name="Resources.resx" expanded="True">
+                <Node name="Resources.Designer.cs" selected="True" />
+              </Node>
+            </Node>
+            <Node name="Resources" expanded="True" />
           </Node>
+          <Node name="Toe.Resources.net40.vs2010" expanded="True" />
         </State>
       </Pad>
     </Pads>

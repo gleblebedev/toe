@@ -1,4 +1,0 @@
-C:\GitHub\toe\src\dotnet\Toe.Utils.TextParser\bin\Debug\Toe.Utils.TextParser.dll
-C:\GitHub\toe\src\dotnet\Toe.Utils.TextParser\bin\Debug\Toe.Utils.TextParser.pdb
-C:\GitHub\toe\src\dotnet\Toe.Utils.TextParser\obj\Debug\Toe.Utils.TextParser.dll
-C:\GitHub\toe\src\dotnet\Toe.Utils.TextParser\obj\Debug\Toe.Utils.TextParser.pdb
