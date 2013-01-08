@@ -58,6 +58,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IwGx\DefaultFragmentShaderOptions.cs" />
+    <Compile Include="IwGx\DefaultProgramOptions.cs" />
+    <Compile Include="IwGx\DefaultShaders.cs" />
+    <Compile Include="IwGx\DefaultVertexShaderOptions.cs" />
     <Compile Include="IwGx\Image.cs" />
     <Compile Include="ManagedResourceType.cs" />
     <Compile Include="MarmaladeAutofacModule.cs" />

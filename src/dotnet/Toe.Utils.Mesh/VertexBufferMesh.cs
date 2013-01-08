@@ -6,11 +6,17 @@ using OpenTK.Graphics.OpenGL;
 
 namespace Toe.Utils.Mesh
 {
+	/// <summary>
+	/// Mesh as set of submeshes with common vertex buffer.
+	/// 
+	/// The implemenation is not efficient!
+	/// Please use it in content pipeline only! It is NOT recommended to use it in production.
+	/// </summary>
 	public class VertexBufferMesh : IMesh
 	{
 		#region Constants and Fields
 
-		private OptimizedList<Vertex> vertexBuffer = new OptimizedList<Vertex>();
+		private readonly OptimizedList<Vertex> vertexBuffer = new OptimizedList<Vertex>();
 
 		#endregion
 

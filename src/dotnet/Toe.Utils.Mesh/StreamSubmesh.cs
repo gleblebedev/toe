@@ -11,6 +11,12 @@ using Microsoft.Xna.Framework;
 
 namespace Toe.Utils.Mesh
 {
+	/// <summary>
+	/// Mesh as set of submeshes with common set of data streams.
+	/// 
+	/// The implemenation is not efficient!
+	/// Please use it in content pipeline only! It is NOT recommended to use it in production.
+	/// </summary>
 	public class StreamSubmesh :BaseSubmesh, ISubMesh
 	{
 		private readonly StreamMesh mesh;

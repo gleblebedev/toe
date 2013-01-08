@@ -64,7 +64,7 @@ namespace Toe.Editors
 				GL.MatrixMode(MatrixMode.Projection);
 				GL.LoadMatrix(ref result);
 
-				int w = Math.Min(180, glControl.Width / 2);
+				int w = Math.Min(Math.Min(180, glControl.Width / 2), glControl.Height / 2);
 
 				GL.MatrixMode(MatrixMode.Modelview);
 				var pos = Vector3.Transform(new Vector3(0, 0, 200), camera.Rot);
