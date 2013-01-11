@@ -1,8 +1,8 @@
 using OpenTK.Graphics.OpenGL;
 
-using Toe.Gx;
+using Toe.Utils.Marmalade.IwGx;
 
-namespace Toe.Utils.Marmalade.IwGx
+namespace Toe.Marmalade.IwGx
 {
 	public class ShaderTechniqueFloatParam : ShaderTechniqueParam
 	{
@@ -24,11 +24,11 @@ namespace Toe.Utils.Marmalade.IwGx
 
 		#region Public Methods and Operators
 
-		public override void ApplyOpenGL(int shaderProgramHandle)
-		{
-			GL.Uniform1(shaderProgramHandle, this.Location, this.values);
-			OpenTKHelper.Assert();
-		}
+		//public override void ApplyOpenGL(int shaderProgramHandle)
+		//{
+		//    GL.Uniform1(shaderProgramHandle, this.Location, this.values);
+		//    OpenTKHelper.Assert();
+		//}
 
 		#endregion
 	}

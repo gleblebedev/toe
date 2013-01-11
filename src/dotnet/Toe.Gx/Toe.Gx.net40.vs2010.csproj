@@ -41,6 +41,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -48,12 +49,32 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DefaultFragmentShaderOptions.cs" />
+    <Compile Include="DefaultProgramOptions.cs" />
+    <Compile Include="DefaultShaders.cs" />
+    <Compile Include="DefaultVertexShaderOptions.cs" />
+    <Compile Include="LightArgs.cs" />
+    <Compile Include="TextureContext.cs" />
     <Compile Include="ToeGraphicsContext.cs" />
     <Compile Include="OpenTKHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Toe.snk" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Toe.Marmalade\Toe.Marmalade.net40.vs2010.csproj">
+      <Project>{2708D020-33C1-4A4A-BDB0-035FB9EEDFFD}</Project>
+      <Name>Toe.Marmalade.net40.vs2010</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Toe.Resources\Toe.Resources.net40.vs2010.csproj">
+      <Project>{15C85727-F6FC-4A28-BB34-84C327AEFF81}</Project>
+      <Name>Toe.Resources.net40.vs2010</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Toe.Utils.Mesh\Toe.Utils.Mesh.net40.vs2010.csproj">
+      <Project>{1AB2E074-5CE6-4CD6-A379-3D6A58116319}</Project>
+      <Name>Toe.Utils.Mesh.net40.vs2010</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -6,6 +6,7 @@ using OpenTK.Graphics.OpenGL;
 
 using Toe.Editors.Interfaces;
 using Toe.Gx;
+using Toe.Utils.Mesh;
 
 namespace Toe.Editors.Marmalade
 {
@@ -16,6 +17,8 @@ namespace Toe.Editors.Marmalade
 		private readonly MaterialEditor editor;
 
 		private readonly ToeGraphicsContext graphicsContext;
+
+		private IMesh box;
 
 		#endregion
 
@@ -34,6 +37,7 @@ namespace Toe.Editors.Marmalade
 			this.Camera.ZNear = 16.0f;
 			this.Camera.ZFar = 2048.0f;
 			base.RenderScene += this.RenderScene;
+			box = BoxBuilder.BuildSoftEdgedBox(250);
 		}
 
 		#endregion
@@ -42,6 +46,8 @@ namespace Toe.Editors.Marmalade
 
 		protected new void RenderScene(object sender, EventArgs args)
 		{
+			GL.ClearColor(0.2f, 0.2f, 0.4f, 1f);
+
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
 			if (this.editor.Material == null)
@@ -66,8 +72,9 @@ namespace Toe.Editors.Marmalade
 			{
 				GL.Disable(EnableCap.Lighting);
 			}
-			this.editor.Material.ApplyOpenGL();
-			this.RenderBox(250);
+			graphicsContext.SetMaterial(this.editor.Material);
+			graphicsContext.Render(box);
+			graphicsContext.SetMaterial(null);
 
 			GL.PopAttrib();
 		}

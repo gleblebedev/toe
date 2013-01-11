@@ -6,21 +6,22 @@ namespace Toe.Marmalade.IwAnim
 	{
 		#region Constants and Fields
 
-		private BoneCollection bones = new BoneCollection();
+		private readonly ManagedList<AnimBone> bones;
+
+		AnimKeyFrame(ManagedList<AnimBone> b)
+		{
+			bones = b;
+		}
 
 		#endregion
 
 		#region Public Properties
 
-		public BoneCollection Bones
+		public ManagedList<AnimBone> Bones
 		{
 			get
 			{
 				return this.bones;
-			}
-			set
-			{
-				this.bones = value;
 			}
 		}
 

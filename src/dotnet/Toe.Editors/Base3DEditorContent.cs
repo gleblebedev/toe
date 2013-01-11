@@ -2,6 +2,7 @@ using System;
 using System.IO;
 
 using OpenTK;
+using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 
 using Toe.Gx;
@@ -13,12 +14,15 @@ namespace Toe.Editors
 {
 	public class Base3DEditorContent:IDisposable
 	{
+		private readonly ToeGraphicsContext graphicsContext;
+
 		private IMesh cube;
 
 		private Texture cubeTex;
 
-		public Base3DEditorContent ()
+		public Base3DEditorContent(ToeGraphicsContext graphicsContext)
 		{
+			this.graphicsContext = graphicsContext;
 			var cubeBytes = Toe.Editors.Properties.Resources.xyzcube;
 			if (cubeBytes != null) {
 				this.cube = (new AseReader ()).Load (new MemoryStream (cubeBytes));
@@ -32,11 +36,12 @@ namespace Toe.Editors
 			
 		}
 
+	
 		public void RenderXyzCube(GLControl glControl, EditorCamera camera)
 		{
 			if (this.cube != null)
 			{
-				this.cubeTex.ApplyOpenGL(0);
+				this.graphicsContext.SetTexture(0, this.cubeTex);
 				GL.Enable(EnableCap.CullFace);
 				GL.CullFace(CullFaceMode.Front);
 				OpenTKHelper.Assert();
@@ -73,7 +78,7 @@ namespace Toe.Editors
 				GL.LoadMatrix(ref view);
 				GL.Viewport(glControl.Width - w, glControl.Height - w, w, w);
 
-				this.cube.RenderOpenGL();
+				graphicsContext.Render(this.cube);
 				OpenTKHelper.Assert();
 			}
 		}

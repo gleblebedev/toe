@@ -54,6 +54,7 @@ namespace Toe.Editors
 
 		private ToolStripMenuItem zUpToolStripMenuItem;
 
+		private ToeGraphicsContext graphicsContext;
 
 		#endregion
 
@@ -65,6 +66,7 @@ namespace Toe.Editors
 		{
 			this.options = options;
 			this.content = content;
+			graphicsContext = context.Resolve<ToeGraphicsContext>();
 			this.camera = new EditorCamera(context.Resolve<IEditorOptions<EditorCameraOptions>>());
 
 			this.InitializeComponent();
@@ -145,6 +147,7 @@ namespace Toe.Editors
 
 		protected void RenderBox(float size)
 		{
+			
 			Vector3[] p = new[]
 				{
 					new Vector3(-size, -size, size), new Vector3(size, -size, size), new Vector3(-size, size, size),
@@ -174,6 +177,7 @@ namespace Toe.Editors
 			OpenTKHelper.Assert();
 		}
 
+		private LightArgs light = LightArgs.Default;
 		private void DrawBoxQuad(Vector3[] p, Vector3[] n, Vector2[] uv, int[] ints)
 		{
 			for (int i = 0; i < 4; ++i)
@@ -189,7 +193,7 @@ namespace Toe.Editors
 		{
 			this.loaded = true;
 			this.glControl.MakeCurrent();
-			this.SetupViewport();
+			this.SetupViewport(graphicsContext);
 		}
 
 		private void GLControlPaint(object sender, PaintEventArgs e)
@@ -207,21 +211,21 @@ namespace Toe.Editors
 					return;
 				}
 
-				this.SetupViewport();
+				this.SetupViewport(graphicsContext);
 
 				GL.Enable(EnableCap.DepthTest);
-				this.Camera.SetProjection();
+				this.Camera.SetProjection(graphicsContext);
 
 				if (this.options.Options.Lighting)
 				{
-					GL.Enable(EnableCap.Lighting);
-					GL.Enable(EnableCap.Light0);
-					GL.Light(
-						LightName.Light0, LightParameter.Position, new[] { this.Camera.Pos.X, this.Camera.Pos.Y, this.Camera.Pos.Z, 1.0f });
+					light.Enabled = true;
+					light.Position = this.Camera.Pos;
+					graphicsContext.SetLight0(ref light);
+					graphicsContext.EnableLighting();
 				}
 				else
 				{
-					GL.Disable(EnableCap.Lighting);
+					graphicsContext.DisableLighting();
 				}
 
 				if (this.RenderScene != null)
@@ -229,6 +233,7 @@ namespace Toe.Editors
 					this.RenderScene(this, new EventArgs());
 				}
 
+				GL.UseProgram(0);
 				GL.Disable(EnableCap.Lighting);
 				GL.Disable(EnableCap.DepthTest);
 				GL.Begin(BeginMode.Lines);
@@ -268,7 +273,7 @@ namespace Toe.Editors
 				return;
 			}
 			this.glControl.MakeCurrent();
-			this.SetupViewport();
+			this.SetupViewport(graphicsContext);
 		}
 
 		private void InitializeComponent()
@@ -436,7 +441,7 @@ namespace Toe.Editors
 			}
 		}
 
-		private void SetupViewport()
+		private void SetupViewport(ToeGraphicsContext context)
 		{
 			if (!this.loaded)
 			{
@@ -449,7 +454,7 @@ namespace Toe.Editors
 			int w = Math.Max(1, this.glControl.Width);
 			int h = Math.Max(1, this.glControl.Height);
 			// Use all of the glControl painting area
-			GL.Viewport(0, 0, w, h);
+			graphicsContext.SetViewport(0, 0, w, h);
 
 			this.Camera.AspectRation = w / (float)h;
 		}

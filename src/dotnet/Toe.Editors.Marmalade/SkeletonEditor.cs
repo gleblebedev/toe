@@ -77,18 +77,18 @@ namespace Toe.Editors.Marmalade
 		{
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
-			var model = this.Skeleton;
-			if (model != null)
+			var skeleton = this.Skeleton;
+			if (skeleton != null)
 			{
 				GL.Begin(BeginMode.Lines);
 				GL.Color3(1.0f, 1.0f, 1.0f);
-				model.Bones.UpdateAbsoluteValues();
-				foreach (MeshBone bone in model.Bones)
+				skeleton.UpdateAbsoluteValues();
+				foreach (AnimBone bone in skeleton.Bones)
 				{
 					var parent = bone.Parent;
 					if (parent >= 0)
 					{
-						var parentBone = model.Bones[parent];
+						var parentBone = skeleton.Bones[parent];
 						GL.Vertex3(parentBone.AbsolutePos);
 						GL.Vertex3(bone.AbsolutePos);
 					}

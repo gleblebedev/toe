@@ -1,4 +1,4 @@
-namespace Toe.Marmalade.IwGx
+namespace Toe.Gx
 {
 	public class DefaultVertexShaderOptions 
 	{
@@ -52,7 +52,7 @@ namespace Toe.Marmalade.IwGx
 			{
 				return false;
 			}
-			return Equals((DefaultVertexShaderOptions)obj);
+			return this.Equals((DefaultVertexShaderOptions)obj);
 		}
 
 		/// <summary>

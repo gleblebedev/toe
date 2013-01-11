@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 
@@ -25,14 +26,40 @@ namespace Toe.Utils.Mesh
 
 		private readonly List<ISubMesh> submeshes = new List<ISubMesh>();
 
-		private readonly List<MeshStream<Vector2>> uv = new List<MeshStream<Vector2>>();
+		private readonly List<MeshStream<Vector3>> uv = new List<MeshStream<Vector3>>();
 
 		private readonly MeshStream<Vector3> vertices = new MeshStream<Vector3>();
 
 		public string useGroup { get; set; }
 
 		#endregion
+		/// <summary>
+		/// Collection of source specific parameters.
+		/// </summary>
+		private IParameterCollection parameters;
 
+		private MeshStream<Vector3> binormals = new MeshStream<Vector3>();
+
+		private MeshStream<Vector3> tangents = new MeshStream<Vector3>();
+
+		#region Implementation of ISceneItem
+
+		/// <summary>
+		/// Collection of source specific parameters.
+		/// </summary>
+		public IParameterCollection Parameters
+		{
+			get
+			{
+				return this.parameters ?? (this.parameters = new DynamicCollection());
+			}
+			set
+			{
+				this.parameters = value;
+			}
+		}
+
+		#endregion
 		#region Public Properties
 
 		public BoneCollection Bones
@@ -63,6 +90,22 @@ namespace Toe.Utils.Mesh
 			}
 		}
 
+		public MeshStream<Vector3> Binormals
+		{
+			get
+			{
+				return this.binormals;
+			}
+		}
+
+		public MeshStream<Vector3> Tangents
+		{
+			get
+			{
+				return this.tangents;
+			}
+		}
+
 		public float Scale { get; set; }
 
 		public string Skeleton { get; set; }
@@ -77,7 +120,7 @@ namespace Toe.Utils.Mesh
 			}
 		}
 
-		public IList<MeshStream<Vector2>> UV
+		public IList<MeshStream<Vector3>> UV
 		{
 			get
 			{
@@ -105,6 +148,8 @@ namespace Toe.Utils.Mesh
 
 		public uint NameHash { get; set; }
 
+
+
 		#endregion
 
 		#region Public Methods and Operators
@@ -121,26 +166,117 @@ namespace Toe.Utils.Mesh
 			return this.bones.EnsureBone(boneName);
 		}
 
-		public MeshStream<Vector2> EnsureUVStream(int setId)
+		public MeshStream<Vector3> EnsureUVStream(int setId)
 		{
 			while (this.UV.Count <= setId)
 			{
-				this.UV.Add(new MeshStream<Vector2>());
+				this.UV.Add(new MeshStream<Vector3>());
 			}
 			return this.UV[setId];
 		}
 
-#if WINDOWS_PHONE
-#else
-		public void RenderOpenGL()
+		#endregion
+
+		#region Implementation of IEnumerable
+
+		/// <summary>
+		/// Returns an enumerator that iterates through the collection.
+		/// </summary>
+		/// <returns>
+		/// A <see cref="T:System.Collections.Generic.IEnumerator`1"/> that can be used to iterate through the collection.
+		/// </returns>
+		/// <filterpriority>1</filterpriority>
+		public IEnumerator<Vertex> GetEnumerator()
 		{
-			var subMeshes = this.submeshes;
-			foreach (ISubMesh subMesh in subMeshes)
+			foreach (var s in submeshes)
 			{
-				subMesh.RenderOpenGL();
+				foreach (Vertex vertex in s)
+				{
+					yield return vertex;
+				}
 			}
 		}
-#endif
+
+		/// <summary>
+		/// Returns an enumerator that iterates through a collection.
+		/// </summary>
+		/// <returns>
+		/// An <see cref="T:System.Collections.IEnumerator"/> object that can be used to iterate through the collection.
+		/// </returns>
+		/// <filterpriority>2</filterpriority>
+		IEnumerator IEnumerable.GetEnumerator()
+		{
+			return this.GetEnumerator();
+		}
+
+		#endregion
+
+		#region Implementation of IVertexSource
+
+		public bool IsVertexStreamAvailable
+		{
+			get
+			{
+				return vertices != null && vertices.Count > 0;
+			}
+		}
+
+		public bool IsNormalStreamAvailable
+		{
+			get
+			{
+				return normals != null && normals.Count > 0;
+			}
+		}
+
+		public bool IsBinormalStreamAvailable
+		{
+			get
+			{
+				return binormals != null && binormals.Count > 0;
+			}
+		}
+
+		public bool IsTangentStreamAvailable
+		{
+			get
+			{
+				return tangents != null && tangents.Count > 0;
+			}
+		}
+
+		public bool IsColorStreamAvailable
+		{
+			get
+			{
+				return colors != null && colors.Count > 0;
+			}
+		}
+
+		public bool IsUV0StreamAvailable
+		{
+			get
+			{
+				return uv.Count > 0 && uv[0].Count > 0;
+			}
+		}
+
+		public bool IsUV1StreamAvailable
+		{
+			get
+			{
+				return uv.Count > 1 && uv[1].Count > 0;
+			}
+		}
+
+		public VertexSourceType VertexSourceType
+		{
+			get
+			{
+				if (submeshes.Count > 0) return submeshes[0].VertexSourceType;
+				return VertexSourceType.TrianleList;
+			}
+		}
 
 		#endregion
 	}

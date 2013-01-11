@@ -90,8 +90,8 @@ namespace Toe.Editors.Marmalade
 
 					var boneCollection = skeleton.Bones;
 					anim.Apply(skeleton, 0);
-					boneCollection.UpdateAbsoluteValues();
-					foreach (MeshBone bone in boneCollection)
+					skeleton.UpdateAbsoluteValues();
+					foreach (AnimBone bone in boneCollection)
 					{
 						var parent = bone.Parent;
 						if (parent >= 0)

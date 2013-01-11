@@ -51,18 +51,27 @@
   <ItemGroup>
     <Compile Include="BaseSubmesh.cs" />
     <Compile Include="BoneCollection.cs" />
+    <Compile Include="BoxBuilder.cs" />
+    <Compile Include="DynamicCollection.cs" />
+    <Compile Include="IMaterial.cs" />
     <Compile Include="IMesh.cs" />
     <Compile Include="IMeshReader.cs" />
     <Compile Include="IMeshWriter.cs" />
+    <Compile Include="INode.cs" />
+    <Compile Include="IParameterCollection.cs" />
+    <Compile Include="IScene.cs" />
+    <Compile Include="ISceneItem.cs" />
     <Compile Include="ISubMesh.cs" />
+    <Compile Include="IVertexSource.cs" />
+    <Compile Include="Material.cs" />
     <Compile Include="MeshBone.cs" />
     <Compile Include="MeshStream.cs" />
     <Compile Include="OptimizedList.cs" />
+    <Compile Include="Scene.cs" />
     <Compile Include="StreamsMesh.cs" />
     <Compile Include="StreamSubmesh.cs" />
     <Compile Include="StreamSubmeshQuad.cs" />
-    <Compile Include="StreamSubmeshTriangle.cs" />
-    <Compile Include="StreamSubmeshTriangleIndexes.cs" />
+    <Compile Include="StreamSubmeshIndexes.cs" />
     <Compile Include="Vertex.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VertexBufferMesh.cs" />
@@ -81,10 +90,4 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <ItemGroup>
-    <ProjectReference Include="..\Toe.Resources\Toe.Resources.net40.vs2010.csproj">
-      <Project>{15C85727-F6FC-4A28-BB34-84C327AEFF81}</Project>
-      <Name>Toe.Resources.net40.vs2010</Name>
-    </ProjectReference>
-  </ItemGroup>
 </Project>

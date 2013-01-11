@@ -1,5 +1,7 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
@@ -46,6 +48,30 @@ namespace Toe.Utils.Mesh
 
 		#endregion
 
+		/// <summary>
+		/// Collection of source specific parameters.
+		/// </summary>
+		private IParameterCollection parameters;
+
+		#region Implementation of ISceneItem
+
+		/// <summary>
+		/// Collection of source specific parameters.
+		/// </summary>
+		public IParameterCollection Parameters
+		{
+			get
+			{
+				return this.parameters ?? (this.parameters = new DynamicCollection());
+			}
+			set
+			{
+				this.parameters = value;
+			}
+		}
+
+		#endregion
+
 		#region Public Methods and Operators
 
 		public ISubMesh CreateSubmesh()
@@ -55,25 +81,104 @@ namespace Toe.Utils.Mesh
 			return streamSubmesh;
 		}
 
-		public void RenderOpenGL()
+		#endregion
+
+
+		#region Implementation of IEnumerable
+
+		/// <summary>
+		/// Returns an enumerator that iterates through the collection.
+		/// </summary>
+		/// <returns>
+		/// A <see cref="T:System.Collections.Generic.IEnumerator`1"/> that can be used to iterate through the collection.
+		/// </returns>
+		/// <filterpriority>1</filterpriority>
+		public IEnumerator<Vertex> GetEnumerator()
 		{
-			var subMeshes = this.submeshes;
-			foreach (ISubMesh subMesh in subMeshes)
-			{
-				subMesh.RenderOpenGL();
-			}
+			return this.submeshes.SelectMany(submesh => submesh).GetEnumerator();
+		}
+
+		/// <summary>
+		/// Returns an enumerator that iterates through a collection.
+		/// </summary>
+		/// <returns>
+		/// An <see cref="T:System.Collections.IEnumerator"/> object that can be used to iterate through the collection.
+		/// </returns>
+		/// <filterpriority>2</filterpriority>
+		IEnumerator IEnumerable.GetEnumerator()
+		{
+			return this.GetEnumerator();
 		}
 
 		#endregion
 
-		public void RenderOpenGLVertex(int index)
+		#region Implementation of IVertexSource
+
+		public bool IsVertexStreamAvailable
 		{
-			GL.Normal3(vertexBuffer[index].Normal);
-			Vector3 vector3 = vertexBuffer[index].UV0;
-			GL.MultiTexCoord3(TextureUnit.Texture0, ref vector3);
-			vector3 = vertexBuffer[index].UV1;
-			GL.MultiTexCoord3(TextureUnit.Texture1, ref vector3);
-			GL.Vertex3(vertexBuffer[index].Position);
+			get
+			{
+				return true;
+			}
 		}
+
+		public bool IsNormalStreamAvailable
+		{
+			get
+			{
+				return true;
+			}
+		}
+
+		public bool IsBinormalStreamAvailable
+		{
+			get
+			{
+				return true;
+			}
+		}
+
+		public bool IsTangentStreamAvailable
+		{
+			get
+			{
+				return true;
+			}
+		}
+
+		public bool IsColorStreamAvailable
+		{
+			get
+			{
+				return true;
+			}
+		}
+
+		public bool IsUV0StreamAvailable
+		{
+			get
+			{
+				return true;
+			}
+		}
+
+		public bool IsUV1StreamAvailable
+		{
+			get
+			{
+				return true;
+			}
+		}
+
+		public VertexSourceType VertexSourceType
+		{
+			get
+			{
+				if (submeshes.Count > 0) return submeshes[0].VertexSourceType;
+				return VertexSourceType.TrianleList;
+			}
+		}
+
+		#endregion
 	}
 }

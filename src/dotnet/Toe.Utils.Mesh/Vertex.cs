@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 
 using OpenTK;
 
@@ -23,7 +24,7 @@ namespace Toe.Utils.Mesh
 		/// </summary>
 		public Vector3 Binormal { get; set; }
 
-		public int Color { get; set; }
+		public Color Color { get; set; }
 
 		/// <summary>
 		/// Normal vector.
@@ -121,7 +122,7 @@ namespace Toe.Utils.Mesh
 				result = (result * 397) ^ this.Normal.GetHashCode();
 				result = (result * 397) ^ this.Tangent.GetHashCode();
 				result = (result * 397) ^ this.Binormal.GetHashCode();
-				result = (result * 397) ^ this.Color;
+				result = (result * 397) ^ this.Color.GetHashCode();
 				result = (result * 397) ^ this.UV0.GetHashCode();
 				result = (result * 397) ^ this.UV1.GetHashCode();
 				result = (result * 397) ^ this.Weights.GetHashCode();

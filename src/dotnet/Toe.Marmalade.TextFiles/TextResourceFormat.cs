@@ -95,7 +95,6 @@ namespace Toe.Marmalade.TextFiles
 					parser.UnknownLexemError();
 				}
 			}
-			return items;
 		}
 
 		public IList<IResourceFileItem> Read(string filePath, IResourceFile resourceFile)

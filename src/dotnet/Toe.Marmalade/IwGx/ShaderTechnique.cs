@@ -4,11 +4,10 @@ using System.Diagnostics;
 
 using OpenTK.Graphics.OpenGL;
 
-using Toe.Gx;
-using Toe.Marmalade;
 using Toe.Resources;
+using Toe.Utils.Marmalade.IwGx;
 
-namespace Toe.Utils.Marmalade.IwGx
+namespace Toe.Marmalade.IwGx
 {
 	public class ShaderTechnique : Managed
 	{
@@ -84,87 +83,87 @@ namespace Toe.Utils.Marmalade.IwGx
 			this.shaderParams.Add(shaderParam);
 		}
 
-		public void ApplyOpenGL()
-		{
-			var v = GL.GetString(StringName.Version);
-			if (!string.IsNullOrEmpty(this.vertexShaderSource))
-			{
-				if (this.vertexShaderHandle == 0)
-				{
-					this.vertexShaderHandle = GL.CreateShader(ShaderType.VertexShader);
-					OpenTKHelper.Assert();
-					GL.ShaderSource(this.vertexShaderHandle, this.AdaptSource(this.vertexShaderSource));
-					OpenTKHelper.Assert();
-					GL.CompileShader(this.vertexShaderHandle);
-					OpenTKHelper.Assert();
-					int compileStatus;
-					GL.GetShader(this.vertexShaderHandle, ShaderParameter.CompileStatus, out compileStatus);
-					if (compileStatus == 0)
-					{
-						string shaderInfoLog;
-						GL.GetShaderInfoLog(this.vertexShaderHandle, out shaderInfoLog);
-						throw new ApplicationException(shaderInfoLog);
-					}
-				}
-			}
-			if (!string.IsNullOrEmpty(this.fragmentShaderSource))
-			{
-				if (this.fragmentShaderHandle == 0)
-				{
-					this.fragmentShaderHandle = GL.CreateShader(ShaderType.FragmentShader);
-					OpenTKHelper.Assert();
-					GL.ShaderSource(this.fragmentShaderHandle, this.AdaptSource(this.fragmentShaderSource));
-					OpenTKHelper.Assert();
-					GL.CompileShader(this.fragmentShaderHandle);
-					OpenTKHelper.Assert();
-					int compileStatus;
-					GL.GetShader(this.fragmentShaderHandle, ShaderParameter.CompileStatus, out compileStatus);
-					if (compileStatus == 0)
-					{
-						string shaderInfoLog;
-						GL.GetShaderInfoLog(this.fragmentShaderHandle, out shaderInfoLog);
-						throw new ApplicationException(shaderInfoLog);
-					}
-				}
-			}
-			if (this.shaderProgramHandle == 0)
-			{
-				this.shaderProgramHandle = GL.CreateProgram();
-				OpenTKHelper.Assert();
+		//public void ApplyOpenGL()
+		//{
+		//    var v = GL.GetString(StringName.Version);
+		//    if (!string.IsNullOrEmpty(this.vertexShaderSource))
+		//    {
+		//        if (this.vertexShaderHandle == 0)
+		//        {
+		//            this.vertexShaderHandle = GL.CreateShader(ShaderType.VertexShader);
+		//            OpenTKHelper.Assert();
+		//            GL.ShaderSource(this.vertexShaderHandle, this.AdaptSource(this.vertexShaderSource));
+		//            OpenTKHelper.Assert();
+		//            GL.CompileShader(this.vertexShaderHandle);
+		//            OpenTKHelper.Assert();
+		//            int compileStatus;
+		//            GL.GetShader(this.vertexShaderHandle, ShaderParameter.CompileStatus, out compileStatus);
+		//            if (compileStatus == 0)
+		//            {
+		//                string shaderInfoLog;
+		//                GL.GetShaderInfoLog(this.vertexShaderHandle, out shaderInfoLog);
+		//                throw new ApplicationException(shaderInfoLog);
+		//            }
+		//        }
+		//    }
+		//    if (!string.IsNullOrEmpty(this.fragmentShaderSource))
+		//    {
+		//        if (this.fragmentShaderHandle == 0)
+		//        {
+		//            this.fragmentShaderHandle = GL.CreateShader(ShaderType.FragmentShader);
+		//            OpenTKHelper.Assert();
+		//            GL.ShaderSource(this.fragmentShaderHandle, this.AdaptSource(this.fragmentShaderSource));
+		//            OpenTKHelper.Assert();
+		//            GL.CompileShader(this.fragmentShaderHandle);
+		//            OpenTKHelper.Assert();
+		//            int compileStatus;
+		//            GL.GetShader(this.fragmentShaderHandle, ShaderParameter.CompileStatus, out compileStatus);
+		//            if (compileStatus == 0)
+		//            {
+		//                string shaderInfoLog;
+		//                GL.GetShaderInfoLog(this.fragmentShaderHandle, out shaderInfoLog);
+		//                throw new ApplicationException(shaderInfoLog);
+		//            }
+		//        }
+		//    }
+		//    if (this.shaderProgramHandle == 0)
+		//    {
+		//        this.shaderProgramHandle = GL.CreateProgram();
+		//        OpenTKHelper.Assert();
 
-				if (this.vertexShaderHandle != 0)
-				{
-					GL.AttachShader(this.shaderProgramHandle, this.vertexShaderHandle);
-					OpenTKHelper.Assert();
-				}
-				if (this.fragmentShaderHandle != 0)
-				{
-					GL.AttachShader(this.shaderProgramHandle, this.fragmentShaderHandle);
-					OpenTKHelper.Assert();
-				}
+		//        if (this.vertexShaderHandle != 0)
+		//        {
+		//            GL.AttachShader(this.shaderProgramHandle, this.vertexShaderHandle);
+		//            OpenTKHelper.Assert();
+		//        }
+		//        if (this.fragmentShaderHandle != 0)
+		//        {
+		//            GL.AttachShader(this.shaderProgramHandle, this.fragmentShaderHandle);
+		//            OpenTKHelper.Assert();
+		//        }
 
-				GL.LinkProgram(this.shaderProgramHandle);
+		//        GL.LinkProgram(this.shaderProgramHandle);
 
-				string programInfoLog;
-				GL.GetProgramInfoLog(this.shaderProgramHandle, out programInfoLog);
-				Debug.WriteLine(programInfoLog);
-				OpenTKHelper.Assert();
+		//        string programInfoLog;
+		//        GL.GetProgramInfoLog(this.shaderProgramHandle, out programInfoLog);
+		//        Debug.WriteLine(programInfoLog);
+		//        OpenTKHelper.Assert();
 
-				foreach (var param in this.shaderParams)
-				{
-					param.Location = GL.GetUniformLocation(this.shaderProgramHandle, param.ParamName);
-					OpenTKHelper.Assert();
-				}
-			}
+		//        foreach (var param in this.shaderParams)
+		//        {
+		//            param.Location = GL.GetUniformLocation(this.shaderProgramHandle, param.ParamName);
+		//            OpenTKHelper.Assert();
+		//        }
+		//    }
 
-			GL.UseProgram(this.shaderProgramHandle);
-			OpenTKHelper.Assert();
+		//    GL.UseProgram(this.shaderProgramHandle);
+		//    OpenTKHelper.Assert();
 
-			foreach (var param in this.shaderParams)
-			{
-				param.ApplyOpenGL(this.shaderProgramHandle);
-			}
-		}
+		//    foreach (var param in this.shaderParams)
+		//    {
+		//        param.ApplyOpenGL(this.shaderProgramHandle);
+		//    }
+		//}
 
 		#endregion
 
@@ -176,11 +175,15 @@ namespace Toe.Utils.Marmalade.IwGx
 			this.DisposeOpenGLHandlers();
 		}
 
-		private string AdaptSource(string src)
+		public static string AdaptSource(string src)
 		{
 			src = src.Replace(" highp ", " ");
 			src = src.Replace(" mediump ", " ");
 			src = src.Replace(" lowp ", " ");
+
+			// void performAlphaTest(lowp float val)
+			src = src.Replace("(lowp ", "( ");
+
 			src = src.Replace("\thighp ", " ");
 			src = src.Replace("\tmediump ", " ");
 			src = src.Replace("\tlowp ", " ");

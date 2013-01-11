@@ -2,6 +2,7 @@ using System.Windows.Forms;
 
 using Toe.Editors.Interfaces;
 using Toe.Editors.Interfaces.Bindings;
+using Toe.Marmalade.IwGx;
 using Toe.Utils.Marmalade.IwGx;
 
 namespace Toe.Editors.Marmalade
