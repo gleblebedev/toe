@@ -219,6 +219,10 @@ namespace Toe.Marmalade.IwGx
 		/// </summary>
 		public int inPipelineConfig;
 
+		public int inSpecular;
 
+		public int inMaterialSpecular;
+
+		public int inSpecularHalfVec;
 	}
 }

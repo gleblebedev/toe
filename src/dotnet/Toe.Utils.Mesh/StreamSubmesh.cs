@@ -25,7 +25,11 @@ namespace Toe.Utils.Mesh
 		{
 			this.mesh = mesh;
 		}
-
+		public object RenderData
+		{
+			get;
+			set;
+		}
 		private readonly List<StreamSubmeshIndexes> indices = new List<StreamSubmeshIndexes>();
 
 		public List<StreamSubmeshIndexes> Indices
@@ -60,72 +64,21 @@ namespace Toe.Utils.Mesh
 		/// A <see cref="T:System.Collections.Generic.IEnumerator`1"/> that can be used to iterate through the collection.
 		/// </returns>
 		/// <filterpriority>1</filterpriority>
-		public override IEnumerator<Vertex> GetEnumerator()
+		public override IEnumerator<int> GetEnumerator()
 		{
+			int j=0;
 			foreach (var i in Indices)
 			{
-				Vertex v = new Vertex();
-				if (IsVertexStreamAvailable) v.Position = mesh.Vertices[i.Vertex];
-				if (IsNormalStreamAvailable) v.Normal = mesh.Normals[i.Normal];
-				if (IsColorStreamAvailable) v.Color = mesh.Colors[i.Color];
-				if (IsUV0StreamAvailable) v.UV0 = mesh.UV[0][i.Color];
-				yield return v;
+				yield return j;
+				++j;
 			}
 		}
 
-		public override bool IsVertexStreamAvailable
+		public override int Count
 		{
 			get
 			{
-				return mesh.IsVertexStreamAvailable;
-			}
-		}
-
-		public override bool IsNormalStreamAvailable
-		{
-			get
-			{
-				return mesh.IsNormalStreamAvailable;
-			}
-		}
-
-		public override bool IsBinormalStreamAvailable
-		{
-			get
-			{
-				return mesh.IsBinormalStreamAvailable;
-			}
-		}
-
-		public override bool IsTangentStreamAvailable
-		{
-			get
-			{
-				return mesh.IsTangentStreamAvailable;
-			}
-		}
-
-		public override bool IsColorStreamAvailable
-		{
-			get
-			{
-				return mesh.IsColorStreamAvailable;
-			}
-		}
-
-		public override bool IsUV0StreamAvailable
-		{
-			get
-			{
-				return mesh.IsUV0StreamAvailable;
-			}
-		}
-
-		public override bool IsUV1StreamAvailable
-		{
-			get
-			{
-				return mesh.IsUV1StreamAvailable;
+				return Indices.Count;
 			}
 		}
 

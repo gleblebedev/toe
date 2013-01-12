@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 
 using OpenTK;
 
@@ -17,7 +19,11 @@ namespace Toe.Utils.Mesh
 		#region Constants and Fields
 
 		public MeshStream<VertexWeight> weights = new MeshStream<VertexWeight>();
-
+		public object RenderData
+		{
+			get;
+			set;
+		}
 		private readonly BoneCollection bones = new BoneCollection();
 
 		private readonly MeshStream<Color> colors = new MeshStream<Color>();
@@ -177,47 +183,86 @@ namespace Toe.Utils.Mesh
 
 		#endregion
 
-		#region Implementation of IEnumerable
-
-		/// <summary>
-		/// Returns an enumerator that iterates through the collection.
-		/// </summary>
-		/// <returns>
-		/// A <see cref="T:System.Collections.Generic.IEnumerator`1"/> that can be used to iterate through the collection.
-		/// </returns>
-		/// <filterpriority>1</filterpriority>
-		public IEnumerator<Vertex> GetEnumerator()
-		{
-			foreach (var s in submeshes)
-			{
-				foreach (Vertex vertex in s)
-				{
-					yield return vertex;
-				}
-			}
-		}
-
-		/// <summary>
-		/// Returns an enumerator that iterates through a collection.
-		/// </summary>
-		/// <returns>
-		/// An <see cref="T:System.Collections.IEnumerator"/> object that can be used to iterate through the collection.
-		/// </returns>
-		/// <filterpriority>2</filterpriority>
-		IEnumerator IEnumerable.GetEnumerator()
-		{
-			return this.GetEnumerator();
-		}
-
-		#endregion
+		
 
 		#region Implementation of IVertexSource
+
+		public int Count
+		{
+			get
+			{
+				return this.submeshes.Sum(submesh => submesh.Count);
+			}
+		}
 
 		public bool IsVertexStreamAvailable
 		{
 			get
 			{
 				return vertices != null && vertices.Count > 0;
+			}
+		}
+
+		public void VisitVertices(Vector3VisitorCallback callback)
+		{
+			foreach (StreamSubmesh submesh in submeshes)
+			{
+				foreach (var index in submesh.Indices)
+				{
+					var v = vertices[index.Vertex];
+					callback(ref v);
+				}
+			}
+		}
+
+		public void VisitNormals(Vector3VisitorCallback callback)
+		{
+			foreach (StreamSubmesh submesh in submeshes)
+			{
+				foreach (var index in submesh.Indices)
+				{
+					var v = normals[index.Vertex];
+					callback(ref v);
+				}
+			}
+		}
+
+		public void VisitColors(ColorVisitorCallback callback)
+		{
+			foreach (StreamSubmesh submesh in submeshes)
+			{
+				foreach (var index in submesh.Indices)
+				{
+					var v = colors[index.Vertex];
+					callback(ref v);
+				}
+			}
+		}
+
+		public void VisitUV(int stage, Vector3VisitorCallback callback)
+		{
+			var uvstream = uv[stage];
+			if (stage==0)
+			{
+				foreach (StreamSubmesh submesh in submeshes)
+				{
+					foreach (var index in submesh.Indices)
+					{
+						var v = uvstream[index.UV0];
+						callback(ref v);
+					}
+				}
+			}
+			else
+			{
+				foreach (StreamSubmesh submesh in submeshes)
+				{
+					foreach (var index in submesh.Indices)
+					{
+						var v = uvstream[index.UV1];
+						callback(ref v);
+					}
+				}
 			}
 		}
 
@@ -269,14 +314,6 @@ namespace Toe.Utils.Mesh
 			}
 		}
 
-		public VertexSourceType VertexSourceType
-		{
-			get
-			{
-				if (submeshes.Count > 0) return submeshes[0].VertexSourceType;
-				return VertexSourceType.TrianleList;
-			}
-		}
 
 		#endregion
 	}

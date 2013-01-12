@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 
 using OpenTK;
 
@@ -9,7 +11,7 @@ using Toe.Utils.Mesh;
 
 namespace Toe.Marmalade.IwGraphics
 {
-	public class Mesh : Managed, IVertexSource
+	public class Mesh : Managed, IVertexStreamSource
 	{
 		public static readonly uint TypeHash = Hash.Get("CMesh");
 
@@ -159,47 +161,134 @@ namespace Toe.Marmalade.IwGraphics
 			
 		}
 
-		#region Implementation of IEnumerable
-
-		/// <summary>
-		/// Returns an enumerator that iterates through the collection.
-		/// </summary>
-		/// <returns>
-		/// A <see cref="T:System.Collections.Generic.IEnumerator`1"/> that can be used to iterate through the collection.
-		/// </returns>
-		/// <filterpriority>1</filterpriority>
-		public IEnumerator<Vertex> GetEnumerator()
-		{
-			foreach (var surface in surfaces)
-			{
-				foreach (var v in surface)
-				{
-					yield return v;
-				}
-			}
-		}
-
-		/// <summary>
-		/// Returns an enumerator that iterates through a collection.
-		/// </summary>
-		/// <returns>
-		/// An <see cref="T:System.Collections.IEnumerator"/> object that can be used to iterate through the collection.
-		/// </returns>
-		/// <filterpriority>2</filterpriority>
-		IEnumerator IEnumerable.GetEnumerator()
-		{
-			return this.GetEnumerator();
-		}
-
-		#endregion
 
 		#region Implementation of IVertexSource
+
+		public int Count
+		{
+			get
+			{
+				return this.surfaces.Sum(submesh => submesh.Count);
+			}
+		}
 
 		public bool IsVertexStreamAvailable
 		{
 			get
 			{
 				return vertices != null && vertices.Count > 0;
+			}
+		}
+
+		public void VisitVertices(Vector3VisitorCallback callback)
+		{
+			foreach (var surface in surfaces)
+			{
+				var gl = surface as ModelBlockGLPrimBase;
+				if (gl != null)
+				{
+					foreach (var i in gl.Indices)
+					{
+						var v = vertices[i];
+						callback(ref v);
+					}
+				}
+				else
+				{
+					var prim = surface as ModelBlockPrimBase;
+					if (prim != null)
+					{
+						foreach (var i in prim.Indices)
+						{
+							var v = vertices[i.Vertex];
+							callback(ref v);
+						}
+					}
+				}
+			}
+		}
+
+		public void VisitNormals(Vector3VisitorCallback callback)
+		{
+			foreach (var surface in surfaces)
+			{
+				var gl = surface as ModelBlockGLPrimBase;
+				if (gl != null)
+				{
+					foreach (var i in gl.Indices)
+					{
+						var v = normals[i];
+						callback(ref v);
+					}
+				}
+				else
+				{
+					var prim = surface as ModelBlockPrimBase;
+					if (prim != null)
+					{
+						foreach (var i in prim.Indices)
+						{
+							var v = normals[i.Normal];
+							callback(ref v);
+						}
+					}
+				}
+			}
+		}
+
+		public void VisitColors(ColorVisitorCallback callback)
+		{
+			foreach (var surface in surfaces)
+			{
+				var gl = surface as ModelBlockGLPrimBase;
+				if (gl != null)
+				{
+					foreach (var i in gl.Indices)
+					{
+						var v = colors[i];
+						callback(ref v);
+					}
+				}
+				else
+				{
+					var prim = surface as ModelBlockPrimBase;
+					if (prim != null)
+					{
+						foreach (var i in prim.Indices)
+						{
+							var v = colors[i.Color];
+							callback(ref v);
+						}
+					}
+				}
+			}
+		}
+
+		public void VisitUV(int stage, Vector3VisitorCallback callback)
+		{
+			foreach (var surface in surfaces)
+			{
+				var gl = surface as ModelBlockGLPrimBase;
+				if (gl != null)
+				{
+					foreach (var i in gl.Indices)
+					{
+						var v = new Vector3(uv0[i]);
+						callback(ref v);
+					}
+				}
+				else
+				{
+					var prim = surface as ModelBlockPrimBase;
+					if (prim != null)
+					{
+						foreach (var i in prim.Indices)
+						{
+							var v = new Vector3(uv0[i.UV0]);
+							callback(ref v);
+						}
+					}
+				}
 			}
 		}
 

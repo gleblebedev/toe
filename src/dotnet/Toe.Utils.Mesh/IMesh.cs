@@ -8,7 +8,7 @@ namespace Toe.Utils.Mesh
 	/// Usualy the implemenation of this interface is not efficient. 
 	/// Please use it in content pipeline only! It is NOT recommended to use it in production.
 	/// </summary>
-	public interface IMesh : ISceneItem, IVertexSource
+	public interface IMesh : ISceneItem, IVertexStreamSource
 	{
 		IList<ISubMesh> Submeshes { get; }
 
@@ -16,8 +16,6 @@ namespace Toe.Utils.Mesh
 
 		string Name { get; }
 
-		uint NameHash { get; }
-
-
+		object RenderData { get; set; }
 	}
 }

@@ -1,13 +1,27 @@
+using System;
 using System.Collections.Generic;
+using System.Drawing;
+
+using OpenTK;
 
 namespace Toe.Utils.Mesh
 {
-	public interface IVertexSource: IEnumerable<Vertex>
+	public delegate void Vector3VisitorCallback(ref Vector3 vec);
+	public delegate void ColorVisitorCallback(ref Color vec);
+	public interface IVertexStreamSource
 	{
+
+		int Count { get; }
 		bool IsVertexStreamAvailable
 		{
 			get;
 		}
+
+		void VisitVertices(Vector3VisitorCallback callback);
+		void VisitNormals(Vector3VisitorCallback callback);
+		void VisitColors(ColorVisitorCallback callback);
+		void VisitUV(int stage, Vector3VisitorCallback callback);
+
 		bool IsNormalStreamAvailable
 		{
 			get;
@@ -32,7 +46,11 @@ namespace Toe.Utils.Mesh
 		{
 			get;
 		}
+	}
 
+	public interface IVertexIndexSource: IEnumerable<int>
+	{
+		int Count { get; }
 		VertexSourceType VertexSourceType { get; }
 	}
 	public enum VertexSourceType

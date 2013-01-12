@@ -15,7 +15,7 @@ namespace Toe.Utils.Mesh
 	/// Vertext, compatible with Marmalade SDK limitations.
 	/// Each model vertex can have up to 4 weights.
 	/// </summary>
-	public class Vertex : IEquatable<Vertex>
+	public struct Vertex : IEquatable<Vertex>
 	{
 		#region Public Properties
 

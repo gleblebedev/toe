@@ -546,6 +546,13 @@ void main(void)
 				OpenTKHelper.Assert();
 				p.inPipelineConfig = GL.GetUniformLocation(p.ProgramId, "inPipelineConfig");
 				OpenTKHelper.Assert();
+
+				p.inSpecular = GL.GetUniformLocation(p.ProgramId, "inSpecular");
+				OpenTKHelper.Assert();
+				p.inMaterialSpecular = GL.GetUniformLocation(p.ProgramId, "inMaterialSpecular");
+				OpenTKHelper.Assert();
+				p.inSpecularHalfVec = GL.GetUniformLocation(p.ProgramId, "inSpecularHalfVec");
+				OpenTKHelper.Assert();
 			}
 			return p;
 		}

@@ -19,27 +19,13 @@ namespace Toe.Marmalade.IwGraphics
 			}
 		}
 
-		public override IEnumerator<Vertex> GetEnumerator()
+		public override IEnumerator<int> GetEnumerator()
 		{
+			int i = 0;
 			foreach (var index in indices)
 			{
-				var vertex = new Vertex();
-				if (Mesh.IsVertexStreamAvailable) vertex.Position = Mesh.Vertices[index.Vertex];
-				if (Mesh.IsNormalStreamAvailable) vertex.Normal = Mesh.Normals[index.Normal];
-				if (Mesh.IsColorStreamAvailable) vertex.Color = Mesh.Colors[index.Color];
-				if (Mesh.IsUV0StreamAvailable)
-				{
-					Vector2 vector2 = Mesh.UV0[index.UV0];
-					vertex.UV0 = new Vector3(vector2.X, vector2.Y, 0);
-				}
-				if (Mesh.IsUV1StreamAvailable)
-				{
-					Vector2 vector2 = Mesh.UV0[index.UV1];
-					vertex.UV1 = new Vector3(vector2.X, vector2.Y, 0);
-				}
-				//if (Mesh.IsTangentStreamAvailable) vertex.Tangent = Mesh.Tangents[index.Tangent];
-				//if (Mesh.IsBinormalStreamAvailable) vertex.Binormal = Mesh.Binormals[index.Binormal];
-				yield return vertex;
+				yield return i;
+				++i;
 			}
 		}
 

@@ -34,6 +34,7 @@ namespace Toe.Utils.Mesh
 
 			Color color = Color.FromArgb(255, 255, 255, 255);
 
+			// Quad 0 TOP
 			vertex = new Vertex { Position = p[2], Color = color, Normal = n[5], UV0 = uv[0], UV1 = uv[0] };
 			s.Add(ref vertex);
 			vertex = new Vertex { Position = p[3], Color = color, Normal = n[7], UV0 = uv[1], UV1 = uv[1] };
@@ -43,59 +44,55 @@ namespace Toe.Utils.Mesh
 			vertex = new Vertex { Position = p[0], Color = color, Normal = n[4], UV0 = uv[3], UV1 = uv[3] };
 			s.Add(ref vertex);
 
-			//vertex = new Vertex { Position = p[2], Color = color, Normal = n[5], UV0 = uv[0], UV1 = uv[0] };
-			//s.Add(ref vertex);
-			//vertex = new Vertex { Position = p[3], Color = color, Normal = n[7], UV0 = uv[1], UV1 = uv[1] };
-			//s.Add(ref vertex);
-			//vertex = new Vertex { Position = p[1], Color = color, Normal = n[6], UV0 = uv[2], UV1 = uv[2] };
-			//s.Add(ref vertex);
-			//vertex = new Vertex { Position = p[0], Color = color, Normal = n[4], UV0 = uv[3], UV1 = uv[3] };
-			//s.Add(ref vertex);
+			// Quad 1
+			vertex = new Vertex { Position = p[4], Color = color, Normal = n[1], UV0 = uv[0], UV1 = uv[0] };
+			s.Add(ref vertex);
+			vertex = new Vertex { Position = p[5], Color = color, Normal = n[3], UV0 = uv[1], UV1 = uv[1] };
+			s.Add(ref vertex);
+			vertex = new Vertex { Position = p[3], Color = color, Normal = n[7], UV0 = uv[2], UV1 = uv[2] };
+			s.Add(ref vertex);
+			vertex = new Vertex { Position = p[2], Color = color, Normal = n[5], UV0 = uv[3], UV1 = uv[3] };
+			s.Add(ref vertex);
 
-			//vertex = new Vertex { Position = p[4], Color = color, Normal = n[1], UV0 = uv[0], UV1 = uv[0] };
-			//s.Add(ref vertex);
-			//vertex = new Vertex { Position = p[5], Color = color, Normal = n[3], UV0 = uv[1], UV1 = uv[1] };
-			//s.Add(ref vertex);
-			//vertex = new Vertex { Position = p[3], Color = color, Normal = n[7], UV0 = uv[2], UV1 = uv[2] };
-			//s.Add(ref vertex);
-			//vertex = new Vertex { Position = p[2], Color = color, Normal = n[5], UV0 = uv[3], UV1 = uv[3] };
-			//s.Add(ref vertex);
+			// Quad 2
+			vertex = new Vertex { Position = p[6], Color = color, Normal = n[0], UV0 = uv[0], UV1 = uv[0] };
+			s.Add(ref vertex);
+			vertex = new Vertex { Position = p[7], Color = color, Normal = n[2], UV0 = uv[1], UV1 = uv[1] };
+			s.Add(ref vertex);
+			vertex = new Vertex { Position = p[5], Color = color, Normal = n[3], UV0 = uv[2], UV1 = uv[2] };
+			s.Add(ref vertex);
+			vertex = new Vertex { Position = p[4], Color = color, Normal = n[1], UV0 = uv[3], UV1 = uv[3] };
+			s.Add(ref vertex);
 
-			//vertex = new Vertex { Position = p[6], Color = color, Normal = n[0], UV0 = uv[0], UV1 = uv[0] };
-			//s.Add(ref vertex);
-			//vertex = new Vertex { Position = p[7], Color = color, Normal = n[2], UV0 = uv[1], UV1 = uv[1] };
-			//s.Add(ref vertex);
-			//vertex = new Vertex { Position = p[5], Color = color, Normal = n[3], UV0 = uv[2], UV1 = uv[2] };
-			//s.Add(ref vertex);
-			//vertex = new Vertex { Position = p[4], Color = color, Normal = n[1], UV0 = uv[3], UV1 = uv[3] };
-			//s.Add(ref vertex);
+			// Quad 3
+			vertex = new Vertex { Position = p[0], Color = color, Normal = n[4], UV0 = uv[0], UV1 = uv[0] };
+			s.Add(ref vertex);
+			vertex = new Vertex { Position = p[1], Color = color, Normal = n[6], UV0 = uv[1], UV1 = uv[1] };
+			s.Add(ref vertex);
+			vertex = new Vertex { Position = p[7], Color = color, Normal = n[2], UV0 = uv[2], UV1 = uv[2] };
+			s.Add(ref vertex);
+			vertex = new Vertex { Position = p[6], Color = color, Normal = n[0], UV0 = uv[3], UV1 = uv[3] };
+			s.Add(ref vertex);
 
-			//vertex = new Vertex { Position = p[0], Color = color, Normal = n[4], UV0 = uv[0], UV1 = uv[0] };
-			//s.Add(ref vertex);
-			//vertex = new Vertex { Position = p[1], Color = color, Normal = n[6], UV0 = uv[1], UV1 = uv[1] };
-			//s.Add(ref vertex);
-			//vertex = new Vertex { Position = p[7], Color = color, Normal = n[2], UV0 = uv[2], UV1 = uv[2] };
-			//s.Add(ref vertex);
-			//vertex = new Vertex { Position = p[6], Color = color, Normal = n[0], UV0 = uv[3], UV1 = uv[3] };
-			//s.Add(ref vertex);
+			// Quad 4
+			vertex = new Vertex { Position = p[3], Color = color, Normal = n[7], UV0 = uv[0], UV1 = uv[0] };
+			s.Add(ref vertex);
+			vertex = new Vertex { Position = p[5], Color = color, Normal = n[3], UV0 = uv[1], UV1 = uv[1] };
+			s.Add(ref vertex);
+			vertex = new Vertex { Position = p[7], Color = color, Normal = n[2], UV0 = uv[2], UV1 = uv[2] };
+			s.Add(ref vertex);
+			vertex = new Vertex { Position = p[1], Color = color, Normal = n[6], UV0 = uv[3], UV1 = uv[3] };
+			s.Add(ref vertex);
 
-			//vertex = new Vertex { Position = p[3], Color = color, Normal = n[7], UV0 = uv[0], UV1 = uv[0] };
-			//s.Add(ref vertex);
-			//vertex = new Vertex { Position = p[5], Color = color, Normal = n[3], UV0 = uv[1], UV1 = uv[1] };
-			//s.Add(ref vertex);
-			//vertex = new Vertex { Position = p[7], Color = color, Normal = n[2], UV0 = uv[2], UV1 = uv[2] };
-			//s.Add(ref vertex);
-			//vertex = new Vertex { Position = p[1], Color = color, Normal = n[6], UV0 = uv[3], UV1 = uv[3] };
-			//s.Add(ref vertex);
-
-			//vertex = new Vertex { Position = p[4], Color = color, Normal = n[1], UV0 = uv[0], UV1 = uv[0] };
-			//s.Add(ref vertex);
-			//vertex = new Vertex { Position = p[2], Color = color, Normal = n[5], UV0 = uv[1], UV1 = uv[1] };
-			//s.Add(ref vertex);
-			//vertex = new Vertex { Position = p[0], Color = color, Normal = n[4], UV0 = uv[2], UV1 = uv[2] };
-			//s.Add(ref vertex);
-			//vertex = new Vertex { Position = p[6], Color = color, Normal = n[0], UV0 = uv[3], UV1 = uv[3] };
-			//s.Add(ref vertex);
+			// Quad 5
+			vertex = new Vertex { Position = p[4], Color = color, Normal = n[1], UV0 = uv[0], UV1 = uv[0] };
+			s.Add(ref vertex);
+			vertex = new Vertex { Position = p[2], Color = color, Normal = n[5], UV0 = uv[1], UV1 = uv[1] };
+			s.Add(ref vertex);
+			vertex = new Vertex { Position = p[0], Color = color, Normal = n[4], UV0 = uv[2], UV1 = uv[2] };
+			s.Add(ref vertex);
+			vertex = new Vertex { Position = p[6], Color = color, Normal = n[0], UV0 = uv[3], UV1 = uv[3] };
+			s.Add(ref vertex);
 
 			return res;
 		}

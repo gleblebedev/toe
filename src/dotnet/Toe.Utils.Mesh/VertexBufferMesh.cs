@@ -28,7 +28,10 @@ namespace Toe.Utils.Mesh
 
 		public string Name { get; set; }
 
-		public uint NameHash { get; set; }
+		public object RenderData
+		{
+			get; set;
+		}
 
 		public IList<ISubMesh> Submeshes
 		{
@@ -84,35 +87,16 @@ namespace Toe.Utils.Mesh
 		#endregion
 
 
-		#region Implementation of IEnumerable
-
-		/// <summary>
-		/// Returns an enumerator that iterates through the collection.
-		/// </summary>
-		/// <returns>
-		/// A <see cref="T:System.Collections.Generic.IEnumerator`1"/> that can be used to iterate through the collection.
-		/// </returns>
-		/// <filterpriority>1</filterpriority>
-		public IEnumerator<Vertex> GetEnumerator()
-		{
-			return this.submeshes.SelectMany(submesh => submesh).GetEnumerator();
-		}
-
-		/// <summary>
-		/// Returns an enumerator that iterates through a collection.
-		/// </summary>
-		/// <returns>
-		/// An <see cref="T:System.Collections.IEnumerator"/> object that can be used to iterate through the collection.
-		/// </returns>
-		/// <filterpriority>2</filterpriority>
-		IEnumerator IEnumerable.GetEnumerator()
-		{
-			return this.GetEnumerator();
-		}
-
-		#endregion
 
 		#region Implementation of IVertexSource
+
+		public int Count
+		{
+			get
+			{
+				return vertexBuffer.Count;
+			}
+		}
 
 		public bool IsVertexStreamAvailable
 		{
@@ -122,51 +106,134 @@ namespace Toe.Utils.Mesh
 			}
 		}
 
+		public void VisitVertices(Vector3VisitorCallback callback)
+		{
+			foreach (var vertex in VertexBuffer)
+			{
+				var v = vertex.Position;
+				callback(ref v);
+			}
+		}
+
+		public void VisitNormals(Vector3VisitorCallback callback)
+		{
+			foreach (var vertex in VertexBuffer)
+			{
+				var v = vertex.Normal;
+				callback(ref v);
+			}
+		}
+
+		public void VisitColors(ColorVisitorCallback callback)
+		{
+			foreach (var vertex in VertexBuffer)
+			{
+				var v = vertex.Color;
+				callback(ref v);
+			}
+		}
+
+		public void VisitUV(int stage, Vector3VisitorCallback callback)
+		{
+			if (stage == 0)
+			{
+				foreach (var vertex in VertexBuffer)
+				{
+					var v = vertex.UV0;
+					callback(ref v);
+				}
+			}
+			else
+			{
+				foreach (var vertex in VertexBuffer)
+				{
+					var v = vertex.UV1;
+					callback(ref v);
+				}
+			}
+		}
+
+		private bool isNormalStreamAvailable = true;
+
 		public bool IsNormalStreamAvailable
 		{
 			get
 			{
-				return true;
+				return this.isNormalStreamAvailable;
+			}
+			set
+			{
+				this.isNormalStreamAvailable = value;
 			}
 		}
+
+		private bool isBinormalStreamAvailable = true;
 
 		public bool IsBinormalStreamAvailable
 		{
 			get
 			{
-				return true;
+				return this.isBinormalStreamAvailable;
+			}
+			set
+			{
+				this.isBinormalStreamAvailable = value;
 			}
 		}
+
+		private bool isTangentStreamAvailable = true;
 
 		public bool IsTangentStreamAvailable
 		{
 			get
 			{
-				return true;
+				return this.isTangentStreamAvailable;
+			}
+			set
+			{
+				this.isTangentStreamAvailable = value;
 			}
 		}
+
+		private bool isColorStreamAvailable = true;
 
 		public bool IsColorStreamAvailable
 		{
 			get
 			{
-				return true;
+				return this.isColorStreamAvailable;
+			}
+			set
+			{
+				this.isColorStreamAvailable = value;
 			}
 		}
+
+		private bool isUV0StreamAvailable = true;
 
 		public bool IsUV0StreamAvailable
 		{
 			get
 			{
-				return true;
+				return this.isUV0StreamAvailable;
+			}
+			set
+			{
+				this.isUV0StreamAvailable = value;
 			}
 		}
+
+		private bool isUV1StreamAvailable = true;
 
 		public bool IsUV1StreamAvailable
 		{
 			get
 			{
-				return true;
+				return this.isUV1StreamAvailable;
+			}
+			set
+			{
+				this.isUV1StreamAvailable = value;
 			}
 		}
 

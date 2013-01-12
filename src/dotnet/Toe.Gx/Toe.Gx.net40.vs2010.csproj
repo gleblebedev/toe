@@ -58,6 +58,8 @@
     <Compile Include="ToeGraphicsContext.cs" />
     <Compile Include="OpenTKHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="VertexBufferRenderData.cs" />
+    <Compile Include="VertexIndicesRenderData.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Toe.snk" />

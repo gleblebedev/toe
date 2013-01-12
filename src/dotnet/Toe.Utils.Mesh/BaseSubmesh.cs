@@ -22,7 +22,11 @@ namespace Toe.Utils.Mesh
 				}
 			}
 		}
-
+		public object RenderData
+		{
+			get;
+			set;
+		}
 		private string name;
 
 		public string Name
@@ -49,7 +53,7 @@ namespace Toe.Utils.Mesh
 		/// A <see cref="T:System.Collections.Generic.IEnumerator`1"/> that can be used to iterate through the collection.
 		/// </returns>
 		/// <filterpriority>1</filterpriority>
-		public abstract IEnumerator<Vertex> GetEnumerator();
+		public abstract IEnumerator<int> GetEnumerator();
 
 		/// <summary>
 		/// Returns an enumerator that iterates through a collection.
@@ -67,21 +71,9 @@ namespace Toe.Utils.Mesh
 
 		#region Implementation of IVertexSource
 
-		public abstract bool IsVertexStreamAvailable { get; }
-
-		public abstract bool IsNormalStreamAvailable { get; }
-
-		public abstract bool IsBinormalStreamAvailable { get; }
-
-		public abstract bool IsTangentStreamAvailable { get; }
-
-		public abstract bool IsColorStreamAvailable { get; }
-
-		public abstract bool IsUV0StreamAvailable { get; }
-
-		public abstract bool IsUV1StreamAvailable { get; }
-
 		VertexSourceType vertexSourceType = VertexSourceType.TrianleList;
+
+		public abstract int Count { get; }
 
 		public virtual VertexSourceType VertexSourceType
 		{

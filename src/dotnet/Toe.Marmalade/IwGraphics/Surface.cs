@@ -6,7 +6,7 @@ using Toe.Utils.Mesh;
 
 namespace Toe.Marmalade.IwGraphics
 {
-	public class Surface : Managed, IVertexSource
+	public class Surface : Managed, IVertexIndexSource
 	{
 		public static readonly uint TypeHash = Hash.Get("CSurface");
 
@@ -57,7 +57,7 @@ namespace Toe.Marmalade.IwGraphics
 		/// A <see cref="T:System.Collections.Generic.IEnumerator`1"/> that can be used to iterate through the collection.
 		/// </returns>
 		/// <filterpriority>1</filterpriority>
-		public virtual IEnumerator<Vertex> GetEnumerator()
+		public virtual IEnumerator<int> GetEnumerator()
 		{
 			throw new System.NotImplementedException();
 		}
@@ -78,59 +78,11 @@ namespace Toe.Marmalade.IwGraphics
 
 		#region Implementation of IVertexSource
 
-		public bool IsVertexStreamAvailable
+		public virtual int Count
 		{
 			get
 			{
-				return mesh.IsVertexStreamAvailable;
-			}
-		}
-
-		public bool IsNormalStreamAvailable
-		{
-			get
-			{
-				return mesh.IsNormalStreamAvailable;
-			}
-		}
-
-		public bool IsBinormalStreamAvailable
-		{
-			get
-			{
-				return mesh.IsBinormalStreamAvailable;
-			}
-		}
-
-		public bool IsTangentStreamAvailable
-		{
-			get
-			{
-				return mesh.IsTangentStreamAvailable;
-			}
-		}
-
-		public bool IsColorStreamAvailable
-		{
-			get
-			{
-				return mesh.IsColorStreamAvailable;
-			}
-		}
-
-		public bool IsUV0StreamAvailable
-		{
-			get
-			{
-				return mesh.IsUV0StreamAvailable;
-			}
-		}
-
-		public bool IsUV1StreamAvailable
-		{
-			get
-			{
-				return mesh.IsUV1StreamAvailable;
+				throw new System.NotImplementedException();
 			}
 		}
 

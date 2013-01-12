@@ -24,7 +24,11 @@ namespace Toe.Utils.Mesh
 		{
 			this.Add(this.mesh.VertexBuffer.Add(v));
 		}
-
+		public object RenderData
+		{
+			get;
+			set;
+		}
 		#region Overrides of BaseSubmesh
 
 		/// <summary>
@@ -34,69 +38,22 @@ namespace Toe.Utils.Mesh
 		/// A <see cref="T:System.Collections.Generic.IEnumerator`1"/> that can be used to iterate through the collection.
 		/// </returns>
 		/// <filterpriority>1</filterpriority>
-		public override IEnumerator<Vertex> GetEnumerator()
+		public override IEnumerator<int> GetEnumerator()
 		{
 			foreach (var i in indices)
 			{
-				yield return this.mesh.VertexBuffer[i];
+				yield return i;
 			}
 		}
 
-		public override bool IsVertexStreamAvailable
+		public override int Count
 		{
 			get
 			{
-				return mesh.IsVertexStreamAvailable;
+				return indices.Count;
 			}
 		}
 
-		public override bool IsNormalStreamAvailable
-		{
-			get
-			{
-				return mesh.IsNormalStreamAvailable;
-			}
-		}
-
-		public override bool IsBinormalStreamAvailable
-		{
-			get
-			{
-				return mesh.IsBinormalStreamAvailable;
-			}
-		}
-
-		public override bool IsTangentStreamAvailable
-		{
-			get
-			{
-				return mesh.IsTangentStreamAvailable;
-			}
-		}
-
-		public override bool IsColorStreamAvailable
-		{
-			get
-			{
-				return mesh.IsColorStreamAvailable;
-			}
-		}
-
-		public override bool IsUV0StreamAvailable
-		{
-			get
-			{
-				return mesh.IsUV0StreamAvailable;
-			}
-		}
-
-		public override bool IsUV1StreamAvailable
-		{
-			get
-			{
-				return mesh.IsUV1StreamAvailable;
-			}
-		}
 
 		#endregion
 	}

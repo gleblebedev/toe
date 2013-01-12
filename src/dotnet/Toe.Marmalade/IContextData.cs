@@ -2,8 +2,8 @@ using System;
 
 namespace Toe.Marmalade
 {
-	public interface IContextData: IDisposable
+	public interface IContextData : IDisposable
 	{
-		
+
 	}
 }

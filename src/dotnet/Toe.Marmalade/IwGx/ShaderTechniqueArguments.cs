@@ -173,7 +173,13 @@ public Vector2 inDeviceSize = new Vector2(1,1);
 /// Transformation from window space to IwGx screen space. This can be useful for effects on rotated displays. If IwGx is rendering rotated then window coordinates are not orientated the same way as the 'logical' screen. Multiplying gl_FragCoord by this matrix produces a vector with extents 0.0-1.0 which is orientated the same way as the logical screen.  3x3 floating point matrix  Not used  uniform mediump mat3 inDisplayRotScaleMat; 
 		/// </summary>
 public Matrix4 inDisplayRotScaleMat = Matrix4.Identity;
- 
-//int[] inPipelineConfig  2 component vector describing the current pipeline config. If the first element is 1, transform is set to HW, if the second element is 1 lighting is set to HW.  Integer vector  Not used  uniform mediump ivec2 inPipelineConfig;  
+
+		public Vector3 inSpecularHalfVec;
+
+		public Vector4 inSpecular;
+
+		public Vector4 inMaterialSpecular;
+
+		//int[] inPipelineConfig  2 component vector describing the current pipeline config. If the first element is 1, transform is set to HW, if the second element is 1 lighting is set to HW.  Integer vector  Not used  uniform mediump ivec2 inPipelineConfig;  
 	}
 }
