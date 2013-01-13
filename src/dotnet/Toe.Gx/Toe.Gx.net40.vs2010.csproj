@@ -54,6 +54,7 @@
     <Compile Include="DefaultShaders.cs" />
     <Compile Include="DefaultVertexShaderOptions.cs" />
     <Compile Include="LightArgs.cs" />
+    <Compile Include="ShaderContext.cs" />
     <Compile Include="TextureContext.cs" />
     <Compile Include="ToeGraphicsContext.cs" />
     <Compile Include="OpenTKHelper.cs" />

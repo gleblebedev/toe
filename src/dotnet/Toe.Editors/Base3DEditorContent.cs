@@ -66,16 +66,16 @@ namespace Toe.Editors
 				result.M42 = -(top + bottom) * invTB;
 				result.M43 = -(zFar + zNear) * invFN;
 				result.M44 = 1;
-				GL.MatrixMode(MatrixMode.Projection);
-				GL.LoadMatrix(ref result);
+
+				graphicsContext.SetProjection(ref result);
 
 				int w = Math.Min(Math.Min(180, glControl.Width / 2), glControl.Height / 2);
 
-				GL.MatrixMode(MatrixMode.Modelview);
 				var pos = Vector3.Transform(new Vector3(0, 0, 200), camera.Rot);
 				Matrix4 view = Matrix4.Rotate(camera.Rot) * Matrix4.CreateTranslation(pos);
 				view.Invert();
-				GL.LoadMatrix(ref view);
+				graphicsContext.SetView(ref view);
+
 				GL.Viewport(glControl.Width - w, glControl.Height - w, w, w);
 
 				graphicsContext.Render(this.cube);

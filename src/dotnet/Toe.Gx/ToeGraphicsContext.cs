@@ -97,14 +97,18 @@ namespace Toe.Gx
 
 		#endregion
 
+		private bool[] isTextureSet=new bool [4];
+
 		public void SetTexture(int channel, Texture texture)
 		{
 			if (texture == null)
 			{
 				GL.ActiveTexture(TextureUnit.Texture0 + channel);
 				GL.Disable(EnableCap.Texture2D);
+				isTextureSet[channel] = false;
 				return;
 			}
+			isTextureSet[channel] = true;
 			var textureContext = texture.ContextData as TextureContext;
 			if (textureContext == null)
 			{
@@ -210,17 +214,17 @@ namespace Toe.Gx
 				COL_STREAM = mesh.IsColorStreamAvailable,
 				FAST_FOG = false,
 				FOG = false,//!material.NoFog,
-				LIGHT_AMBIENT = light.Enabled,
-				LIGHT_DIFFUSE = light.Enabled && IsNotDisabledColor(light.Diffuse),
-				LIGHT_SPECULAR = light.Enabled && IsNotDisabledColor(light.Specular),
-				LIGHT_EMISSIVE = light.Enabled,
+				LIGHT_AMBIENT = lighting && light.Enabled,
+				LIGHT_DIFFUSE = lighting && light.Enabled && IsNotDisabledColor(light.Diffuse),
+				LIGHT_SPECULAR = lighting && light.Enabled && IsNotDisabledColor(light.Specular),
+				LIGHT_EMISSIVE = lighting && light.Enabled,
 				NORM_STREAM = mesh.IsNormalStreamAvailable,
 				SKIN_MAJOR_BONE = false,
 				SKINWEIGHT_STREAM = false,
 				SKIN_NORMALS = false,
 				TANGENT_STREAM = false,//mesh.IsTangentStreamAvailable,
-				UV0_STREAM = mesh.IsUV0StreamAvailable,
-				UV1_STREAM = mesh.IsUV1StreamAvailable
+				UV0_STREAM = mesh.IsUV0StreamAvailable && isTextureSet[0],
+				UV1_STREAM = mesh.IsUV1StreamAvailable && isTextureSet[1]
 			};
 
 			var fso = new DefaultFragmentShaderOptions()
@@ -228,10 +232,10 @@ namespace Toe.Gx
 				COL_STREAM = mesh.IsColorStreamAvailable,
 				FAST_FOG = false,
 				FOG = false,//!material.NoFog,
-				LIGHT_AMBIENT = light.Enabled,
-				LIGHT_DIFFUSE = light.Enabled && IsNotDisabledColor(light.Diffuse),
-				LIGHT_SPECULAR = light.Enabled && IsNotDisabledColor(light.Specular),
-				LIGHT_EMISSIVE = light.Enabled,
+				LIGHT_AMBIENT = lighting && light.Enabled,
+				LIGHT_DIFFUSE = lighting && light.Enabled && IsNotDisabledColor(light.Diffuse),
+				LIGHT_SPECULAR = lighting && light.Enabled && IsNotDisabledColor(light.Specular),
+				LIGHT_EMISSIVE = lighting && light.Enabled,
 				UV0_STREAM = mesh.IsUV0StreamAvailable,
 				UV1_STREAM = mesh.IsUV1StreamAvailable,
 				ALPHA_BLEND = (int)AlphaMode.DEFAULT,
@@ -239,8 +243,8 @@ namespace Toe.Gx
 				BLEND = (int)BlendMode.MODULATE,
 				EFFECT_PRESET = (int)EffectPreset.DEFAULT,
 				IW_GX_PLATFORM_TEGRA2 = false,
-				TEX0 = false,// !material.Texture0.IsEmpty,
-				TEX1 = false,//!material.Texture1.IsEmpty
+				TEX0 = isTextureSet[0],
+				TEX1 = isTextureSet[1]
 			};
 
 			ShaderTechniqueArgumentIndices p = shaders.GetProgram(new DefaultProgramOptions(vso, fso));
@@ -267,6 +271,17 @@ namespace Toe.Gx
 			this.SetTexture(3, material.Texture1.Resource as Texture);
 			this.ApplyFiltering();
 			GL.ActiveTexture(TextureUnit.Texture0);
+
+			var shaderTechnique = material.ShaderTechnique.Resource as ShaderTechnique;
+			if (shaderTechnique!=null)
+			{
+				var programShader = GetShaderProgram(shaderTechnique);
+				GL.UseProgram(programShader.ProgramId);
+				OpenTKHelper.Assert();
+
+				this.BindShaderArgs(ref programShader);
+				return programShader;
+			}
 
 			var vso = new DefaultVertexShaderOptions
 			{
@@ -314,6 +329,16 @@ namespace Toe.Gx
 			this.BindShaderArgs(ref p);
 
 			return p;
+		}
+
+		private ShaderTechniqueArgumentIndices GetShaderProgram(ShaderTechnique shaderTechnique)
+		{
+			var shaderContext = shaderTechnique.ContextData as ShaderContext;
+			if (shaderContext == null)
+			{
+				shaderTechnique.ContextData = shaderContext = new ShaderContext(shaderTechnique);
+			}
+			return shaderContext.Indices;
 		}
 
 		private bool IsNotDisabledColor(Color ambient)
@@ -515,9 +540,9 @@ namespace Toe.Gx
 			cam.Normalize();
 			args.inSpecularHalfVec = cam;
 			args.inEmissive = material == null ? Vector4.Zero : ColorToVector4(material.ColEmissive);
-			args.inAmbient = light.Enabled?ColorToVector4(light.Ambient):new Vector4(1, 1, 1, 1.0f);
-			args.inDiffuse = light.Enabled ? ColorToVector4(light.Diffuse) : new Vector4(1, 1, 1, 1.0f);
-			args.inSpecular = light.Enabled  ? ColorToVector4(light.Specular) : new Vector4(1, 1, 1, 1.0f);
+			args.inAmbient = (lighting && light.Enabled)?ColorToVector4(light.Ambient):new Vector4(1, 1, 1, 1.0f);
+			args.inDiffuse = (lighting && light.Enabled) ? ColorToVector4(light.Diffuse) : new Vector4(1, 1, 1, 1.0f);
+			args.inSpecular = (lighting && light.Enabled) ? ColorToVector4(light.Specular) : new Vector4(1, 1, 1, 1.0f);
 			args.inMaterialSpecular = material != null ? ColorToVector4(material.SpecularCombined) : new Vector4(0, 0, 0, 0.0f);
 			args.inMaterialAmbient = material == null ? Vector4.Zero : ColorToVector4(material.ColAmbient);
 			args.inMaterialDiffuse = material == null ? Vector4.Zero : ColorToVector4(material.ColDiffuse);
@@ -530,7 +555,7 @@ namespace Toe.Gx
 
 		private void ApplyFiltering()
 		{
-			if (this.material.Filtering)
+			if (this.material == null || this.material.Filtering)
 			{
 				GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
 				GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);

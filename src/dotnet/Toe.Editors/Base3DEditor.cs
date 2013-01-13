@@ -234,7 +234,8 @@ namespace Toe.Editors
 				}
 
 				GL.UseProgram(0);
-				GL.Disable(EnableCap.Lighting);
+
+				graphicsContext.DisableLighting();
 				GL.Disable(EnableCap.DepthTest);
 				GL.Begin(BeginMode.Lines);
 				GL.Color3(1.0f, 0, 0);

@@ -184,7 +184,7 @@ namespace Toe.Utils.Mesh.Ase
 				}
 				if (0 == string.Compare(attr, "*MESH_CVERTLIST", StringComparison.InvariantCultureIgnoreCase))
 				{
-					this.SkipBlock(parser);
+					this.ParseColList(parser, cols);
 					continue;
 				}
 				if (0 == string.Compare(attr, "*MESH_NUMCVFACES", StringComparison.InvariantCultureIgnoreCase))
@@ -208,23 +208,52 @@ namespace Toe.Utils.Mesh.Ase
 			int i = 0;
 			foreach (var aseFace in faces)
 			{
-				submesh.Add(mesh.VertexBuffer.Add(BuildVertex(vertices, aseFace.C, normals, tfaces, tvertices, (tfaces != null && tvertices != null) ? tvertices[tfaces[i].C] : Vector3.Zero)));
-				submesh.Add(mesh.VertexBuffer.Add(BuildVertex(vertices, aseFace.B, normals, tfaces, tvertices, (tfaces != null && tvertices != null) ? tvertices[tfaces[i].B] : Vector3.Zero)));
-				submesh.Add(mesh.VertexBuffer.Add(BuildVertex(vertices, aseFace.A, normals, tfaces, tvertices, (tfaces != null && tvertices != null) ? tvertices[tfaces[i].A] : Vector3.Zero)));
+				submesh.Add(mesh.VertexBuffer.Add(BuildVertex(vertices, aseFace.C, normals, tfaces, cols, tvertices, (tfaces != null && tvertices != null) ? tvertices[tfaces[i].C] : Vector3.Zero)));
+				submesh.Add(mesh.VertexBuffer.Add(BuildVertex(vertices, aseFace.B, normals, tfaces, cols, tvertices, (tfaces != null && tvertices != null) ? tvertices[tfaces[i].B] : Vector3.Zero)));
+				submesh.Add(mesh.VertexBuffer.Add(BuildVertex(vertices, aseFace.A, normals, tfaces, cols, tvertices, (tfaces != null && tvertices != null) ? tvertices[tfaces[i].A] : Vector3.Zero)));
 				++i;
 			}
 		}
 
 		private static Vertex BuildVertex(
-			Vector3[] vertices, int index0, Vector3[] normals, AseTFace[] tfaces, Vector3[] tvertices, Vector3 uv)
+			Vector3[] vertices, int index0, Vector3[] normals, AseTFace[] tfaces, Color[] c, Vector3[] tvertices, Vector3 uv)
 		{
 			Vertex v = new Vertex { Position = vertices[index0] };
 			if (normals != null)
 			{
 				v.Normal = normals[index0];
 			}
+			v.Color = c != null ? c[index0] : Color.FromArgb(255,255,255,255);
 			v.UV0 = new Vector3(uv.X, 1.0f-uv.Y, uv.Z);
 			return v;
+		}
+
+		
+		private void ParseColList(AseParser parser, IList<Color> colors)
+		{
+			parser.Consume("{");
+			for (; ; )
+			{
+				var attr = parser.Consume();
+				if (attr == null || attr == "}") break;
+				if (0 == string.Compare(attr, "*MESH_VERTCOL", StringComparison.InvariantCultureIgnoreCase))
+				{
+					var index = parser.ConsumeInt();
+					var a = parser.ConsumeFloat();
+					var b = parser.ConsumeFloat();
+					var c = parser.ConsumeFloat();
+					colors[index] = Color.FromArgb(255, ClampCol(255.0f * a), ClampCol(255.0f * b), ClampCol(255.0f * c));
+					continue;
+				}
+				parser.UnknownLexemError();
+			}
+		}
+
+		private byte ClampCol(float a)
+		{
+			if (a <= 0) return 0;
+			if (a >= 1) return 255;
+			return (byte)(255.0f * a);
 		}
 
 		private void ParseTFaceList(AseParser parser, IList<AseTFace> faces)

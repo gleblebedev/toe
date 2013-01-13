@@ -356,7 +356,6 @@ namespace Toe.Editors
 
 		public void SetProjection(ToeGraphicsContext graphicsContext)
 		{
-			GL.MatrixMode(MatrixMode.Projection);
 			Matrix4 projection;
 			if (this.ortho)
 			{
@@ -371,14 +370,10 @@ namespace Toe.Editors
 
 			graphicsContext.SetProjection(ref projection);
 
-			
-
-			GL.MatrixMode(MatrixMode.Modelview);
 			Matrix4 view = Matrix4.Rotate(this.rot) * Matrix4.CreateTranslation(this.pos);
 			view.Invert();
 
 			graphicsContext.SetView(ref view);
-			GL.LoadMatrix(ref view);
 		}
 
 		#endregion

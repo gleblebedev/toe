@@ -436,125 +436,131 @@ void main(void)
 				p = new ShaderTechniqueArgumentIndices();
 				int f = this.GenFragmentShader(po.FragmentShaderOptions);
 				int v = this.GenVertexShader(po.VertexShaderOptions);
-				p.ProgramId = GL.CreateProgram();
-				OpenTKHelper.Assert();
+				GenProgram(ref p, v, f);
+
 				this.generatedProgramms[po] = p;
-				GL.AttachShader(p.ProgramId, v);
-				OpenTKHelper.Assert();
-				GL.AttachShader(p.ProgramId, f);
-				OpenTKHelper.Assert();
-				GL.LinkProgram(p.ProgramId);
 
-				string programInfoLog;
-				GL.GetProgramInfoLog(p.ProgramId, out programInfoLog);
-				Debug.WriteLine(programInfoLog);
-				OpenTKHelper.Assert();
-
-				p.inVert = GL.GetAttribLocation(p.ProgramId, "inVert");
-				OpenTKHelper.Assert();
-				p.inUV0 = GL.GetAttribLocation(p.ProgramId, "inUV0");
-				OpenTKHelper.Assert();
-				p.inUV1 = GL.GetAttribLocation(p.ProgramId, "inUV1");
-				OpenTKHelper.Assert();
-				p.inCol = GL.GetAttribLocation(p.ProgramId, "inCol");
-				OpenTKHelper.Assert();
-				p.inNorm = GL.GetAttribLocation(p.ProgramId, "inNorm");
-				OpenTKHelper.Assert();
-				p.inTangent = GL.GetAttribLocation(p.ProgramId, "inTangent");
-				OpenTKHelper.Assert();
-				p.inBiTangent = GL.GetAttribLocation(p.ProgramId, "inBiTangent");
-				OpenTKHelper.Assert();
-				p.inSkinWeights = GL.GetAttribLocation(p.ProgramId, "inSkinWeights");
-				OpenTKHelper.Assert();
-				p.inSkinIndices = GL.GetAttribLocation(p.ProgramId, "inSkinIndices");
-				OpenTKHelper.Assert();
-
-
-				p.inPMVMat = GL.GetUniformLocation(p.ProgramId, "inPMVMat");
-				OpenTKHelper.Assert();
-				p.inMVMat = GL.GetUniformLocation(p.ProgramId, "inMVMat");
-				OpenTKHelper.Assert();
-				p.inMVRotMat = GL.GetUniformLocation(p.ProgramId, "inMVRotMat");
-				OpenTKHelper.Assert();
-				p.inModelRotMat = GL.GetUniformLocation(p.ProgramId, "inModelRotMat");
-				OpenTKHelper.Assert();
-				p.inModelPos = GL.GetUniformLocation(p.ProgramId, "inModelPos");
-				OpenTKHelper.Assert();
-				p.inCamPos = GL.GetUniformLocation(p.ProgramId, "inCamPos");
-				OpenTKHelper.Assert();
-				p.inSampler0 = GL.GetUniformLocation(p.ProgramId, "inSampler0");
-				OpenTKHelper.Assert();
-				p.inSampler1 = GL.GetUniformLocation(p.ProgramId, "inSampler1");
-				OpenTKHelper.Assert();
-				p.inSampler2 = GL.GetUniformLocation(p.ProgramId, "inSampler2");
-				OpenTKHelper.Assert();
-				p.inSampler3 = GL.GetUniformLocation(p.ProgramId, "inSampler3");
-				OpenTKHelper.Assert();
-				p.inAlphaTestValue = GL.GetUniformLocation(p.ProgramId, "inAlphaTestValue");
-				OpenTKHelper.Assert();
-				p.inMaterialAmbient = GL.GetUniformLocation(p.ProgramId, "inMaterialAmbient");
-				OpenTKHelper.Assert();
-				p.inMaterialDiffuse = GL.GetUniformLocation(p.ProgramId, "inMaterialDiffuse");
-				OpenTKHelper.Assert();
-				p.inEmissive = GL.GetUniformLocation(p.ProgramId, "inEmissive");
-				OpenTKHelper.Assert();
-				p.inAmbient = GL.GetUniformLocation(p.ProgramId, "inAmbient");
-				OpenTKHelper.Assert();
-				p.inDiffuse = GL.GetUniformLocation(p.ProgramId, "inDiffuse");
-				OpenTKHelper.Assert();
-				p.inDiffuseDir = GL.GetUniformLocation(p.ProgramId, "inDiffuseDir");
-				OpenTKHelper.Assert();
-				p.inFogNear = GL.GetUniformLocation(p.ProgramId, "inFogNear");
-				OpenTKHelper.Assert();
-				p.inFogRange = GL.GetUniformLocation(p.ProgramId, "inFogRange");
-				OpenTKHelper.Assert();
-				p.inFogColour = GL.GetUniformLocation(p.ProgramId, "inFogColour");
-				OpenTKHelper.Assert();
-				p.inSkinMats = GL.GetUniformLocation(p.ProgramId, "inSkinMats");
-				OpenTKHelper.Assert();
-				p.inUVOffset = GL.GetUniformLocation(p.ProgramId, "inUVOffset");
-				OpenTKHelper.Assert();
-				p.inUVScale = GL.GetUniformLocation(p.ProgramId, "inUVScale");
-				OpenTKHelper.Assert();
-				p.inUV1Scale = GL.GetUniformLocation(p.ProgramId, "inUV1Scale");
-				OpenTKHelper.Assert();
-				p.inUV2Scale = GL.GetUniformLocation(p.ProgramId, "inUV2Scale");
-				OpenTKHelper.Assert();
-				p.inUV3Scale = GL.GetUniformLocation(p.ProgramId, "inUV3Scale");
-				OpenTKHelper.Assert();
-				p.inTextureSize = GL.GetUniformLocation(p.ProgramId, "inTextureSize");
-				OpenTKHelper.Assert();
-				p.inTextureSize1 = GL.GetUniformLocation(p.ProgramId, "inTextureSize1");
-				OpenTKHelper.Assert();
-				p.inTextureSize2 = GL.GetUniformLocation(p.ProgramId, "inTextureSize2");
-				OpenTKHelper.Assert();
-				p.inTextureSize3 = GL.GetUniformLocation(p.ProgramId, "inTextureSize3");
-				OpenTKHelper.Assert();
-				p.inOOTextureSize = GL.GetUniformLocation(p.ProgramId, "inOOTextureSize");
-				OpenTKHelper.Assert();
-				p.inOOTextureSize1 = GL.GetUniformLocation(p.ProgramId, "inOOTextureSize1");
-				OpenTKHelper.Assert();
-				p.inOOTextureSize2 = GL.GetUniformLocation(p.ProgramId, "inOOTextureSize2");
-				OpenTKHelper.Assert();
-				p.inOOTextureSize3 = GL.GetUniformLocation(p.ProgramId, "inOOTextureSize3");
-				OpenTKHelper.Assert();
-				p.inDisplaySize = GL.GetUniformLocation(p.ProgramId, "inDisplaySize");
-				OpenTKHelper.Assert();
-				p.inDeviceSize = GL.GetUniformLocation(p.ProgramId, "inDeviceSize");
-				OpenTKHelper.Assert();
-				p.inDisplayRotScaleMat = GL.GetUniformLocation(p.ProgramId, "inDisplayRotScaleMat");
-				OpenTKHelper.Assert();
-				p.inPipelineConfig = GL.GetUniformLocation(p.ProgramId, "inPipelineConfig");
-				OpenTKHelper.Assert();
-
-				p.inSpecular = GL.GetUniformLocation(p.ProgramId, "inSpecular");
-				OpenTKHelper.Assert();
-				p.inMaterialSpecular = GL.GetUniformLocation(p.ProgramId, "inMaterialSpecular");
-				OpenTKHelper.Assert();
-				p.inSpecularHalfVec = GL.GetUniformLocation(p.ProgramId, "inSpecularHalfVec");
-				OpenTKHelper.Assert();
 			}
 			return p;
+		}
+
+		public static void GenProgram(ref ShaderTechniqueArgumentIndices p, int v, int f)
+		{
+			p.ProgramId = GL.CreateProgram();
+			OpenTKHelper.Assert();
+			GL.AttachShader(p.ProgramId, v);
+			OpenTKHelper.Assert();
+			GL.AttachShader(p.ProgramId, f);
+			OpenTKHelper.Assert();
+			GL.LinkProgram(p.ProgramId);
+
+			string programInfoLog;
+			GL.GetProgramInfoLog(p.ProgramId, out programInfoLog);
+			Debug.WriteLine(programInfoLog);
+			OpenTKHelper.Assert();
+
+			p.inVert = GL.GetAttribLocation(p.ProgramId, "inVert");
+			OpenTKHelper.Assert();
+			p.inUV0 = GL.GetAttribLocation(p.ProgramId, "inUV0");
+			OpenTKHelper.Assert();
+			p.inUV1 = GL.GetAttribLocation(p.ProgramId, "inUV1");
+			OpenTKHelper.Assert();
+			p.inCol = GL.GetAttribLocation(p.ProgramId, "inCol");
+			OpenTKHelper.Assert();
+			p.inNorm = GL.GetAttribLocation(p.ProgramId, "inNorm");
+			OpenTKHelper.Assert();
+			p.inTangent = GL.GetAttribLocation(p.ProgramId, "inTangent");
+			OpenTKHelper.Assert();
+			p.inBiTangent = GL.GetAttribLocation(p.ProgramId, "inBiTangent");
+			OpenTKHelper.Assert();
+			p.inSkinWeights = GL.GetAttribLocation(p.ProgramId, "inSkinWeights");
+			OpenTKHelper.Assert();
+			p.inSkinIndices = GL.GetAttribLocation(p.ProgramId, "inSkinIndices");
+			OpenTKHelper.Assert();
+
+			p.inPMVMat = GL.GetUniformLocation(p.ProgramId, "inPMVMat");
+			OpenTKHelper.Assert();
+			p.inMVMat = GL.GetUniformLocation(p.ProgramId, "inMVMat");
+			OpenTKHelper.Assert();
+			p.inMVRotMat = GL.GetUniformLocation(p.ProgramId, "inMVRotMat");
+			OpenTKHelper.Assert();
+			p.inModelRotMat = GL.GetUniformLocation(p.ProgramId, "inModelRotMat");
+			OpenTKHelper.Assert();
+			p.inModelPos = GL.GetUniformLocation(p.ProgramId, "inModelPos");
+			OpenTKHelper.Assert();
+			p.inCamPos = GL.GetUniformLocation(p.ProgramId, "inCamPos");
+			OpenTKHelper.Assert();
+			p.inSampler0 = GL.GetUniformLocation(p.ProgramId, "inSampler0");
+			OpenTKHelper.Assert();
+			p.inSampler1 = GL.GetUniformLocation(p.ProgramId, "inSampler1");
+			OpenTKHelper.Assert();
+			p.inSampler2 = GL.GetUniformLocation(p.ProgramId, "inSampler2");
+			OpenTKHelper.Assert();
+			p.inSampler3 = GL.GetUniformLocation(p.ProgramId, "inSampler3");
+			OpenTKHelper.Assert();
+			p.inAlphaTestValue = GL.GetUniformLocation(p.ProgramId, "inAlphaTestValue");
+			OpenTKHelper.Assert();
+			p.inMaterialAmbient = GL.GetUniformLocation(p.ProgramId, "inMaterialAmbient");
+			OpenTKHelper.Assert();
+			p.inMaterialDiffuse = GL.GetUniformLocation(p.ProgramId, "inMaterialDiffuse");
+			OpenTKHelper.Assert();
+			p.inEmissive = GL.GetUniformLocation(p.ProgramId, "inEmissive");
+			OpenTKHelper.Assert();
+			p.inAmbient = GL.GetUniformLocation(p.ProgramId, "inAmbient");
+			OpenTKHelper.Assert();
+			p.inDiffuse = GL.GetUniformLocation(p.ProgramId, "inDiffuse");
+			OpenTKHelper.Assert();
+			p.inDiffuseDir = GL.GetUniformLocation(p.ProgramId, "inDiffuseDir");
+			OpenTKHelper.Assert();
+			p.inFogNear = GL.GetUniformLocation(p.ProgramId, "inFogNear");
+			OpenTKHelper.Assert();
+			p.inFogRange = GL.GetUniformLocation(p.ProgramId, "inFogRange");
+			OpenTKHelper.Assert();
+			p.inFogColour = GL.GetUniformLocation(p.ProgramId, "inFogColour");
+			OpenTKHelper.Assert();
+			p.inSkinMats = GL.GetUniformLocation(p.ProgramId, "inSkinMats");
+			OpenTKHelper.Assert();
+			p.inUVOffset = GL.GetUniformLocation(p.ProgramId, "inUVOffset");
+			OpenTKHelper.Assert();
+			p.inUVScale = GL.GetUniformLocation(p.ProgramId, "inUVScale");
+			OpenTKHelper.Assert();
+			p.inUV1Scale = GL.GetUniformLocation(p.ProgramId, "inUV1Scale");
+			OpenTKHelper.Assert();
+			p.inUV2Scale = GL.GetUniformLocation(p.ProgramId, "inUV2Scale");
+			OpenTKHelper.Assert();
+			p.inUV3Scale = GL.GetUniformLocation(p.ProgramId, "inUV3Scale");
+			OpenTKHelper.Assert();
+			p.inTextureSize = GL.GetUniformLocation(p.ProgramId, "inTextureSize");
+			OpenTKHelper.Assert();
+			p.inTextureSize1 = GL.GetUniformLocation(p.ProgramId, "inTextureSize1");
+			OpenTKHelper.Assert();
+			p.inTextureSize2 = GL.GetUniformLocation(p.ProgramId, "inTextureSize2");
+			OpenTKHelper.Assert();
+			p.inTextureSize3 = GL.GetUniformLocation(p.ProgramId, "inTextureSize3");
+			OpenTKHelper.Assert();
+			p.inOOTextureSize = GL.GetUniformLocation(p.ProgramId, "inOOTextureSize");
+			OpenTKHelper.Assert();
+			p.inOOTextureSize1 = GL.GetUniformLocation(p.ProgramId, "inOOTextureSize1");
+			OpenTKHelper.Assert();
+			p.inOOTextureSize2 = GL.GetUniformLocation(p.ProgramId, "inOOTextureSize2");
+			OpenTKHelper.Assert();
+			p.inOOTextureSize3 = GL.GetUniformLocation(p.ProgramId, "inOOTextureSize3");
+			OpenTKHelper.Assert();
+			p.inDisplaySize = GL.GetUniformLocation(p.ProgramId, "inDisplaySize");
+			OpenTKHelper.Assert();
+			p.inDeviceSize = GL.GetUniformLocation(p.ProgramId, "inDeviceSize");
+			OpenTKHelper.Assert();
+			p.inDisplayRotScaleMat = GL.GetUniformLocation(p.ProgramId, "inDisplayRotScaleMat");
+			OpenTKHelper.Assert();
+			p.inPipelineConfig = GL.GetUniformLocation(p.ProgramId, "inPipelineConfig");
+			OpenTKHelper.Assert();
+
+			p.inSpecular = GL.GetUniformLocation(p.ProgramId, "inSpecular");
+			OpenTKHelper.Assert();
+			p.inMaterialSpecular = GL.GetUniformLocation(p.ProgramId, "inMaterialSpecular");
+			OpenTKHelper.Assert();
+			p.inSpecularHalfVec = GL.GetUniformLocation(p.ProgramId, "inSpecularHalfVec");
+			OpenTKHelper.Assert();
 		}
 
 		private int GenFragmentShader(DefaultFragmentShaderOptions fso)
@@ -563,15 +569,14 @@ void main(void)
 			int p;
 			if (!this.generatedFragmentShaders.TryGetValue(fso, out p))
 			{
-				ShaderType fragmentShader = ShaderType.FragmentShader;
 				string fragmentShaderSource = this.GetFragmentShaderSource(ref fso);
-				p = GenShader(fragmentShader, fragmentShaderSource);
+				p = GenShader(ShaderType.FragmentShader, fragmentShaderSource);
 				this.generatedFragmentShaders[fso] = p;
 			}
 			return p;
 		}
 
-		private static int GenShader(ShaderType fragmentShader, string fragmentShaderSource)
+		public static int GenShader(ShaderType fragmentShader, string fragmentShaderSource)
 		{
 			int p;
 			p = GL.CreateShader(fragmentShader);
