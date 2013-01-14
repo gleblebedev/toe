@@ -65,14 +65,14 @@ namespace Toe.Resources
 				}
 
 				string fullPath;
-				if (!string.IsNullOrEmpty(this.container.BasePath))
+				if (!string.IsNullOrEmpty(this.Container.BasePath))
 				{
 					var replace = this.fileReference.Replace('/', Path.DirectorySeparatorChar);
 					if (replace.Length > 2 && replace[0] == '.' && replace[1] == Path.DirectorySeparatorChar)
 					{
 						replace = replace.Substring(2);
 					}
-					fullPath = Path.Combine(this.container.BasePath, replace);
+					fullPath = Path.Combine(this.Container.BasePath, replace);
 				}
 				else
 				{
@@ -198,13 +198,21 @@ namespace Toe.Resources
 			}
 		}
 
+		public IBasePathProvider Container
+		{
+			get
+			{
+				return this.container;
+			}
+		}
+
 		#endregion
 
 		#region Public Methods and Operators
 
 		public ResourceReference Clone()
 		{
-			var r = new ResourceReference(this.type, this.resourceManager, this.container);
+			var r = new ResourceReference(this.type, this.resourceManager, this.Container);
 			r.fileReference = this.fileReference;
 			r.nameReference = this.nameReference;
 			r.hashReference = this.hashReference;

@@ -58,6 +58,8 @@ namespace Toe.Marmalade.IwGx
 		/// </summary>
 		public int inCamPos;
 
+		public int inEyePos;
+
 		/// <summary>
 		/// Texture sampler for texture stage 0 
 		/// </summary>
@@ -224,5 +226,7 @@ namespace Toe.Marmalade.IwGx
 		public int inMaterialSpecular;
 
 		public int inSpecularHalfVec;
+
+		public int inTVScale;
 	}
 }

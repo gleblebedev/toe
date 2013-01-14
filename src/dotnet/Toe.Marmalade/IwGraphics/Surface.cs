@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 
+using OpenTK;
+
 using Toe.Resources;
 using Toe.Utils.Mesh;
 
@@ -95,5 +97,10 @@ namespace Toe.Marmalade.IwGraphics
 		}
 
 		#endregion
+
+		internal virtual void CalculateTangents(OptimizedList<Vector3> t, OptimizedList<Vector3> b)
+		{
+			//throw new System.NotImplementedException();
+		}
 	}
 }

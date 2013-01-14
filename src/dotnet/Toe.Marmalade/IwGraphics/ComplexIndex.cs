@@ -11,5 +11,9 @@ namespace Toe.Marmalade.IwGraphics
 		public int UV1;
 
 		public int Color;
+
+		public int Binormal;
+
+		public int Tangent;
 	}
 }

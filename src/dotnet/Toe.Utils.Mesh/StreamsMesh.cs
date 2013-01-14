@@ -227,13 +227,35 @@ namespace Toe.Utils.Mesh
 			}
 		}
 
+		public void VisitBinormals(Vector3VisitorCallback callback)
+		{
+			foreach (StreamSubmesh submesh in submeshes)
+			{
+				foreach (var index in submesh.Indices)
+				{
+					var v = binormals[index.Binormal];
+					callback(ref v);
+				}
+			}
+		}
+		public void VisitTangents(Vector3VisitorCallback callback)
+		{
+			foreach (StreamSubmesh submesh in submeshes)
+			{
+				foreach (var index in submesh.Indices)
+				{
+					var v = tangents[index.Tangent];
+					callback(ref v);
+				}
+			}
+		}
 		public void VisitColors(ColorVisitorCallback callback)
 		{
 			foreach (StreamSubmesh submesh in submeshes)
 			{
 				foreach (var index in submesh.Indices)
 				{
-					var v = colors[index.Vertex];
+					var v = colors[index.Color];
 					callback(ref v);
 				}
 			}

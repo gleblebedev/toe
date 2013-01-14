@@ -65,7 +65,7 @@ namespace Toe.Editors.Marmalade
 			this.InitializeComponent();
 
 			this.InitializeEditor();
-			this.base3DEditor.RenderScene += this.OnRenderScene;
+			
 		}
 
 		#endregion
@@ -191,6 +191,7 @@ namespace Toe.Editors.Marmalade
 			var editNameView = new EditNameView(this.history) { Dock = DockStyle.Fill };
 			this.tableLayoutPanel1.Controls.Add(editNameView, 1, 0);
 			new DataContextBinding(editNameView, this.dataContext, false);
+			this.base3DEditor.RenderScene += this.OnRenderScene;
 		}
 
 		#endregion

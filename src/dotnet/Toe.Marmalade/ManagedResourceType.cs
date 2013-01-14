@@ -1,3 +1,5 @@
+using System;
+
 using Toe.Resources;
 
 namespace Toe.Marmalade
@@ -24,7 +26,9 @@ namespace Toe.Marmalade
 
 		public ResourceReference BuildReference(IResourceItem item, bool fileReferencesAllowed)
 		{
+			if (item == null) throw new ArgumentNullException("item");
 			var r = new ResourceReference(item.Type, this.resourceManager, item.Source);
+
 			var val = item.Value as T;
 			if (val == null)
 			{

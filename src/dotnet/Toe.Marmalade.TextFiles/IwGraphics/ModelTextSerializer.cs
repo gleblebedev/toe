@@ -199,7 +199,7 @@ namespace Toe.Marmalade.TextFiles.IwGraphics
 		private static ComplexIndex ParseTrisIndexes(TextParser parser)
 		{
 			parser.Consume("{");
-			ComplexIndex i;
+			ComplexIndex i = new ComplexIndex();
 			i.Vertex = parser.ConsumeInt();
 			parser.Skip(",");
 			if (parser.Lexem == "}")

@@ -46,6 +46,10 @@ namespace Toe.Utils.Mesh
 		{
 			get;
 		}
+
+		void VisitTangents(Vector3VisitorCallback action);
+
+		void VisitBinormals(Vector3VisitorCallback action);
 	}
 
 	public interface IVertexIndexSource: IEnumerable<int>

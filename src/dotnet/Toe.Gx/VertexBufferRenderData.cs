@@ -13,6 +13,8 @@ namespace Toe.Gx
 	{
 		private Vector3[] v;
 		private Vector3[] n;
+		private Vector3[] t;
+		private Vector3[] b;
 		private byte[] c;
 		private Vector3[] uv0;
 		private Vector3[] uv1;
@@ -40,8 +42,30 @@ namespace Toe.Gx
 						++i;
 					});
 			}
+			this.t = null;
+			if (mesh.IsTangentStreamAvailable)
+			{
+				this.t = new Vector3[mesh.Count];
+				int i = 0;
+				mesh.VisitTangents((ref Vector3 vv) =>
+				{
+					this.t[i] = vv;
+					++i;
+				});
+			}
+			this.b = null;
+			if (mesh.IsTangentStreamAvailable)
+			{
+				this.b = new Vector3[mesh.Count];
+				int i = 0;
+				mesh.VisitBinormals((ref Vector3 vv) =>
+				{
+					this.b[i] = vv;
+					++i;
+				});
+			}
 			this.uv0 = null;
-			if (mesh.IsNormalStreamAvailable)
+			if (mesh.IsUV0StreamAvailable)
 			{
 				this.uv0 = new Vector3[mesh.Count];
 				int i = 0;
@@ -52,7 +76,7 @@ namespace Toe.Gx
 					});
 			}
 			this.uv1 = null;
-			if (mesh.IsNormalStreamAvailable)
+			if (mesh.IsUV1StreamAvailable)
 			{
 				this.uv1 = new Vector3[mesh.Count];
 				int i = 0;
@@ -91,6 +115,14 @@ namespace Toe.Gx
 			{
 				GL.DisableVertexAttribArray(p.inNorm);
 			}
+			if (p.inTangent >= 0)
+			{
+				GL.DisableVertexAttribArray(p.inTangent);
+			}
+			if (p.inBiTangent >= 0)
+			{
+				GL.DisableVertexAttribArray(p.inBiTangent);
+			}
 			if (p.inCol >= 0)
 			{
 				GL.DisableVertexAttribArray(p.inCol);
@@ -115,6 +147,16 @@ namespace Toe.Gx
 			{
 				GL.EnableVertexAttribArray(p.inNorm);
 				GL.VertexAttribPointer(p.inNorm, 3, VertexAttribPointerType.Float, true, 4 * 3, this.n);
+			}
+			if (p.inTangent >= 0 && this.t != null)
+			{
+				GL.EnableVertexAttribArray(p.inTangent);
+				GL.VertexAttribPointer(p.inTangent, 3, VertexAttribPointerType.Float, true, 4 * 3, this.t);
+			}
+			if (p.inBiTangent >= 0 && this.b != null)
+			{
+				GL.EnableVertexAttribArray(p.inBiTangent);
+				GL.VertexAttribPointer(p.inBiTangent, 3, VertexAttribPointerType.Float, true, 4 * 3, this.b);
 			}
 			if (p.inCol >= 0 && this.c != null)
 			{

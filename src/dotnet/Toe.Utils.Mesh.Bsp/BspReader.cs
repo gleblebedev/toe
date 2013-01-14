@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Toe.Utils.Mesh.Bsp
 {
-	public class BspReader : IMeshReader
+	public class BspReader : ISceneReader
 	{
 		#region Implementation of IMeshReader
 
@@ -15,7 +15,7 @@ namespace Toe.Utils.Mesh.Bsp
 		/// </summary>
 		/// <param name="stream">Stream to read from.</param>
 		/// <returns>Complete parsed mesh.</returns>
-		public IMesh Load(Stream stream)
+		public IScene Load(Stream stream)
 		{
 			throw new NotImplementedException();
 		}

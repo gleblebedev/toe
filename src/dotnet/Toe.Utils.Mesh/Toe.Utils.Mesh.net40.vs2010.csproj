@@ -55,9 +55,10 @@
     <Compile Include="DynamicCollection.cs" />
     <Compile Include="IMaterial.cs" />
     <Compile Include="IMesh.cs" />
-    <Compile Include="IMeshReader.cs" />
+    <Compile Include="ISceneReader.cs" />
     <Compile Include="IMeshWriter.cs" />
     <Compile Include="INode.cs" />
+    <Compile Include="INodeContainer.cs" />
     <Compile Include="IParameterCollection.cs" />
     <Compile Include="IScene.cs" />
     <Compile Include="ISceneItem.cs" />
@@ -66,6 +67,7 @@
     <Compile Include="Material.cs" />
     <Compile Include="MeshBone.cs" />
     <Compile Include="MeshStream.cs" />
+    <Compile Include="Node.cs" />
     <Compile Include="OptimizedList.cs" />
     <Compile Include="Scene.cs" />
     <Compile Include="StreamsMesh.cs" />

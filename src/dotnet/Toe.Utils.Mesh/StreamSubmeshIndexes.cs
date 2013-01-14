@@ -8,6 +8,10 @@ namespace Toe.Utils.Mesh
 
 		public int Normal;
 
+		public int Binormal;
+
+		public int Tangent;
+
 		public int UV0;
 
 		public int UV1;

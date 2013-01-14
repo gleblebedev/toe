@@ -7,8 +7,6 @@ using OpenTK;
 
 using Toe.Marmalade.IwGraphics;
 using Toe.Resources;
-using Toe.Utils.Marmalade.IwGraphics;
-using Toe.Utils.Mesh;
 
 namespace Toe.Marmalade.BinaryFiles.IwGraphics
 {
@@ -91,7 +89,13 @@ namespace Toe.Marmalade.BinaryFiles.IwGraphics
 				}
 				if (type == Hash.Get("CIwModelBlockBiTangents"))
 				{
-					throw new NotImplementedException();
+					this.ParseModelBlockBiTangents(parser, model, name, size, numItems, flags);
+					continue;
+				}
+				if (type == Hash.Get("CIwModelBlockTangents"))
+				{
+					this.ParseModelBlockTangents(parser, model, name, size, numItems, flags);
+					continue;
 				}
 				if (type == Hash.Get("CIwModelBlockChunk"))
 				{
@@ -193,14 +197,6 @@ namespace Toe.Marmalade.BinaryFiles.IwGraphics
 				{
 					throw new NotImplementedException();
 				}
-				if (type == Hash.Get("CIwModelBlockTangents"))
-				{
-					throw new NotImplementedException();
-				}
-				if (type == Hash.Get("CIwModelBlockTangents"))
-				{
-					throw new NotImplementedException();
-				}
 
 				throw new FormatException("Unknown element");
 			}
@@ -264,9 +260,22 @@ namespace Toe.Marmalade.BinaryFiles.IwGraphics
 
 		#region Methods
 
+		private void ParseModelBlockBiTangents(
+			BinaryParser parser, Model model, uint name, uint size, uint numItems, ushort flags)
+		{
+			var streamMesh = (model.Meshes[0]);
+			streamMesh.BiTangents.Clear();
+			int num = (int)numItems;
+			streamMesh.BiTangents.Capacity = num;
+			for (int i = 0; i < num; ++i)
+			{
+				streamMesh.BiTangents.Add(parser.ConsumeVector3());
+			}
+		}
+
 		private void ParseModelBlockCols(BinaryParser parser, Model model, uint name, uint size, uint numItems, ushort flags)
 		{
-			var streamMesh = ((Mesh)model.Meshes[0]);
+			var streamMesh = (model.Meshes[0]);
 			int num = (int)numItems;
 			streamMesh.Colors.Clear();
 			streamMesh.Colors.Capacity = num;
@@ -291,8 +300,8 @@ namespace Toe.Marmalade.BinaryFiles.IwGraphics
 		private void ParseModelBlockGLTriList(
 			BinaryParser parser, Model model, uint name, uint size, uint numItems, ushort flags)
 		{
-			var streamMesh = ((Mesh)model.Meshes[0]);
-			var streamSubmesh = context.Resolve<ModelBlockGLTriList>();
+			var streamMesh = (model.Meshes[0]);
+			var streamSubmesh = this.context.Resolve<ModelBlockGLTriList>();
 			streamSubmesh.Mesh = streamMesh;
 			streamMesh.Surfaces.Add(streamSubmesh);
 
@@ -324,7 +333,7 @@ namespace Toe.Marmalade.BinaryFiles.IwGraphics
 
 		private void ParseModelBlockGLUVs(BinaryParser parser, Model model, uint name, uint size, uint numItems, ushort flags)
 		{
-			var streamMesh = ((Mesh)model.Meshes[0]);
+			var streamMesh = (model.Meshes[0]);
 			int num = (int)numItems;
 			streamMesh.UV0.Clear();
 			streamMesh.UV0.Capacity = num;
@@ -336,7 +345,7 @@ namespace Toe.Marmalade.BinaryFiles.IwGraphics
 
 		private void ParseModelBlockNorms(BinaryParser parser, Model model, uint name, uint size, uint numItems, ushort flags)
 		{
-			var streamMesh = ((Mesh)model.Meshes[0]);
+			var streamMesh = (model.Meshes[0]);
 			streamMesh.Normals.Clear();
 			int num = (int)numItems;
 			streamMesh.Normals.Capacity = num;
@@ -346,10 +355,23 @@ namespace Toe.Marmalade.BinaryFiles.IwGraphics
 			}
 		}
 
+		private void ParseModelBlockTangents(
+			BinaryParser parser, Model model, uint name, uint size, uint numItems, ushort flags)
+		{
+			var streamMesh = (model.Meshes[0]);
+			streamMesh.Tangents.Clear();
+			int num = (int)numItems;
+			streamMesh.Tangents.Capacity = num;
+			for (int i = 0; i < num; ++i)
+			{
+				streamMesh.Tangents.Add(parser.ConsumeVector3());
+			}
+		}
+
 		private void ParseModelBlockVerts(BinaryParser parser, Model model, uint name, uint size, uint numItems, ushort flags)
 		{
 			var uniqueValues = parser.ConsumeUInt16();
-			var streamMesh = ((Mesh)model.Meshes[0]);
+			var streamMesh = (model.Meshes[0]);
 			streamMesh.Vertices.Clear();
 			var itemsToRead = (int)uniqueValues;
 			streamMesh.Vertices.EnsureAt((int)numItems - 1);

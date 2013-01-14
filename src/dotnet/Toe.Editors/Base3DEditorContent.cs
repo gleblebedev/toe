@@ -25,7 +25,14 @@ namespace Toe.Editors
 			this.graphicsContext = graphicsContext;
 			var cubeBytes = Toe.Editors.Properties.Resources.xyzcube;
 			if (cubeBytes != null) {
-				this.cube = (new AseReader ()).Load (new MemoryStream (cubeBytes));
+				IScene scene = (new AseReader()).Load(new MemoryStream(cubeBytes));
+				foreach (var node in scene.Nodes)
+				{
+					if (node.Mesh != null)
+					{
+						this.cube = node.Mesh;
+					}
+				}
 				this.cubeTex = new Toe.Marmalade.IwGx.Texture ();
 				cubeTex.Image = new Toe.Marmalade.IwGx.Image (Toe.Editors.Properties.Resources.xyzcube1);
 			}

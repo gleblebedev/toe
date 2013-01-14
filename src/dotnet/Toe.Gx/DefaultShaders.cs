@@ -488,6 +488,8 @@ void main(void)
 			OpenTKHelper.Assert();
 			p.inModelPos = GL.GetUniformLocation(p.ProgramId, "inModelPos");
 			OpenTKHelper.Assert();
+			p.inEyePos = GL.GetUniformLocation(p.ProgramId, "inEyePos");
+			OpenTKHelper.Assert();
 			p.inCamPos = GL.GetUniformLocation(p.ProgramId, "inCamPos");
 			OpenTKHelper.Assert();
 			p.inSampler0 = GL.GetUniformLocation(p.ProgramId, "inSampler0");
@@ -521,6 +523,9 @@ void main(void)
 			p.inSkinMats = GL.GetUniformLocation(p.ProgramId, "inSkinMats");
 			OpenTKHelper.Assert();
 			p.inUVOffset = GL.GetUniformLocation(p.ProgramId, "inUVOffset");
+			OpenTKHelper.Assert();
+
+			p.inTVScale = GL.GetUniformLocation(p.ProgramId, "inTVScale");
 			OpenTKHelper.Assert();
 			p.inUVScale = GL.GetUniformLocation(p.ProgramId, "inUVScale");
 			OpenTKHelper.Assert();

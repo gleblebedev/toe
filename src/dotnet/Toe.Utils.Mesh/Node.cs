@@ -3,9 +3,9 @@ using System.Collections.Generic;
 namespace Toe.Utils.Mesh
 {
 	/// <summary>
-	/// Generic scene conainer.
+	/// Generic node.
 	/// </summary>
-	public class Scene : IScene
+	public class Node : INode
 	{
 		/// <summary>
 		/// Collection of source specific parameters.
@@ -30,6 +30,8 @@ namespace Toe.Utils.Mesh
 		}
 
 		public string Name { get; set; }
+
+		public IMesh Mesh { get; set; }
 
 		#endregion
 

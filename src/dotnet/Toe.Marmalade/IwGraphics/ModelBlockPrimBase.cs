@@ -28,7 +28,17 @@ namespace Toe.Marmalade.IwGraphics
 				++i;
 			}
 		}
-
+		public override int Count
+		{
+			get
+			{
+				return indices.Count;
+			}
+		}
+		internal override void CalculateTangents(OptimizedList<Vector3> t, OptimizedList<Vector3> b)
+		{
+			throw new System.NotImplementedException();
+		}
 		private MeshStream<ComplexIndex> indices = new MeshStream<ComplexIndex>();
 
 		public MeshStream<ComplexIndex> Indices

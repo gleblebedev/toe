@@ -8,6 +8,7 @@ using OpenTK.Graphics.OpenGL;
 
 using Toe.Marmalade.IwGraphics;
 using Toe.Marmalade.IwGx;
+using Toe.Resources;
 using Toe.Utils.Marmalade.IwGx;
 using Toe.Utils.Mesh;
 
@@ -15,6 +16,8 @@ namespace Toe.Gx
 {
 	public class ToeGraphicsContext : IDisposable
 	{
+		private readonly IResourceManager resourceManager;
+
 		#region Constants and Fields
 
 		private GraphicsContext context;
@@ -35,8 +38,9 @@ namespace Toe.Gx
 
 		}
 
-		public ToeGraphicsContext()
+		public ToeGraphicsContext(IResourceManager resourceManager)
 		{
+			this.resourceManager = resourceManager;
 			GraphicsContext.ShareContexts = true;
 
 			//context = OpenTK.Graphics.GraphicsContext.CreateDummyContext();
@@ -158,7 +162,13 @@ namespace Toe.Gx
 			
 			foreach (var surface in mesh.Surfaces)
 			{
-				this.SetMaterial(surface.Material.Resource as Material);
+				var mtl = surface.Material.Resource as Material;
+				if (mtl == null && !string.IsNullOrEmpty(surface.Material.NameReference))
+				{
+					//TODO: fix naming
+					mtl = resourceManager.FindResource(surface.Material.Type, Hash.Get(mesh.Name + "/" + surface.Material.NameReference)) as Material;
+				}
+				this.SetMaterial(mtl);
 
 				var p = ApplyMaterialShader(mesh);	
 				vertexBufferRenderData.Enable(p);
@@ -285,7 +295,7 @@ namespace Toe.Gx
 
 			var vso = new DefaultVertexShaderOptions
 			{
-				BITANGENT_STREAM = false,//mesh.IsBinormalStreamAvailable,
+				BITANGENT_STREAM = mesh.IsBinormalStreamAvailable,
 				COL_STREAM = mesh.IsColorStreamAvailable,
 				FAST_FOG = false,
 				FOG = false,//!material.NoFog,
@@ -297,7 +307,7 @@ namespace Toe.Gx
 				SKIN_MAJOR_BONE = false,
 				SKINWEIGHT_STREAM = false,
 				SKIN_NORMALS = false,
-				TANGENT_STREAM = false,//mesh.IsTangentStreamAvailable,
+				TANGENT_STREAM = mesh.IsTangentStreamAvailable,
 				UV0_STREAM = mesh.IsUV0StreamAvailable,
 				UV1_STREAM = mesh.IsUV1StreamAvailable
 			};
@@ -376,6 +386,10 @@ namespace Toe.Gx
 			{
 				GL.Uniform3(p.inCamPos, ref this.args.inCamPos);
 			}
+			if (p.inEyePos >= 0)
+			{
+				GL.Uniform3(p.inEyePos, ref this.args.inEyePos);
+			}
 			if (p.inAlphaTestValue >= 0)
 			{
 				GL.Uniform1(p.inAlphaTestValue, this.args.inAlphaTestValue);
@@ -435,6 +449,11 @@ namespace Toe.Gx
 			if (p.inUVOffset >= 0)
 			{
 				GL.Uniform2(p.inUVOffset, this.args.inUVOffset);
+			}
+
+			if (p.inTVScale >= 0)
+			{
+				GL.Uniform2(p.inTVScale, this.args.inTVScale);
 			}
 			if (p.inUVScale >= 0)
 			{
@@ -535,6 +554,7 @@ namespace Toe.Gx
 			args.inDiffuseDir = Vector3.Transform(this.light.Position, invMMat);
 			args.inDiffuseDir.Normalize();
 			var cam = Vector3.Transform(args.inCamPos, invMMat);
+			args.inEyePos = cam;
 			cam.Normalize();
 			cam = args.inDiffuseDir + cam;
 			cam.Normalize();

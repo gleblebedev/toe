@@ -237,6 +237,24 @@ namespace Toe.Utils.Mesh
 			}
 		}
 
+		public void VisitTangents(Vector3VisitorCallback callback)
+		{
+			foreach (var vertex in VertexBuffer)
+			{
+				var v = vertex.Tangent;
+				callback(ref v);
+			}
+		}
+
+		public void VisitBinormals(Vector3VisitorCallback callback)
+		{
+			foreach (var vertex in VertexBuffer)
+			{
+				var v = vertex.Binormal;
+				callback(ref v);
+			}
+		}
+
 		public VertexSourceType VertexSourceType
 		{
 			get

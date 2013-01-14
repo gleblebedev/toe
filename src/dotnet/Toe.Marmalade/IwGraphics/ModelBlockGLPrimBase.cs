@@ -28,6 +28,10 @@ namespace Toe.Marmalade.IwGraphics
 				return this.indices;
 			}
 		}
+		internal override void CalculateTangents(OptimizedList<Vector3> t, OptimizedList<Vector3> b)
+		{
+			throw new System.NotImplementedException();
+		}
 
 		public ModelBlockGLPrimBase(IResourceManager resourceManager)
 			: base(resourceManager)

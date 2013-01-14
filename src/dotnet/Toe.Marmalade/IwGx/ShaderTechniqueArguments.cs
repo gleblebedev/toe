@@ -83,12 +83,12 @@ public float inFogNear = 0;
 		/// <summary>
 /// Fog range value in clip space.  Floating point value.  Used for fogging  uniform mediump float inFogRange; 
 		/// </summary>
-public float inFogRange = 1;
+public float inFogRange = 4096;
  
 		/// <summary>
 /// Fog colour  Normalised floating point vector  Used for fogging  uniform mediump vec4 inFogColour; 
 		/// </summary>
-public Vector4 inFogColour;
+public Vector4 inFogColour = new Vector4(1,1,1,1);
 
 		/// <summary>
 /// Offset for UV stream 0. inUV0 should be multiplied by inUVScale before applying the offset.  Floating point value  Used for UV animation  uniform mediump vec2 inUVOffset; 
@@ -179,6 +179,10 @@ public Matrix4 inDisplayRotScaleMat = Matrix4.Identity;
 		public Vector4 inSpecular;
 
 		public Vector4 inMaterialSpecular;
+
+		public Vector3 inEyePos;
+
+		public Vector2 inTVScale = new Vector2(1, 1);
 
 		//int[] inPipelineConfig  2 component vector describing the current pipeline config. If the first element is 1, transform is set to HW, if the second element is 1 lighting is set to HW.  Integer vector  Not used  uniform mediump ivec2 inPipelineConfig;  
 	}

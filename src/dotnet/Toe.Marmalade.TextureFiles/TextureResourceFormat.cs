@@ -39,7 +39,7 @@ namespace Toe.Marmalade.TextureFiles
 		public bool CanRead(string filePath)
 		{
 			var f = filePath.ToLower();
-			if (f.EndsWith(".bmp") || f.EndsWith(".png"))
+			if (f.EndsWith(".bmp") || f.EndsWith(".png") || f.EndsWith(".jpg"))
 			{
 				return true;
 			}
