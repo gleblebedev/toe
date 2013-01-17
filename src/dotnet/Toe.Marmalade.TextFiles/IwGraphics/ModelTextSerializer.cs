@@ -174,6 +174,7 @@ namespace Toe.Marmalade.TextFiles.IwGraphics
 
 				parser.UnknownLexemError();
 			}
+			mesh.CalculateTangents();
 			return mesh;
 		}
 
@@ -199,7 +200,7 @@ namespace Toe.Marmalade.TextFiles.IwGraphics
 		private static ComplexIndex ParseTrisIndexes(TextParser parser)
 		{
 			parser.Consume("{");
-			ComplexIndex i = new ComplexIndex();
+			var i = new ComplexIndex();
 			i.Vertex = parser.ConsumeInt();
 			parser.Skip(",");
 			if (parser.Lexem == "}")
@@ -369,7 +370,7 @@ namespace Toe.Marmalade.TextFiles.IwGraphics
 
 		private ModelExtSelSetFace ParseModelExtSelSetFace(TextParser parser, Mesh mesh)
 		{
-			ModelExtSelSetFace sel = new ModelExtSelSetFace();
+			var sel = new ModelExtSelSetFace();
 			parser.Consume("CIwModelExtSelSetFace");
 			parser.Consume("{");
 			for (;;)
@@ -441,7 +442,7 @@ namespace Toe.Marmalade.TextFiles.IwGraphics
 		{
 			parser.Consume("CSurface");
 			parser.Consume("{");
-			ModelBlockPrimBase surface = context.Resolve<ModelBlockPrimBase>();
+			var surface = context.Resolve<ModelBlockPrimBase>();
 			surface.Mesh = mesh;
 			for (;;)
 			{

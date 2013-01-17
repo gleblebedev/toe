@@ -49,6 +49,9 @@ namespace Toe.Editors
 			if (this.cube != null)
 			{
 				this.graphicsContext.SetTexture(0, this.cubeTex);
+				this.graphicsContext.SetTexture(1, null);
+				this.graphicsContext.SetTexture(2, null);
+				this.graphicsContext.SetTexture(3, null);
 				GL.Enable(EnableCap.CullFace);
 				GL.CullFace(CullFaceMode.Front);
 				OpenTKHelper.Assert();

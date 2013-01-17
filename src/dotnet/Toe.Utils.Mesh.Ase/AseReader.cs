@@ -215,7 +215,7 @@ namespace Toe.Utils.Mesh.Ase
 				Vertex a = BuildVertex(vertices, aseFace.C, normals, tfaces, cols, tvertices, (tfaces != null && tvertices != null) ? tvertices[tfaces[i].C] : Vector3.Zero);
 				Vertex b = BuildVertex(vertices, aseFace.B, normals, tfaces, cols, tvertices, (tfaces != null && tvertices != null) ? tvertices[tfaces[i].B] : Vector3.Zero);
 				Vertex c = BuildVertex(vertices, aseFace.A, normals, tfaces, cols, tvertices, (tfaces != null && tvertices != null) ? tvertices[tfaces[i].A] : Vector3.Zero);
-				//BuildTangent(ref a, ref b, ref c);
+				BuildTangent(ref a, ref b, ref c);
 				submesh.Add(mesh.VertexBuffer.Add(a));
 				submesh.Add(mesh.VertexBuffer.Add(b));
 				submesh.Add(mesh.VertexBuffer.Add(c));

@@ -110,6 +110,7 @@ namespace Toe.Editors.Marmalade
 			{
 				graphicsContext.RenderModel(model);
 			}
+			graphicsContext.SetMaterial(null);
 			GL.PopAttrib();
 		}
 

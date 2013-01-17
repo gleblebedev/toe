@@ -177,7 +177,7 @@ namespace Toe.Marmalade.IwGraphics
 
 		public void CalculateTangents()
 		{
-			if (tangents != null)
+			if (tangents != null && tangents.Count > 0)
 				return;
 
 			OptimizedList<Vector3> t = new OptimizedList<Vector3>();
@@ -186,6 +186,8 @@ namespace Toe.Marmalade.IwGraphics
 			{
 				surface.CalculateTangents(t, b);
 			}
+			tangents.AddRange(t);
+			binormals.AddRange(b);
 		}
 
 		#region Implementation of IVertexSource

@@ -63,6 +63,7 @@
     <Compile Include="IResourceFile.cs" />
     <Compile Include="IResourceFileItem.cs" />
     <Compile Include="IResourceFileFormat.cs" />
+    <Compile Include="IResourceFileWatcher.cs" />
     <Compile Include="IResourceItem.cs" />
     <Compile Include="IResourceManager.cs" />
     <Compile Include="IResourceType.cs" />
@@ -73,6 +74,7 @@
     <Compile Include="ResourceErrorHandler.cs" />
     <Compile Include="ResourceErrorHandlerException.cs" />
     <Compile Include="ResourceFile.cs" />
+    <Compile Include="ResourceFileWatcher.cs" />
     <Compile Include="ResourceItem.cs" />
     <Compile Include="ResourceItemSource.cs" />
     <Compile Include="ResourceManager.cs" />

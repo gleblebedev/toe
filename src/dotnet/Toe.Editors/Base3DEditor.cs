@@ -234,6 +234,7 @@ namespace Toe.Editors
 				}
 
 				GL.UseProgram(0);
+				graphicsContext.SetMaterial(null);
 
 				graphicsContext.DisableLighting();
 				GL.Disable(EnableCap.DepthTest);
