@@ -6,6 +6,7 @@ using System.Linq;
 
 using OpenTK;
 
+using Toe.Marmalade.IwGraphics.TangentSpace;
 using Toe.Resources;
 using Toe.Utils.Mesh;
 
@@ -180,14 +181,26 @@ namespace Toe.Marmalade.IwGraphics
 			if (tangents != null && tangents.Count > 0)
 				return;
 
-			OptimizedList<Vector3> t = new OptimizedList<Vector3>();
-			OptimizedList<Vector3> b = new OptimizedList<Vector3>();
+			var t = new TangentMixer();
+			var b = new TangentMixer();
 			foreach (var surface in Surfaces)
 			{
 				surface.CalculateTangents(t, b);
 			}
-			tangents.AddRange(t);
-			binormals.AddRange(b);
+
+			var tt = new Vector3[t.Count];
+			foreach (var m in t.Mix.SelectMany(mixes => mixes.Value.Items))
+			{
+				tt[m.Index] = m.Value;
+			}
+			var bb = new Vector3[b.Count];
+			foreach (var m in b.Mix.SelectMany(mixes => mixes.Value.Items))
+			{
+				bb[m.Index] = m.Value;
+			}
+
+			tangents.AddRange(tt);
+			binormals.AddRange(bb);
 		}
 
 		#region Implementation of IVertexSource

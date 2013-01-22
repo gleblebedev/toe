@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 using OpenTK;
 
+using Toe.Marmalade.IwGraphics.TangentSpace;
 using Toe.Resources;
 using Toe.Utils.Mesh;
 
@@ -98,7 +99,7 @@ namespace Toe.Marmalade.IwGraphics
 
 		#endregion
 
-		internal virtual void CalculateTangents(OptimizedList<Vector3> t, OptimizedList<Vector3> b)
+		internal virtual void CalculateTangents(TangentMixer t, TangentMixer b)
 		{
 			//throw new System.NotImplementedException();
 		}

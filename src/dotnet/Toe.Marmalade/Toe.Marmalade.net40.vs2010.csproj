@@ -67,6 +67,10 @@
     <Compile Include="IwGraphics\ModelBlockGLTriStrip.cs" />
     <Compile Include="IwGraphics\ModelBlockPrimBase.cs" />
     <Compile Include="IwGraphics\Surface.cs" />
+    <Compile Include="IwGraphics\TangentSpace\TangentKey.cs" />
+    <Compile Include="IwGraphics\TangentSpace\TangentMix.cs" />
+    <Compile Include="IwGraphics\TangentSpace\TangentMixer.cs" />
+    <Compile Include="IwGraphics\TangentSpace\TangentMixItem.cs" />
     <Compile Include="IwGx\Image.cs" />
     <Compile Include="IwGx\ShaderTechniqueArgumentIndices.cs" />
     <Compile Include="IwGx\ShaderTechniqueArguments.cs" />

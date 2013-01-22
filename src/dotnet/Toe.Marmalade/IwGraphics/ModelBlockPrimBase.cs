@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 using OpenTK;
 
+using Toe.Marmalade.IwGraphics.TangentSpace;
 using Toe.Resources;
 using Toe.Utils.Mesh;
 
@@ -36,7 +37,7 @@ namespace Toe.Marmalade.IwGraphics
 				return indices.Count;
 			}
 		}
-		internal override void CalculateTangents(OptimizedList<Vector3> t, OptimizedList<Vector3> b)
+		internal override void CalculateTangents(TangentMixer t, TangentMixer b)
 		{
 			switch (VertexSourceType)
 			{
@@ -52,24 +53,29 @@ namespace Toe.Marmalade.IwGraphics
 			}
 		}
 
-		private void CalculateTangentsTrianleStrip(OptimizedList<Vector3> t, OptimizedList<Vector3> b)
+		private void CalculateTangentsTrianleStrip(TangentMixer t, TangentMixer b)
 		{
 			throw new NotImplementedException();
 		}
 
-		private void CalculateTangentsTrianleList(OptimizedList<Vector3> t, OptimizedList<Vector3> b)
+		private void CalculateTangentsTrianleList(TangentMixer t, TangentMixer b)
 		{
 			for (int i=0; i<indices.Count;i+=3)
 			{
 				Vector3 p2 = Mesh.Vertices[indices[i + 2].Vertex];
 				Vector3 p1 = Mesh.Vertices[indices[i + 1].Vertex];
 				Vector3 p0 = Mesh.Vertices[indices[i].Vertex];
+
+				Vector3 n2 = Mesh.Normals[indices[i + 2].Normal];
+				Vector3 n1 = Mesh.Normals[indices[i + 1].Normal];
+				Vector3 n0 = Mesh.Normals[indices[i].Normal];
+
 				Vector3 v1 = p1 - p0;
 				Vector3 v2 = p2 - p0;
 
 				var pu0 = Mesh.UV0[indices[i].UV0];
-				var pu1 = Mesh.UV0[indices[i+1].UV0];
-				var pu2 = Mesh.UV0[indices[i+2].UV0];
+				var pu1 = Mesh.UV0[indices[i + 1].UV0];
+				var pu2 = Mesh.UV0[indices[i + 2].UV0];
 
 				var u1 = pu1 - pu0;
 				var u2 = pu2 - pu0;
@@ -81,16 +87,38 @@ namespace Toe.Marmalade.IwGraphics
 				var tangent = Vector3.Normalize(new Vector3((v1.X * u2.Y - v2.X * u1.Y) * det, (v1.Y * u2.Y - v2.Y * u1.Y) * det, (v1.Z * u2.Y - v2.Z * u1.Y) * det));
 				var bitangent = Vector3.Normalize(new Vector3((-v1.X * u2.X + v2.X * u1.X) * det, (-v1.Y * u2.X + v2.Y * u1.X) * det, (-v1.Z * u2.X + v2.Z * u1.X) * det));
 
-				int tindex = t.Add(tangent);
-				int bindex = b.Add(bitangent);
-				ModifyAtFunc<ComplexIndex> modifyT = (ref ComplexIndex a) => { a.Tangent = tindex;a.Binormal = bindex;};
-				indices.ModifyAt(i, modifyT);
-				indices.ModifyAt(i+1, modifyT);
-				indices.ModifyAt(i+2, modifyT);
+				var key0 = new TangentKey(p0, pu0);
+				var key1 = new TangentKey(p1, pu1);
+				var key2 = new TangentKey(p2, pu2);
+
+				{
+					ModifyAtFunc<ComplexIndex> modifyT = (ref ComplexIndex a) =>
+						{
+							a.Tangent = t.Add(key0, ref n0, tangent);
+							a.Binormal = b.Add(key0, ref n0, bitangent);
+						};
+					indices.ModifyAt(i, modifyT);
+				}
+				{
+					ModifyAtFunc<ComplexIndex> modifyT = (ref ComplexIndex a) =>
+					{
+						a.Tangent = t.Add(key1, ref n1, tangent);
+						a.Binormal = b.Add(key1, ref n1, bitangent);
+					};
+					indices.ModifyAt(i+1, modifyT);
+				}
+				{
+					ModifyAtFunc<ComplexIndex> modifyT = (ref ComplexIndex a) =>
+					{
+						a.Tangent = t.Add(key2, ref n2, tangent);
+						a.Binormal = b.Add(key2, ref n2, bitangent);
+					};
+					indices.ModifyAt(i+2, modifyT);
+				}
 			}
 		}
 
-		private void CalculateTangentsQuadList(OptimizedList<Vector3> t, OptimizedList<Vector3> b)
+		private void CalculateTangentsQuadList(TangentMixer t, TangentMixer b)
 		{
 			throw new NotImplementedException();
 		}

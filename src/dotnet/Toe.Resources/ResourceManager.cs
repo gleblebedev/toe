@@ -66,7 +66,7 @@ namespace Toe.Resources
 
 			resourceFile = this.context.Resolve<IResourceFile>(new Parameter[] { TypedParameter.From<IResourceManager>(this), TypedParameter.From(fullPath) });
 			this.files.Add(key, resourceFile);
-			WatchFile(fullPath, resourceFile);
+			//WatchFile(fullPath, resourceFile);
 
 			return resourceFile;
 		}
