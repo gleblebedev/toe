@@ -2,6 +2,7 @@ using System;
 using System.IO;
 
 using OpenTK;
+using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 
 using Toe.Gx;
@@ -13,15 +14,25 @@ namespace Toe.Editors
 {
 	public class Base3DEditorContent:IDisposable
 	{
+		private readonly ToeGraphicsContext graphicsContext;
+
 		private IMesh cube;
 
 		private Texture cubeTex;
 
-		public Base3DEditorContent ()
+		public Base3DEditorContent(ToeGraphicsContext graphicsContext)
 		{
+			this.graphicsContext = graphicsContext;
 			var cubeBytes = Toe.Editors.Properties.Resources.xyzcube;
 			if (cubeBytes != null) {
-				this.cube = (new AseReader ()).Load (new MemoryStream (cubeBytes));
+				IScene scene = (new AseReader()).Load(new MemoryStream(cubeBytes));
+				foreach (var node in scene.Nodes)
+				{
+					if (node.Mesh != null)
+					{
+						this.cube = node.Mesh;
+					}
+				}
 				this.cubeTex = new Toe.Marmalade.IwGx.Texture ();
 				cubeTex.Image = new Toe.Marmalade.IwGx.Image (Toe.Editors.Properties.Resources.xyzcube1);
 			}
@@ -32,11 +43,15 @@ namespace Toe.Editors
 			
 		}
 
+	
 		public void RenderXyzCube(GLControl glControl, EditorCamera camera)
 		{
 			if (this.cube != null)
 			{
-				this.cubeTex.ApplyOpenGL(0);
+				this.graphicsContext.SetTexture(0, this.cubeTex);
+				this.graphicsContext.SetTexture(1, null);
+				this.graphicsContext.SetTexture(2, null);
+				this.graphicsContext.SetTexture(3, null);
 				GL.Enable(EnableCap.CullFace);
 				GL.CullFace(CullFaceMode.Front);
 				OpenTKHelper.Assert();
@@ -61,19 +76,19 @@ namespace Toe.Editors
 				result.M42 = -(top + bottom) * invTB;
 				result.M43 = -(zFar + zNear) * invFN;
 				result.M44 = 1;
-				GL.MatrixMode(MatrixMode.Projection);
-				GL.LoadMatrix(ref result);
+
+				graphicsContext.SetProjection(ref result);
 
 				int w = Math.Min(Math.Min(180, glControl.Width / 2), glControl.Height / 2);
 
-				GL.MatrixMode(MatrixMode.Modelview);
 				var pos = Vector3.Transform(new Vector3(0, 0, 200), camera.Rot);
 				Matrix4 view = Matrix4.Rotate(camera.Rot) * Matrix4.CreateTranslation(pos);
 				view.Invert();
-				GL.LoadMatrix(ref view);
+				graphicsContext.SetView(ref view);
+
 				GL.Viewport(glControl.Width - w, glControl.Height - w, w, w);
 
-				this.cube.RenderOpenGL();
+				graphicsContext.Render(this.cube);
 				OpenTKHelper.Assert();
 			}
 		}

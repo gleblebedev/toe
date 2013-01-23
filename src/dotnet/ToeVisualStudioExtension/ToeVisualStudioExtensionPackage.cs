@@ -105,7 +105,7 @@ namespace TinyOpenEngine.ToeVisualStudioExtension
 			// http://msdn.microsoft.com/en-us/library/microsoft.visualstudio.shell.logicalview.aspx
 
 			var primary = "{00000000-0000-0000-0000-000000000000}";
-			var any = "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}";
+			//var any = "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}";
 			var window = dte.OpenFile(primary, filePath);
 			window.Activate();
 		}

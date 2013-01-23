@@ -1,4 +1,4 @@
-namespace Toe.Marmalade.IwGx
+namespace Toe.Gx
 {
 	public class DefaultFragmentShaderOptions 
 	{
@@ -12,7 +12,7 @@ namespace Toe.Marmalade.IwGx
 		public bool LIGHT_EMISSIVE { get; set; }
 		public bool LIGHT_DIFFUSE { get; set; }
 		public bool LIGHT_SPECULAR { get; set; }
-		public bool ALPHA_TEST { get; set; }
+		public int ALPHA_TEST { get; set; }
 		public int ALPHA_BLEND { get; set; }
 		public bool FOG { get; set; }
 		public bool IW_GX_PLATFORM_TEGRA2 { get; set; }
@@ -53,7 +53,7 @@ namespace Toe.Marmalade.IwGx
 			{
 				return false;
 			}
-			return Equals((DefaultFragmentShaderOptions)obj);
+			return this.Equals((DefaultFragmentShaderOptions)obj);
 		}
 
 		/// <summary>

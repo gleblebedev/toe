@@ -5,8 +5,6 @@ using System.Runtime.InteropServices;
 
 using OpenTK.Graphics.OpenGL;
 
-using Toe.Gx;
-
 using PixelFormat = System.Drawing.Imaging.PixelFormat;
 
 namespace Toe.Marmalade.IwGx
@@ -455,46 +453,13 @@ namespace Toe.Marmalade.IwGx
 			}
 		}
 
-		public void OpenGLUpload()
-		{
-			OpenTK.Graphics.OpenGL.PixelFormat pixelFormat;
-			PixelInternalFormat pixelInternalFormat = PixelInternalFormat.Rgba;
-			switch (this.Format)
-			{
-				case ImageFormat.RGB_888:
-					pixelFormat = OpenTK.Graphics.OpenGL.PixelFormat.Bgr;
-					break;
-				case ImageFormat.BGR_888:
-					pixelFormat = OpenTK.Graphics.OpenGL.PixelFormat.Rgb;
-					break;
-				case ImageFormat.ABGR_8888:
-					pixelFormat = OpenTK.Graphics.OpenGL.PixelFormat.Rgba;
-					break;
-				default:
-					{
-						var i = this.ConvertToAbgr8888();
-						i.OpenGLUpload();
-						return;
-					}
-			}
-			GL.TexImage2D(
-				TextureTarget.Texture2D,
-				0,
-				pixelInternalFormat,
-				this.width,
-				this.height,
-				0,
-				pixelFormat,
-				PixelType.UnsignedByte,
-				this.data);
-			OpenTKHelper.Assert();
-		}
+	
 
 		#endregion
 
 		#region Methods
 
-		private Image ConvertToAbgr8888()
+		public Image ConvertToAbgr8888()
 		{
 			var image = new Image();
 			image.height = this.height;
@@ -506,7 +471,6 @@ namespace Toe.Marmalade.IwGx
 			{
 				case ImageFormat.FORMAT_UNDEFINED:
 					throw new FormatException("Can't convert undefined format");
-					break;
 					//case ImageFormat.RGB_332:
 					//    break;
 					//case ImageFormat.BGR_332:

@@ -4,8 +4,6 @@ using Microsoft.Xna.Framework;
 
 using OpenTK;
 
-using Toe.Resources;
-
 #endif
 
 namespace Toe.Utils.Mesh
@@ -27,8 +25,6 @@ namespace Toe.Utils.Mesh
 		private Quaternion bindingRot = Quaternion.Identity;
 
 		private string name;
-
-		private uint nameHash;
 
 		private int parent = -1;
 
@@ -129,26 +125,10 @@ namespace Toe.Utils.Mesh
 				if (this.name != value)
 				{
 					this.name = value;
-					this.nameHash = Hash.Get(value);
 				}
 			}
 		}
 
-		public uint NameHash
-		{
-			get
-			{
-				return this.nameHash;
-			}
-			set
-			{
-				if (this.nameHash != value)
-				{
-					this.nameHash = value;
-					this.name = null;
-				}
-			}
-		}
 
 		public int Parent
 		{

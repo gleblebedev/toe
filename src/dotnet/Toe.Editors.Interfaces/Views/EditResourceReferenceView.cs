@@ -146,8 +146,15 @@ namespace Toe.Editors.Interfaces.Views
 		protected virtual void SetNewValue(IResourceItem item)
 		{
 			var t = this.context.ResolveKeyed<IResourceType>(this.Type);
-
-			var newR = t.BuildReference(item, this.fileReferencesAllowed);
+			ResourceReference newR;
+			if (item == null)
+			{
+				newR = new ResourceReference(this.Type, resourceManager, this.Reference.Container);
+			}
+			else
+			{
+				newR = t.BuildReference(item, this.fileReferencesAllowed);
+			}
 			var oldR = this.Reference.Clone();
 			var setReferenceCommand = new SetReferenceCommand(this.Reference, newR, oldR);
 			this.history.RegisterAction(setReferenceCommand);

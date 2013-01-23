@@ -101,9 +101,9 @@ namespace Toe.ToeVsExt
 
 		private string fileName = string.Empty;
 
-		private object findState;
+		//private object findState;
 
-		private string[] fontListArray;
+		//private string[] fontListArray;
 
 		private bool gettingCheckoutStatus;
 
@@ -115,7 +115,7 @@ namespace Toe.ToeVsExt
 		// when the changes are related to the load operation.
 		private bool loading;
 
-		private bool lockImage;
+		//private bool lockImage;
 
 		private Package myPackage;
 
@@ -124,9 +124,9 @@ namespace Toe.ToeVsExt
 
 		private SelectionContainer selContainer;
 
-		private IVsTextImage spTextImage;
+		//private IVsTextImage spTextImage;
 
-		private ArrayList textSpanArray = new ArrayList();
+		//private ArrayList textSpanArray = new ArrayList();
 
 		private ITrackSelection trackSel;
 
@@ -222,7 +222,7 @@ namespace Toe.ToeVsExt
 		/// <returns> HResult that indicates success/failure.</returns>
 		public int Copy()
 		{
-			object o = null;
+			//object o = null;
 			//editorControl.TextSelection.Copy(out o);
 			return VSConstants.S_OK;
 		}
@@ -233,7 +233,7 @@ namespace Toe.ToeVsExt
 		/// <returns> HResult that indicates success/failure.</returns>
 		public int Cut()
 		{
-			object o = null;
+			//object o = null;
 			//editorControl.TextSelection.Cut(out o);
 			return VSConstants.S_OK;
 		}
@@ -261,7 +261,7 @@ namespace Toe.ToeVsExt
 			// Check if the picked item is the one we can paste.
 			if (oleData.GetDataPresent(DataFormats.UnicodeText))
 			{
-				object o = null;
+				//object o = null;
 				//editorControl.TextSelection.Paste(ref o, 0);
 			}
 
@@ -320,7 +320,7 @@ namespace Toe.ToeVsExt
 		/// <returns> HResult that indicates success/failure.</returns>
 		public int Paste()
 		{
-			object o = null;
+			//object o = null;
 			//editorControl.TextSelection.Paste(ref o, 0);
 			return VSConstants.S_OK;
 		}
@@ -1688,7 +1688,7 @@ namespace Toe.ToeVsExt
 			// the position of the cursor.  If there is a selection then this value will tell
 			// us the position of the "left" side of the selection (the side of the selection that
 			// has the smaller index value).
-			int startIndex = 0; // editorControl.RichTextBoxControl.SelectionStart;
+			//int startIndex = 0; // editorControl.RichTextBoxControl.SelectionStart;
 
 			//// If the cursor is at the end of the selection then we need to add the selection
 			//// length to the index value.

@@ -4,13 +4,13 @@ namespace Toe.Utils.Mesh
 	{
 		#region Constants and Fields
 
-		public StreamSubmeshTriangleIndexes A;
+		public StreamSubmeshIndexes A;
 
-		public StreamSubmeshTriangleIndexes B;
+		public StreamSubmeshIndexes B;
 
-		public StreamSubmeshTriangleIndexes C;
+		public StreamSubmeshIndexes C;
 
-		public StreamSubmeshTriangleIndexes D;
+		public StreamSubmeshIndexes D;
 
 		#endregion
 	}

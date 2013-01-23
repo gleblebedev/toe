@@ -11,6 +11,7 @@ using Toe.Editors.Interfaces;
 using Toe.Editors.Interfaces.Bindings;
 using Toe.Editors.Interfaces.Panels;
 using Toe.Editors.Marmalade.Views;
+using Toe.Gx;
 using Toe.Marmalade.IwGraphics;
 using Toe.Resources;
 using Toe.Utils.Marmalade.IwGraphics;
@@ -22,6 +23,8 @@ namespace Toe.Editors.Marmalade
 		#region Constants and Fields
 
 		private readonly IComponentContext context;
+
+		private readonly ToeGraphicsContext graphicsContext;
 
 		private readonly DataContextContainer dataContext = new DataContextContainer();
 
@@ -49,18 +52,20 @@ namespace Toe.Editors.Marmalade
 			IEditorEnvironment editorEnvironment,
 			IResourceManager resourceManager,
 			IComponentContext context,
+			ToeGraphicsContext graphicsContext,
 			IEditorOptions<Base3DEditorOptions> options,
 			ICommandHistory history)
 		{
 			this.editorEnvironment = editorEnvironment;
 			this.resourceManager = resourceManager;
 			this.context = context;
+			this.graphicsContext = graphicsContext;
 			this.options = options;
 			this.history = history;
 			this.InitializeComponent();
 
 			this.InitializeEditor();
-			this.base3DEditor.RenderScene += this.RenderScene;
+			
 		}
 
 		#endregion
@@ -95,17 +100,17 @@ namespace Toe.Editors.Marmalade
 
 		#region Methods
 
-		protected void RenderScene(object sender, EventArgs args)
+		protected void OnRenderScene(object sender, EventArgs args)
 		{
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-
 			GL.PushAttrib(AttribMask.AllAttribBits);
 
 			var model = this.Model;
 			if (model != null)
 			{
-				model.RenderOpenGL();
+				graphicsContext.RenderModel(model);
 			}
+			graphicsContext.SetMaterial(null);
 			GL.PopAttrib();
 		}
 
@@ -187,6 +192,7 @@ namespace Toe.Editors.Marmalade
 			var editNameView = new EditNameView(this.history) { Dock = DockStyle.Fill };
 			this.tableLayoutPanel1.Controls.Add(editNameView, 1, 0);
 			new DataContextBinding(editNameView, this.dataContext, false);
+			this.base3DEditor.RenderScene += this.OnRenderScene;
 		}
 
 		#endregion

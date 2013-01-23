@@ -1,4 +1,6 @@
-namespace Toe.Marmalade.IwGx
+using Toe.Marmalade.IwGx;
+
+namespace Toe.Gx
 {
 	public class DefaultProgramOptions
 	{
@@ -6,7 +8,7 @@ namespace Toe.Marmalade.IwGx
 
 		private readonly DefaultFragmentShaderOptions fs;
 
-		DefaultProgramOptions(DefaultVertexShaderOptions vs, DefaultFragmentShaderOptions fs)
+		public DefaultProgramOptions(DefaultVertexShaderOptions vs, DefaultFragmentShaderOptions fs)
 		{
 			this.vs = vs;
 			this.fs = fs;
@@ -55,7 +57,7 @@ namespace Toe.Marmalade.IwGx
 			{
 				return false;
 			}
-			return Equals((DefaultProgramOptions)obj);
+			return this.Equals((DefaultProgramOptions)obj);
 		}
 
 		/// <summary>

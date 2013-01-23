@@ -6,6 +6,7 @@ using OpenTK.Graphics.OpenGL;
 
 using Toe.Editors.Interfaces;
 using Toe.Editors.Interfaces.Bindings;
+using Toe.Gx;
 using Toe.Marmalade.IwGx;
 using Toe.Resources;
 
@@ -21,6 +22,8 @@ namespace Toe.Editors.Marmalade
 
 		private readonly IResourceManager resourceManager;
 
+		private readonly ToeGraphicsContext graphicsContext;
+
 		#endregion
 
 		#region Constructors and Destructors
@@ -29,11 +32,13 @@ namespace Toe.Editors.Marmalade
 			IEditorEnvironment editorEnvironment,
 			IResourceManager resourceManager,
 			IComponentContext context,
+			ToeGraphicsContext graphicsContext,
 			IEditorOptions<Base3DEditorOptions> options, Base3DEditorContent content)
 			: base(context, options,content)
 		{
 			this.editorEnvironment = editorEnvironment;
 			this.resourceManager = resourceManager;
+			this.graphicsContext = graphicsContext;
 			this.InitializeComponent();
 
 			this.InitializeEditor();
@@ -80,7 +85,7 @@ namespace Toe.Editors.Marmalade
 			var texture = this.Texture;
 			if (texture != null)
 			{
-				texture.ApplyOpenGL(0);
+				graphicsContext.SetTexture(0, texture);
 				GL.Enable(EnableCap.Blend);
 				GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
 				GL.Enable(EnableCap.AlphaTest);

@@ -43,7 +43,7 @@ namespace Toe.Marmalade.BinaryFiles.IwAnim
 				var frameId = parser.ConsumeUInt32();
 				if (frameId == Hash.Get("CIwAnimKeyFrame"))
 				{
-					var frame = new AnimKeyFrame();
+					var frame = context.Resolve<AnimKeyFrame>();
 					parser.Expect((uint)0x0);
 					frame.Time = parser.ConsumeFloat();
 					var type = parser.ConsumeByte();
@@ -60,13 +60,10 @@ namespace Toe.Marmalade.BinaryFiles.IwAnim
 							parser.ConsumeUInt32(); // 0x01FFFFF, 0x01FFFFE
 							num = parser.ConsumeUInt32();
 							b = parser.ConsumeBool();
-							if (b == false)
-							{
-								b = b;
-							}
+
 							for (uint index = 0; index < num; ++index)
 							{
-								var bone = frame.Bones.EnsureBoneAt((int)index);
+								var bone = frame.Bones[(int)index];
 								bone.BindingPos = parser.ConsumeVector3();
 								bone.BindingRot = parser.ConsumeQuaternion();
 							}

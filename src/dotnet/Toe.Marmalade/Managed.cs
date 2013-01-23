@@ -16,6 +16,8 @@ namespace Toe.Marmalade
 
 		private uint nameHash;
 
+		private IContextData contextData;
+
 		#endregion
 
 		#region Constructors and Destructors
@@ -50,6 +52,23 @@ namespace Toe.Marmalade
 					this.RaisePropertyChanging("BasePath");
 					this.basePath = value;
 					this.RaisePropertyChanged("BasePath");
+				}
+			}
+		}
+
+		public IContextData ContextData
+		{
+			get
+			{
+				return this.contextData;
+			}
+			set
+			{
+				if (this.contextData != value)
+				{
+					this.RaisePropertyChanging("ContextData");
+					this.contextData = value;
+					this.RaisePropertyChanged("ContextData");
 				}
 			}
 		}
@@ -128,6 +147,14 @@ namespace Toe.Marmalade
 
 		protected virtual void Dispose(bool disposing)
 		{
+			if (disposing)
+			{
+				if (contextData != null)
+				{
+					contextData.Dispose();
+					contextData = null;
+				}
+			}
 		}
 
 		protected virtual void RaisePropertyChanged(string propertyName)

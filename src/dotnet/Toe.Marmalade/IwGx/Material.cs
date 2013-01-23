@@ -4,7 +4,6 @@ using System.Drawing;
 
 using OpenTK.Graphics.OpenGL;
 
-using Toe.Gx;
 using Toe.Resources;
 using Toe.Utils.Marmalade.IwGx;
 
@@ -71,8 +70,6 @@ namespace Toe.Marmalade.IwGx
 		public const uint UNMODULATE_F = (1 << 1);
 
 		public static readonly uint TypeHash = Hash.Get("CIwMaterial");
-
-		private readonly ToeGraphicsContext graphicsContext;
 
 		private readonly IResourceManager resourceManager;
 
@@ -142,10 +139,9 @@ namespace Toe.Marmalade.IwGx
 
 		#region Constructors and Destructors
 
-		public Material(IResourceManager resourceManager, ToeGraphicsContext graphicsContext)
+		public Material(IResourceManager resourceManager)
 		{
 			this.resourceManager = resourceManager;
-			this.graphicsContext = graphicsContext;
 			this.texture0 = new ResourceReference(Texture.TypeHash, resourceManager, this);
 			this.texture0.ReferenceChanged += (s, a) => this.RaisePropertyChanged("Texture0");
 
@@ -158,7 +154,7 @@ namespace Toe.Marmalade.IwGx
 			this.texture3 = new ResourceReference(Texture.TypeHash, resourceManager, this);
 			this.texture3.ReferenceChanged += (s, a) => this.RaisePropertyChanged("Texture3");
 
-			this.shaderTechnique = new ResourceReference(Utils.Marmalade.IwGx.ShaderTechnique.TypeHash, resourceManager, this);
+			this.shaderTechnique = new ResourceReference(IwGx.ShaderTechnique.TypeHash, resourceManager, this);
 			this.shaderTechnique.ReferenceChanged += (s, a) => this.RaisePropertyChanged("ShaderTechnique");
 		}
 
@@ -724,171 +720,171 @@ namespace Toe.Marmalade.IwGx
 
 		#region Public Methods and Operators
 
-		public void ApplyOpenGL()
-		{
-			GL.Color3(1.0f, 1.0f, 1.0f);
+		//public void ApplyOpenGL()
+		//{
+		//    GL.Color3(1.0f, 1.0f, 1.0f);
 
-			switch (this.CullMode)
-			{
-				case CullMode.FRONT:
-					if (!this.graphicsContext.FlipCulling)
-					{
-						GL.CullFace(CullFaceMode.Front);
-					}
-					else
-					{
-						GL.CullFace(CullFaceMode.Back);
-					}
-					GL.Enable(EnableCap.CullFace);
-					break;
-				case CullMode.BACK:
-					if (!this.graphicsContext.FlipCulling)
-					{
-						GL.CullFace(CullFaceMode.Back);
-					}
-					else
-					{
-						GL.CullFace(CullFaceMode.Front);
-					}
-					GL.Enable(EnableCap.CullFace);
-					break;
-				case CullMode.NONE:
-					GL.CullFace(CullFaceMode.FrontAndBack);
-					GL.Disable(EnableCap.CullFace);
-					break;
-				default:
-					throw new ArgumentOutOfRangeException();
-			}
-			switch (this.ShadeMode)
-			{
-				case ShadeMode.FLAT:
-					GL.ShadeModel(ShadingModel.Flat);
-					break;
-				case ShadeMode.GOURAUD:
-					GL.ShadeModel(ShadingModel.Smooth);
-					break;
-				default:
-					throw new ArgumentOutOfRangeException();
-			}
-			switch (this.AlphaMode)
-			{
-				case AlphaMode.NONE:
-					GL.Disable(EnableCap.Blend);
-					break;
-				case AlphaMode.HALF:
-					break;
-				case AlphaMode.ADD:
-					GL.Enable(EnableCap.Blend);
-					GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.One);
-					break;
-				case AlphaMode.SUB:
-					break;
-				case AlphaMode.BLEND:
-					GL.Enable(EnableCap.Blend);
-					GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
-					break;
-				case AlphaMode.DEFAULT:
-					GL.Disable(EnableCap.Blend);
-					break;
-				default:
-					throw new ArgumentOutOfRangeException();
-			}
-			switch (this.AlphaTestMode)
-			{
-				case AlphaTestMode.DISABLED:
-					GL.Disable(EnableCap.AlphaTest);
-					break;
-				case AlphaTestMode.NEVER:
-					GL.Enable(EnableCap.AlphaTest);
-					GL.AlphaFunc(AlphaFunction.Never, this.alphaTestValue / 255.0f);
-					break;
-				case AlphaTestMode.LESS:
-					GL.Enable(EnableCap.AlphaTest);
-					GL.AlphaFunc(AlphaFunction.Less, this.alphaTestValue / 255.0f);
-					break;
-				case AlphaTestMode.EQUAL:
-					GL.Enable(EnableCap.AlphaTest);
-					GL.AlphaFunc(AlphaFunction.Equal, this.alphaTestValue / 255.0f);
-					break;
-				case AlphaTestMode.LEQUAL:
-					GL.Enable(EnableCap.AlphaTest);
-					GL.AlphaFunc(AlphaFunction.Lequal, this.alphaTestValue / 255.0f);
-					break;
-				case AlphaTestMode.GREATER:
-					GL.Enable(EnableCap.AlphaTest);
-					GL.AlphaFunc(AlphaFunction.Greater, this.alphaTestValue / 255.0f);
-					break;
-				case AlphaTestMode.NOTEQUAL:
-					GL.Enable(EnableCap.AlphaTest);
-					GL.AlphaFunc(AlphaFunction.Notequal, this.alphaTestValue / 255.0f);
-					break;
-				case AlphaTestMode.GEQUAL:
-					GL.Enable(EnableCap.AlphaTest);
-					GL.AlphaFunc(AlphaFunction.Gequal, this.alphaTestValue / 255.0f);
-					break;
-				case AlphaTestMode.ALWAYS:
-					GL.Enable(EnableCap.AlphaTest);
-					GL.AlphaFunc(AlphaFunction.Always, this.alphaTestValue / 255.0f);
-					break;
-				default:
-					throw new ArgumentOutOfRangeException();
-			}
-			GL.DepthMask(this.DepthWriteEnable);
+		//    switch (this.CullMode)
+		//    {
+		//        case CullMode.FRONT:
+		//            if (!this.graphicsContext.FlipCulling)
+		//            {
+		//                GL.CullFace(CullFaceMode.Front);
+		//            }
+		//            else
+		//            {
+		//                GL.CullFace(CullFaceMode.Back);
+		//            }
+		//            GL.Enable(EnableCap.CullFace);
+		//            break;
+		//        case CullMode.BACK:
+		//            if (!this.graphicsContext.FlipCulling)
+		//            {
+		//                GL.CullFace(CullFaceMode.Back);
+		//            }
+		//            else
+		//            {
+		//                GL.CullFace(CullFaceMode.Front);
+		//            }
+		//            GL.Enable(EnableCap.CullFace);
+		//            break;
+		//        case CullMode.NONE:
+		//            GL.CullFace(CullFaceMode.FrontAndBack);
+		//            GL.Disable(EnableCap.CullFace);
+		//            break;
+		//        default:
+		//            throw new ArgumentOutOfRangeException();
+		//    }
+		//    switch (this.ShadeMode)
+		//    {
+		//        case ShadeMode.FLAT:
+		//            GL.ShadeModel(ShadingModel.Flat);
+		//            break;
+		//        case ShadeMode.GOURAUD:
+		//            GL.ShadeModel(ShadingModel.Smooth);
+		//            break;
+		//        default:
+		//            throw new ArgumentOutOfRangeException();
+		//    }
+		//    switch (this.AlphaMode)
+		//    {
+		//        case AlphaMode.NONE:
+		//            GL.Disable(EnableCap.Blend);
+		//            break;
+		//        case AlphaMode.HALF:
+		//            break;
+		//        case AlphaMode.ADD:
+		//            GL.Enable(EnableCap.Blend);
+		//            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.One);
+		//            break;
+		//        case AlphaMode.SUB:
+		//            break;
+		//        case AlphaMode.BLEND:
+		//            GL.Enable(EnableCap.Blend);
+		//            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+		//            break;
+		//        case AlphaMode.DEFAULT:
+		//            GL.Disable(EnableCap.Blend);
+		//            break;
+		//        default:
+		//            throw new ArgumentOutOfRangeException();
+		//    }
+		//    switch (this.AlphaTestMode)
+		//    {
+		//        case AlphaTestMode.DISABLED:
+		//            GL.Disable(EnableCap.AlphaTest);
+		//            break;
+		//        case AlphaTestMode.NEVER:
+		//            GL.Enable(EnableCap.AlphaTest);
+		//            GL.AlphaFunc(AlphaFunction.Never, this.alphaTestValue / 255.0f);
+		//            break;
+		//        case AlphaTestMode.LESS:
+		//            GL.Enable(EnableCap.AlphaTest);
+		//            GL.AlphaFunc(AlphaFunction.Less, this.alphaTestValue / 255.0f);
+		//            break;
+		//        case AlphaTestMode.EQUAL:
+		//            GL.Enable(EnableCap.AlphaTest);
+		//            GL.AlphaFunc(AlphaFunction.Equal, this.alphaTestValue / 255.0f);
+		//            break;
+		//        case AlphaTestMode.LEQUAL:
+		//            GL.Enable(EnableCap.AlphaTest);
+		//            GL.AlphaFunc(AlphaFunction.Lequal, this.alphaTestValue / 255.0f);
+		//            break;
+		//        case AlphaTestMode.GREATER:
+		//            GL.Enable(EnableCap.AlphaTest);
+		//            GL.AlphaFunc(AlphaFunction.Greater, this.alphaTestValue / 255.0f);
+		//            break;
+		//        case AlphaTestMode.NOTEQUAL:
+		//            GL.Enable(EnableCap.AlphaTest);
+		//            GL.AlphaFunc(AlphaFunction.Notequal, this.alphaTestValue / 255.0f);
+		//            break;
+		//        case AlphaTestMode.GEQUAL:
+		//            GL.Enable(EnableCap.AlphaTest);
+		//            GL.AlphaFunc(AlphaFunction.Gequal, this.alphaTestValue / 255.0f);
+		//            break;
+		//        case AlphaTestMode.ALWAYS:
+		//            GL.Enable(EnableCap.AlphaTest);
+		//            GL.AlphaFunc(AlphaFunction.Always, this.alphaTestValue / 255.0f);
+		//            break;
+		//        default:
+		//            throw new ArgumentOutOfRangeException();
+		//    }
+		//    GL.DepthMask(this.DepthWriteEnable);
 
-			GL.Enable(EnableCap.ColorMaterial);
+		//    GL.Enable(EnableCap.ColorMaterial);
 
-			if (this.colSpecular.A > 0 && (this.colSpecular.R > 0 || this.colSpecular.G > 0 || this.colSpecular.B > 0))
-			{
-				GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Specular, this.ColSpecular);
-				GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Shininess, this.SpecularPower / 255.0f);
-			}
-			GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Diffuse, this.ColDiffuse);
-			GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Emission, this.ColEmissive);
-			GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Ambient, this.ColAmbient);
+		//    if (this.colSpecular.A > 0 && (this.colSpecular.R > 0 || this.colSpecular.G > 0 || this.colSpecular.B > 0))
+		//    {
+		//        GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Specular, this.ColSpecular);
+		//        GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Shininess, this.SpecularPower / 255.0f);
+		//    }
+		//    GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Diffuse, this.ColDiffuse);
+		//    GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Emission, this.ColEmissive);
+		//    GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Ambient, this.ColAmbient);
 
-			var technique = this.shaderTechnique.Resource as ShaderTechnique;
-			if (this.graphicsContext.IsShadersEnabled && technique != null)
-			{
-				this.ApplyTextureToChannel(this.texture0, 0);
-				this.ApplyTextureToChannel(this.texture1, 1);
-				this.ApplyTextureToChannel(this.texture2, 2);
-				this.ApplyTextureToChannel(this.texture3, 3);
+		//    var technique = this.shaderTechnique.Resource as ShaderTechnique;
+		//    if (this.graphicsContext.IsShadersEnabled && technique != null)
+		//    {
+		//        this.ApplyTextureToChannel(this.texture0, 0);
+		//        this.ApplyTextureToChannel(this.texture1, 1);
+		//        this.ApplyTextureToChannel(this.texture2, 2);
+		//        this.ApplyTextureToChannel(this.texture3, 3);
 
-				technique.ApplyOpenGL();
-			}
-			else
-			{
-				switch (this.EffectPreset)
-				{
-					case EffectPreset.DEFAULT:
-						this.ApplyDefaultEffect();
-						break;
-					case EffectPreset.NORMAL_MAPPING:
-						this.ApplyNormalMapEffect();
-						break;
-					case EffectPreset.REFLECTION_MAPPING:
-						this.ApplyTexture0Effect();
-						break;
-					case EffectPreset.ENVIRONMENT_MAPPING:
-						this.ApplyTexture0Effect();
-						break;
-					case EffectPreset.CONSTANT_COLOUR_CHANNEL:
-						this.ApplyTexture0Effect();
-						break;
-					case EffectPreset.LIGHTMAP_POST_PROCESS:
-						this.ApplyTexture0Effect();
-						break;
-					case EffectPreset.NORMAL_MAPPING_SPECULAR:
-						this.ApplyTexture0Effect();
-						break;
-					case EffectPreset.TEXTURE0_ONLY:
-						this.ApplyTexture0Effect();
-						break;
-					default:
-						throw new ArgumentOutOfRangeException();
-				}
-			}
-		}
+		//        technique.ApplyOpenGL();
+		//    }
+		//    else
+		//    {
+		//        switch (this.EffectPreset)
+		//        {
+		//            case EffectPreset.DEFAULT:
+		//                this.ApplyDefaultEffect();
+		//                break;
+		//            case EffectPreset.NORMAL_MAPPING:
+		//                this.ApplyNormalMapEffect();
+		//                break;
+		//            case EffectPreset.REFLECTION_MAPPING:
+		//                this.ApplyTexture0Effect();
+		//                break;
+		//            case EffectPreset.ENVIRONMENT_MAPPING:
+		//                this.ApplyTexture0Effect();
+		//                break;
+		//            case EffectPreset.CONSTANT_COLOUR_CHANNEL:
+		//                this.ApplyTexture0Effect();
+		//                break;
+		//            case EffectPreset.LIGHTMAP_POST_PROCESS:
+		//                this.ApplyTexture0Effect();
+		//                break;
+		//            case EffectPreset.NORMAL_MAPPING_SPECULAR:
+		//                this.ApplyTexture0Effect();
+		//                break;
+		//            case EffectPreset.TEXTURE0_ONLY:
+		//                this.ApplyTexture0Effect();
+		//                break;
+		//            default:
+		//                throw new ArgumentOutOfRangeException();
+		//        }
+		//    }
+		//}
 
 		#endregion
 
@@ -903,77 +899,77 @@ namespace Toe.Marmalade.IwGx
 			}
 		}
 
-		private void ApplyDefaultEffect()
-		{
-			this.ApplyTextureToChannel(this.texture0, 0);
-			this.ApplyTextureToChannel(this.texture1, 1);
-			GL.ActiveTexture(TextureUnit.Texture1);
-			switch (this.BlendMode)
-			{
-				case BlendMode.MODULATE:
-					GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvMode, (float)TextureEnvMode.Modulate);
-					break;
-				case BlendMode.DECAL:
-					GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvMode, (float)TextureEnvMode.Decal);
-					break;
-				case BlendMode.ADD:
-					GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvMode, (float)TextureEnvMode.Add);
-					break;
-				case BlendMode.REPLACE:
-					GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvMode, (float)TextureEnvMode.Replace);
-					break;
-				case BlendMode.BLEND:
-					GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvMode, (float)TextureEnvMode.Blend);
-					break;
-				case BlendMode.MODULATE_2X:
-					GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvMode, (float)TextureEnvMode.Modulate);
-					break;
-				case BlendMode.MODULATE_4X:
-					GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvMode, (float)TextureEnvMode.Modulate);
-					break;
-				default:
-					throw new ArgumentOutOfRangeException();
-			}
-		}
+		//private void ApplyDefaultEffect()
+		//{
+		//    this.ApplyTextureToChannel(this.texture0, 0);
+		//    this.ApplyTextureToChannel(this.texture1, 1);
+		//    GL.ActiveTexture(TextureUnit.Texture1);
+		//    switch (this.BlendMode)
+		//    {
+		//        case BlendMode.MODULATE:
+		//            GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvMode, (float)TextureEnvMode.Modulate);
+		//            break;
+		//        case BlendMode.DECAL:
+		//            GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvMode, (float)TextureEnvMode.Decal);
+		//            break;
+		//        case BlendMode.ADD:
+		//            GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvMode, (float)TextureEnvMode.Add);
+		//            break;
+		//        case BlendMode.REPLACE:
+		//            GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvMode, (float)TextureEnvMode.Replace);
+		//            break;
+		//        case BlendMode.BLEND:
+		//            GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvMode, (float)TextureEnvMode.Blend);
+		//            break;
+		//        case BlendMode.MODULATE_2X:
+		//            GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvMode, (float)TextureEnvMode.Modulate);
+		//            break;
+		//        case BlendMode.MODULATE_4X:
+		//            GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvMode, (float)TextureEnvMode.Modulate);
+		//            break;
+		//        default:
+		//            throw new ArgumentOutOfRangeException();
+		//    }
+		//}
 
-		private void ApplyNormalMapEffect()
-		{
-			this.ApplyTexture0Effect();
-			//this.ApplyTextureToChannel(this.texture1, 0);
-			//GL.ActiveTexture(TextureUnit.Texture0);
-			//GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvMode, (int)TextureEnvMode.Combine);
-			//GL.TexEnv(TextureEnvTarget.TextureEnv, GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_DOT3_RGB);
-			//GL.TexEnv(TextureEnvTarget.TextureEnv, GL_TEXTURE_ENV, GL_SOURCE0_RGB, GL_PREVIOUS);
-			//GL.TexEnv(TextureEnvTarget.TextureEnv, GL_TEXTURE_ENV, GL_SOURCE1_RGB, GL_TEXTURE);
+		//private void ApplyNormalMapEffect()
+		//{
+		//    this.ApplyTexture0Effect();
+		//    //this.ApplyTextureToChannel(this.texture1, 0);
+		//    //GL.ActiveTexture(TextureUnit.Texture0);
+		//    //GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvMode, (int)TextureEnvMode.Combine);
+		//    //GL.TexEnv(TextureEnvTarget.TextureEnv, GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_DOT3_RGB);
+		//    //GL.TexEnv(TextureEnvTarget.TextureEnv, GL_TEXTURE_ENV, GL_SOURCE0_RGB, GL_PREVIOUS);
+		//    //GL.TexEnv(TextureEnvTarget.TextureEnv, GL_TEXTURE_ENV, GL_SOURCE1_RGB, GL_TEXTURE);
 
-			//this.ApplyTextureToChannel(this.texture0, 1);
-			//GL.ActiveTexture(TextureUnit.Texture1);
+		//    //this.ApplyTextureToChannel(this.texture0, 1);
+		//    //GL.ActiveTexture(TextureUnit.Texture1);
 
-			//GL.TexEnv(TextureEnvTarget.TextureEnv, GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE);
-			//GL.TexEnv(TextureEnvTarget.TextureEnv, GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_DOT3_RGB);
-			//GL.TexEnv(TextureEnvTarget.TextureEnv, GL_TEXTURE_ENV, GL_SOURCE0_RGB, GL_PREVIOUS);
-			//GL.TexEnv(TextureEnvTarget.TextureEnv, GL_TEXTURE_ENV, GL_SOURCE1_RGB, GL_TEXTURE);
-		}
+		//    //GL.TexEnv(TextureEnvTarget.TextureEnv, GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE);
+		//    //GL.TexEnv(TextureEnvTarget.TextureEnv, GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_DOT3_RGB);
+		//    //GL.TexEnv(TextureEnvTarget.TextureEnv, GL_TEXTURE_ENV, GL_SOURCE0_RGB, GL_PREVIOUS);
+		//    //GL.TexEnv(TextureEnvTarget.TextureEnv, GL_TEXTURE_ENV, GL_SOURCE1_RGB, GL_TEXTURE);
+		//}
 
-		private void ApplyTexture0Effect()
-		{
-			this.ApplyTextureToChannel(this.texture0, 0);
-		}
+		//private void ApplyTexture0Effect()
+		//{
+		//    this.ApplyTextureToChannel(this.texture0, 0);
+		//}
 
-		private void ApplyTextureToChannel(ResourceReference resourceReference, int i)
-		{
-			var resource = resourceReference.Resource as Texture;
-			if (resource != null)
-			{
-				resource.ApplyOpenGL(i);
-				this.SetFiltering(i);
-			}
-			else
-			{
-				GL.ActiveTexture(TextureUnit.Texture0 + i);
-				GL.Disable(EnableCap.Texture2D);
-			}
-		}
+		//private void ApplyTextureToChannel(ResourceReference resourceReference, int i)
+		//{
+		//    var resource = resourceReference.Resource as Texture;
+		//    if (resource != null)
+		//    {
+		//        resource.ApplyOpenGL(i);
+		//        this.SetFiltering(i);
+		//    }
+		//    else
+		//    {
+		//        GL.ActiveTexture(TextureUnit.Texture0 + i);
+		//        GL.Disable(EnableCap.Texture2D);
+		//    }
+		//}
 
 		private void MatAnimPropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
