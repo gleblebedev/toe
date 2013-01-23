@@ -1,5 +1,6 @@
 using System.Globalization;
 
+using Toe.Marmalade.IwGx;
 using Toe.Resources;
 using Toe.Utils.Marmalade;
 using Toe.Utils.Marmalade.IwGx;
@@ -34,6 +35,30 @@ namespace Toe.Marmalade.TextFiles.IwGx
 			get
 			{
 				return ".itx";
+			}
+		}
+
+		public string Fragment
+		{
+			get
+			{
+				return this.fragment;
+			}
+			set
+			{
+				this.fragment = value;
+			}
+		}
+
+		public string Vertex
+		{
+			get
+			{
+				return this.vertex;
+			}
+			set
+			{
+				this.vertex = value;
 			}
 		}
 
@@ -97,7 +122,7 @@ namespace Toe.Marmalade.TextFiles.IwGx
 
 		private void ParseFloatParam(TextParser parser, ShaderTechnique shader, string paramName, int numArgs)
 		{
-			float[] a = new float[numArgs];
+			var a = new float[numArgs];
 			for (int i = 0; i < numArgs; ++i)
 			{
 				a[i] = parser.ConsumeFloat();

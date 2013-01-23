@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 
 using OpenTK.Graphics.OpenGL;
 
@@ -13,6 +14,8 @@ namespace Toe.Gx
 			ErrorCode ec = GL.GetError();
 			if (ec != 0)
 			{
+				if (Debugger.IsAttached)
+					Debugger.Break();
 				throw new ApplicationException(ec.ToString());
 			}
 		}

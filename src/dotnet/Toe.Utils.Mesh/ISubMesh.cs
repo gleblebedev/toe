@@ -3,17 +3,13 @@ namespace Toe.Utils.Mesh
 	/// <summary>
 	/// Submesh with single material.
 	/// </summary>
-	public interface ISubMesh
+	public interface ISubMesh: IVertexIndexSource
 	{
-#if WINDOWS_PHONE
-#else
-		void RenderOpenGL();
-#endif
 
-		string Material { get; set; }
+		IMaterial Material { get; set; }
 
 		string Name { get; }
 
-		uint MaterialHash { get; set; }
+		object RenderData { get; set; }
 	}
 }

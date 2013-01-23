@@ -5,6 +5,7 @@ using OpenTK;
 using OpenTK.Graphics.OpenGL;
 
 using Toe.Editors.Interfaces;
+using Toe.Gx;
 
 namespace Toe.Editors
 {
@@ -142,10 +143,8 @@ namespace Toe.Editors
 				{
 					case CoordinateSystem.ZUp:
 						return new Vector3(0, 1, 0);
-						break;
 					case CoordinateSystem.YUp:
 						return new Vector3(0, 0, -1);
-						break;
 					default:
 						throw new ArgumentOutOfRangeException();
 				}
@@ -160,10 +159,8 @@ namespace Toe.Editors
 				{
 					case CoordinateSystem.ZUp:
 						return new Vector3(1, 0, 0);
-						break;
 					case CoordinateSystem.YUp:
 						return new Vector3(1, 0, 0);
-						break;
 					default:
 						throw new ArgumentOutOfRangeException();
 				}
@@ -178,10 +175,8 @@ namespace Toe.Editors
 				{
 					case CoordinateSystem.ZUp:
 						return new Vector3(0, 0, 1);
-						break;
 					case CoordinateSystem.YUp:
 						return new Vector3(0, 1, 0);
-						break;
 					default:
 						throw new ArgumentOutOfRangeException();
 				}
@@ -359,9 +354,8 @@ namespace Toe.Editors
 			//this.rot.Conjugate();
 		}
 
-		public void SetProjection()
+		public void SetProjection(ToeGraphicsContext graphicsContext)
 		{
-			GL.MatrixMode(MatrixMode.Projection);
 			Matrix4 projection;
 			if (this.ortho)
 			{
@@ -373,12 +367,13 @@ namespace Toe.Editors
 			{
 				CreatePerspectiveFieldOfView(this.fovy, this.aspectRation, this.zNear, this.zFar, out projection);
 			}
-			GL.LoadMatrix(ref projection);
 
-			GL.MatrixMode(MatrixMode.Modelview);
+			graphicsContext.SetProjection(ref projection);
+
 			Matrix4 view = Matrix4.Rotate(this.rot) * Matrix4.CreateTranslation(this.pos);
 			view.Invert();
-			GL.LoadMatrix(ref view);
+
+			graphicsContext.SetView(ref view);
 		}
 
 		#endregion

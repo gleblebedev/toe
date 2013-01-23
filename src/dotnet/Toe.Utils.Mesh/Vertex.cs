@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 
 using OpenTK;
 
@@ -14,37 +15,133 @@ namespace Toe.Utils.Mesh
 	/// Vertext, compatible with Marmalade SDK limitations.
 	/// Each model vertex can have up to 4 weights.
 	/// </summary>
-	public class Vertex : IEquatable<Vertex>
+	public struct Vertex : IEquatable<Vertex>
 	{
 		#region Public Properties
+
+		private Vector3 binormal;
 
 		/// <summary>
 		/// Binormal / bitangent for UV0.
 		/// </summary>
-		public Vector3 Binormal { get; set; }
+		public Vector3 Binormal
+		{
+			get
+			{
+				return this.binormal;
+			}
+			set
+			{
+				this.binormal = value;
+			}
+		}
 
-		public int Color { get; set; }
+		private Color color;
+
+		public Color Color
+		{
+			get
+			{
+				return this.color;
+			}
+			set
+			{
+				this.color = value;
+			}
+		}
+
+		private Vector3 normal;
 
 		/// <summary>
 		/// Normal vector.
 		/// </summary>
-		public Vector3 Normal { get; set; }
+		public Vector3 Normal
+		{
+			get
+			{
+				return this.normal;
+			}
+			set
+			{
+				this.normal = value;
+			}
+		}
+
+		private Vector3 position;
 
 		/// <summary>
 		/// Position vector.
 		/// </summary>
-		public Vector3 Position { get; set; }
+		public Vector3 Position
+		{
+			get
+			{
+				return this.position;
+			}
+			set
+			{
+				this.position = value;
+			}
+		}
+
+		private Vector3 tangent;
 
 		/// <summary>
 		/// Tangent for UV0.
 		/// </summary>
-		public Vector3 Tangent { get; set; }
+		public Vector3 Tangent
+		{
+			get
+			{
+				return this.tangent;
+			}
+			set
+			{
+				this.tangent = value;
+			}
+		}
 
-		public Vector3 UV0 { get; set; }
+		private Vector3 uv0;
 
-		public Vector3 UV1 { get; set; }
+		public Vector3 UV0
+		{
+			get
+			{
+				return this.uv0;
+			}
+			set
+			{
+				this.uv0 = value;
+			}
+		}
 
-		public VertexWeights Weights { get; set; }
+		private Vector3 uv1;
+
+		public Vector3 UV1
+		{
+			get
+			{
+				return this.uv1;
+			}
+			set
+			{
+				this.uv1 = value;
+			}
+		}
+
+		private VertexWeights weights;
+
+		public VertexWeights Weights
+		{
+			get
+			{
+				return this.weights;
+			}
+			set
+			{
+				this.weights = value;
+			}
+		}
 
 		#endregion
 
@@ -121,7 +218,7 @@ namespace Toe.Utils.Mesh
 				result = (result * 397) ^ this.Normal.GetHashCode();
 				result = (result * 397) ^ this.Tangent.GetHashCode();
 				result = (result * 397) ^ this.Binormal.GetHashCode();
-				result = (result * 397) ^ this.Color;
+				result = (result * 397) ^ this.Color.GetHashCode();
 				result = (result * 397) ^ this.UV0.GetHashCode();
 				result = (result * 397) ^ this.UV1.GetHashCode();
 				result = (result * 397) ^ this.Weights.GetHashCode();

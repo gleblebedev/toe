@@ -15,7 +15,7 @@ namespace Toe.Marmalade.IwGraphics
 
 		public static readonly uint TypeHash = Hash.Get("CIwModel");
 
-		private readonly IList<IMesh> meshes = new List<IMesh>();
+		private readonly IList<Mesh> meshes = new List<Mesh>();
 
 		private readonly IResourceManager resourceManager;
 
@@ -61,7 +61,7 @@ namespace Toe.Marmalade.IwGraphics
 			}
 		}
 
-		public IList<IMesh> Meshes
+		public IList<Mesh> Meshes
 		{
 			get
 			{
@@ -75,35 +75,7 @@ namespace Toe.Marmalade.IwGraphics
 
 		#region Public Methods and Operators
 
-		public void RenderOpenGL()
-		{
-			foreach (var mesh in this.Meshes)
-			{
-				foreach (ISubMesh submesh in mesh.Submeshes)
-				{
-					GL.PushAttrib(AttribMask.AllAttribBits);
-					Material m = null;
-					if (!string.IsNullOrEmpty(submesh.Material))
-					{
-						m = this.resourceManager.FindResource(Material.TypeHash, Hash.Get(mesh.Name + "/" + submesh.Material)) as Material;
-						if (m == null)
-						{
-							m = this.resourceManager.FindResource(Material.TypeHash, Hash.Get(submesh.Material)) as Material;
-						}
-					}
-					else
-					{
-						m = this.resourceManager.FindResource(Material.TypeHash, submesh.MaterialHash) as Material;
-					}
-					if (m != null)
-					{
-						m.ApplyOpenGL();
-					}
-					submesh.RenderOpenGL();
-					GL.PopAttrib();
-				}
-			}
-		}
+		
 
 		#endregion
 	}

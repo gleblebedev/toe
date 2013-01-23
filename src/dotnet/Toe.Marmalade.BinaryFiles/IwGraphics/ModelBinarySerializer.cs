@@ -7,8 +7,6 @@ using OpenTK;
 
 using Toe.Marmalade.IwGraphics;
 using Toe.Resources;
-using Toe.Utils.Marmalade.IwGraphics;
-using Toe.Utils.Mesh;
 
 namespace Toe.Marmalade.BinaryFiles.IwGraphics
 {
@@ -43,7 +41,7 @@ namespace Toe.Marmalade.BinaryFiles.IwGraphics
 			var numVertsUnique = parser.ConsumeUInt32();
 			model.Center = parser.ConsumeVector3();
 			model.Radius = parser.ConsumeFloat();
-			var streamMesh = new StreamMesh();
+			var streamMesh = this.context.Resolve<Mesh>();
 			model.Meshes.Add(streamMesh);
 
 			streamMesh.NameHash = parser.ConsumeUInt32();
@@ -91,145 +89,113 @@ namespace Toe.Marmalade.BinaryFiles.IwGraphics
 				}
 				if (type == Hash.Get("CIwModelBlockBiTangents"))
 				{
-					throw new NotImplementedException();
+					this.ParseModelBlockBiTangents(parser, model, name, size, numItems, flags);
+					continue;
+				}
+				if (type == Hash.Get("CIwModelBlockTangents"))
+				{
+					this.ParseModelBlockTangents(parser, model, name, size, numItems, flags);
 					continue;
 				}
 				if (type == Hash.Get("CIwModelBlockChunk"))
 				{
 					throw new NotImplementedException();
-					continue;
 				}
 				if (type == Hash.Get("CIwModelBlockChunkTree"))
 				{
 					throw new NotImplementedException();
-					continue;
 				}
 				if (type == Hash.Get("CIwModelBlockChunkVerts"))
 				{
 					throw new NotImplementedException();
-					continue;
 				}
 				if (type == Hash.Get("CIwModelBlockCols16"))
 				{
 					throw new NotImplementedException();
-					continue;
 				}
 				if (type == Hash.Get("CIwModelBlockFaceFlags"))
 				{
 					throw new NotImplementedException();
-					continue;
 				}
 				if (type == Hash.Get("CIwModelBlockGLPrimBase"))
 				{
 					throw new NotImplementedException();
-					continue;
 				}
 				if (type == Hash.Get("CIwModelBlockGLRenderEdges"))
 				{
 					throw new NotImplementedException();
-					continue;
 				}
 				if (type == Hash.Get("CIwModelBlockGLRenderVerts"))
 				{
 					throw new NotImplementedException();
-					continue;
 				}
-
 				if (type == Hash.Get("CIwModelBlockGLTriStrip"))
 				{
 					throw new NotImplementedException();
-					continue;
 				}
 				if (type == Hash.Get("CIwModelBlockGLUVs2"))
 				{
 					throw new NotImplementedException();
-					continue;
 				}
 				if (type == Hash.Get("CIwModelBlockIndGroups"))
 				{
 					throw new NotImplementedException();
-					continue;
 				}
-
 				if (type == Hash.Get("CIwModelBlockPrimBase"))
 				{
 					throw new NotImplementedException();
-					continue;
 				}
 				if (type == Hash.Get("CIwModelBlockPrimF3"))
 				{
 					throw new NotImplementedException();
-					continue;
 				}
 				if (type == Hash.Get("CIwModelBlockPrimF4"))
 				{
 					throw new NotImplementedException();
-					continue;
 				}
 				if (type == Hash.Get("CIwModelBlockPrimFT3"))
 				{
 					throw new NotImplementedException();
-					continue;
 				}
 				if (type == Hash.Get("CIwModelBlockPrimFT4"))
 				{
 					throw new NotImplementedException();
-					continue;
 				}
 				if (type == Hash.Get("CIwModelBlockPrimG3"))
 				{
 					throw new NotImplementedException();
-					continue;
 				}
 				if (type == Hash.Get("CIwModelBlockPrimG4"))
 				{
 					throw new NotImplementedException();
-					continue;
 				}
 				if (type == Hash.Get("CIwModelBlockPrimGen3"))
 				{
 					throw new NotImplementedException();
-					continue;
 				}
 				if (type == Hash.Get("CIwModelBlockPrimGen4"))
 				{
 					throw new NotImplementedException();
-					continue;
 				}
 				if (type == Hash.Get("CIwModelBlockPrimGT3"))
 				{
 					throw new NotImplementedException();
-					continue;
 				}
 				if (type == Hash.Get("CIwModelBlockPrimGT4"))
 				{
 					throw new NotImplementedException();
-					continue;
 				}
 				if (type == Hash.Get("CIwModelBlockRenderEdges"))
 				{
 					throw new NotImplementedException();
-					continue;
 				}
 				if (type == Hash.Get("CIwModelBlockRenderVerts"))
 				{
 					throw new NotImplementedException();
-					continue;
 				}
 				if (type == Hash.Get("CIwModelBlockSWOptim1"))
 				{
 					throw new NotImplementedException();
-					continue;
-				}
-				if (type == Hash.Get("CIwModelBlockTangents"))
-				{
-					throw new NotImplementedException();
-					continue;
-				}
-				if (type == Hash.Get("CIwModelBlockTangents"))
-				{
-					throw new NotImplementedException();
-					continue;
 				}
 
 				throw new FormatException("Unknown element");
@@ -245,17 +211,14 @@ namespace Toe.Marmalade.BinaryFiles.IwGraphics
 				if (type == Hash.Get("CIwModelExtPos"))
 				{
 					throw new NotImplementedException();
-					continue;
 				}
 				if (type == Hash.Get("CIwModelExtSelSet"))
 				{
 					throw new NotImplementedException();
-					continue;
 				}
 				if (type == Hash.Get("CIwModelExtSelSetEdge"))
 				{
 					throw new NotImplementedException();
-					continue;
 				}
 				if (type == Hash.Get("CIwModelExtSelSetFace"))
 				{
@@ -270,7 +233,6 @@ namespace Toe.Marmalade.BinaryFiles.IwGraphics
 				if (type == Hash.Get("CIwModelExtSphere"))
 				{
 					throw new NotImplementedException();
-					continue;
 				}
 
 				throw new FormatException("Unknown element");
@@ -285,9 +247,9 @@ namespace Toe.Marmalade.BinaryFiles.IwGraphics
 
 			foreach (var mesh in model.Meshes)
 			{
-				foreach (var submesh in mesh.Submeshes)
+				foreach (Surface submesh in mesh.Surfaces)
 				{
-					submesh.MaterialHash = materials[submesh.MaterialHash];
+					submesh.Material.HashReference = materials[submesh.Material.HashReference];
 				}
 			}
 
@@ -298,9 +260,22 @@ namespace Toe.Marmalade.BinaryFiles.IwGraphics
 
 		#region Methods
 
+		private void ParseModelBlockBiTangents(
+			BinaryParser parser, Model model, uint name, uint size, uint numItems, ushort flags)
+		{
+			var streamMesh = (model.Meshes[0]);
+			streamMesh.BiTangents.Clear();
+			int num = (int)numItems;
+			streamMesh.BiTangents.Capacity = num;
+			for (int i = 0; i < num; ++i)
+			{
+				streamMesh.BiTangents.Add(parser.ConsumeVector3());
+			}
+		}
+
 		private void ParseModelBlockCols(BinaryParser parser, Model model, uint name, uint size, uint numItems, ushort flags)
 		{
-			var streamMesh = ((StreamMesh)model.Meshes[0]);
+			var streamMesh = (model.Meshes[0]);
 			int num = (int)numItems;
 			streamMesh.Colors.Clear();
 			streamMesh.Colors.Capacity = num;
@@ -325,23 +300,22 @@ namespace Toe.Marmalade.BinaryFiles.IwGraphics
 		private void ParseModelBlockGLTriList(
 			BinaryParser parser, Model model, uint name, uint size, uint numItems, ushort flags)
 		{
-			var streamMesh = ((StreamMesh)model.Meshes[0]);
-			var streamSubmesh = (StreamSubmesh)streamMesh.CreateSubmesh();
-			streamMesh.Submeshes.Add(streamSubmesh);
+			var streamMesh = (model.Meshes[0]);
+			var streamSubmesh = this.context.Resolve<ModelBlockGLTriList>();
+			streamSubmesh.Mesh = streamMesh;
+			streamMesh.Surfaces.Add(streamSubmesh);
 
-			streamSubmesh.MaterialHash = parser.ConsumeUInt32();
+			streamSubmesh.Material.HashReference = parser.ConsumeUInt32();
 
 			var indices = parser.ConsumeUInt16Array((int)numItems);
 			for (int i = 0; i < indices.Length;)
 			{
-				var tiangle = new StreamSubmeshTriangle();
-				UInt16 index = indices[i++];
-				tiangle.C = new StreamSubmeshTriangleIndexes { Vertex = index, Normal = index, Color = index, UV0 = index };
-				index = indices[i++];
-				tiangle.B = new StreamSubmeshTriangleIndexes { Vertex = index, Normal = index, Color = index, UV0 = index };
-				index = indices[i++];
-				tiangle.A = new StreamSubmeshTriangleIndexes { Vertex = index, Normal = index, Color = index, UV0 = index };
-				streamSubmesh.Tris.Add(tiangle);
+				UInt16 c = indices[i++];
+				UInt16 b = indices[i++];
+				UInt16 a = indices[i++];
+				streamSubmesh.Indices.Add(a);
+				streamSubmesh.Indices.Add(b);
+				streamSubmesh.Indices.Add(c);
 			}
 			//if (serialise.IsReading())
 			//{
@@ -359,23 +333,19 @@ namespace Toe.Marmalade.BinaryFiles.IwGraphics
 
 		private void ParseModelBlockGLUVs(BinaryParser parser, Model model, uint name, uint size, uint numItems, ushort flags)
 		{
-			var streamMesh = ((StreamMesh)model.Meshes[0]);
-			while (streamMesh.UV.Count < 1)
-			{
-				streamMesh.UV.Add(new MeshStream<Vector2>());
-			}
+			var streamMesh = (model.Meshes[0]);
 			int num = (int)numItems;
-			streamMesh.UV[0].Clear();
-			streamMesh.UV[0].Capacity = num;
+			streamMesh.UV0.Clear();
+			streamMesh.UV0.Capacity = num;
 			for (int i = 0; i < num; ++i)
 			{
-				streamMesh.UV[0].Add(parser.ConsumeVector2());
+				streamMesh.UV0.Add(parser.ConsumeVector2());
 			}
 		}
 
 		private void ParseModelBlockNorms(BinaryParser parser, Model model, uint name, uint size, uint numItems, ushort flags)
 		{
-			var streamMesh = ((StreamMesh)model.Meshes[0]);
+			var streamMesh = (model.Meshes[0]);
 			streamMesh.Normals.Clear();
 			int num = (int)numItems;
 			streamMesh.Normals.Capacity = num;
@@ -385,10 +355,23 @@ namespace Toe.Marmalade.BinaryFiles.IwGraphics
 			}
 		}
 
+		private void ParseModelBlockTangents(
+			BinaryParser parser, Model model, uint name, uint size, uint numItems, ushort flags)
+		{
+			var streamMesh = (model.Meshes[0]);
+			streamMesh.Tangents.Clear();
+			int num = (int)numItems;
+			streamMesh.Tangents.Capacity = num;
+			for (int i = 0; i < num; ++i)
+			{
+				streamMesh.Tangents.Add(parser.ConsumeVector3());
+			}
+		}
+
 		private void ParseModelBlockVerts(BinaryParser parser, Model model, uint name, uint size, uint numItems, ushort flags)
 		{
 			var uniqueValues = parser.ConsumeUInt16();
-			var streamMesh = ((StreamMesh)model.Meshes[0]);
+			var streamMesh = (model.Meshes[0]);
 			streamMesh.Vertices.Clear();
 			var itemsToRead = (int)uniqueValues;
 			streamMesh.Vertices.EnsureAt((int)numItems - 1);

@@ -5,7 +5,7 @@ namespace Toe.Utils.Mesh
 	/// <summary>
 	/// Meshs file parser interface.
 	/// </summary>
-	public interface IMeshReader
+	public interface ISceneReader
 	{
 		#region Public Methods and Operators
 
@@ -14,7 +14,7 @@ namespace Toe.Utils.Mesh
 		/// </summary>
 		/// <param name="stream">Stream to read from.</param>
 		/// <returns>Complete parsed mesh.</returns>
-		IMesh Load(Stream stream);
+		IScene Load(Stream stream);
 
 		#endregion
 	}

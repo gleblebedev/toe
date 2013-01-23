@@ -6,30 +6,15 @@ namespace Toe.Utils.Mesh
 {
 	public class VertexBufferSubmesh : BaseSubmesh,ISubMesh
 	{
-		List<int> indices = new List<int>();
+		readonly List<int> indices = new List<int>();
 
-		private readonly VertexBufferMesh vertexBufferMesh;
+		private readonly VertexBufferMesh mesh;
 
-		public VertexBufferSubmesh(VertexBufferMesh vertexBufferMesh)
+		public VertexBufferSubmesh(VertexBufferMesh mesh):base()
 		{
-			this.vertexBufferMesh = vertexBufferMesh;
+			this.mesh = mesh;
+			this.VertexSourceType = VertexSourceType.TrianleList;
 		}
-
-		#region Implementation of ISubMesh
-
-		public override void RenderOpenGL()
-		{
-			GL.Begin(BeginMode.Triangles);
-			GL.Color3(1.0f, 1.0f, 1.0f);
-			foreach (var index in indices)
-			{
-				vertexBufferMesh.RenderOpenGLVertex(index);
-			}
-			GL.End();
-		}
-
-	
-		#endregion
 
 		public void Add(int i)
 		{
@@ -37,7 +22,39 @@ namespace Toe.Utils.Mesh
 		}
 		public void Add(ref Vertex v)
 		{
-			this.Add(vertexBufferMesh.VertexBuffer.Add(v));
+			this.Add(this.mesh.VertexBuffer.Add(v));
 		}
+		public object RenderData
+		{
+			get;
+			set;
+		}
+		#region Overrides of BaseSubmesh
+
+		/// <summary>
+		/// Returns an enumerator that iterates through the collection.
+		/// </summary>
+		/// <returns>
+		/// A <see cref="T:System.Collections.Generic.IEnumerator`1"/> that can be used to iterate through the collection.
+		/// </returns>
+		/// <filterpriority>1</filterpriority>
+		public override IEnumerator<int> GetEnumerator()
+		{
+			foreach (var i in indices)
+			{
+				yield return i;
+			}
+		}
+
+		public override int Count
+		{
+			get
+			{
+				return indices.Count;
+			}
+		}
+
+
+		#endregion
 	}
 }

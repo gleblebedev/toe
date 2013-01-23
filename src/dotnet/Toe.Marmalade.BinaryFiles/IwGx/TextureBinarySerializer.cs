@@ -46,10 +46,6 @@ namespace Toe.Marmalade.BinaryFiles.IwGx
 			texture.Image = this.ParseImage(parser);
 
 			var e = parser.ConsumeBool();
-			if (e)
-			{
-				e = e;
-			}
 			//parser.Expect(false);
 
 			return texture;

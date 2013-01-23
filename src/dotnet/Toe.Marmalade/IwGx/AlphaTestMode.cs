@@ -1,4 +1,4 @@
-namespace Toe.Utils.Marmalade.IwGx
+namespace Toe.Marmalade.IwGx
 {
 	/// <summary>
 	/// Alpha (transparency) Testing modes.

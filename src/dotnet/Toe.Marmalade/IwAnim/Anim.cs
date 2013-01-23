@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 
 using Toe.Resources;
-using Toe.Utils.Mesh;
+
 
 namespace Toe.Marmalade.IwAnim
 {
@@ -102,7 +102,7 @@ namespace Toe.Marmalade.IwAnim
 				for (int index = 0; index < frame.Bones.Count; ++index)
 				{
 					var bone = frame.Bones[index];
-					MeshBone b;
+					AnimBone b;
 					if (!this.IsAnonymousBones)
 					{
 						b = animSkel.Bones[animSkel.EnsureBone(bone.NameHash)];

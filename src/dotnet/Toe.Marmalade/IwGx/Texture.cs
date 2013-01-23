@@ -2,7 +2,6 @@ using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 
-using Toe.Gx;
 using Toe.Resources;
 
 namespace Toe.Marmalade.IwGx
@@ -15,26 +14,6 @@ namespace Toe.Marmalade.IwGx
 
 		public Vector2 UVScale;
 
-		//private Bitmap bitmap;
-
-		private IGraphicsContext context;
-
-		//public Bitmap Bitmap
-		//{
-		//    get
-		//    {
-		//        return this.bitmap;
-		//    }
-		//    set
-		//    {
-		//        if (this.bitmap != value)
-		//        {
-		//            this.bitmap = value;
-		//            this.RaisePropertyChanged("Bitmap");
-		//        }
-		//    }
-		//}
-
 		private uint flags;
 
 		private ImageFormat formatHw = ImageFormat.FORMAT_UNDEFINED;
@@ -42,8 +21,6 @@ namespace Toe.Marmalade.IwGx
 		private ImageFormat formatSw = ImageFormat.FORMAT_UNDEFINED;
 
 		private Image image;
-
-		private uint textureId;
 
 		#endregion
 
@@ -123,28 +100,6 @@ namespace Toe.Marmalade.IwGx
 
 		#endregion
 
-		#region Public Methods and Operators
-
-		public void ApplyOpenGL(int stage)
-		{
-			GL.ActiveTexture(TextureUnit.Texture0 + stage);
-			OpenTKHelper.Assert();
-
-			if (this.textureId == 0)
-			{
-				this.GenTexture();
-			}
-			else if (this.context.IsDisposed)
-			{
-				this.GenTexture();
-			}
-			GL.Enable(EnableCap.Texture2D);
-			OpenTKHelper.Assert();
-			GL.BindTexture(TextureTarget.Texture2D, this.textureId);
-			OpenTKHelper.Assert();
-		}
-
-		#endregion
 
 		#region Methods
 
@@ -153,37 +108,10 @@ namespace Toe.Marmalade.IwGx
 			base.Dispose(disposing);
 			if (disposing)
 			{
-				//if (this.bitmap != null)
-				//{
-				//    this.bitmap.Dispose();
-				//}
 			}
 		}
 
-		private void GenTexture()
-		{
-			this.context = GraphicsContext.CurrentContext;
-
-			GL.GenTextures(1, out this.textureId);
-			OpenTKHelper.Assert();
-			GL.PushAttrib(AttribMask.TextureBit);
-			try
-			{
-				GL.BindTexture(TextureTarget.Texture2D, this.textureId);
-				OpenTKHelper.Assert();
-				this.Image.OpenGLUpload();
-
-				GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
-				GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
-				OpenTKHelper.Assert();
-				GL.Finish();
-				OpenTKHelper.Assert();
-			}
-			finally
-			{
-				GL.PopAttrib();
-			}
-		}
+		
 
 		#endregion
 	}

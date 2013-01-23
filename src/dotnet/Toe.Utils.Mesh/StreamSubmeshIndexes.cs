@@ -1,12 +1,16 @@
 namespace Toe.Utils.Mesh
 {
-	public struct StreamSubmeshTriangleIndexes
+	public struct StreamSubmeshIndexes
 	{
 		#region Constants and Fields
 
 		public int Color;
 
 		public int Normal;
+
+		public int Binormal;
+
+		public int Tangent;
 
 		public int UV0;
 

@@ -12,6 +12,7 @@ using Toe.Editors.Interfaces;
 using Toe.Editors.Interfaces.Bindings;
 using Toe.Editors.Interfaces.Panels;
 using Toe.Editors.Interfaces.Views;
+using Toe.Gx;
 using Toe.Marmalade.IwAnim;
 using Toe.Marmalade.IwGraphics;
 using Toe.Resources;
@@ -32,6 +33,8 @@ namespace Toe.Editors.Marmalade
 
 		private readonly ICommandHistory history;
 
+		private readonly ToeGraphicsContext graphicsContext;
+
 		private readonly IResourceManager resourceManager;
 
 		private EditResourceReferenceView animButton;
@@ -50,11 +53,13 @@ namespace Toe.Editors.Marmalade
 			IEditorEnvironment editorEnvironment,
 			IResourceManager resourceManager,
 			ICommandHistory history,
+			ToeGraphicsContext graphicsContext,
 			IComponentContext context)
 		{
 			this.editorEnvironment = editorEnvironment;
 			this.resourceManager = resourceManager;
 			this.history = history;
+			this.graphicsContext = graphicsContext;
 			this.context = context;
 			this.InitializeComponent();
 
@@ -130,7 +135,7 @@ namespace Toe.Editors.Marmalade
 				if (model != null)
 				{
 					GL.Enable(EnableCap.DepthTest);
-					model.RenderOpenGL();
+					graphicsContext.RenderModel(model);
 				}
 				if (skeleton != null)
 				{
@@ -138,9 +143,9 @@ namespace Toe.Editors.Marmalade
 					GL.Begin(BeginMode.Lines);
 					GL.Color3(1.0f, 1.0f, 1.0f);
 
+					skeleton.UpdateAbsoluteValues();
 					var boneCollection = skeleton.Bones;
-					boneCollection.UpdateAbsoluteValues();
-					foreach (MeshBone bone in boneCollection)
+					foreach (AnimBone bone in boneCollection)
 					{
 						var parent = bone.Parent;
 						if (parent >= 0)

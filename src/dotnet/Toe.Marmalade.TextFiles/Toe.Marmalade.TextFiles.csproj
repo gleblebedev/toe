@@ -59,7 +59,6 @@
     <Compile Include="IwAnim\AnimTextSerializer.cs" />
     <Compile Include="IwAnim\SkelTextSerializer.cs" />
     <Compile Include="IwAnim\SkinTextSerializer.cs" />
-    <Compile Include="IwGraphics\GeoReader.cs" />
     <Compile Include="IwGraphics\ModelTextSerializer.cs" />
     <Compile Include="IwGx\MaterialTextSerializer.cs" />
     <Compile Include="IwGx\ShaderTextSerializer.cs" />

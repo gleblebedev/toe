@@ -1,3 +1,5 @@
+using Autofac;
+
 using Toe.Marmalade.IwAnim;
 using Toe.Utils.Marmalade;
 using Toe.Utils.Mesh;
@@ -6,6 +8,13 @@ namespace Toe.Marmalade.TextFiles.IwAnim
 {
 	public class SkelTextSerializer : ITextSerializer
 	{
+		private readonly IComponentContext context;
+
+		public SkelTextSerializer(IComponentContext context)
+		{
+			this.context = context;
+		}
+
 		#region Public Properties
 
 		public string DefaultFileExtension
@@ -22,7 +31,7 @@ namespace Toe.Marmalade.TextFiles.IwAnim
 
 		public Managed Parse(TextParser parser, string defaultName)
 		{
-			var skel = new AnimSkel();
+			var skel = context.Resolve<AnimSkel>();
 			skel.Name = defaultName;
 			parser.Consume("CIwAnimSkel");
 			parser.Consume("{");
@@ -66,7 +75,7 @@ namespace Toe.Marmalade.TextFiles.IwAnim
 		private static void ParseBone(TextParser parser, AnimSkel mesh)
 		{
 			parser.Consume("{");
-			MeshBone bone = null;
+			AnimBone bone = null;
 			for (;;)
 			{
 				var attribute = parser.Lexem;

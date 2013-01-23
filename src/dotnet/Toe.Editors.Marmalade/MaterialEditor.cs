@@ -198,6 +198,24 @@ namespace Toe.Editors.Marmalade
 			}
 
 			{
+				this.stackPanel.Controls.Add(new StringView { Text = "Specify texture for stage 2", Dock = DockStyle.Fill }, 0, row);
+				var valueCtrl = new EditResourceReferenceView(
+					this.editorEnvironment, this.resourceManager, this.history, this.context, true) { Margin = new Padding(4), Dock = DockStyle.Fill };
+				this.stackPanel.Controls.Add(valueCtrl, 1, row);
+				++row;
+				new PropertyBinding<Material, ResourceReference>(valueCtrl, this.dataContext, mtl => mtl.Texture2, null);
+			}
+
+			{
+				this.stackPanel.Controls.Add(new StringView { Text = "Specify texture for stage 3", Dock = DockStyle.Fill }, 0, row);
+				var valueCtrl = new EditResourceReferenceView(
+					this.editorEnvironment, this.resourceManager, this.history, this.context, true) { Margin = new Padding(4), Dock = DockStyle.Fill };
+				this.stackPanel.Controls.Add(valueCtrl, 1, row);
+				++row;
+				new PropertyBinding<Material, ResourceReference>(valueCtrl, this.dataContext, mtl => mtl.Texture3, null);
+			}
+
+			{
 				this.stackPanel.Controls.Add(new StringView { Text = "Specify vertex shader to use", Dock = DockStyle.Fill }, 0, row);
 				var valueCtrl = new EditStringView { Margin = new Padding(4), Dock = DockStyle.Fill };
 				this.stackPanel.Controls.Add(valueCtrl, 1, row);
@@ -511,7 +529,8 @@ namespace Toe.Editors.Marmalade
 
 			{
 				this.stackPanel.Controls.Add(new StringView { Text = "Attach the specified shader to this material", Dock = DockStyle.Fill }, 0, row);
-				var valueCtrl = new EditShaderView(this.history) { Margin = new Padding(4), Dock = DockStyle.Fill };
+				var valueCtrl = new EditResourceReferenceView(
+					this.editorEnvironment, this.resourceManager, this.history, this.context, true) { Margin = new Padding(4), Dock = DockStyle.Fill };
 				this.stackPanel.Controls.Add(valueCtrl, 1, row);
 				++row;
 				new PropertyBinding<Material, ResourceReference>(valueCtrl, this.dataContext, mtl => mtl.ShaderTechnique, null);

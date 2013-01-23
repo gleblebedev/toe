@@ -11,7 +11,7 @@ namespace Toe.Marmalade.IwAnim
 
 		public static readonly uint TypeHash = Hash.Get("CIwAnimSkin");
 
-		private readonly BoneCollection bones = new BoneCollection();
+		private readonly ManagedList<AnimBone> bones;
 
 		private readonly IResourceManager resourceManager;
 
@@ -25,8 +25,9 @@ namespace Toe.Marmalade.IwAnim
 
 		#region Constructors and Destructors
 
-		public AnimSkin(IResourceManager resourceManager)
+		public AnimSkin(IResourceManager resourceManager, ManagedList<AnimBone> b)
 		{
+			bones = b;
 			this.resourceManager = resourceManager;
 			this.skeleton = new ResourceReference(AnimSkel.TypeHash, resourceManager, this);
 			this.skeletonModel = new ResourceReference(Model.TypeHash, resourceManager, this);
@@ -36,7 +37,7 @@ namespace Toe.Marmalade.IwAnim
 
 		#region Public Properties
 
-		public BoneCollection Bones
+		public ManagedList<AnimBone> Bones
 		{
 			get
 			{
@@ -84,7 +85,7 @@ namespace Toe.Marmalade.IwAnim
 
 		public int EnsureBone(string boneName)
 		{
-			return this.bones.EnsureBone(boneName);
+			return this.bones.EnsureItem(boneName);
 		}
 
 		#endregion

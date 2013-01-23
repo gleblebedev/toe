@@ -1,5 +1,7 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
@@ -26,7 +28,10 @@ namespace Toe.Utils.Mesh
 
 		public string Name { get; set; }
 
-		public uint NameHash { get; set; }
+		public object RenderData
+		{
+			get; set;
+		}
 
 		public IList<ISubMesh> Submeshes
 		{
@@ -46,6 +51,30 @@ namespace Toe.Utils.Mesh
 
 		#endregion
 
+		/// <summary>
+		/// Collection of source specific parameters.
+		/// </summary>
+		private IParameterCollection parameters;
+
+		#region Implementation of ISceneItem
+
+		/// <summary>
+		/// Collection of source specific parameters.
+		/// </summary>
+		public IParameterCollection Parameters
+		{
+			get
+			{
+				return this.parameters ?? (this.parameters = new DynamicCollection());
+			}
+			set
+			{
+				this.parameters = value;
+			}
+		}
+
+		#endregion
+
 		#region Public Methods and Operators
 
 		public ISubMesh CreateSubmesh()
@@ -55,25 +84,186 @@ namespace Toe.Utils.Mesh
 			return streamSubmesh;
 		}
 
-		public void RenderOpenGL()
+		#endregion
+
+
+
+		#region Implementation of IVertexSource
+
+		public int Count
 		{
-			var subMeshes = this.submeshes;
-			foreach (ISubMesh subMesh in subMeshes)
+			get
 			{
-				subMesh.RenderOpenGL();
+				return vertexBuffer.Count;
+			}
+		}
+
+		public bool IsVertexStreamAvailable
+		{
+			get
+			{
+				return true;
+			}
+		}
+
+		public void VisitVertices(Vector3VisitorCallback callback)
+		{
+			foreach (var vertex in VertexBuffer)
+			{
+				var v = vertex.Position;
+				callback(ref v);
+			}
+		}
+
+		public void VisitNormals(Vector3VisitorCallback callback)
+		{
+			foreach (var vertex in VertexBuffer)
+			{
+				var v = vertex.Normal;
+				callback(ref v);
+			}
+		}
+
+		public void VisitColors(ColorVisitorCallback callback)
+		{
+			foreach (var vertex in VertexBuffer)
+			{
+				var v = vertex.Color;
+				callback(ref v);
+			}
+		}
+
+		public void VisitUV(int stage, Vector3VisitorCallback callback)
+		{
+			if (stage == 0)
+			{
+				foreach (var vertex in VertexBuffer)
+				{
+					var v = vertex.UV0;
+					callback(ref v);
+				}
+			}
+			else
+			{
+				foreach (var vertex in VertexBuffer)
+				{
+					var v = vertex.UV1;
+					callback(ref v);
+				}
+			}
+		}
+
+		private bool isNormalStreamAvailable = true;
+
+		public bool IsNormalStreamAvailable
+		{
+			get
+			{
+				return this.isNormalStreamAvailable;
+			}
+			set
+			{
+				this.isNormalStreamAvailable = value;
+			}
+		}
+
+		private bool isBinormalStreamAvailable = true;
+
+		public bool IsBinormalStreamAvailable
+		{
+			get
+			{
+				return this.isBinormalStreamAvailable;
+			}
+			set
+			{
+				this.isBinormalStreamAvailable = value;
+			}
+		}
+
+		private bool isTangentStreamAvailable = true;
+
+		public bool IsTangentStreamAvailable
+		{
+			get
+			{
+				return this.isTangentStreamAvailable;
+			}
+			set
+			{
+				this.isTangentStreamAvailable = value;
+			}
+		}
+
+		private bool isColorStreamAvailable = true;
+
+		public bool IsColorStreamAvailable
+		{
+			get
+			{
+				return this.isColorStreamAvailable;
+			}
+			set
+			{
+				this.isColorStreamAvailable = value;
+			}
+		}
+
+		private bool isUV0StreamAvailable = true;
+
+		public bool IsUV0StreamAvailable
+		{
+			get
+			{
+				return this.isUV0StreamAvailable;
+			}
+			set
+			{
+				this.isUV0StreamAvailable = value;
+			}
+		}
+
+		private bool isUV1StreamAvailable = true;
+
+		public bool IsUV1StreamAvailable
+		{
+			get
+			{
+				return this.isUV1StreamAvailable;
+			}
+			set
+			{
+				this.isUV1StreamAvailable = value;
+			}
+		}
+
+		public void VisitTangents(Vector3VisitorCallback callback)
+		{
+			foreach (var vertex in VertexBuffer)
+			{
+				var v = vertex.Tangent;
+				callback(ref v);
+			}
+		}
+
+		public void VisitBinormals(Vector3VisitorCallback callback)
+		{
+			foreach (var vertex in VertexBuffer)
+			{
+				var v = vertex.Binormal;
+				callback(ref v);
+			}
+		}
+
+		public VertexSourceType VertexSourceType
+		{
+			get
+			{
+				if (submeshes.Count > 0) return submeshes[0].VertexSourceType;
+				return VertexSourceType.TrianleList;
 			}
 		}
 
 		#endregion
-
-		public void RenderOpenGLVertex(int index)
-		{
-			GL.Normal3(vertexBuffer[index].Normal);
-			Vector3 vector3 = vertexBuffer[index].UV0;
-			GL.MultiTexCoord3(TextureUnit.Texture0, ref vector3);
-			vector3 = vertexBuffer[index].UV1;
-			GL.MultiTexCoord3(TextureUnit.Texture1, ref vector3);
-			GL.Vertex3(vertexBuffer[index].Position);
-		}
 	}
 }

@@ -58,11 +58,23 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IwGx\DefaultFragmentShaderOptions.cs" />
-    <Compile Include="IwGx\DefaultProgramOptions.cs" />
-    <Compile Include="IwGx\DefaultShaders.cs" />
-    <Compile Include="IwGx\DefaultVertexShaderOptions.cs" />
+    <Compile Include="IContextData.cs" />
+    <Compile Include="IwAnim\AnimBone.cs" />
+    <Compile Include="IwGraphics\ComplexIndex.cs" />
+    <Compile Include="IwGraphics\Mesh.cs" />
+    <Compile Include="IwGraphics\ModelBlockGLPrimBase.cs" />
+    <Compile Include="IwGraphics\ModelBlockGLTriList.cs" />
+    <Compile Include="IwGraphics\ModelBlockGLTriStrip.cs" />
+    <Compile Include="IwGraphics\ModelBlockPrimBase.cs" />
+    <Compile Include="IwGraphics\Surface.cs" />
+    <Compile Include="IwGraphics\TangentSpace\TangentKey.cs" />
+    <Compile Include="IwGraphics\TangentSpace\TangentMix.cs" />
+    <Compile Include="IwGraphics\TangentSpace\TangentMixer.cs" />
+    <Compile Include="IwGraphics\TangentSpace\TangentMixItem.cs" />
     <Compile Include="IwGx\Image.cs" />
+    <Compile Include="IwGx\ShaderTechniqueArgumentIndices.cs" />
+    <Compile Include="IwGx\ShaderTechniqueArguments.cs" />
+    <Compile Include="ManagedList.cs" />
     <Compile Include="ManagedResourceType.cs" />
     <Compile Include="MarmaladeAutofacModule.cs" />
     <Compile Include="IwAnim\Anim.cs" />
@@ -97,10 +109,6 @@
     <None Include="Toe.snk" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Toe.Gx\Toe.Gx.net40.vs2010.csproj">
-      <Project>{1D297D66-08E0-4239-9D2C-0F29F6F5A895}</Project>
-      <Name>Toe.Gx.net40.vs2010</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Toe.Resources\Toe.Resources.net40.vs2010.csproj">
       <Project>{15C85727-F6FC-4A28-BB34-84C327AEFF81}</Project>
       <Name>Toe.Resources.net40.vs2010</Name>

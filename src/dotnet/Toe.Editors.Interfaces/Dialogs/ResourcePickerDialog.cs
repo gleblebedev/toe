@@ -81,13 +81,19 @@ namespace Toe.Editors.Interfaces.Dialogs
 				var f = this.resourceManager.EnsureFile(safeFileName);
 				if (f != null)
 				{
-					foreach (var i in f.Items)
+					if (f.Items != null)
 					{
-						if (i.Type == this.type)
+						foreach (var i in f.Items)
 						{
-							this.list.Items.Add(i);
-							this.list.SelectedItem = i;
-							this.DialogResult = DialogResult.OK;
+							if (i.Type == this.type)
+							{
+
+								var r = this.resourceManager.ConsumeResource(i.Type, i.NameHash);
+								this.list.Items.Add(r);
+								this.list.SelectedItem = r;
+								this.resourceManager.ReleaseResource(i.Type, i.NameHash);
+								this.DialogResult = DialogResult.OK;
+							}
 						}
 					}
 				}

@@ -83,11 +83,11 @@ namespace Toe.Marmalade.TextFiles.IwAnim
 
 		private void ParseKeyFrame(TextParser parser, Anim mesh)
 		{
-			var frame = new AnimKeyFrame();
+			var frame = context.Resolve<AnimKeyFrame>();
 			parser.Consume("CIwAnimKeyFrame");
 			parser.Consume("{");
 
-			MeshBone bone = null;
+			AnimBone bone = null;
 			for (;;)
 			{
 				var attribute = parser.Lexem;
@@ -105,7 +105,7 @@ namespace Toe.Marmalade.TextFiles.IwAnim
 				if (attribute == "bone")
 				{
 					parser.Consume();
-					bone = frame.Bones[frame.Bones.EnsureBone(parser.ConsumeString())];
+					bone = frame.Bones[frame.Bones.EnsureItem(parser.ConsumeString())];
 					continue;
 				}
 				if (attribute == "pos")
