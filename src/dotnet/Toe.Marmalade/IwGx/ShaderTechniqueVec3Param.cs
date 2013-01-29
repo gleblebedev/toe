@@ -1,20 +1,20 @@
-using OpenTK.Graphics.OpenGL;
+using OpenTK;
 
 using Toe.Utils.Marmalade.IwGx;
 
 namespace Toe.Marmalade.IwGx
 {
-	public class ShaderTechniqueFloatParam : ShaderTechniqueParam
+	public class ShaderTechniqueVec3Param : ShaderTechniqueParam
 	{
 		#region Constants and Fields
 
-		private readonly float[] values;
+		private readonly Vector3[] values;
 
 		#endregion
 
 		#region Constructors and Destructors
 
-		public ShaderTechniqueFloatParam(string paramName, float[] values)
+		public ShaderTechniqueVec3Param(string paramName, Vector3[] values)
 			: base(paramName)
 		{
 			this.values = values;
@@ -22,7 +22,7 @@ namespace Toe.Marmalade.IwGx
 
 		#endregion
 
-		public float[] Values
+		public Vector3[] Values
 		{
 			get
 			{

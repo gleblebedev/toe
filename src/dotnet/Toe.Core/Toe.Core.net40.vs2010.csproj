@@ -40,9 +40,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IToeSystem.cs" />
+    <Compile Include="ToeComponentLayerPopularity.cs" />
+    <Compile Include="ToeSceneConfiguration.cs" />
     <Compile Include="ToeEntity.cs" />
+    <Compile Include="ToeEntityId.cs" />
     <Compile Include="ToeScene.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ReadMe.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

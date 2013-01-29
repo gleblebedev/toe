@@ -259,7 +259,7 @@ namespace Toe.Utils.Mesh.Ase
 			{
 				v.Normal = normals[index0];
 			}
-			v.Color = c != null ? c[index0] : Color.FromArgb(255,255,255,255);
+			v.Color = c != null && c.Length > 0 ? c[index0] : Color.FromArgb(255,255,255,255);
 			v.UV1 = v.UV0 = new Vector3(uv.X, 1.0f - uv.Y, uv.Z);
 			return v;
 		}

@@ -55,6 +55,7 @@
     <Compile Include="DynamicCollection.cs" />
     <Compile Include="IMaterial.cs" />
     <Compile Include="IMesh.cs" />
+    <Compile Include="ISceneFileFormat.cs" />
     <Compile Include="ISceneReader.cs" />
     <Compile Include="IMeshWriter.cs" />
     <Compile Include="INode.cs" />

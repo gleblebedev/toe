@@ -1,5 +1,7 @@
 using Autofac;
 
+using Toe.Editors.Interfaces;
+
 namespace Toe.Editors
 {
 	public class BaseEditorsAutofacModule : Module
@@ -11,6 +13,8 @@ namespace Toe.Editors
 			base.Load(builder);
 			builder.RegisterType<Base3DEditor>().InstancePerDependency();
 			builder.RegisterType<Base3DEditorContent>().SingleInstance();
+			builder.RegisterGeneric(typeof(DefaultEditorConfiguration<>)).As(typeof(IEditorOptions<>)).SingleInstance();
+			builder.RegisterType<DefaultEditorConfigStorage>().As<IEditorConfigStorage>().SingleInstance();
 		}
 
 		#endregion

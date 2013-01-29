@@ -74,6 +74,7 @@
     <Compile Include="IwGx\Image.cs" />
     <Compile Include="IwGx\ShaderTechniqueArgumentIndices.cs" />
     <Compile Include="IwGx\ShaderTechniqueArguments.cs" />
+    <Compile Include="IwGx\ShaderTechniqueVec3Param.cs" />
     <Compile Include="ManagedList.cs" />
     <Compile Include="ManagedResourceType.cs" />
     <Compile Include="MarmaladeAutofacModule.cs" />

@@ -10,8 +10,6 @@ namespace Toe.Editors.Interfaces
 
 		#region Public Methods and Operators
 
-		void Load();
-
 		void Save();
 
 		#endregion

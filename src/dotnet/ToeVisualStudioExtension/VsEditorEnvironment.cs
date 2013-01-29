@@ -1,12 +1,14 @@
 using Autofac;
 using Autofac.Core;
 
+using TinyOpenEngine.ToeVisualStudioExtension;
+
 using Toe.Editors.Interfaces;
 using Toe.Editors.Interfaces.Bindings;
 using Toe.Editors.Interfaces.Views;
 using Toe.Resources;
 
-namespace TinyOpenEngine.ToeVisualStudioExtension
+namespace Toe.ToeVsExt
 {
 	public class VsEditorEnvironment : IEditorEnvironment
 	{

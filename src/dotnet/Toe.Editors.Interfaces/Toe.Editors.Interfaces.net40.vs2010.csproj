@@ -66,6 +66,7 @@
     </Compile>
     <Compile Include="ICommand.cs" />
     <Compile Include="ICommandHistory.cs" />
+    <Compile Include="IEditorConfigStorage.cs" />
     <Compile Include="IEditorEnvironment.cs" />
     <Compile Include="IEditorOptions.cs" />
     <Compile Include="IResourceEditor.cs" />

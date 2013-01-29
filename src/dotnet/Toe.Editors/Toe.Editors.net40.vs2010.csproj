@@ -36,6 +36,9 @@
     <AssemblyOriginatorKeyFile>Toe.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="OpenTK">
       <HintPath>..\packages\OpenTK\OpenTK.dll</HintPath>
     </Reference>
@@ -58,6 +61,8 @@
   <ItemGroup>
     <Compile Include="Base3DEditorContent.cs" />
     <Compile Include="Base3DEditorOptions.cs" />
+    <Compile Include="DefaultEditorConfigStorage.cs" />
+    <Compile Include="DefaultEditorConfiguration.cs" />
     <Compile Include="EditorCameraOptions.cs" />
     <Compile Include="GameCameraController.cs" />
     <Compile Include="BaseEditorsAutofacModule.cs" />
@@ -82,6 +87,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="packages.config" />
     <None Include="Resources\xyzcube.ASE">
       <SubType>Designer</SubType>
     </None>

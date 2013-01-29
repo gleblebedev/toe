@@ -1,5 +1,7 @@
 using System.Globalization;
 
+using OpenTK;
+
 using Toe.Marmalade.IwGx;
 using Toe.Resources;
 using Toe.Utils.Marmalade;
@@ -123,13 +125,24 @@ namespace Toe.Marmalade.TextFiles.IwGx
 		private void ParseFloatParam(TextParser parser, ShaderTechnique shader, string paramName, int numArgs)
 		{
 			var a = new float[numArgs];
-			for (int i = 0; i < numArgs; ++i)
+			for (int i = 0; i < a.Length; ++i)
 			{
 				a[i] = parser.ConsumeFloat();
 			}
 			shader.AddParam(new ShaderTechniqueFloatParam(paramName, a));
 		}
-
+		private void ParseVec3Param(TextParser parser, ShaderTechnique shader, string paramName, int numArgs)
+		{
+			var a = new Vector3[numArgs];
+			for (int i = 0; i < a.Length; ++i)
+			{
+				var x =parser.ConsumeFloat(); 
+				var y =parser.ConsumeFloat(); 
+				var z =parser.ConsumeFloat(); 
+				a[i] = new Vector3(x,y,z);
+			}
+			shader.AddParam(new ShaderTechniqueVec3Param(paramName, a));
+		}
 		private void ParseFragmentShader(TextParser parser, ShaderTechnique shader)
 		{
 			parser.Consume();
@@ -146,6 +159,9 @@ namespace Toe.Marmalade.TextFiles.IwGx
 			{
 				case "float":
 					this.ParseFloatParam(parser, shader, paramName, numArgs);
+					break;
+				case "vec3":
+					this.ParseVec3Param(parser, shader, paramName, numArgs);
 					break;
 				default:
 					parser.Error(string.Format(CultureInfo.InvariantCulture, "Unknown param type {0}", typeName));

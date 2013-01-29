@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{845DC17B-7819-4E72-A966-B798A3C912D7}</ProjectGuid>
+    <ProjectGuid>{33ED6B51-D3A5-43C9-9D4F-371576814518}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Toe.Utils.Mesh.Bsp</RootNamespace>
-    <AssemblyName>Toe.Utils.Mesh.Bsp</AssemblyName>
+    <RootNamespace>Toe.Editors.GenericScene</RootNamespace>
+    <AssemblyName>Toe.Editors.GenericScene</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -30,6 +30,12 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>Toe.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Autofac">
       <HintPath>..\packages\Autofac.2.6.3.862\lib\NET40\Autofac.dll</HintPath>
@@ -39,6 +45,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -46,10 +53,26 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BspReader.cs" />
+    <Compile Include="GenericSceneEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GenericSceneEditorsAutofacModule.cs" />
+    <Compile Include="GenericSceneResourceEditorFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Toe.Editors.Interfaces\Toe.Editors.Interfaces.net40.vs2010.csproj">
+      <Project>{2B25523C-AA51-43C7-B5F2-41D3F8FBA0AE}</Project>
+      <Name>Toe.Editors.Interfaces.net40.vs2010</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Toe.Editors\Toe.Editors.net40.vs2010.csproj">
+      <Project>{5FA4A978-FB68-4CB0-B693-FB534C76F2C9}</Project>
+      <Name>Toe.Editors.net40.vs2010</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Toe.Gx\Toe.Gx.net40.vs2010.csproj">
+      <Project>{1D297D66-08E0-4239-9D2C-0F29F6F5A895}</Project>
+      <Name>Toe.Gx.net40.vs2010</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Toe.Utils.Mesh\Toe.Utils.Mesh.net40.vs2010.csproj">
       <Project>{1AB2E074-5CE6-4CD6-A379-3D6A58116319}</Project>
       <Name>Toe.Utils.Mesh.net40.vs2010</Name>
@@ -57,6 +80,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Toe.snk" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

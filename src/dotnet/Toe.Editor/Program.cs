@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using Autofac;
 
 using Toe.Editors;
+using Toe.Editors.GenericScene;
 using Toe.Editors.Interfaces;
 using Toe.Editors.Marmalade;
 using Toe.Gx;
@@ -15,6 +16,7 @@ using Toe.Marmalade.BinaryFiles;
 using Toe.Marmalade.TextFiles;
 using Toe.Marmalade.TextureFiles;
 using Toe.Resources;
+using Toe.Utils.Mesh.Ase;
 
 using IContainer = Autofac.IContainer;
 using ResourceFileItem = Toe.Marmalade.TextFiles.ResourceFileItem;
@@ -41,13 +43,16 @@ namespace Toe.Editor
 			var cb = new ContainerBuilder();
 			cb.RegisterModule<BaseEditorsAutofacModule>();
 			cb.RegisterModule<MarmaladeEditorsAutofacModule>();
+			cb.RegisterModule<GenericSceneEditorsAutofacModule>();
+			cb.RegisterModule<AseAutofacModule>();
+			
 			cb.RegisterModule<MarmaladeAutofacModule>();
 			cb.RegisterModule<MarmaladeTextFilesAutofacModule>();
 			cb.RegisterModule<MarmaladeBinaryFilesAutofacModule>();
 			cb.RegisterModule<MarmaladeTextureFilesAutofacModule>();
 
 			cb.RegisterGeneric(typeof(BindingList<>)).UsingConstructor(new Type[] { }).As(typeof(IList<>));
-			cb.RegisterGeneric(typeof(EditorConfiguration<>)).As(typeof(IEditorOptions<>)).SingleInstance();
+			//cb.RegisterGeneric(typeof(EditorConfiguration<>)).As(typeof(IEditorOptions<>)).SingleInstance();
 			cb.RegisterType<EditorEnvironment>().As<IEditorEnvironment>().SingleInstance();
 			cb.RegisterType<ResourceManager>().As<IResourceManager>().SingleInstance();
 			cb.RegisterType<ResourceFile>().As<IResourceFile>().InstancePerDependency();
