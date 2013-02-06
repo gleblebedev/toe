@@ -28,6 +28,7 @@ namespace Toe.Editors.GenericScene
 		public IResourceEditor CreateEditor(string fileName)
 		{
 			if (fileName.EndsWith(".ase", StringComparison.InvariantCultureIgnoreCase)
+				|| fileName.EndsWith(".bsp", StringComparison.InvariantCultureIgnoreCase)
 			    || fileName.EndsWith(".dae", StringComparison.InvariantCultureIgnoreCase))
 			{
 				return this.context.Resolve<GenericSceneEditor>();

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.IO;
 using System.Windows.Forms;
@@ -17,17 +19,43 @@ namespace Toe.Editor
 
 		private readonly IComponentContext context;
 
+		private readonly IEditorOptions<MainEditorWindowOptions> options;
+
 		private readonly IResourceEditor lastEditor;
 
 		#endregion
 
 		#region Constructors and Destructors
 
-		public MainEditorWindow(IComponentContext context)
+		public MainEditorWindow(IComponentContext context, IEditorOptions<MainEditorWindowOptions> options)
 		{
 			this.context = context;
+			this.options = options;
 			this.InitializeComponent();
 			this.fileTabs.SelectedIndexChanged += this.RebindToEditor;
+
+			if (options.Options.RecentFiles == null)
+			{
+				options.Options.RecentFiles = new ObservableCollection<string>();
+			}
+
+			options.Options.RecentFiles.CollectionChanged += ResetRecentFilesMenu;
+			ResetRecentFilesMenu(options.Options.RecentFiles, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+
+		}
+
+		private void ResetRecentFilesMenu(object sender, NotifyCollectionChangedEventArgs e)
+		{
+			recentFilesMenu.DropDownItems.Clear();
+			foreach (var file in options.Options.RecentFiles)
+			{
+				recentFilesMenu.DropDownItems.Add(this.CreateRecentFileMenuItem(file));
+			}
+		}
+
+		private ToolStripMenuItem CreateRecentFileMenuItem(string file)
+		{
+			return new ToolStripMenuItem(Path.GetFileName(file), null, (s, a) => this.OpenFile(file));
 		}
 
 		#endregion
@@ -36,6 +64,7 @@ namespace Toe.Editor
 
 		public void OpenFile(string filename)
 		{
+			this.AddFileToRecentFiles(filename);
 			foreach (TabPage fileTab in this.fileTabs.TabPages)
 			{
 				var tag = fileTab.Tag as IResourceEditor;
@@ -63,6 +92,24 @@ namespace Toe.Editor
 			tabPage.Tag = resourceEditor;
 			this.fileTabs.TabPages.Add(tabPage);
 			this.fileTabs.SelectedTab = tabPage;
+		}
+
+		private void AddFileToRecentFiles(string filename)
+		{
+			var f = Path.GetFullPath(filename);
+			var i = this.options.Options.RecentFiles.IndexOf(f);
+			if (i == 0)
+				return;
+			if (i > 0)
+			{
+				this.options.Options.RecentFiles.Move(i,0);
+				this.options.Save();
+				return;
+			}
+			this.options.Options.RecentFiles.Insert(0,f);
+			while (this.options.Options.RecentFiles.Count > 10)
+				this.options.Options.RecentFiles.RemoveAt(10);
+			this.options.Save();
 		}
 
 		#endregion

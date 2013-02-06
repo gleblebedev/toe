@@ -5,6 +5,8 @@ using System.Windows.Forms;
 
 using Autofac;
 
+using OpenTK.Graphics.OpenGL;
+
 using Toe.Editors.Interfaces;
 using Toe.Editors.Interfaces.Bindings;
 using Toe.Gx;
@@ -57,7 +59,8 @@ namespace Toe.Editors.GenericScene
 
 		private void RenderEditorScene(object sender, EventArgs e)
 		{
-			
+			GL.ClearColor(0.2f, 0.2f, 0.4f, 1f);
+			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 		}
 
 		private void InitializeComponent()

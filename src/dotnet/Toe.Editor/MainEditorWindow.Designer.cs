@@ -40,8 +40,7 @@
 			this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.saveAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-			this.recentFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.combatEvagroupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.recentFilesMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
 			this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -86,7 +85,7 @@
             this.saveAsToolStripMenuItem,
             this.saveAllToolStripMenuItem,
             this.toolStripSeparator3,
-            this.recentFilesToolStripMenuItem,
+            this.recentFilesMenu,
             this.toolStripSeparator4,
             this.exitToolStripMenuItem});
 			this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
@@ -147,20 +146,11 @@
 			this.toolStripSeparator3.Name = "toolStripSeparator3";
 			this.toolStripSeparator3.Size = new System.Drawing.Size(133, 6);
 			// 
-			// recentFilesToolStripMenuItem
+			// recentFilesMenu
 			// 
-			this.recentFilesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.combatEvagroupToolStripMenuItem});
-			this.recentFilesToolStripMenuItem.Name = "recentFilesToolStripMenuItem";
-			this.recentFilesToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
-			this.recentFilesToolStripMenuItem.Text = "Recent Files";
-			// 
-			// combatEvagroupToolStripMenuItem
-			// 
-			this.combatEvagroupToolStripMenuItem.Name = "combatEvagroupToolStripMenuItem";
-			this.combatEvagroupToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
-			this.combatEvagroupToolStripMenuItem.Text = "male_lod0.group";
-			this.combatEvagroupToolStripMenuItem.Click += new System.EventHandler(this.combatEvagroupToolStripMenuItem_Click);
+			this.recentFilesMenu.Name = "recentFilesMenu";
+			this.recentFilesMenu.Size = new System.Drawing.Size(136, 22);
+			this.recentFilesMenu.Text = "Recent Files";
 			// 
 			// toolStripSeparator4
 			// 
@@ -320,7 +310,7 @@
 		private System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem saveAllToolStripMenuItem;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
-		private System.Windows.Forms.ToolStripMenuItem recentFilesToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem recentFilesMenu;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
 		private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
@@ -328,7 +318,6 @@
 		private System.Windows.Forms.ToolStripMenuItem undoMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem redoMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem combatEvagroupToolStripMenuItem;
 		private System.Windows.Forms.ToolStripContainer toolStripContainer1;
 		private System.Windows.Forms.TabControl fileTabs;
 		private System.Windows.Forms.ToolStrip toolStrip1;

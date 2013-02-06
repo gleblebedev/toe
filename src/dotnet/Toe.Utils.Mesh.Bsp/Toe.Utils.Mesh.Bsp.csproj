@@ -30,6 +30,12 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>Toe.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Autofac">
       <HintPath>..\packages\Autofac.2.6.3.862\lib\NET40\Autofac.dll</HintPath>
@@ -39,6 +45,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -46,8 +53,26 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BspAutofacModule.cs" />
+    <Compile Include="BaseBspReader.cs" />
     <Compile Include="BspReader.cs" />
+    <Compile Include="BspSceneFileFormat.cs" />
+    <Compile Include="HL2\BaseHL2BspReader.cs" />
+    <Compile Include="HL2\BspReader17.cs" />
+    <Compile Include="HL2\BspReader19.cs" />
+    <Compile Include="IBspReader.cs" />
+    <Compile Include="Q1\BaseQ1HL2BspReader.cs" />
+    <Compile Include="Q1\BspFileEntry.cs" />
+    <Compile Include="Q1\BspFileHeader.cs" />
+    <Compile Include="Q1\Palette.cs" />
+    <Compile Include="QLive\BspReader.cs" />
+    <Compile Include="HL1\BspReader.cs" />
+    <Compile Include="HL2\BspReader20.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Q1\BspReader.cs" />
+    <Compile Include="Q2\BspReader.cs" />
+    <Compile Include="Q3\BspReader.cs" />
+    <Compile Include="StreamExt.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Toe.Utils.Mesh\Toe.Utils.Mesh.net40.vs2010.csproj">
@@ -57,7 +82,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Toe.snk" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

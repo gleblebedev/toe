@@ -17,6 +17,8 @@ using Toe.Marmalade.TextFiles;
 using Toe.Marmalade.TextureFiles;
 using Toe.Resources;
 using Toe.Utils.Mesh.Ase;
+using Toe.Utils.Mesh.Bsp;
+using Toe.Utils.Mesh.Dae;
 
 using IContainer = Autofac.IContainer;
 using ResourceFileItem = Toe.Marmalade.TextFiles.ResourceFileItem;
@@ -45,6 +47,8 @@ namespace Toe.Editor
 			cb.RegisterModule<MarmaladeEditorsAutofacModule>();
 			cb.RegisterModule<GenericSceneEditorsAutofacModule>();
 			cb.RegisterModule<AseAutofacModule>();
+			cb.RegisterModule<DaeAutofacModule>();
+			cb.RegisterModule<BspAutofacModule>();
 			
 			cb.RegisterModule<MarmaladeAutofacModule>();
 			cb.RegisterModule<MarmaladeTextFilesAutofacModule>();

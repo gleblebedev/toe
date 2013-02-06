@@ -60,7 +60,7 @@
     <Compile Include="AseReader.cs" />
     <Compile Include="AseSceneFileFormat.cs" />
     <Compile Include="AseWriter.cs" />
-    <Compile Include="MarmaladeEditorsAutofacModule.cs" />
+    <Compile Include="AseAutofacModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

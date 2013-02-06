@@ -92,6 +92,11 @@ namespace Toe.Utils.Mesh.Ase
 					ParsSubMesh(parser, node);
 					continue;
 				}
+				if (0 == string.Compare(attr, "*MESH_ANIMATION", StringComparison.InvariantCultureIgnoreCase))
+				{
+					ParsMeshAnimation(parser, node);
+					continue;
+				}
 				if (0 == string.Compare(attr, "*PROP_MOTIONBLUR", StringComparison.InvariantCultureIgnoreCase))
 				{
 					parser.ConsumeFloat();
@@ -110,6 +115,31 @@ namespace Toe.Utils.Mesh.Ase
 				if (0 == string.Compare(attr, "*MATERIAL_REF", StringComparison.InvariantCultureIgnoreCase))
 				{
 					parser.ConsumeInt();
+					continue;
+				}
+				if (0 == string.Compare(attr, "*WIREFRAME_COLOR", StringComparison.InvariantCultureIgnoreCase))
+				{
+					parser.ConsumeFloat();
+					parser.ConsumeFloat();
+					parser.ConsumeFloat();
+					continue;
+				}
+				
+				parser.UnknownLexemError();
+			}
+		}
+
+		private void ParsMeshAnimation(AseParser parser, Node node)
+		{
+			parser.Consume("{");
+			for (; ; )
+			{
+				var attr = parser.Consume();
+				if (attr == null || attr == "}")
+					break;
+				if (0 == string.Compare(attr, "*MESH", StringComparison.InvariantCultureIgnoreCase))
+				{
+					ParsSubMesh(parser, node);
 					continue;
 				}
 				parser.UnknownLexemError();
