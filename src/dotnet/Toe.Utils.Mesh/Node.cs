@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 
+using OpenTK;
+
 namespace Toe.Utils.Mesh
 {
 	/// <summary>
@@ -32,6 +34,18 @@ namespace Toe.Utils.Mesh
 		public string Name { get; set; }
 
 		public IMesh Mesh { get; set; }
+
+		private Vector3 position = Vector3.Zero;
+
+		private Quaternion rotation = Quaternion.Identity;
+
+		public Matrix4 ModelMatrix
+		{
+			get
+			{
+				return Matrix4.Rotate(rotation) * Matrix4.CreateTranslation(position);
+			}
+		}
 
 		#endregion
 

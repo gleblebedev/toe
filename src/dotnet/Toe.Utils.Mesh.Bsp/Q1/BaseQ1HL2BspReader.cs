@@ -53,5 +53,10 @@ namespace Toe.Utils.Mesh.Bsp.Q1
 			this.header.models.offset = this.Stream.ReadUInt32();
 			this.header.models.size = this.Stream.ReadUInt32();
 		}
+
+		protected override void ReadVertices()
+		{
+			
+		}
 	}
 }

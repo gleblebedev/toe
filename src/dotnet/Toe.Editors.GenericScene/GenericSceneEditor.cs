@@ -5,6 +5,7 @@ using System.Windows.Forms;
 
 using Autofac;
 
+using OpenTK;
 using OpenTK.Graphics.OpenGL;
 
 using Toe.Editors.Interfaces;
@@ -61,6 +62,32 @@ namespace Toe.Editors.GenericScene
 		{
 			GL.ClearColor(0.2f, 0.2f, 0.4f, 1f);
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+
+			if (scene != null)
+			{
+				Matrix4 parent = Matrix4.Identity;
+				RenderSceneNodes(ref parent, scene.Nodes);
+			}
+		}
+
+		private void RenderSceneNodes(ref Matrix4 parent, IList<INode> nodes)
+		{
+			if (nodes == null)
+				return;
+			foreach (var node in nodes)
+			{
+				Matrix4 modelMatrix = parent*node.ModelMatrix;
+				this.RenderNodeAt(ref modelMatrix, node);
+				this.RenderSceneNodes(ref modelMatrix, node.Nodes);
+				break;
+				
+			}
+		}
+
+		private void RenderNodeAt(ref Matrix4 modelMatrix, INode node)
+		{
+			graphicsContext.SetModel(ref modelMatrix);
+			graphicsContext.Render(node.Mesh);
 		}
 
 		private void InitializeComponent()
@@ -141,7 +168,7 @@ namespace Toe.Editors.GenericScene
 					var reader = format.CreateReader();
 					using (var s = File.OpenRead(filename))
 					{
-						reader.Load(s);
+						scene = reader.Load(s);
 					}
 				}
 			}

@@ -1,6 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
+using System.Runtime.InteropServices;
+using System.Threading;
 
 using OpenTK;
 using OpenTK.Graphics;
@@ -16,34 +17,81 @@ namespace Toe.Gx
 {
 	public class ToeGraphicsContext : IDisposable
 	{
+		#region Constants and Fields
+
+		private readonly ShaderTechniqueArguments args = new ShaderTechniqueArguments();
+
+		private readonly Vertex[] vertexBuffer = new Vertex[1024*64];
+		private readonly ToeGxIndexBufferItem[] indexBuffer = new ToeGxIndexBufferItem[1024];
+		private int vertexBufferCount = 0;
+		private int indexBufferCount =0;
+
+		private readonly bool[] isTextureSet = new bool[4];
+
 		private readonly IResourceManager resourceManager;
 
-		#region Constants and Fields
+		private readonly DefaultShaders shaders = new DefaultShaders();
 
 		private GraphicsContext context;
 
 		private bool flipCulling = true;
 
-		#endregion
+		private LightArgs light;
 
-		#region Constructors and Destructors
+		private bool lighting;
 
 		private Material material;
 
-		private DefaultShaders shaders = new DefaultShaders();
+		private Matrix4 model = Matrix4.Identity;
 
-		public void SetMaterial(Material m)
-		{
-			this.material = m;
+		private Matrix4 modelView = Matrix4.Identity;
 
-		}
+		private Matrix4 projection = Matrix4.Identity;
+
+		private Thread resourceContextThread;
+
+		private Matrix4 view = Matrix4.Identity;
+
+		private NativeWindow window;
+
+		#endregion
+
+		#region Constructors and Destructors
 
 		public ToeGraphicsContext(IResourceManager resourceManager)
 		{
 			this.resourceManager = resourceManager;
 			GraphicsContext.ShareContexts = true;
+			var currentContext = GraphicsContext.CurrentContext;
+			if (currentContext != null)
+			{
+				currentContext.MakeCurrent(null);
+			}
+			//EventWaitHandle context_ready = new EventWaitHandle(false, EventResetMode.AutoReset);
 
-			//context = OpenTK.Graphics.GraphicsContext.CreateDummyContext();
+			//this.resourceContextThread = new Thread(
+			//	() =>
+			//		{
+						this.window = new NativeWindow();
+						GraphicsContext.ShareContexts = true;
+						this.context = new GraphicsContext(GraphicsMode.Default, this.window.WindowInfo);
+						this.context.MakeCurrent(this.window.WindowInfo);
+
+						this.window.ProcessEvents();
+						//context_ready.Set();
+						//while (this.window.Exists)
+						//{
+						//    this.window.ProcessEvents();
+
+						//    // Perform your processing here
+
+						//    Thread.Sleep(1); // Limit CPU usage, if necessary
+						//}
+					//});
+			//this.resourceContextThread.IsBackground = true;
+			//this.resourceContextThread.Start();
+
+			//context_ready.WaitOne();
 		}
 
 		~ToeGraphicsContext()
@@ -73,6 +121,27 @@ namespace Toe.Gx
 
 		#region Public Methods and Operators
 
+		public void RenderDebugLine(ref Vector3 from, ref Vector3 to, ref Color color)
+		{
+			if (vertexBufferCount + 2 > vertexBuffer.Length) DropVertextBuffer();
+			vertexBuffer[vertexBufferCount] = new Vertex() { Position = from, Color = color };
+			++vertexBufferCount;
+			vertexBuffer[vertexBufferCount] = new Vertex() { Position = to, Color = color };
+			++vertexBufferCount;
+		}
+
+		private void DropVertextBuffer()
+		{
+			vertexBufferCount = 0;
+			indexBufferCount = 0;
+		}
+
+		public void DisableLighting()
+		{
+			GL.Disable(EnableCap.Lighting);
+			this.lighting = false;
+		}
+
 		/// <summary>
 		/// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
 		/// </summary>
@@ -83,12 +152,127 @@ namespace Toe.Gx
 			GC.SuppressFinalize(this);
 		}
 
+		public void EnableLighting()
+		{
+			GL.Enable(EnableCap.Lighting);
+			this.lighting = true;
+		}
+
+		public void Render(IMesh mesh)
+		{
+			var vertexBufferRenderData = mesh.RenderData as VertexBufferRenderData;
+			if (vertexBufferRenderData == null)
+			{
+				mesh.RenderData = vertexBufferRenderData = new VertexBufferRenderData(mesh);
+			}
+
+			foreach (var surface in mesh.Submeshes)
+			{
+				//this.SetMaterial(surface.Material.Resource as Material);
+
+				var p = this.ApplyMaterialShader(mesh);
+				if (p == null)
+				{
+					return;
+				}
+				vertexBufferRenderData.Enable(p);
+
+				this.Render(mesh, surface);
+			}
+		}
+
+		public void RenderModel(Model model)
+		{
+			foreach (var mesh in model.Meshes)
+			{
+				this.RenderMesh(mesh);
+			}
+		}
+
+		public void SetLight0(ref LightArgs args)
+		{
+			this.light = args;
+			if (!this.light.Enabled)
+			{
+				GL.Disable(EnableCap.Light0);
+			}
+			else
+			{
+				GL.Enable(EnableCap.Light0);
+				GL.Light(
+					LightName.Light0,
+					LightParameter.Position,
+					new[] { this.light.Position.X, this.light.Position.Y, this.light.Position.Z, 1.0f });
+			}
+		}
+
+		public void SetMaterial(Material m)
+		{
+			this.material = m;
+		}
+
+		public void SetModel(ref Matrix4 view)
+		{
+			this.model = this.model;
+			this.modelView = view * this.model;
+			GL.MatrixMode(MatrixMode.Modelview);
+			GL.LoadMatrix(ref this.modelView);
+		}
+
+		public void SetProjection(ref Matrix4 projection)
+		{
+			this.projection = projection;
+			GL.MatrixMode(MatrixMode.Projection);
+			GL.LoadMatrix(ref projection);
+			GL.MatrixMode(MatrixMode.Modelview);
+		}
+
+		public void SetTexture(int channel, Texture texture)
+		{
+			if (texture == null)
+			{
+				GL.ActiveTexture(TextureUnit.Texture0 + channel);
+				GL.Disable(EnableCap.Texture2D);
+				this.isTextureSet[channel] = false;
+				return;
+			}
+			this.isTextureSet[channel] = true;
+			var textureContext = texture.ContextData as TextureContext;
+			if (textureContext == null)
+			{
+				textureContext = new TextureContext(texture);
+				texture.ContextData = textureContext;
+			}
+			textureContext.ApplyToChannel(channel);
+		}
+
+		public void SetView(ref Matrix4 view)
+		{
+			this.view = view;
+			this.modelView = view * this.model;
+			GL.MatrixMode(MatrixMode.Modelview);
+			GL.LoadMatrix(ref this.modelView);
+		}
+
+		public void SetViewport(int x, int y, int w, int h)
+		{
+			GL.Viewport(x, y, w, h);
+			this.args.inDisplaySize = new Vector2(w, h);
+			this.args.inDeviceSize = new Vector2(w, h);
+		}
+
 		#endregion
 
 		#region Methods
 
 		protected virtual void Dispose(bool disposing)
 		{
+			if (this.resourceContextThread != null)
+			{
+				this.resourceContextThread.Abort();
+				this.resourceContextThread = null;
+			}
+
 			if (disposing)
 			{
 				if (this.context != null)
@@ -99,165 +283,70 @@ namespace Toe.Gx
 			}
 		}
 
-		#endregion
-
-		private bool[] isTextureSet=new bool [4];
-
-		public void SetTexture(int channel, Texture texture)
+		private static float[] BuildMat3x3(ref Matrix4 inModelRotMat)
 		{
-			if (texture == null)
-			{
-				GL.ActiveTexture(TextureUnit.Texture0 + channel);
-				GL.Disable(EnableCap.Texture2D);
-				isTextureSet[channel] = false;
-				return;
-			}
-			isTextureSet[channel] = true;
-			var textureContext = texture.ContextData as TextureContext;
-			if (textureContext == null)
-			{
-				textureContext = new TextureContext(texture);
-				texture.ContextData = textureContext;
-			}
-			textureContext.ApplyToChannel(channel);
-		}
-
-		public void RenderModel(Model model)
-		{
-			foreach (var mesh in model.Meshes)
-			{
-				RenderMesh(mesh);
-			}
-		}
-		public void Render(IMesh mesh)
-		{
-			var vertexBufferRenderData = mesh.RenderData as VertexBufferRenderData;
-			if (vertexBufferRenderData == null)
-			{
-				mesh.RenderData = vertexBufferRenderData = new VertexBufferRenderData(mesh);
-			}
-			
-			foreach (var surface in mesh.Submeshes)
-			{
-				//this.SetMaterial(surface.Material.Resource as Material);
-
-				var p = ApplyMaterialShader(mesh);
-				if (p == null)
-					return;
-				vertexBufferRenderData.Enable(p);
-				
-				Render(mesh, surface);
-				
-			}
-		}
-
-		private void RenderMesh(Mesh mesh)
-		{
-			var vertexBufferRenderData = mesh.ContextData as VertexBufferRenderData;
-			if (vertexBufferRenderData == null)
-			{
-				mesh.ContextData = vertexBufferRenderData = new VertexBufferRenderData(mesh);
-			}
-
-			
-			foreach (var surface in mesh.Surfaces)
-			{
-				var mtl = surface.Material.Resource as Material;
-				if (mtl == null && !string.IsNullOrEmpty(surface.Material.NameReference))
+			return new[]
 				{
-					//TODO: fix naming
-					mtl = resourceManager.FindResource(surface.Material.Type, Hash.Get(mesh.Name + "/" + surface.Material.NameReference)) as Material;
-				}
-				this.SetMaterial(mtl);
-
-				var p = ApplyMaterialShader(mesh);	
-				vertexBufferRenderData.Enable(p);
-				Render(mesh, surface);
-				vertexBufferRenderData.Disable(p);
-			}
+					inModelRotMat.M11, inModelRotMat.M12, inModelRotMat.M13, inModelRotMat.M21, inModelRotMat.M22, inModelRotMat.M23,
+					inModelRotMat.M31, inModelRotMat.M32, inModelRotMat.M33
+				};
 		}
 
-		private void RenderSurface(Mesh mesh, Surface surface)
+		private static Vector4 ColorToVector4(Color colEmissive)
 		{
-			this.Render(mesh, surface);			
-		}
-
-		private void Render(IVertexStreamSource vb, IVertexIndexSource indices)
-		{
-			BeginMode mode;
-			int count = 0;
-			switch (indices.VertexSourceType)
-			{
-				case VertexSourceType.TrianleList:
-					mode = BeginMode.Triangles;
-					count = indices.Count / 3;
-					break;
-				case VertexSourceType.TrianleStrip:
-					mode = BeginMode.TriangleStrip;
-					count = indices.Count-2;
-					break;
-				case VertexSourceType.QuadList:
-					mode = BeginMode.Quads;
-					count = indices.Count /4;
-					break;
-				default:
-					throw new ArgumentOutOfRangeException();
-			}
-
-			count = indices.Count;
-			var ids = new uint[indices.Count];
-			int i=0;
-			foreach (var index in indices)
-			{
-				ids[i] = (uint)index;
-				++i;
-			}
-			GL.DrawElements(mode, count,DrawElementsType.UnsignedInt, ids);
-			OpenTKHelper.Assert();
+			return new Vector4(colEmissive.R / 255.0f, colEmissive.G / 255.0f, colEmissive.B / 255.0f, colEmissive.A / 255.0f);
 		}
 
 		private ShaderTechniqueArgumentIndices ApplyDefaultMaterial(IVertexStreamSource mesh)
 		{
 			var vso = new DefaultVertexShaderOptions
-			{
-				BITANGENT_STREAM = false,//mesh.IsBinormalStreamAvailable,
-				COL_STREAM = mesh.IsColorStreamAvailable,
-				FAST_FOG = false,
-				FOG = false,//!material.NoFog,
-				LIGHT_AMBIENT = lighting && light.Enabled,
-				LIGHT_DIFFUSE = lighting && light.Enabled && IsNotDisabledColor(light.Diffuse),
-				LIGHT_SPECULAR = lighting && light.Enabled && IsNotDisabledColor(light.Specular),
-				LIGHT_EMISSIVE = lighting && light.Enabled,
-				NORM_STREAM = mesh.IsNormalStreamAvailable,
-				SKIN_MAJOR_BONE = false,
-				SKINWEIGHT_STREAM = false,
-				SKIN_NORMALS = false,
-				TANGENT_STREAM = false,//mesh.IsTangentStreamAvailable,
-				UV0_STREAM = mesh.IsUV0StreamAvailable && isTextureSet[0],
-				UV1_STREAM = mesh.IsUV1StreamAvailable && isTextureSet[1]
-			};
+				{
+					BITANGENT_STREAM = false,
+					//mesh.IsBinormalStreamAvailable,
+					COL_STREAM = mesh.IsColorStreamAvailable,
+					FAST_FOG = false,
+					FOG = false,
+					//!material.NoFog,
+					LIGHT_AMBIENT = this.lighting && this.light.Enabled,
+					LIGHT_DIFFUSE =
+						this.lighting && this.light.Enabled
+						&& this.IsNotDisabledColor(this.light.Diffuse),
+					LIGHT_SPECULAR =
+						this.lighting && this.light.Enabled
+						&& this.IsNotDisabledColor(this.light.Specular),
+					LIGHT_EMISSIVE = this.lighting && this.light.Enabled,
+					NORM_STREAM = mesh.IsNormalStreamAvailable,
+					SKIN_MAJOR_BONE = false,
+					SKINWEIGHT_STREAM = false,
+					SKIN_NORMALS = false,
+					TANGENT_STREAM = false,
+					//mesh.IsTangentStreamAvailable,
+					UV0_STREAM = mesh.IsUV0StreamAvailable && this.isTextureSet[0],
+					UV1_STREAM = mesh.IsUV1StreamAvailable && this.isTextureSet[1]
+				};
 
-			var fso = new DefaultFragmentShaderOptions()
-			{
-				COL_STREAM = mesh.IsColorStreamAvailable,
-				FAST_FOG = false,
-				FOG = false,//!material.NoFog,
-				LIGHT_AMBIENT = lighting && light.Enabled,
-				LIGHT_DIFFUSE = lighting && light.Enabled && IsNotDisabledColor(light.Diffuse),
-				LIGHT_SPECULAR = lighting && light.Enabled && IsNotDisabledColor(light.Specular),
-				LIGHT_EMISSIVE = lighting && light.Enabled,
-				UV0_STREAM = mesh.IsUV0StreamAvailable,
-				UV1_STREAM = mesh.IsUV1StreamAvailable,
-				ALPHA_BLEND = (int)AlphaMode.DEFAULT,
-				ALPHA_TEST = (int)AlphaTestMode.DISABLED,
-				BLEND = (int)BlendMode.MODULATE,
-				EFFECT_PRESET = (int)EffectPreset.DEFAULT,
-				IW_GX_PLATFORM_TEGRA2 = false,
-				TEX0 = isTextureSet[0],
-				TEX1 = isTextureSet[1]
-			};
+			var fso = new DefaultFragmentShaderOptions
+				{
+					COL_STREAM = mesh.IsColorStreamAvailable,
+					FAST_FOG = false,
+					FOG = false,
+					//!material.NoFog,
+					LIGHT_AMBIENT = this.lighting && this.light.Enabled,
+					LIGHT_DIFFUSE = this.lighting && this.light.Enabled && this.IsNotDisabledColor(this.light.Diffuse),
+					LIGHT_SPECULAR = this.lighting && this.light.Enabled && this.IsNotDisabledColor(this.light.Specular),
+					LIGHT_EMISSIVE = this.lighting && this.light.Enabled,
+					UV0_STREAM = mesh.IsUV0StreamAvailable,
+					UV1_STREAM = mesh.IsUV1StreamAvailable,
+					ALPHA_BLEND = (int)AlphaMode.DEFAULT,
+					ALPHA_TEST = (int)AlphaTestMode.DISABLED,
+					BLEND = (int)BlendMode.MODULATE,
+					EFFECT_PRESET = (int)EffectPreset.DEFAULT,
+					IW_GX_PLATFORM_TEGRA2 = false,
+					TEX0 = this.isTextureSet[0],
+					TEX1 = this.isTextureSet[1]
+				};
 
-			ShaderTechniqueArgumentIndices p = shaders.GetProgram(new DefaultProgramOptions(vso, fso));
+			ShaderTechniqueArgumentIndices p = this.shaders.GetProgram(new DefaultProgramOptions(vso, fso));
 			GL.UseProgram(p.ProgramId);
 			OpenTKHelper.Assert();
 
@@ -265,27 +354,42 @@ namespace Toe.Gx
 
 			return p;
 		}
+
+		private void ApplyFiltering()
+		{
+			if (this.material == null || this.material.Filtering)
+			{
+				GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
+				GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+			}
+			else
+			{
+				GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
+				GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
+			}
+		}
+
 		private ShaderTechniqueArgumentIndices ApplyMaterialShader(IVertexStreamSource mesh)
 		{
-			if (material == null)
+			if (this.material == null)
 			{
-				return ApplyDefaultMaterial(mesh);
+				return this.ApplyDefaultMaterial(mesh);
 			}
 
-			this.SetTexture(0, material.Texture0.Resource as Texture);
+			this.SetTexture(0, this.material.Texture0.Resource as Texture);
 			this.ApplyFiltering();
-			this.SetTexture(1, material.Texture1.Resource as Texture);
+			this.SetTexture(1, this.material.Texture1.Resource as Texture);
 			this.ApplyFiltering();
-			this.SetTexture(2, material.Texture1.Resource as Texture);
+			this.SetTexture(2, this.material.Texture1.Resource as Texture);
 			this.ApplyFiltering();
-			this.SetTexture(3, material.Texture1.Resource as Texture);
+			this.SetTexture(3, this.material.Texture1.Resource as Texture);
 			this.ApplyFiltering();
 			GL.ActiveTexture(TextureUnit.Texture0);
 
-			var shaderTechnique = material.ShaderTechnique.Resource as ShaderTechnique;
-			if (shaderTechnique!=null)
+			var shaderTechnique = this.material.ShaderTechnique.Resource as ShaderTechnique;
+			if (shaderTechnique != null)
 			{
-				var programShader = GetShaderProgram(shaderTechnique);
+				var programShader = this.GetShaderProgram(shaderTechnique);
 				GL.UseProgram(programShader.ProgramId);
 				OpenTKHelper.Assert();
 
@@ -294,68 +398,53 @@ namespace Toe.Gx
 			}
 
 			var vso = new DefaultVertexShaderOptions
-			{
-				BITANGENT_STREAM = mesh.IsBinormalStreamAvailable,
-				COL_STREAM = mesh.IsColorStreamAvailable,
-				FAST_FOG = false,
-				FOG = false,//!material.NoFog,
-				LIGHT_AMBIENT = lighting && light.Enabled,
-				LIGHT_DIFFUSE = lighting && light.Enabled && IsNotDisabledColor(light.Diffuse),
-				LIGHT_SPECULAR = lighting && light.Enabled && IsNotDisabledColor(light.Specular),
-				LIGHT_EMISSIVE = lighting && light.Enabled,
-				NORM_STREAM = mesh.IsNormalStreamAvailable,
-				SKIN_MAJOR_BONE = false,
-				SKINWEIGHT_STREAM = false,
-				SKIN_NORMALS = false,
-				TANGENT_STREAM = mesh.IsTangentStreamAvailable,
-				UV0_STREAM = mesh.IsUV0StreamAvailable,
-				UV1_STREAM = mesh.IsUV1StreamAvailable
-			};
+				{
+					BITANGENT_STREAM = mesh.IsBinormalStreamAvailable,
+					COL_STREAM = mesh.IsColorStreamAvailable,
+					FAST_FOG = false,
+					FOG = false,
+					//!material.NoFog,
+					LIGHT_AMBIENT = this.lighting && this.light.Enabled,
+					LIGHT_DIFFUSE = this.lighting && this.light.Enabled && this.IsNotDisabledColor(this.light.Diffuse),
+					LIGHT_SPECULAR = this.lighting && this.light.Enabled && this.IsNotDisabledColor(this.light.Specular),
+					LIGHT_EMISSIVE = this.lighting && this.light.Enabled,
+					NORM_STREAM = mesh.IsNormalStreamAvailable,
+					SKIN_MAJOR_BONE = false,
+					SKINWEIGHT_STREAM = false,
+					SKIN_NORMALS = false,
+					TANGENT_STREAM = mesh.IsTangentStreamAvailable,
+					UV0_STREAM = mesh.IsUV0StreamAvailable,
+					UV1_STREAM = mesh.IsUV1StreamAvailable
+				};
 
-			var fso = new DefaultFragmentShaderOptions()
-			{
-				COL_STREAM = mesh.IsColorStreamAvailable,
-				FAST_FOG = false,
-				FOG = false,//!material.NoFog,
-				LIGHT_AMBIENT = lighting && light.Enabled,
-				LIGHT_DIFFUSE = lighting && light.Enabled && IsNotDisabledColor(light.Diffuse),
-				LIGHT_SPECULAR = lighting && light.Enabled && IsNotDisabledColor(light.Specular),
-				LIGHT_EMISSIVE = lighting && light.Enabled,
-				UV0_STREAM = mesh.IsUV0StreamAvailable,
-				UV1_STREAM = mesh.IsUV1StreamAvailable,
-				ALPHA_BLEND = (int)material.AlphaMode,
-				ALPHA_TEST = (int)material.AlphaTestMode,
-				BLEND = (int)material.BlendMode,
-				EFFECT_PRESET = (int)material.EffectPreset,
-				IW_GX_PLATFORM_TEGRA2 = false,
-				TEX0 = !material.Texture0.IsEmpty,
-				TEX1 = !material.Texture1.IsEmpty
-			};
+			var fso = new DefaultFragmentShaderOptions
+				{
+					COL_STREAM = mesh.IsColorStreamAvailable,
+					FAST_FOG = false,
+					FOG = false,
+					//!material.NoFog,
+					LIGHT_AMBIENT = this.lighting && this.light.Enabled,
+					LIGHT_DIFFUSE = this.lighting && this.light.Enabled && this.IsNotDisabledColor(this.light.Diffuse),
+					LIGHT_SPECULAR = this.lighting && this.light.Enabled && this.IsNotDisabledColor(this.light.Specular),
+					LIGHT_EMISSIVE = this.lighting && this.light.Enabled,
+					UV0_STREAM = mesh.IsUV0StreamAvailable,
+					UV1_STREAM = mesh.IsUV1StreamAvailable,
+					ALPHA_BLEND = (int)this.material.AlphaMode,
+					ALPHA_TEST = (int)this.material.AlphaTestMode,
+					BLEND = (int)this.material.BlendMode,
+					EFFECT_PRESET = (int)this.material.EffectPreset,
+					IW_GX_PLATFORM_TEGRA2 = false,
+					TEX0 = !this.material.Texture0.IsEmpty,
+					TEX1 = !this.material.Texture1.IsEmpty
+				};
 
-			ShaderTechniqueArgumentIndices p = shaders.GetProgram(new DefaultProgramOptions(vso, fso));
+			ShaderTechniqueArgumentIndices p = this.shaders.GetProgram(new DefaultProgramOptions(vso, fso));
 			GL.UseProgram(p.ProgramId);
 			OpenTKHelper.Assert();
 
 			this.BindShaderArgs(ref p);
 
 			return p;
-		}
-
-		private ShaderTechniqueArgumentIndices GetShaderProgram(ShaderTechnique shaderTechnique)
-		{
-			var shaderContext = shaderTechnique.ContextData as ShaderContext;
-			if (shaderContext == null)
-			{
-				shaderTechnique.ContextData = shaderContext = new ShaderContext(shaderTechnique);
-			}
-			return shaderContext.Indices;
-		}
-
-		private bool IsNotDisabledColor(Color ambient)
-		{
-			if (ambient.A == 0) return false;
-			if (ambient.R == 0 && ambient.G == 0 && ambient.B == 0) return false;
-			return true;
 		}
 
 		private void BindShaderArgs(ref ShaderTechniqueArgumentIndices p)
@@ -527,187 +616,134 @@ namespace Toe.Gx
 			{
 				GL.Uniform3(p.inSpecularHalfVec, this.args.inSpecularHalfVec);
 			}
-			
+
 			//GL.UseProgram(0);
 			OpenTKHelper.Assert();
 		}
 
-		private static float[] BuildMat3x3(ref Matrix4 inModelRotMat)
-		{
-			return new float[] { inModelRotMat.M11, inModelRotMat.M12, inModelRotMat.M13, inModelRotMat.M21, inModelRotMat.M22, inModelRotMat.M23, inModelRotMat.M31, inModelRotMat.M32, inModelRotMat.M33 };
-		}
-
-		ShaderTechniqueArguments args = new ShaderTechniqueArguments();
-
 		private void EvalShaderTechniqueArguments()
 		{
-			args.inPMVMat = model * view * projection;
-			args.inMVMat = model*view;
-			var invMMat = model;
+			this.args.inPMVMat = this.model * this.view * this.projection;
+			this.args.inMVMat = this.model * this.view;
+			var invMMat = this.model;
 			invMMat.Invert();
-			args.inMVRotMat = args.inMVMat;
-			args.inModelRotMat = model;
-			args.inModelPos = Vector3.Transform(Vector3.Zero, model);
-			Matrix4 invView = view;
+			this.args.inMVRotMat = this.args.inMVMat;
+			this.args.inModelRotMat = this.model;
+			this.args.inModelPos = Vector3.Transform(Vector3.Zero, this.model);
+			Matrix4 invView = this.view;
 			invView.Invert();
-			args.inCamPos = Vector3.Transform(Vector3.Zero, invView);
-			args.inDiffuseDir = Vector3.Transform(this.light.Position, invMMat);
-			args.inDiffuseDir.Normalize();
-			var cam = Vector3.Transform(args.inCamPos, invMMat);
-			args.inEyePos = cam;
+			this.args.inCamPos = Vector3.Transform(Vector3.Zero, invView);
+			this.args.inDiffuseDir = Vector3.Transform(this.light.Position, invMMat);
+			this.args.inDiffuseDir.Normalize();
+			var cam = Vector3.Transform(this.args.inCamPos, invMMat);
+			this.args.inEyePos = cam;
 			cam.Normalize();
-			cam = args.inDiffuseDir + cam;
+			cam = this.args.inDiffuseDir + cam;
 			cam.Normalize();
-			args.inSpecularHalfVec = cam;
-			args.inEmissive = material == null ? Vector4.Zero : ColorToVector4(material.ColEmissive);
-			args.inAmbient = (lighting && light.Enabled)?ColorToVector4(light.Ambient):new Vector4(1, 1, 1, 1.0f);
-			args.inDiffuse = (lighting && light.Enabled) ? ColorToVector4(light.Diffuse) : new Vector4(1, 1, 1, 1.0f);
-			args.inSpecular = (lighting && light.Enabled) ? ColorToVector4(light.Specular) : new Vector4(1, 1, 1, 1.0f);
-			args.inMaterialSpecular = material != null ? ColorToVector4(material.SpecularCombined) : new Vector4(0, 0, 0, 0.0f);
-			args.inMaterialAmbient = material == null ? Vector4.Zero : ColorToVector4(material.ColAmbient);
-			args.inMaterialDiffuse = material == null ? Vector4.Zero : ColorToVector4(material.ColDiffuse);
+			this.args.inSpecularHalfVec = cam;
+			this.args.inEmissive = this.material == null ? Vector4.Zero : ColorToVector4(this.material.ColEmissive);
+			this.args.inAmbient = (this.lighting && this.light.Enabled)
+			                      	? ColorToVector4(this.light.Ambient)
+			                      	: new Vector4(1, 1, 1, 1.0f);
+			this.args.inDiffuse = (this.lighting && this.light.Enabled)
+			                      	? ColorToVector4(this.light.Diffuse)
+			                      	: new Vector4(1, 1, 1, 1.0f);
+			this.args.inSpecular = (this.lighting && this.light.Enabled)
+			                       	? ColorToVector4(this.light.Specular)
+			                       	: new Vector4(1, 1, 1, 1.0f);
+			this.args.inMaterialSpecular = this.material != null
+			                               	? ColorToVector4(this.material.SpecularCombined)
+			                               	: new Vector4(0, 0, 0, 0.0f);
+			this.args.inMaterialAmbient = this.material == null ? Vector4.Zero : ColorToVector4(this.material.ColAmbient);
+			this.args.inMaterialDiffuse = this.material == null ? Vector4.Zero : ColorToVector4(this.material.ColDiffuse);
 		}
 
-		private static Vector4 ColorToVector4(Color colEmissive)
+		private ShaderTechniqueArgumentIndices GetShaderProgram(ShaderTechnique shaderTechnique)
 		{
-			return new Vector4(colEmissive.R / 255.0f, colEmissive.G / 255.0f, colEmissive.B / 255.0f, colEmissive.A / 255.0f);
-		}
-
-		private void ApplyFiltering()
-		{
-			if (this.material == null || this.material.Filtering)
+			var shaderContext = shaderTechnique.ContextData as ShaderContext;
+			if (shaderContext == null)
 			{
-				GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
-				GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+				shaderTechnique.ContextData = shaderContext = new ShaderContext(shaderTechnique);
 			}
-			else
+			return shaderContext.Indices;
+		}
+
+		private bool IsNotDisabledColor(Color ambient)
+		{
+			if (ambient.A == 0)
 			{
-				GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
-				GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
+				return false;
 			}
-		}
-
-		//private void RenderVertex(IVertexSource mesh, Vertex vertex, ShaderTechniqueArgumentIndices indices)
-		//{
-		//    if (indices == null)
-		//    {
-		//        if (mesh.IsNormalStreamAvailable) GL.Normal3(vertex.Normal);
-		//        if (mesh.IsColorStreamAvailable) GL.Color4(vertex.Color);
-		//        if (mesh.IsUV0StreamAvailable) GL.MultiTexCoord3(TextureUnit.Texture0, vertex.UV0.X, vertex.UV0.Y, vertex.UV0.Z);
-		//        if (mesh.IsUV1StreamAvailable) GL.MultiTexCoord3(TextureUnit.Texture1, vertex.UV1.X, vertex.UV1.Y, vertex.UV1.Z);
-		//        GL.Vertex3(vertex.Position);
-		//    }
-		//    else
-		//    {
-		//        if (indices.inCol >= 0)
-		//            if (mesh.IsColorStreamAvailable)
-		//                GL.VertexAttrib4(indices.inCol, new Vector4( vertex.Color.R/255.0f, vertex.Color.G/255.0f, vertex.Color.B/255.0f, vertex.Color.A/255.0f ));
-		//            else
-		//                GL.VertexAttrib4(indices.inCol, new Vector4(1,1,1,1));
-		//        if (indices.inNorm >= 0)
-		//            if (mesh.IsNormalStreamAvailable)
-		//                GL.VertexAttrib4(indices.inNorm, new Vector4(vertex.Normal));
-		//            else
-		//                GL.VertexAttrib4(indices.inNorm, new Vector4(0, 0, 1,1));
-		//        if (indices.inUV0 >= 0)
-		//            if (mesh.IsUV0StreamAvailable)
-		//                GL.VertexAttrib2(indices.inUV0, new Vector2(vertex.UV0));
-		//            else
-		//                GL.VertexAttrib2(indices.inUV0, new Vector2(0, 0));
-		//        if (indices.inUV1 >= 0)
-		//            if (mesh.IsUV1StreamAvailable)
-		//                GL.VertexAttrib2(indices.inUV1, new Vector2(vertex.UV1));
-		//            else
-		//                GL.VertexAttrib2(indices.inUV1, new Vector2(0, 0));
-		//        if (indices.inBiTangent >= 0)
-		//            //if (mesh.IsBinormalStreamAvailable)
-		//            //    GL.VertexAttrib4(indices.inBiTangent, vertex.Binormal);
-		//            //else
-		//                GL.VertexAttrib4(indices.inBiTangent, new Vector4(0, 0, 0,1));
-		//        if (indices.inTangent >= 0)
-		//            //if (mesh.IsTangentStreamAvailable)
-		//            //    GL.VertexAttrib4(indices.inTangent, vertex.Tangent);
-		//            //else
-		//                GL.VertexAttrib4(indices.inTangent, new Vector4(0, 0, 0,1));
-		//        //if (indices.inVert >= 0)
-		//        //    if (mesh.IsVertexStreamAvailable)
-		//        //    {
-		//        //        Vector3 position = vertex.Position;
-		//        //        GL.VertexAttrib4(indices.inVert, new Vector4(position.X, position.Y, position.Z,1));
-		//        //    }
-		//        //    else
-		//        //        GL.VertexAttrib3(indices.inVert, new Vector3(0, 0, 0));
-		//        GL.Vertex3(vertex.Position);
-		//    }
-		//}
-		public void EnableLighting()
-		{
-			GL.Enable(EnableCap.Lighting);
-			lighting = true;
-		}
-
-		public void DisableLighting()
-		{
-			GL.Disable(EnableCap.Lighting);
-			lighting = false;
-		}
-
-		public void SetLight0(ref LightArgs args)
-		{
-			this.light = args;
-			if (!this.light.Enabled)
+			if (ambient.R == 0 && ambient.G == 0 && ambient.B == 0)
 			{
-				GL.Disable(EnableCap.Light0);
+				return false;
 			}
-			else 
+			return true;
+		}
+
+		private void Render(IVertexStreamSource vb, IVertexIndexSource indices)
+		{
+			BeginMode mode;
+			int count = 0;
+			switch (indices.VertexSourceType)
 			{
-				GL.Enable(EnableCap.Light0);
-				GL.Light(LightName.Light0, LightParameter.Position, new[] { light.Position.X, light.Position.Y, light.Position.Z, 1.0f });
+				case VertexSourceType.TrianleList:
+					mode = BeginMode.Triangles;
+					break;
+				case VertexSourceType.TrianleStrip:
+					mode = BeginMode.TriangleStrip;
+					break;
+				case VertexSourceType.QuadList:
+					mode = BeginMode.Quads;
+					break;
+				default:
+					throw new ArgumentOutOfRangeException();
+			}
+
+			count = indices.Count;
+			var ids = new uint[indices.Count];
+			int i = 0;
+			foreach (var index in indices)
+			{
+				ids[i] = (uint)index;
+				++i;
+			}
+			GL.DrawElements(mode, count, DrawElementsType.UnsignedInt, ids);
+			OpenTKHelper.Assert();
+		}
+
+		private void RenderMesh(Mesh mesh)
+		{
+			var vertexBufferRenderData = mesh.ContextData as VertexBufferRenderData;
+			if (vertexBufferRenderData == null)
+			{
+				mesh.ContextData = vertexBufferRenderData = new VertexBufferRenderData(mesh);
+			}
+
+			foreach (var surface in mesh.Surfaces)
+			{
+				var mtl = surface.Material.Resource as Material;
+				if (mtl == null && !string.IsNullOrEmpty(surface.Material.NameReference))
+				{
+					//TODO: fix naming
+					mtl =
+						this.resourceManager.FindResource(
+							surface.Material.Type, Hash.Get(mesh.Name + "/" + surface.Material.NameReference)) as Material;
+				}
+				this.SetMaterial(mtl);
+
+				var p = this.ApplyMaterialShader(mesh);
+				vertexBufferRenderData.Enable(p);
+				this.Render(mesh, surface);
+				vertexBufferRenderData.Disable(p);
 			}
 		}
 
-		public void SetViewport(int x, int y, int w, int h)
+		private void RenderSurface(Mesh mesh, Surface surface)
 		{
-			GL.Viewport(x, y, w, h);
-			args.inDisplaySize = new Vector2(w,h);
-			args.inDeviceSize = new Vector2(w, h);
-
+			this.Render(mesh, surface);
 		}
 
-		private Matrix4 projection = Matrix4.Identity;
-
-		private Matrix4 view = Matrix4.Identity;
-
-		private Matrix4 model = Matrix4.Identity;
-
-		private Matrix4 modelView = Matrix4.Identity;
-
-		private LightArgs light = new LightArgs();
-
-		private bool lighting;
-
-		public void SetProjection(ref Matrix4 projection)
-		{
-			this.projection = projection;
-			GL.MatrixMode(MatrixMode.Projection);
-			GL.LoadMatrix(ref projection);
-			GL.MatrixMode(MatrixMode.Modelview);
-		}
-
-		public void SetView(ref Matrix4 view)
-		{
-			this.view = view;
-			this.modelView = view*model;
-			GL.MatrixMode(MatrixMode.Modelview);
-			GL.LoadMatrix(ref modelView);
-		}
-
-		public void SetModel(ref Matrix4 view)
-		{
-			this.model = model;
-			this.modelView = view * model;
-			GL.MatrixMode(MatrixMode.Modelview);
-			GL.LoadMatrix(ref modelView);
-		}
+		#endregion
 	}
 }

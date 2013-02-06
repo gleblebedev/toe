@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Runtime.InteropServices;
 
 using OpenTK;
 
@@ -15,133 +16,41 @@ namespace Toe.Utils.Mesh
 	/// Vertext, compatible with Marmalade SDK limitations.
 	/// Each model vertex can have up to 4 weights.
 	/// </summary>
+	[StructLayout(LayoutKind.Sequential)]
 	public struct Vertex : IEquatable<Vertex>
 	{
 		#region Public Properties
 
-		private Vector3 binormal;
+		/// <summary>
+		/// Vertex position.
+		/// </summary>
+		public Vector3 Position;
 
 		/// <summary>
-		/// Binormal / bitangent for UV0.
+		/// Vertex normal vector.
 		/// </summary>
-		public Vector3 Binormal
-		{
-			get
-			{
-				return this.binormal;
-			}
-			set
-			{
-				this.binormal = value;
-			}
-		}
-
-		private Color color;
-
-		public Color Color
-		{
-			get
-			{
-				return this.color;
-			}
-			set
-			{
-				this.color = value;
-			}
-		}
-
-		private Vector3 normal;
+		public Vector3 Normal;
 
 		/// <summary>
-		/// Normal vector.
+		/// Vertex color.
 		/// </summary>
-		public Vector3 Normal
-		{
-			get
-			{
-				return this.normal;
-			}
-			set
-			{
-				this.normal = value;
-			}
-		}
+		public Color Color;
 
-		private Vector3 position;
+		public Vector3 UV0;
 
-		/// <summary>
-		/// Position vector.
-		/// </summary>
-		public Vector3 Position
-		{
-			get
-			{
-				return this.position;
-			}
-			set
-			{
-				this.position = value;
-			}
-		}
-
-		private Vector3 tangent;
+		public Vector3 UV1;
 
 		/// <summary>
 		/// Tangent for UV0.
 		/// </summary>
-		public Vector3 Tangent
-		{
-			get
-			{
-				return this.tangent;
-			}
-			set
-			{
-				this.tangent = value;
-			}
-		}
+		public Vector3 Tangent;
 
-		private Vector3 uv0;
+		/// <summary>
+		/// Binormal / bitangent for UV0.
+		/// </summary>
+		public Vector3 Binormal;
 
-		public Vector3 UV0
-		{
-			get
-			{
-				return this.uv0;
-			}
-			set
-			{
-				this.uv0 = value;
-			}
-		}
-
-		private Vector3 uv1;
-
-		public Vector3 UV1
-		{
-			get
-			{
-				return this.uv1;
-			}
-			set
-			{
-				this.uv1 = value;
-			}
-		}
-
-		private VertexWeights weights;
-
-		public VertexWeights Weights
-		{
-			get
-			{
-				return this.weights;
-			}
-			set
-			{
-				this.weights = value;
-			}
-		}
+		public VertexWeights Weights;
 
 		#endregion
 

@@ -1,8 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+
+using Toe.Utils.Mesh.Bsp.Q3;
 
 namespace Toe.Utils.Mesh.Bsp
 {
@@ -34,6 +35,10 @@ namespace Toe.Utils.Mesh.Bsp
 					reader = new HL2.BspReader19();
 				else if (magic == 20)
 					reader = new HL2.BspReader20();
+				else if (magic == 21)
+					reader = new HL2.BspReader21();
+				else
+					throw new BspFormatException("Unknown Source Engine BSP: " + magic);
 			}
 			else if (magic == 0x50534249)
 			{
@@ -43,7 +48,9 @@ namespace Toe.Utils.Mesh.Bsp
 				else if (magic == 0x2E)
 					reader = new Q3.BspReader();
 				else if (magic == 0x2F)
-					reader = new QLive.BspReader();
+					reader = new QLiveBspReader();
+				else
+					throw new BspFormatException("Unknown Quake 3 BSP: " + magic);
 			}
 			stream.Position = pos;
 

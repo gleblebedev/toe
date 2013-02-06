@@ -62,6 +62,10 @@ namespace Toe.Utils.Mesh
 		TrianleList,
 		TrianleStrip,
 
-		QuadList
+		QuadList,
+		QuadStrip,
+
+		LineLine,
+		LineStrip,
 	}
 }

@@ -13,6 +13,10 @@ namespace Toe.Utils.Mesh.Ase
 
 		readonly StringBuilder sb = new StringBuilder();
 
+		private int line = 0;
+
+		private int pos = 0;
+
 		public AseParser(TextReader reader)
 		{
 			this.reader = reader;
@@ -32,7 +36,7 @@ namespace Toe.Utils.Mesh.Ase
 					@where = (fileStream).Name;
 				}
 			}
-			return @where;
+			return string.Format("{0} line:{1} pos:{2}", @where, this.line, this.pos);
 		}
 		protected override void ReadLexem()
 		{
@@ -70,7 +74,17 @@ namespace Toe.Utils.Mesh.Ase
 
 		protected int ReadNextChar()
 		{
-			return this.nextChar = this.reader.Read();
+			this.nextChar = this.reader.Read();
+			if (this.nextChar == '\n')
+			{
+				++line;
+				pos = 0;
+			}
+			else if (this.nextChar == '\r')
+			{
+				++pos;
+			}
+			return this.nextChar;
 		}
 	}
 }

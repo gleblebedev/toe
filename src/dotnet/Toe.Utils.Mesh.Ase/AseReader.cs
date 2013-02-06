@@ -117,6 +117,11 @@ namespace Toe.Utils.Mesh.Ase
 					parser.ConsumeInt();
 					continue;
 				}
+				if (0 == string.Compare(attr, "*TM_ANIMATION", StringComparison.InvariantCultureIgnoreCase))
+				{
+					this.SkipBlock(parser);
+					continue;
+				}
 				if (0 == string.Compare(attr, "*WIREFRAME_COLOR", StringComparison.InvariantCultureIgnoreCase))
 				{
 					parser.ConsumeFloat();
@@ -372,7 +377,8 @@ namespace Toe.Utils.Mesh.Ase
 					if (parser.Lexem == "*MESH_SMOOTHING")
 					{
 						parser.Consume();
-						parser.ConsumeInt();
+						if (parser.Lexem != "*MESH_MTLID")
+							parser.ConsumeInt();
 					}
 					if (parser.Lexem == "*MESH_MTLID")
 					{
