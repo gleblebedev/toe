@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Drawing;
-using System.Runtime.InteropServices;
 using System.Threading;
 
 using OpenTK;
@@ -21,10 +20,7 @@ namespace Toe.Gx
 
 		private readonly ShaderTechniqueArguments args = new ShaderTechniqueArguments();
 
-		private readonly Vertex[] vertexBuffer = new Vertex[1024*64];
 		private readonly ToeGxIndexBufferItem[] indexBuffer = new ToeGxIndexBufferItem[1024];
-		private int vertexBufferCount = 0;
-		private int indexBufferCount =0;
 
 		private readonly bool[] isTextureSet = new bool[4];
 
@@ -32,9 +28,17 @@ namespace Toe.Gx
 
 		private readonly DefaultShaders shaders = new DefaultShaders();
 
+		private readonly Vertex[] vertexBuffer = new Vertex[1024 * 64];
+
+		private readonly NativeWindow window;
+
 		private GraphicsContext context;
 
+		private Material debugMaterial;
+
 		private bool flipCulling = true;
+
+		private int indexBufferCount;
 
 		private LightArgs light;
 
@@ -50,9 +54,9 @@ namespace Toe.Gx
 
 		private Thread resourceContextThread;
 
-		private Matrix4 view = Matrix4.Identity;
+		private int vertexBufferCount;
 
-		private NativeWindow window;
+		private Matrix4 view = Matrix4.Identity;
 
 		#endregion
 
@@ -61,6 +65,8 @@ namespace Toe.Gx
 		public ToeGraphicsContext(IResourceManager resourceManager)
 		{
 			this.resourceManager = resourceManager;
+			this.debugMaterial = new Material(this.resourceManager)
+				{ ColEmissive = Color.FromArgb(255, 255, 255, 255), SpecularPower = 0 };
 			GraphicsContext.ShareContexts = true;
 			var currentContext = GraphicsContext.CurrentContext;
 			if (currentContext != null)
@@ -72,22 +78,22 @@ namespace Toe.Gx
 			//this.resourceContextThread = new Thread(
 			//	() =>
 			//		{
-						this.window = new NativeWindow();
-						GraphicsContext.ShareContexts = true;
-						this.context = new GraphicsContext(GraphicsMode.Default, this.window.WindowInfo);
-						this.context.MakeCurrent(this.window.WindowInfo);
+			this.window = new NativeWindow();
+			GraphicsContext.ShareContexts = true;
+			this.context = new GraphicsContext(GraphicsMode.Default, this.window.WindowInfo);
+			this.context.MakeCurrent(this.window.WindowInfo);
 
-						this.window.ProcessEvents();
-						//context_ready.Set();
-						//while (this.window.Exists)
-						//{
-						//    this.window.ProcessEvents();
+			this.window.ProcessEvents();
+			//context_ready.Set();
+			//while (this.window.Exists)
+			//{
+			//    this.window.ProcessEvents();
 
-						//    // Perform your processing here
+			//    // Perform your processing here
 
-						//    Thread.Sleep(1); // Limit CPU usage, if necessary
-						//}
-					//});
+			//    Thread.Sleep(1); // Limit CPU usage, if necessary
+			//}
+			//});
 			//this.resourceContextThread.IsBackground = true;
 			//this.resourceContextThread.Start();
 
@@ -121,19 +127,42 @@ namespace Toe.Gx
 
 		#region Public Methods and Operators
 
-		public void RenderDebugLine(ref Vector3 from, ref Vector3 to, ref Color color)
+		public void Flush()
 		{
-			if (vertexBufferCount + 2 > vertexBuffer.Length) DropVertextBuffer();
-			vertexBuffer[vertexBufferCount] = new Vertex() { Position = from, Color = color };
-			++vertexBufferCount;
-			vertexBuffer[vertexBufferCount] = new Vertex() { Position = to, Color = color };
-			++vertexBufferCount;
+			this.RenderVertexBuffer();
+			OpenTKHelper.Assert();
+			GL.Flush();
+			OpenTKHelper.Assert();
 		}
 
-		private void DropVertextBuffer()
+		private void RenderVertexBuffer()
 		{
-			vertexBufferCount = 0;
-			indexBufferCount = 0;
+			if (this.vertexBufferCount == 0)
+				return;
+
+			SetMaterial(null);
+			DisableLighting();
+
+			//SetTexture(0, null);
+			//SetTexture(1, null);
+			//SetTexture(2, null);
+			//SetTexture(3, null);
+
+			this.SetModel(ref Matrix4.Identity);
+			//this.SetView(ref Matrix4.Identity);
+
+			//GL.Enable(EnableCap.CullFace);
+			//GL.CullFace(CullFaceMode.Front);
+
+			GL.Begin(BeginMode.Lines);
+			for (int i = 0; i < this.vertexBufferCount; ++i)
+			{
+				GL.Color4(this.vertexBuffer[i].Color);
+				GL.Vertex3(this.vertexBuffer[i].Position);
+			}
+			GL.End();
+			this.vertexBufferCount = 0;
+			this.indexBufferCount = 0;
 		}
 
 		public void DisableLighting()
@@ -181,6 +210,22 @@ namespace Toe.Gx
 			}
 		}
 
+		public void RenderDebugLine(Vector3 from, Vector3 to, Color color)
+		{
+			RenderDebugLine(ref from, ref to, ref color);
+		}
+		public void RenderDebugLine(ref Vector3 from, ref Vector3 to, ref Color color)
+		{
+			if (this.vertexBufferCount + 2 > this.vertexBuffer.Length)
+			{
+				this.DropVertextBuffer();
+			}
+			this.vertexBuffer[this.vertexBufferCount] = new Vertex { Position = from, Color = color };
+			++this.vertexBufferCount;
+			this.vertexBuffer[this.vertexBufferCount] = new Vertex { Position = to, Color = color };
+			++this.vertexBufferCount;
+		}
+
 		public void RenderModel(Model model)
 		{
 			foreach (var mesh in model.Meshes)
@@ -209,18 +254,23 @@ namespace Toe.Gx
 		public void SetMaterial(Material m)
 		{
 			this.material = m;
+			if (this.material == null)
+			{
+				GL.UseProgram(0);
+			}
 		}
 
-		public void SetModel(ref Matrix4 view)
+		public void SetModel(ref Matrix4 model)
 		{
-			this.model = this.model;
-			this.modelView = view * this.model;
+			this.model = model;
+			this.modelView = this.view * this.model;
 			GL.MatrixMode(MatrixMode.Modelview);
 			GL.LoadMatrix(ref this.modelView);
 		}
 
 		public void SetProjection(ref Matrix4 projection)
 		{
+			RenderVertexBuffer();
 			this.projection = projection;
 			GL.MatrixMode(MatrixMode.Projection);
 			GL.LoadMatrix(ref projection);
@@ -248,6 +298,7 @@ namespace Toe.Gx
 
 		public void SetView(ref Matrix4 view)
 		{
+			RenderVertexBuffer();
 			this.view = view;
 			this.modelView = view * this.model;
 			GL.MatrixMode(MatrixMode.Modelview);
@@ -256,6 +307,7 @@ namespace Toe.Gx
 
 		public void SetViewport(int x, int y, int w, int h)
 		{
+			RenderVertexBuffer();
 			GL.Viewport(x, y, w, h);
 			this.args.inDisplaySize = new Vector2(w, h);
 			this.args.inDeviceSize = new Vector2(w, h);
@@ -369,6 +421,16 @@ namespace Toe.Gx
 			}
 		}
 
+		private void ApplyMaterialFixedPipeline()
+		{
+			if (this.material == null)
+			{
+				return;
+			}
+			this.ApplyMaterialTextures();
+			GL.UseProgram(0);
+			OpenTKHelper.Assert();
+		}
 		private ShaderTechniqueArgumentIndices ApplyMaterialShader(IVertexStreamSource mesh)
 		{
 			if (this.material == null)
@@ -376,15 +438,7 @@ namespace Toe.Gx
 				return this.ApplyDefaultMaterial(mesh);
 			}
 
-			this.SetTexture(0, this.material.Texture0.Resource as Texture);
-			this.ApplyFiltering();
-			this.SetTexture(1, this.material.Texture1.Resource as Texture);
-			this.ApplyFiltering();
-			this.SetTexture(2, this.material.Texture1.Resource as Texture);
-			this.ApplyFiltering();
-			this.SetTexture(3, this.material.Texture1.Resource as Texture);
-			this.ApplyFiltering();
-			GL.ActiveTexture(TextureUnit.Texture0);
+			this.ApplyMaterialTextures();
 
 			var shaderTechnique = this.material.ShaderTechnique.Resource as ShaderTechnique;
 			if (shaderTechnique != null)
@@ -445,6 +499,19 @@ namespace Toe.Gx
 			this.BindShaderArgs(ref p);
 
 			return p;
+		}
+
+		private void ApplyMaterialTextures()
+		{
+			this.SetTexture(0, this.material.Texture0.Resource as Texture);
+			this.ApplyFiltering();
+			this.SetTexture(1, this.material.Texture1.Resource as Texture);
+			this.ApplyFiltering();
+			this.SetTexture(2, this.material.Texture1.Resource as Texture);
+			this.ApplyFiltering();
+			this.SetTexture(3, this.material.Texture1.Resource as Texture);
+			this.ApplyFiltering();
+			GL.ActiveTexture(TextureUnit.Texture0);
 		}
 
 		private void BindShaderArgs(ref ShaderTechniqueArgumentIndices p)
@@ -621,6 +688,12 @@ namespace Toe.Gx
 			OpenTKHelper.Assert();
 		}
 
+		private void DropVertextBuffer()
+		{
+			this.vertexBufferCount = 0;
+			this.indexBufferCount = 0;
+		}
+
 		private void EvalShaderTechniqueArguments()
 		{
 			this.args.inPMVMat = this.model * this.view * this.projection;
@@ -745,5 +818,14 @@ namespace Toe.Gx
 		}
 
 		#endregion
+
+		public void ModelToWorld(ref Vector3 vec, out Vector3 r)
+		{
+			Vector3.Transform(ref vec, ref model, out r);
+		}
+		public void ModelToWorldView(ref Vector3 vec, out Vector3 r)
+		{
+			Vector3.Transform(ref vec, ref modelView, out r);
+		}
 	}
 }

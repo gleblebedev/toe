@@ -10,6 +10,7 @@ namespace Toe.Utils.Mesh.Ase
 {
 	public class AseReader : ISceneReader
 	{
+
 		#region Implementation of IMeshReader
 
 		/// <summary>
@@ -151,6 +152,27 @@ namespace Toe.Utils.Mesh.Ase
 			}
 		}
 
+		struct FaceVertexNormal
+		{
+			internal int Index;
+			internal Vector3 Normal;
+		}
+		struct FaceNormal
+		{
+			internal Vector3 Normal;
+
+			internal FaceVertexNormal A;
+			internal FaceVertexNormal B;
+			internal FaceVertexNormal C;
+
+			public Vector3 GetNormal(int index0)
+			{
+				if (index0 == A.Index) return A.Normal;
+				if (index0 == B.Index) return B.Normal;
+				if (index0 == C.Index) return C.Normal;
+				return Normal;
+			}
+		}
 		private void ParsSubMesh(AseParser parser, Node node)
 		{
 			var mesh = new VertexBufferMesh();
@@ -158,7 +180,7 @@ namespace Toe.Utils.Mesh.Ase
 			node.Mesh = mesh;
 
 			Vector3[] vertices = null;
-			Vector3[] normals = null;
+			FaceNormal[] normals = null;
 			Vector3[] tvertices = null;
 			Color[] cols = null;
 			AseFace[] faces = null;
@@ -238,7 +260,7 @@ namespace Toe.Utils.Mesh.Ase
 				}
 				if (0 == string.Compare(attr, "*MESH_NORMALS", StringComparison.InvariantCultureIgnoreCase))
 				{
-					normals = new Vector3[vertices.Length];
+					normals = new FaceNormal[faces.Length];
 					this.ParsNormalList(parser,normals);
 					continue;
 				}
@@ -247,17 +269,17 @@ namespace Toe.Utils.Mesh.Ase
 			int i = 0;
 			foreach (var aseFace in faces)
 			{
-				Vertex a = BuildVertex(vertices, aseFace.C, normals, tfaces, cols, tvertices, (tfaces != null && tvertices != null) ? tvertices[tfaces[i].C] : Vector3.Zero);
-				Vertex b = BuildVertex(vertices, aseFace.B, normals, tfaces, cols, tvertices, (tfaces != null && tvertices != null) ? tvertices[tfaces[i].B] : Vector3.Zero);
-				Vertex c = BuildVertex(vertices, aseFace.A, normals, tfaces, cols, tvertices, (tfaces != null && tvertices != null) ? tvertices[tfaces[i].A] : Vector3.Zero);
+				Vertex a = BuildVertex(vertices, aseFace.C, normals, i, tfaces, cols, tvertices, (tfaces != null && tvertices != null) ? tvertices[tfaces[i].C] : Vector3.Zero);
+				Vertex b = BuildVertex(vertices, aseFace.B, normals, i, tfaces, cols, tvertices, (tfaces != null && tvertices != null) ? tvertices[tfaces[i].B] : Vector3.Zero);
+				Vertex c = BuildVertex(vertices, aseFace.A, normals, i, tfaces, cols, tvertices, (tfaces != null && tvertices != null) ? tvertices[tfaces[i].A] : Vector3.Zero);
 				BuildTangent(ref a, ref b, ref c);
 				submesh.Add(mesh.VertexBuffer.Add(a));
 				submesh.Add(mesh.VertexBuffer.Add(b));
 				submesh.Add(mesh.VertexBuffer.Add(c));
 				++i;
 			}
-			mesh.IsBinormalStreamAvailable = false;
-			mesh.IsTangentStreamAvailable = false;
+			mesh.IsBinormalStreamAvailable = true;
+			mesh.IsTangentStreamAvailable = true;
 			if (cols == null) mesh.IsColorStreamAvailable = false;
 			if (normals == null) mesh.IsNormalStreamAvailable = false;
 		}
@@ -287,12 +309,12 @@ namespace Toe.Utils.Mesh.Ase
 		}
 
 		private static Vertex BuildVertex(
-			Vector3[] vertices, int index0, Vector3[] normals, AseTFace[] tfaces, Color[] c, Vector3[] tvertices, Vector3 uv)
+			Vector3[] vertices, int index0, FaceNormal[] normals, int faceIndex, AseTFace[] tfaces, Color[] c, Vector3[] tvertices, Vector3 uv)
 		{
 			Vertex v = new Vertex { Position = vertices[index0] };
 			if (normals != null)
 			{
-				v.Normal = normals[index0];
+				v.Normal = normals[faceIndex].GetNormal(index0);
 			}
 			v.Color = c != null && c.Length > 0 ? c[index0] : Color.FromArgb(255,255,255,255);
 			v.UV1 = v.UV0 = new Vector3(uv.X, 1.0f - uv.Y, uv.Z);
@@ -434,8 +456,10 @@ namespace Toe.Utils.Mesh.Ase
 			}
 		}
 
-		private void ParsNormalList(AseParser parser, IList<Vector3> normals)
+		private void ParsNormalList(AseParser parser, FaceNormal[] normals)
 		{
+			int faceIndex = 0;
+			int faceVertexIndex = 0;
 			parser.Consume("{");
 			for (; ; )
 			{
@@ -444,10 +468,12 @@ namespace Toe.Utils.Mesh.Ase
 					break;
 				if (0 == string.Compare(attr, "*MESH_FACENORMAL", StringComparison.InvariantCultureIgnoreCase))
 				{
-					var index = parser.ConsumeInt();
+					faceIndex = parser.ConsumeInt();
 					var x = parser.ConsumeFloat();
 					var y = parser.ConsumeFloat();
 					var z = parser.ConsumeFloat();
+					normals[faceIndex].A.Normal = normals[faceIndex].B.Normal = normals[faceIndex].C.Normal = normals[faceIndex].Normal = new Vector3(x, y, z);
+					faceVertexIndex = 0;
 					continue;
 				}
 				if (0 == string.Compare(attr, "*MESH_VERTEXNORMAL", StringComparison.InvariantCultureIgnoreCase))
@@ -456,7 +482,23 @@ namespace Toe.Utils.Mesh.Ase
 					var x = parser.ConsumeFloat();
 					var y = parser.ConsumeFloat();
 					var z = parser.ConsumeFloat();
-					normals[index] = new Vector3(x, y, z);
+					Vector3 v = new Vector3(x,y,z);
+					switch (faceVertexIndex)
+					{
+						case 0:
+							normals[faceIndex].A.Index = index;
+							normals[faceIndex].A.Normal = v;
+							break;
+						case 1:
+							normals[faceIndex].B.Index = index;
+							normals[faceIndex].B.Normal = v;
+							break;
+						case 2:
+							normals[faceIndex].C.Index = index;
+							normals[faceIndex].C.Normal = v;
+							break;
+					}
+					++faceVertexIndex;
 					continue;
 				}
 				parser.UnknownLexemError();

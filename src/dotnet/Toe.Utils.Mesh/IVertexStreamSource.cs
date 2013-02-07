@@ -1,13 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.Drawing;
-
-using OpenTK;
 
 namespace Toe.Utils.Mesh
 {
-	public delegate void Vector3VisitorCallback(ref Vector3 vec);
-	public delegate void ColorVisitorCallback(ref Color vec);
 	public interface IVertexStreamSource
 	{
 
@@ -50,22 +44,5 @@ namespace Toe.Utils.Mesh
 		void VisitTangents(Vector3VisitorCallback action);
 
 		void VisitBinormals(Vector3VisitorCallback action);
-	}
-
-	public interface IVertexIndexSource: IEnumerable<int>
-	{
-		int Count { get; }
-		VertexSourceType VertexSourceType { get; }
-	}
-	public enum VertexSourceType
-	{
-		TrianleList,
-		TrianleStrip,
-
-		QuadList,
-		QuadStrip,
-
-		LineLine,
-		LineStrip,
 	}
 }

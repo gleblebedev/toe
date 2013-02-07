@@ -87,7 +87,7 @@ namespace Toe.Editors.GenericScene
 		private void RenderNodeAt(ref Matrix4 modelMatrix, INode node)
 		{
 			graphicsContext.SetModel(ref modelMatrix);
-			graphicsContext.Render(node.Mesh);
+			this.base3DEditor.RenderMesh(node.Mesh);
 		}
 
 		private void InitializeComponent()

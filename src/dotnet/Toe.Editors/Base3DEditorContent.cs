@@ -48,6 +48,9 @@ namespace Toe.Editors
 		{
 			if (this.cube != null)
 			{
+				graphicsContext.SetMaterial(null);
+				graphicsContext.DisableLighting();
+
 				this.graphicsContext.SetTexture(0, this.cubeTex);
 				this.graphicsContext.SetTexture(1, null);
 				this.graphicsContext.SetTexture(2, null);

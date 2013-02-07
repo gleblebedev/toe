@@ -52,6 +52,7 @@
     <Compile Include="BaseSubmesh.cs" />
     <Compile Include="BoneCollection.cs" />
     <Compile Include="BoxBuilder.cs" />
+    <Compile Include="ColorVisitorCallback.cs" />
     <Compile Include="DynamicCollection.cs" />
     <Compile Include="IMaterial.cs" />
     <Compile Include="IMesh.cs" />
@@ -64,7 +65,8 @@
     <Compile Include="IScene.cs" />
     <Compile Include="ISceneItem.cs" />
     <Compile Include="ISubMesh.cs" />
-    <Compile Include="IVertexSource.cs" />
+    <Compile Include="IVertexIndexSource.cs" />
+    <Compile Include="IVertexStreamSource.cs" />
     <Compile Include="Material.cs" />
     <Compile Include="MeshBone.cs" />
     <Compile Include="MeshStream.cs" />
@@ -75,10 +77,12 @@
     <Compile Include="StreamSubmesh.cs" />
     <Compile Include="StreamSubmeshQuad.cs" />
     <Compile Include="StreamSubmeshIndexes.cs" />
+    <Compile Include="Vector3VisitorCallback.cs" />
     <Compile Include="Vertex.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VertexBufferMesh.cs" />
     <Compile Include="VertexBufferSubmesh.cs" />
+    <Compile Include="VertexSourceType.cs" />
     <Compile Include="VertexWeight.cs" />
     <Compile Include="VertexWeights.cs" />
   </ItemGroup>

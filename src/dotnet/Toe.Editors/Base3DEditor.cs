@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
@@ -235,7 +236,6 @@ namespace Toe.Editors
 
 				GL.UseProgram(0);
 				graphicsContext.SetMaterial(null);
-
 				graphicsContext.DisableLighting();
 				GL.Disable(EnableCap.DepthTest);
 				GL.Begin(BeginMode.Lines);
@@ -254,8 +254,8 @@ namespace Toe.Editors
 
 				content.RenderXyzCube(glControl,Camera);
 
-				GL.Flush();
-				OpenTKHelper.Assert();
+				graphicsContext.Flush();
+				
 				this.glControl.SwapBuffers();
 			}
 			catch (Exception ex)
@@ -502,5 +502,84 @@ namespace Toe.Editors
 		}
 
 		#endregion
+
+		public void RenderMesh(IMesh mesh)
+		{
+			graphicsContext.Render(mesh);
+			if (options.Options.Wireframe) RenderMeshWireframe(mesh);
+			if (options.Options.Normals) RenderMeshNormals(mesh);
+		}
+
+		private void RenderMeshNormals(IMesh mesh)
+		{
+			var streamMesh = mesh as StreamMesh;
+			if (streamMesh!=null)
+			{
+				return;
+			}
+			var vbMesh = mesh as VertexBufferMesh;
+			var normalColor = Color.White;
+			if (vbMesh != null)
+			{
+				foreach (var vertex in vbMesh.VertexBuffer)
+				{
+					var p = vertex.Position;
+					var n = p+vertex.Normal*10.0f;
+					Vector3 a, b;
+					graphicsContext.ModelToWorld(ref p, out a);
+					graphicsContext.ModelToWorld(ref n, out b);
+					graphicsContext.RenderDebugLine(a, b, normalColor);
+				}
+			}
+		}
+
+		private void RenderMeshWireframe(IMesh mesh)
+		{
+			var vb = mesh as IVertexStreamSource;
+			var vertices = new List<Vector3>(vb.Count);
+			Vector3 buf;
+			vb.VisitVertices((ref Vector3 a) =>
+				{
+					graphicsContext.ModelToWorld(ref a, out buf);
+					vertices.Add(buf);  
+				});
+			Color wireColor = Color.White;
+
+			foreach (var submesh in mesh.Submeshes)
+			{
+				var vi = submesh as IVertexIndexSource;
+				var enumerator = vi.GetEnumerator();
+				switch (vi.VertexSourceType)
+				{
+					case VertexSourceType.TrianleList:
+						for (; ; )
+						{
+							if (!enumerator.MoveNext()) break;
+							var a = enumerator.Current;
+							if (!enumerator.MoveNext()) break;
+							var b = enumerator.Current;
+							if (!enumerator.MoveNext()) break;
+							var c = enumerator.Current;
+							graphicsContext.RenderDebugLine(vertices[a], vertices[b], wireColor);
+							graphicsContext.RenderDebugLine(vertices[b], vertices[c], wireColor);
+							graphicsContext.RenderDebugLine(vertices[c], vertices[a], wireColor);
+						}
+
+						break;
+					case VertexSourceType.TrianleStrip:
+						break;
+					case VertexSourceType.QuadList:
+						break;
+					case VertexSourceType.QuadStrip:
+						break;
+					case VertexSourceType.LineLine:
+						break;
+					case VertexSourceType.LineStrip:
+						break;
+					default:
+						break;
+				}
+			}
+		}
 	}
 }
