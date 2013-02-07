@@ -7,12 +7,38 @@ namespace Toe.Utils.Mesh
 	/// </summary>
 	public class Scene : IScene
 	{
+		#region Constants and Fields
+
+		private readonly IList<IMesh> geometries = new List<IMesh>();
+
+		private readonly IList<INode> nodes = new List<INode>();
+
 		/// <summary>
 		/// Collection of source specific parameters.
 		/// </summary>
 		private IParameterCollection parameters;
 
-		#region Implementation of ISceneItem
+		#endregion
+
+		#region Public Properties
+
+		public IList<IMesh> Geometries
+		{
+			get
+			{
+				return this.geometries;
+			}
+		}
+
+		public string Name { get; set; }
+
+		public IList<INode> Nodes
+		{
+			get
+			{
+				return this.nodes;
+			}
+		}
 
 		/// <summary>
 		/// Collection of source specific parameters.
@@ -26,21 +52,6 @@ namespace Toe.Utils.Mesh
 			set
 			{
 				this.parameters = value;
-			}
-		}
-
-		public string Name { get; set; }
-
-		#endregion
-
-		readonly IList<INode> nodes = new List<INode>();
-		#region Implementation of INodeContainer
-
-		public IList<INode> Nodes
-		{
-			get
-			{
-				return nodes;
 			}
 		}
 

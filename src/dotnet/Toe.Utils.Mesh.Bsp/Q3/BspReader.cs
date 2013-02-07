@@ -1,5 +1,7 @@
 ﻿using System.IO;
 
+using OpenTK;
+
 namespace Toe.Utils.Mesh.Bsp.Q3
 {
 	public class BspReader:BaseBspReader, IBspReader
@@ -8,6 +10,8 @@ namespace Toe.Utils.Mesh.Bsp.Q3
 
 		protected Quake3Vertex[] vertices;
 		protected Quake3Face[] faces;
+
+		private uint[] meshverts;
 
 		protected override void ReadHeader()
 		{
@@ -34,6 +38,8 @@ namespace Toe.Utils.Mesh.Bsp.Q3
 		}
 		protected override void ReadFaces()
 		{
+			this.ReadMeshVerts();
+
 			SeekEntryAt(header.faces.offset);
 			int size = EvalNumItems(header.faces.size, 26 * 4);
 			faces = new Quake3Face[size];
@@ -44,11 +50,91 @@ namespace Toe.Utils.Mesh.Bsp.Q3
 			AssertStreamPossition(header.faces.size + header.faces.offset);
 		}
 
+		private void ReadMeshVerts()
+		{
+			this.SeekEntryAt(this.header.meshverts.offset);
+			int size = this.EvalNumItems(this.header.meshverts.size, 4);
+			meshverts = new uint[size];
+			for (int i = 0; i < size; ++i)
+			{
+				meshverts[i] = Stream.ReadUInt32();
+			}
+			this.AssertStreamPossition(this.header.meshverts.size + this.header.meshverts.offset);
+		}
+
+		protected override void BuildScene()
+		{
+			var node = new Node();
+			Scene.Nodes.Add(node);
+			var streamMesh = new VertexBufferMesh();
+			node.Mesh = streamMesh;
+
+			var subMesh = streamMesh.CreateSubmesh() as VertexBufferSubmesh;
+			subMesh.VertexSourceType= VertexSourceType.TrianleList;
+			foreach (var quake3Face in faces)
+			{
+				switch (quake3Face.type)
+				{
+					case 2: //Patch
+						var width = quake3Face.sizeX;
+						var height = quake3Face.sizeY;
+						if (width * height != quake3Face.numOfVerts)
+							throw new BspFormatException("wrong patch point count");
+						//for (int i = 0; i < width - 1; i += 1)
+						//{
+						//    for (int j = 0; j < height - 1; j += 1)
+						//    {
+						//        var vert0 = BuildVertex((int)(face.vertexIndex + (i) + (j) * width), face);
+						//        var vert1 = BuildVertex((int)(face.vertexIndex + (i + 1) + (j) * width), face);
+						//        var vert2 = BuildVertex((int)(face.vertexIndex + (i + 1) + (j + 1) * width), face);
+
+
+						//        var geoFace = new BspGeometryFace() { Vertex0 = vert2, Vertex1 = vert1, Vertex2 = vert0, Texture = texture, Lightmap = lightMap };
+						//        res.Faces.Add(geoFace);
+
+						//        vert0 = BuildVertex((int)(face.vertexIndex + (i) + (j) * width), face);
+						//        vert1 = BuildVertex((int)(face.vertexIndex + (i + 1) + (j + 1) * width), face);
+						//        vert2 = BuildVertex((int)(face.vertexIndex + (i) + (j + 1) * width), face);
+
+						//        geoFace = new BspGeometryFace() { Vertex0 = vert2, Vertex1 = vert1, Vertex2 = vert0, Texture = texture, Lightmap = lightMap };
+						//        res.Faces.Add(geoFace);
+						//    }
+						//}
+						break;
+					case 1: //Polygon
+					case 3: //Mesh
+						for (int i = 0; i < quake3Face.numMeshVerts ; ++i)
+						{
+							AddVertexToMesh(ref vertices[quake3Face.vertexIndex + meshverts[quake3Face.meshVertIndex + i]],  subMesh, streamMesh);
+
+						}
+						break;
+					case 4: //Billboard
+						break;
+				}
+			}
+			Scene.Geometries.Add(streamMesh);
+		}
+
+		private static void AddVertexToMesh(ref Quake3Vertex vertex,  VertexBufferSubmesh subMesh, VertexBufferMesh streamMesh)
+		{
+			var v = new Vertex()
+				{
+					Position = vertex.vPosition,
+					Normal = vertex.vNormal,
+					Color = vertex.color,
+					UV0 = new Vector3(vertex.vTextureCoord.X, vertex.vTextureCoord.Y, 0.0f)
+				};
+			subMesh.Add(streamMesh.VertexBuffer.Add(v));
+		}
+
 		protected virtual void ReadFace(ref Quake3Face quake3Face)
 		{
 			quake3Face.texinfo_id = Stream.ReadInt32();
 			quake3Face.effect = Stream.ReadInt32();
 			quake3Face.type = Stream.ReadInt32();
+			if (quake3Face.type > 4)
+				throw new BspFormatException("Unknown face type " + quake3Face.type);
 			quake3Face.vertexIndex = Stream.ReadInt32();
 			quake3Face.numOfVerts = Stream.ReadInt32();
 			quake3Face.meshVertIndex = Stream.ReadInt32();

@@ -79,8 +79,6 @@ namespace Toe.Editors.GenericScene
 				Matrix4 modelMatrix = parent*node.ModelMatrix;
 				this.RenderNodeAt(ref modelMatrix, node);
 				this.RenderSceneNodes(ref modelMatrix, node.Nodes);
-				break;
-				
 			}
 		}
 
