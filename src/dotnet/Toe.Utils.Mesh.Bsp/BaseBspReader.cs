@@ -50,6 +50,8 @@ namespace Toe.Utils.Mesh.Bsp
 
 			ReadHeader();
 			ReadVertices();
+			ReadTextures();
+			ReadEffects();
 			ReadLightmaps();
 			ReadFaces();
 			ReadVisibilityGraph();
@@ -62,7 +64,14 @@ namespace Toe.Utils.Mesh.Bsp
 		{
 			
 		}
+		protected virtual void ReadTextures()
+		{
 
+		}
+		protected virtual void ReadEffects()
+		{
+
+		}
 		protected virtual void ReadLightmaps()
 		{
 			

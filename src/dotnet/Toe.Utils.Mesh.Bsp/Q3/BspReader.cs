@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using System.Text;
 
 using OpenTK;
 
@@ -12,6 +14,10 @@ namespace Toe.Utils.Mesh.Bsp.Q3
 		protected Quake3Face[] faces;
 
 		private uint[] meshverts;
+
+		private Quake3Texture[] textures;
+
+		private Quake3Effects[] effects;
 
 		protected override void ReadHeader()
 		{
@@ -36,6 +42,45 @@ namespace Toe.Utils.Mesh.Bsp.Q3
 			ReadEntry(ref header.lightvols); //Local illumination data.
 			ReadEntry(ref header.visdata); //Cluster-cluster visibility data.
 		}
+		protected override void ReadTextures()
+		{
+			SeekEntryAt(header.textures.offset);
+			int size = EvalNumItems(header.textures.size, 64 + 4 + 4);
+			textures = new Quake3Texture[size];
+			for (int i = 0; i < size; ++i)
+			{
+				this.ReadTexture(ref this.textures[i]);
+			}
+			AssertStreamPossition(header.textures.size + header.textures.offset);
+		
+		}
+
+		private void ReadTexture(ref Quake3Texture quake3Texture)
+		{
+			quake3Texture.name = Encoding.ASCII.GetString(Stream.ReadBytes(64)).Trim(new char[] { ' ', '\0' });
+			quake3Texture.flags = Stream.ReadUInt32();
+			quake3Texture.contents = Stream.ReadUInt32();
+		}
+
+		protected override void ReadEffects()
+		{
+			SeekEntryAt(header.effects.offset);
+			int size = EvalNumItems(header.effects.size, 64 + 4 + 4);
+			effects = new Quake3Effects[size];
+			for (int i = 0; i < size; ++i)
+			{
+				this.ReadEffect(ref this.effects[i]);
+			}
+			AssertStreamPossition(header.effects.size + header.effects.offset);
+		}
+
+		private void ReadEffect(ref Quake3Effects quake3Effects)
+		{
+			quake3Effects.name = Encoding.ASCII.GetString(Stream.ReadBytes(64)).Trim(new char[] { ' ', '\0' });
+			quake3Effects.brush = Stream.ReadUInt32();
+			quake3Effects.unknown = Stream.ReadUInt32();
+		}
+
 		protected override void ReadFaces()
 		{
 			this.ReadMeshVerts();
@@ -76,37 +121,14 @@ namespace Toe.Utils.Mesh.Bsp.Q3
 				switch (quake3Face.type)
 				{
 					case 2: //Patch
-						var width = quake3Face.sizeX;
-						var height = quake3Face.sizeY;
-						if (width * height != quake3Face.numOfVerts)
-							throw new BspFormatException("wrong patch point count");
-						//for (int i = 0; i < width - 1; i += 1)
-						//{
-						//    for (int j = 0; j < height - 1; j += 1)
-						//    {
-						//        var vert0 = BuildVertex((int)(face.vertexIndex + (i) + (j) * width), face);
-						//        var vert1 = BuildVertex((int)(face.vertexIndex + (i + 1) + (j) * width), face);
-						//        var vert2 = BuildVertex((int)(face.vertexIndex + (i + 1) + (j + 1) * width), face);
-
-
-						//        var geoFace = new BspGeometryFace() { Vertex0 = vert2, Vertex1 = vert1, Vertex2 = vert0, Texture = texture, Lightmap = lightMap };
-						//        res.Faces.Add(geoFace);
-
-						//        vert0 = BuildVertex((int)(face.vertexIndex + (i) + (j) * width), face);
-						//        vert1 = BuildVertex((int)(face.vertexIndex + (i + 1) + (j + 1) * width), face);
-						//        vert2 = BuildVertex((int)(face.vertexIndex + (i) + (j + 1) * width), face);
-
-						//        geoFace = new BspGeometryFace() { Vertex0 = vert2, Vertex1 = vert1, Vertex2 = vert0, Texture = texture, Lightmap = lightMap };
-						//        res.Faces.Add(geoFace);
-						//    }
-						//}
+						BuildPatch(quake3Face, streamMesh, subMesh);
+						
 						break;
 					case 1: //Polygon
 					case 3: //Mesh
 						for (int i = 0; i < quake3Face.numMeshVerts ; ++i)
 						{
 							AddVertexToMesh(ref vertices[quake3Face.vertexIndex + meshverts[quake3Face.meshVertIndex + i]],  subMesh, streamMesh);
-
 						}
 						break;
 					case 4: //Billboard
@@ -114,6 +136,27 @@ namespace Toe.Utils.Mesh.Bsp.Q3
 				}
 			}
 			Scene.Geometries.Add(streamMesh);
+		}
+
+		private void BuildPatch(Quake3Face quake3Face, VertexBufferMesh streamMesh, VertexBufferSubmesh subMesh)
+		{
+			var width = quake3Face.sizeX;
+			var height = quake3Face.sizeY;
+			if (width * height != quake3Face.numOfVerts)
+				throw new BspFormatException("wrong patch point count");
+			for (int i = 0; i < width - 1; i += 1)
+			{
+				for (int j = 0; j < height - 1; j += 1)
+				{
+					AddVertexToMesh(ref vertices[quake3Face.vertexIndex +  (i) + (j) * width], subMesh, streamMesh);
+					AddVertexToMesh(ref vertices[quake3Face.vertexIndex +  (i+1) + (j+1) * width], subMesh, streamMesh);
+					AddVertexToMesh(ref vertices[quake3Face.vertexIndex + (i + 1) + (j) * width], subMesh, streamMesh);
+
+					AddVertexToMesh(ref vertices[quake3Face.vertexIndex +  (i) + (j) * width], subMesh, streamMesh);
+					AddVertexToMesh(ref vertices[quake3Face.vertexIndex +  (i ) + (j + 1) * width], subMesh, streamMesh);
+					AddVertexToMesh(ref vertices[quake3Face.vertexIndex + (i + 1) + (j + 1) * width], subMesh, streamMesh);
+				}
+			}
 		}
 
 		private static void AddVertexToMesh(ref Quake3Vertex vertex,  VertexBufferSubmesh subMesh, VertexBufferMesh streamMesh)
@@ -210,5 +253,18 @@ namespace Toe.Utils.Mesh.Bsp.Q3
 
 			vertex.color = this.Stream.ReadARGB();
 		}
+	}
+
+	public struct Quake3Texture
+	{
+		public string name;
+		public uint flags;
+		public uint contents;
+	}
+	public struct Quake3Effects
+	{
+		public string name;
+		public uint brush;
+		public uint unknown;
 	}
 }

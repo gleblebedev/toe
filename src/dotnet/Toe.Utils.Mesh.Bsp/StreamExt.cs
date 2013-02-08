@@ -47,6 +47,15 @@ namespace Toe.Utils.Mesh.Bsp
 			if (float.IsInfinity(v.X) || float.IsInfinity(v.Y))
 				throw new BspFormatException(string.Format("Wrong vertex data {{{0}, {1}}}", v.X, v.Y));
 		}
+		public static byte[] ReadBytes(this Stream stream, int count)
+		{
+			var res = new byte[count];
+			for (int i = 0; i < count; i++)
+			{
+				res[i] = (byte)stream.ReadByte();
+			}
+			return res;
+		}
 		public static uint ReadUInt32(this Stream stream)
 		{
 			var a0 = (uint)stream.ReadByte();
