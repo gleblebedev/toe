@@ -3,6 +3,8 @@ using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 
+using Toe.Utils;
+
 namespace Toe.Resources
 {
 	public class ResourceReference : IDisposable, INotifyPropertyChanged

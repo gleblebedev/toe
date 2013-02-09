@@ -7,11 +7,15 @@ namespace Toe.Core
 	/// </summary>
 	public class ToeScene
 	{
+
 		private readonly ToeSceneConfiguration configuration;
 
-		public ToeScene(ToeSceneConfiguration configuration)
+		private readonly ToeMessageRegistry messageRegistry;
+
+		public ToeScene(ToeSceneConfiguration configuration, ToeMessageRegistry messageRegistry)
 		{
 			this.configuration = configuration;
+			this.messageRegistry = messageRegistry;
 			AllocateScene();
 		}
 
@@ -54,6 +58,14 @@ namespace Toe.Core
 			{
 				EnsureSceneIsNotAllocated();
 				this.configuration.NumClientEntities = value;
+			}
+		}
+
+		public ToeMessageRegistry MessageRegistry
+		{
+			get
+			{
+				return this.messageRegistry;
 			}
 		}
 

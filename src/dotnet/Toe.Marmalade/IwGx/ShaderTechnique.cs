@@ -5,6 +5,7 @@ using System.Diagnostics;
 using OpenTK.Graphics.OpenGL;
 
 using Toe.Resources;
+using Toe.Utils;
 using Toe.Utils.Marmalade.IwGx;
 
 namespace Toe.Marmalade.IwGx

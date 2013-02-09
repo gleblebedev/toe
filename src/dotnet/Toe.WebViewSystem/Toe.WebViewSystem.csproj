@@ -5,17 +5,18 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{D9ADA8FC-21F7-471D-ABE4-9E289DCBDDC8}</ProjectGuid>
+    <ProjectGuid>{206CED32-6894-4529-B401-741E461E0379}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Toe.Marmalade.TextureFiles</RootNamespace>
-    <AssemblyName>Toe.Marmalade.TextureFiles</AssemblyName>
+    <RootNamespace>Toe.WebViewSystem</RootNamespace>
+    <AssemblyName>Toe.WebViewSystem</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>True</DebugSymbols>
+    <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
-    <Optimize>False</Optimize>
+    <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -23,28 +24,21 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
-    <Optimize>True</Optimize>
+    <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>True</SignAssembly>
+    <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>Toe.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Autofac">
-      <HintPath>..\packages\Autofac.2.6.3.862\lib\NET40\Autofac.dll</HintPath>
-    </Reference>
-    <Reference Include="Autofac.Configuration">
-      <HintPath>..\packages\Autofac.2.6.3.862\lib\NET40\Autofac.Configuration.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -52,32 +46,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MarmaladeTextureFilesAutofacModule.cs" />
+    <Compile Include="System.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TextureResourceFormat.cs" />
-    <Compile Include="TgaHeader.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <ProjectReference Include="..\Toe.Core\Toe.Core.net40.vs2010.csproj">
+      <Project>{1BAAEFA4-03FB-4FE9-953D-629C1FEF9AA0}</Project>
+      <Name>Toe.Core.net40.vs2010</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
     <None Include="Toe.snk" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Toe.Marmalade.TextFiles\Toe.Marmalade.TextFiles.csproj">
-      <Project>{6A49694C-C9B0-4E1D-83B2-2A445B3371FE}</Project>
-      <Name>Toe.Marmalade.TextFiles</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Toe.Marmalade\Toe.Marmalade.net40.vs2010.csproj">
-      <Project>{2708D020-33C1-4A4A-BDB0-035FB9EEDFFD}</Project>
-      <Name>Toe.Marmalade.net40.vs2010</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Toe.Resources\Toe.Resources.net40.vs2010.csproj">
-      <Project>{15C85727-F6FC-4A28-BB34-84C327AEFF81}</Project>
-      <Name>Toe.Resources.net40.vs2010</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Toe.Utils\Toe.Utils.csproj">
-      <Project>{7F30E400-0F58-4190-8AE9-111CE57F61E4}</Project>
-      <Name>Toe.Utils</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

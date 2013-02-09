@@ -9,6 +9,7 @@ using OpenTK.Graphics.OpenGL;
 using Toe.Marmalade.IwGraphics;
 using Toe.Marmalade.IwGx;
 using Toe.Resources;
+using Toe.Utils;
 using Toe.Utils.Marmalade.IwGx;
 using Toe.Utils.Mesh;
 

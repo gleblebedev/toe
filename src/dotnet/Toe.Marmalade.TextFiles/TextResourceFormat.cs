@@ -86,7 +86,7 @@ namespace Toe.Marmalade.TextFiles
 						return items;
 					}
 					object serializer;
-					if (this.context.TryResolveKeyed(Hash.Get(lexem), typeof(ITextSerializer), out serializer))
+					if (this.context.TryResolveKeyed(Toe.Utils.Hash.Get(lexem), typeof(ITextSerializer), out serializer))
 					{
 						items.Add(((ITextSerializer)serializer).Parse(parser, defaultName));
 						continue;

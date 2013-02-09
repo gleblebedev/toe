@@ -5,6 +5,7 @@ using OpenTK.Graphics.OpenGL;
 
 using Toe.Marmalade.IwGx;
 using Toe.Resources;
+using Toe.Utils;
 using Toe.Utils.Mesh;
 
 namespace Toe.Marmalade.IwGraphics

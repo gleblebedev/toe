@@ -91,6 +91,14 @@
       <Project>{91EF330C-981F-49F0-8BD6-5D8FA36B2871}</Project>
       <Name>Toe.Utils.TextParser</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Toe.Utils\Toe.Utils.csproj">
+      <Project>{7F30E400-0F58-4190-8AE9-111CE57F61E4}</Project>
+      <Name>Toe.Utils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Toe\Toe.net40.vs2010.csproj">
+      <Project>{069E2F5D-0AB9-4356-9E22-01A8748902A0}</Project>
+      <Name>Toe.net40.vs2010</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

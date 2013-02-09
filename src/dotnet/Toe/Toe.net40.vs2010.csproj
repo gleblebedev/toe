@@ -87,6 +87,20 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Toe.Core\Toe.Core.net40.vs2010.csproj">
+      <Project>{1BAAEFA4-03FB-4FE9-953D-629C1FEF9AA0}</Project>
+      <Name>Toe.Core.net40.vs2010</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Toe.LuaScriptingSystem\Toe.LuaScriptingSystem.csproj">
+      <Project>{5E32AE71-C5B6-4CB5-8733-C6FE793E7A65}</Project>
+      <Name>Toe.LuaScriptingSystem</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Toe.WebViewSystem\Toe.WebViewSystem.csproj">
+      <Project>{206CED32-6894-4529-B401-741E461E0379}</Project>
+      <Name>Toe.WebViewSystem</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

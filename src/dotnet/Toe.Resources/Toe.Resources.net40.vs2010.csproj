@@ -49,15 +49,10 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EditorResourceErrorHandler.cs" />
-    <Compile Include="Hash.cs" />
     <Compile Include="IBasePathProvider.cs" />
     <Compile Include="IResourceErrorHandler.cs" />
     <Compile Include="IResourceFile.cs" />
@@ -88,6 +83,12 @@
     <EmbeddedResource Include="ResourceErrorDialog.resx">
       <DependentUpon>ResourceErrorDialog.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Toe.Utils\Toe.Utils.csproj">
+      <Project>{7F30E400-0F58-4190-8AE9-111CE57F61E4}</Project>
+      <Name>Toe.Utils</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -6,6 +6,7 @@ using System.IO;
 using Autofac;
 
 using Toe.Resources;
+using Toe.Utils;
 
 namespace Toe.Marmalade.IwResManager
 {

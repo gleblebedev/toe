@@ -6,6 +6,8 @@ using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 
+using Toe.Core;
+
 #if WINDOWS_PHONE
 #else
 
@@ -34,6 +36,11 @@ namespace Toe
 			this.gl.Paint += this.GLControlPaint;
 			this.gl.Resize += this.GLControlResize;
 			this.Controls.Add(this.gl);
+		}
+
+		public MainWindow(ToeSceneConfiguration config):this()
+		{
+			
 		}
 
 		#endregion

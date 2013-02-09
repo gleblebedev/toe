@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Windows.Forms;
 
+using Toe.Core;
+
 namespace Toe
 {
 	internal static class Program
@@ -15,7 +17,16 @@ namespace Toe
 		{
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
-			Application.Run(new MainWindow());
+
+			var config = new ToeSceneConfiguration();
+			var webViewConfig = new ToeSystemConfiguration(){SystemName = "WebView"};
+			webViewConfig.Layers.Add(new ToeLayerConfiguration(){LayerName = "WebView", Popularity = ToeComponentLayerPopularity.VeryRare});
+			var luaConfig = new ToeSystemConfiguration() { SystemName = "LuaScript" };
+			luaConfig.Layers.Add(new ToeLayerConfiguration() { LayerName = "Script", Popularity = ToeComponentLayerPopularity.Average });
+			config.Systems.Add(webViewConfig);
+			config.Systems.Add(luaConfig);
+			
+			Application.Run(new MainWindow(config));
 		}
 
 		#endregion

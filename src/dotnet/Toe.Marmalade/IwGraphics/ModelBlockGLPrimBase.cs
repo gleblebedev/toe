@@ -4,6 +4,7 @@ using OpenTK;
 
 using Toe.Marmalade.IwGraphics.TangentSpace;
 using Toe.Resources;
+using Toe.Utils;
 using Toe.Utils.Mesh;
 
 namespace Toe.Marmalade.IwGraphics

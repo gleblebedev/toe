@@ -1,3 +1,5 @@
+using System.Collections.ObjectModel;
+
 namespace Toe.Core
 {
 	public class ToeSceneConfiguration
@@ -28,5 +30,15 @@ namespace Toe.Core
 				this.numClientEntities = value;
 			}
 		}
+
+		public ObservableCollection<ToeSystemConfiguration> Systems
+		{
+			get
+			{
+				return this.systems;
+			}
+		}
+
+		private ObservableCollection<ToeSystemConfiguration> systems = new ObservableCollection<ToeSystemConfiguration>();
 	}
 }
