@@ -133,6 +133,10 @@
       <Project>{15C85727-F6FC-4A28-BB34-84C327AEFF81}</Project>
       <Name>Toe.Resources.net40.vs2010</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Toe.Utils\Toe.Utils.csproj">
+      <Project>{7F30E400-0F58-4190-8AE9-111CE57F61E4}</Project>
+      <Name>Toe.Utils</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

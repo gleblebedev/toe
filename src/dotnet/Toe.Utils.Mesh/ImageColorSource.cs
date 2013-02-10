@@ -2,7 +2,7 @@ using System.ComponentModel;
 
 namespace Toe.Utils.Mesh
 {
-	public class ImageColorSource : IColorSource, INotifyPropertyChanged
+	public class ImageColorSource : ClassWithNotification, IColorSource
 	{
 		#region Implementation of IColorSource
 
@@ -16,7 +16,7 @@ namespace Toe.Utils.Mesh
 
 		#endregion
 
-		protected static PropertyChangedEventArgs ImageChangedEventArgs = new PropertyChangedEventArgs(Expr.Path<ImageColorSource>(a => a.Image));
+		private static PropertyEventArgs ImageEventArgs = Expr.PropertyEventArgs<ImageColorSource>(x => x.Image);
 
 		private IImage image;
 
@@ -30,21 +30,13 @@ namespace Toe.Utils.Mesh
 			{
 				if (this.image != value)
 				{
+					this.RaisePropertyChanging(ImageEventArgs.Changing);
 					this.image = value;
-					RaisePropertyChanged(ImageChangedEventArgs);
+					this.RaisePropertyChanged(ImageEventArgs.Changed);
 				}
 			}
 		}
 
-		private void RaisePropertyChanged(PropertyChangedEventArgs property)
-		{
-			if (PropertyChanged != null) PropertyChanged(this, property);
-		}
 
-		#region Implementation of INotifyPropertyChanged
-
-		public event PropertyChangedEventHandler PropertyChanged;
-
-		#endregion
 	}
 }

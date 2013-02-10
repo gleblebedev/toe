@@ -1,12 +1,9 @@
 ﻿using System.Collections.Generic;
 
 using OpenTK;
-using OpenTK.Graphics.OpenGL;
 
-using Toe.Marmalade.IwGx;
 using Toe.Resources;
 using Toe.Utils;
-using Toe.Utils.Mesh;
 
 namespace Toe.Marmalade.IwGraphics
 {
@@ -15,6 +12,8 @@ namespace Toe.Marmalade.IwGraphics
 		#region Constants and Fields
 
 		public static readonly uint TypeHash = Hash.Get("CIwModel");
+
+		protected static PropertyEventArgs FlagsEventArgs = Expr.PropertyEventArgs<Model>(x => x.Flags);
 
 		private readonly IList<Mesh> meshes = new List<Mesh>();
 
@@ -55,9 +54,9 @@ namespace Toe.Marmalade.IwGraphics
 			{
 				if (this.flags != value)
 				{
-					this.RaisePropertyChanging("Flags");
+					this.RaisePropertyChanging(FlagsEventArgs.Changing);
 					this.flags = value;
-					this.RaisePropertyChanged("Flags");
+					this.RaisePropertyChanged(FlagsEventArgs.Changed);
 				}
 			}
 		}
@@ -71,12 +70,6 @@ namespace Toe.Marmalade.IwGraphics
 		}
 
 		public float Radius { get; set; }
-
-		#endregion
-
-		#region Public Methods and Operators
-
-		
 
 		#endregion
 	}

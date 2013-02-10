@@ -7,7 +7,7 @@ using Toe.Utils;
 
 namespace Toe.Marmalade
 {
-	public abstract class Managed : INotifyPropertyChanging, INotifyPropertyChanged, IDisposable, IBasePathProvider
+	public abstract class Managed : ClassWithNotification, IDisposable, IBasePathProvider
 	{
 		#region Constants and Fields
 
@@ -30,15 +30,9 @@ namespace Toe.Marmalade
 
 		#endregion
 
-		#region Public Events
-
-		public event PropertyChangedEventHandler PropertyChanged;
-
-		public event PropertyChangingEventHandler PropertyChanging;
-
-		#endregion
-
 		#region Public Properties
+
+		protected static PropertyEventArgs BasePathEventArgs = Expr.PropertyEventArgs<Managed>(x => x.BasePath);
 
 		public string BasePath
 		{
@@ -50,13 +44,13 @@ namespace Toe.Marmalade
 			{
 				if (this.basePath != value)
 				{
-					this.RaisePropertyChanging("BasePath");
+					this.RaisePropertyChanging(BasePathEventArgs.Changing);
 					this.basePath = value;
-					this.RaisePropertyChanged("BasePath");
+					this.RaisePropertyChanged(BasePathEventArgs.Changed);
 				}
 			}
 		}
-
+		protected static PropertyEventArgs ContextDataEventArgs = Expr.PropertyEventArgs<Managed>(x => x.ContextData);
 		public IContextData ContextData
 		{
 			get
@@ -67,15 +61,17 @@ namespace Toe.Marmalade
 			{
 				if (this.contextData != value)
 				{
-					this.RaisePropertyChanging("ContextData");
+					this.RaisePropertyChanging(ContextDataEventArgs.Changing);
 					this.contextData = value;
-					this.RaisePropertyChanged("ContextData");
+					this.RaisePropertyChanged(ContextDataEventArgs.Changed);
 				}
 			}
 		}
 
 		public abstract uint ClassHashCode { get; }
 
+		protected static PropertyEventArgs NameEventArgs = Expr.PropertyEventArgs<Managed>(x => x.Name);
+		protected static PropertyEventArgs NameHashEventArgs = Expr.PropertyEventArgs<Managed>(x => x.NameHash);
 		/// <summary>
 		/// Object name.
 		/// </summary>
@@ -89,12 +85,12 @@ namespace Toe.Marmalade
 			{
 				if (this.name != value)
 				{
-					this.RaisePropertyChanging("Name");
-					this.RaisePropertyChanging("NameHash");
+					this.RaisePropertyChanging(NameEventArgs.Changing);
+					this.RaisePropertyChanging(NameHashEventArgs.Changing);
 					this.name = value;
 					this.nameHash = Hash.Get(this.Name);
-					this.RaisePropertyChanged("Name");
-					this.RaisePropertyChanged("NameHash");
+					this.RaisePropertyChanged(NameEventArgs.Changed);
+					this.RaisePropertyChanged(NameHashEventArgs.Changed);
 				}
 			}
 		}
@@ -109,12 +105,12 @@ namespace Toe.Marmalade
 			{
 				if (this.nameHash != value)
 				{
-					this.RaisePropertyChanging("Name");
-					this.RaisePropertyChanging("NameHash");
+					this.RaisePropertyChanging(NameEventArgs.Changing);
+					this.RaisePropertyChanging(NameHashEventArgs.Changing);
 					this.name = null;
 					this.nameHash = value;
-					this.RaisePropertyChanged("Name");
-					this.RaisePropertyChanged("NameHash");
+					this.RaisePropertyChanged(NameEventArgs.Changed);
+					this.RaisePropertyChanged(NameHashEventArgs.Changed);
 				}
 			}
 		}
@@ -155,22 +151,6 @@ namespace Toe.Marmalade
 					contextData.Dispose();
 					contextData = null;
 				}
-			}
-		}
-
-		protected virtual void RaisePropertyChanged(string propertyName)
-		{
-			if (this.PropertyChanged != null)
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
-
-		protected virtual void RaisePropertyChanging(string propertyName)
-		{
-			if (this.PropertyChanging != null)
-			{
-				this.PropertyChanging(this, new PropertyChangingEventArgs(propertyName));
 			}
 		}
 

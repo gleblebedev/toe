@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel;
+using System.Data.SqlTypes;
 using System.Drawing;
 
 using OpenTK.Graphics.OpenGL;
@@ -110,8 +111,6 @@ namespace Toe.Marmalade.IwGx
 
 		private EffectPreset effectPreset = EffectPreset.DEFAULT;
 
-		private bool filtering = true;
-
 		private ImageFormat formatHw;
 
 		private ImageFormat formatSw;
@@ -144,24 +143,27 @@ namespace Toe.Marmalade.IwGx
 		{
 			this.resourceManager = resourceManager;
 			this.texture0 = new ResourceReference(Texture.TypeHash, resourceManager, this);
-			this.texture0.ReferenceChanged += (s, a) => this.RaisePropertyChanged("Texture0");
+			this.texture0.ReferenceChanged += (s, a) => this.RaisePropertyChanged(Texture0EventArgs.Changed);
 
 			this.texture1 = new ResourceReference(Texture.TypeHash, resourceManager, this);
-			this.texture1.ReferenceChanged += (s, a) => this.RaisePropertyChanged("Texture1");
+			this.texture1.ReferenceChanged += (s, a) => this.RaisePropertyChanged(Texture1EventArgs.Changed);
 
 			this.texture2 = new ResourceReference(Texture.TypeHash, resourceManager, this);
-			this.texture2.ReferenceChanged += (s, a) => this.RaisePropertyChanged("Texture2");
+			this.texture2.ReferenceChanged += (s, a) => this.RaisePropertyChanged(Texture2EventArgs.Changed);
 
 			this.texture3 = new ResourceReference(Texture.TypeHash, resourceManager, this);
-			this.texture3.ReferenceChanged += (s, a) => this.RaisePropertyChanged("Texture3");
+			this.texture3.ReferenceChanged += (s, a) => this.RaisePropertyChanged(Texture3EventArgs.Changed);
 
 			this.shaderTechnique = new ResourceReference(IwGx.ShaderTechnique.TypeHash, resourceManager, this);
-			this.shaderTechnique.ReferenceChanged += (s, a) => this.RaisePropertyChanged("ShaderTechnique");
+			this.shaderTechnique.ReferenceChanged += (s, a) => this.RaisePropertyChanged(ShaderTechniqueEventArgs.Changed);
 		}
 
 		#endregion
 
 		#region Public Properties
+
+		protected static PropertyEventArgs AlphaModeEventArgs = Expr.PropertyEventArgs<Material>(x => x.AlphaMode);
+
 
 		public AlphaMode AlphaMode
 		{
@@ -173,11 +175,14 @@ namespace Toe.Marmalade.IwGx
 			{
 				if (this.alphaMode != value)
 				{
+					this.RaisePropertyChanging(AlphaModeEventArgs.Changing);
 					this.alphaMode = value;
-					this.RaisePropertyChanged("AlphaMode");
+					this.RaisePropertyChanged(AlphaModeEventArgs.Changed);
 				}
 			}
 		}
+
+		protected static PropertyEventArgs AlphaTestModeEventArgs = Expr.PropertyEventArgs<Material>(x => x.AlphaTestMode);
 
 		public AlphaTestMode AlphaTestMode
 		{
@@ -189,11 +194,14 @@ namespace Toe.Marmalade.IwGx
 			{
 				if (this.alphaTestMode != value)
 				{
+					this.RaisePropertyChanging(AlphaTestModeEventArgs.Changing);
 					this.alphaTestMode = value;
-					this.RaisePropertyChanged("AlphaTestMode");
+					this.RaisePropertyChanged(AlphaTestModeEventArgs.Changed);
 				}
 			}
 		}
+
+		protected static PropertyEventArgs AlphaTestValueEventArgs = Expr.PropertyEventArgs<Material>(x => x.AlphaTestValue);
 
 		public byte AlphaTestValue
 		{
@@ -205,11 +213,14 @@ namespace Toe.Marmalade.IwGx
 			{
 				if (this.alphaTestValue != value)
 				{
+					this.RaisePropertyChanging(AlphaTestValueEventArgs.Changing);
 					this.alphaTestValue = value;
-					this.RaisePropertyChanged("AlphaTestValue");
+					this.RaisePropertyChanged(AlphaTestValueEventArgs.Changed);
 				}
 			}
 		}
+
+		protected static PropertyEventArgs BlendModeEventArgs = Expr.PropertyEventArgs<Material>(x => x.BlendMode);
 
 		public BlendMode BlendMode
 		{
@@ -221,11 +232,16 @@ namespace Toe.Marmalade.IwGx
 			{
 				if (this.blendMode != value)
 				{
+					this.RaisePropertyChanging(BlendModeEventArgs.Changing);
 					this.blendMode = value;
-					this.RaisePropertyChanged("BlendMode");
+					this.RaisePropertyChanged(BlendModeEventArgs.Changed);
 				}
 			}
 		}
+		
+
+		protected static PropertyEventArgs ClampUVEventArgs = Expr.PropertyEventArgs<Material>(x => x.ClampUV);
+
 
 		public bool ClampUV
 		{
@@ -237,11 +253,13 @@ namespace Toe.Marmalade.IwGx
 			{
 				if (this.clampUV != value)
 				{
+					this.RaisePropertyChanging(ClampUVEventArgs.Changing);
 					this.clampUV = value;
-					this.RaisePropertyChanged("ClampUV");
+					this.RaisePropertyChanged(ClampUVEventArgs.Changed);
 				}
 			}
 		}
+	
 
 		public override uint ClassHashCode
 		{
@@ -250,6 +268,8 @@ namespace Toe.Marmalade.IwGx
 				return TypeHash;
 			}
 		}
+
+		protected static PropertyEventArgs ColAmbientEventArgs = Expr.PropertyEventArgs<Material>(x => x.ColAmbient);
 
 		public Color ColAmbient
 		{
@@ -261,11 +281,15 @@ namespace Toe.Marmalade.IwGx
 			{
 				if (this.colAmbient != value)
 				{
+					this.RaisePropertyChanging(ColAmbientEventArgs.Changing);
 					this.colAmbient = value;
-					this.RaisePropertyChanged("ColAmbient");
+					this.RaisePropertyChanged(ColAmbientEventArgs.Changed);
 				}
 			}
 		}
+
+		protected static PropertyEventArgs ColDiffuseEventArgs = Expr.PropertyEventArgs<Material>(x => x.ColDiffuse);
+
 
 		public Color ColDiffuse
 		{
@@ -277,12 +301,16 @@ namespace Toe.Marmalade.IwGx
 			{
 				if (this.colDiffuse != value)
 				{
+					this.RaisePropertyChanging(ColDiffuseEventArgs.Changing);
 					this.colDiffuse = value;
-					this.RaisePropertyChanged("ColDiffuse");
+					this.RaisePropertyChanged(ColDiffuseEventArgs.Changed);
 				}
 			}
 		}
 
+		protected static PropertyEventArgs ColEmissiveEventArgs = Expr.PropertyEventArgs<Material>(x => x.ColEmissive);
+
+		
 		public Color ColEmissive
 		{
 			get
@@ -293,29 +321,37 @@ namespace Toe.Marmalade.IwGx
 			{
 				if (this.colEmissive != value)
 				{
+					this.RaisePropertyChanging(ColEmissiveEventArgs.Changing);
 					this.colEmissive = value;
-					this.RaisePropertyChanged("ColEmissive");
+					this.RaisePropertyChanged(ColEmissiveEventArgs.Changed);
 				}
 			}
 		}
 
+		protected static PropertyEventArgs ColSpecularEventArgs = Expr.PropertyEventArgs<Material>(x => x.ColSpecular);
+
+	
 		public Color ColSpecular
 		{
 			get
 			{
 				return Color.FromArgb(255, this.colSpecular.R, this.colSpecular.G, this.colSpecular.B);
-				;
 			}
 			set
 			{
 				if (this.colSpecular != value)
 				{
+					this.RaisePropertyChanging(ColSpecularEventArgs.Changing);
 					this.colSpecular = Color.FromArgb(this.SpecularPower, value.R, value.G, value.B);
-					this.RaisePropertyChanged("ColSpecular");
+					this.RaisePropertyChanged(ColSpecularEventArgs.Changed);
 				}
 			}
 		}
 
+
+		protected static PropertyEventArgs CullModeEventArgs = Expr.PropertyEventArgs<Material>(x => x.CullMode);
+
+	
 		public CullMode CullMode
 		{
 			get
@@ -326,11 +362,16 @@ namespace Toe.Marmalade.IwGx
 			{
 				if (this.cullMode != value)
 				{
+					this.RaisePropertyChanging(CullModeEventArgs.Changing);
 					this.cullMode = value;
-					this.RaisePropertyChanged("CullMode");
+					this.RaisePropertyChanged(CullModeEventArgs.Changed);
 				}
 			}
 		}
+
+		protected static PropertyEventArgs DepthWriteEnableEventArgs = Expr.PropertyEventArgs<Material>(x => x.DepthWriteEnable);
+
+
 
 		public bool DepthWriteEnable
 		{
@@ -342,11 +383,14 @@ namespace Toe.Marmalade.IwGx
 			{
 				if (this.depthWriteEnable != value)
 				{
+					this.RaisePropertyChanging(DepthWriteEnableEventArgs.Changing);
 					this.depthWriteEnable = value;
-					this.RaisePropertyChanged("DepthWriteEnable");
+					this.RaisePropertyChanged(DepthWriteEnableEventArgs.Changed);
 				}
 			}
 		}
+
+		protected static PropertyEventArgs EffectPresetEventArgs = Expr.PropertyEventArgs<Material>(x => x.EffectPreset);
 
 		public EffectPreset EffectPreset
 		{
@@ -358,11 +402,16 @@ namespace Toe.Marmalade.IwGx
 			{
 				if (this.effectPreset != value)
 				{
+					this.RaisePropertyChanging(EffectPresetEventArgs.Changing);
 					this.effectPreset = value;
-					this.RaisePropertyChanged("EffectPreset");
+					this.RaisePropertyChanged(EffectPresetEventArgs.Changed);
 				}
 			}
 		}
+
+		protected static PropertyEventArgs FilteringEventArgs = Expr.PropertyEventArgs<Material>(x => x.Filtering);
+
+		private bool filtering;
 
 		public bool Filtering
 		{
@@ -374,12 +423,13 @@ namespace Toe.Marmalade.IwGx
 			{
 				if (this.filtering != value)
 				{
+					this.RaisePropertyChanging(FilteringEventArgs.Changing);
 					this.filtering = value;
-					this.RaisePropertyChanged("Filtering");
+					this.RaisePropertyChanged(FilteringEventArgs.Changed);
 				}
 			}
 		}
-
+	
 		public uint Flags
 		{
 			set
@@ -431,6 +481,9 @@ namespace Toe.Marmalade.IwGx
 			}
 		}
 
+		protected static PropertyEventArgs FormatHWEventArgs = Expr.PropertyEventArgs<Material>(x => x.FormatHW);
+
+
 		public ImageFormat FormatHW
 		{
 			get
@@ -441,11 +494,14 @@ namespace Toe.Marmalade.IwGx
 			{
 				if (this.formatHw != value)
 				{
+					this.RaisePropertyChanging(FormatHWEventArgs.Changing);
 					this.formatHw = value;
-					this.RaisePropertyChanged("FormatHW");
+					this.RaisePropertyChanged(FormatHWEventArgs.Changed);
 				}
 			}
 		}
+
+		protected static PropertyEventArgs FormatSWEventArgs = Expr.PropertyEventArgs<Material>(x => x.FormatSW);
 
 		public ImageFormat FormatSW
 		{
@@ -457,11 +513,14 @@ namespace Toe.Marmalade.IwGx
 			{
 				if (this.formatSw != value)
 				{
+					this.RaisePropertyChanging(FormatSWEventArgs.Changing);
 					this.formatSw = value;
-					this.RaisePropertyChanged("FormatSW");
+					this.RaisePropertyChanged(FormatSWEventArgs.Changed);
 				}
 			}
 		}
+
+		protected static PropertyEventArgs InvisibleEventArgs = Expr.PropertyEventArgs<Material>(x => x.Invisible);
 
 		public bool Invisible
 		{
@@ -473,11 +532,14 @@ namespace Toe.Marmalade.IwGx
 			{
 				if (this.invisible != value)
 				{
+					this.RaisePropertyChanging(InvisibleEventArgs.Changing);
 					this.invisible = value;
-					this.RaisePropertyChanged("Invisible");
+					this.RaisePropertyChanged(InvisibleEventArgs.Changed);
 				}
 			}
 		}
+
+		protected static PropertyEventArgs KeepAfterUploadEventArgs = Expr.PropertyEventArgs<Material>(x => x.KeepAfterUpload);
 
 		public bool KeepAfterUpload
 		{
@@ -489,11 +551,14 @@ namespace Toe.Marmalade.IwGx
 			{
 				if (this.keepAfterUpload != value)
 				{
+					this.RaisePropertyChanging(KeepAfterUploadEventArgs.Changing);
 					this.keepAfterUpload = value;
-					this.RaisePropertyChanged("KeepAfterUpload");
+					this.RaisePropertyChanged(KeepAfterUploadEventArgs.Changed);
 				}
 			}
 		}
+		protected static PropertyEventArgs MatAnimEventArgs = Expr.PropertyEventArgs<Material>(x => x.MatAnim);
+
 
 		public MatAnim MatAnim
 		{
@@ -505,19 +570,16 @@ namespace Toe.Marmalade.IwGx
 			{
 				if (this.matAnim != value)
 				{
-					if (this.matAnim != null)
-					{
-						this.matAnim.PropertyChanged -= this.MatAnimPropertyChanged;
-					}
+					this.RaisePropertyChanging(MatAnimEventArgs.Changing);
 					this.matAnim = value;
-					if (this.matAnim != null)
-					{
-						this.matAnim.PropertyChanged += this.MatAnimPropertyChanged;
-					}
-					this.RaisePropertyChanged("MatAnim");
+					this.RaisePropertyChanged(MatAnimEventArgs.Changed);
 				}
 			}
 		}
+
+
+		protected static PropertyEventArgs MergeGeomEventArgs = Expr.PropertyEventArgs<Material>(x => x.MergeGeom);
+
 
 		public bool MergeGeom
 		{
@@ -529,11 +591,14 @@ namespace Toe.Marmalade.IwGx
 			{
 				if (this.mergeGeom != value)
 				{
+					this.RaisePropertyChanging(MergeGeomEventArgs.Changing);
 					this.mergeGeom = value;
-					this.RaisePropertyChanged("MergeGeom");
+					this.RaisePropertyChanged(MergeGeomEventArgs.Changed);
 				}
 			}
 		}
+
+		protected static PropertyEventArgs ModulateModeEventArgs = Expr.PropertyEventArgs<Material>(x => x.ModulateMode);
 
 		public ModulateMode ModulateMode
 		{
@@ -545,11 +610,15 @@ namespace Toe.Marmalade.IwGx
 			{
 				if (this.modulateMode != value)
 				{
+					this.RaisePropertyChanging(ModulateModeEventArgs.Changing);
 					this.modulateMode = value;
-					this.RaisePropertyChanged("ModulateMode");
+					this.RaisePropertyChanged(ModulateModeEventArgs.Changed);
 				}
 			}
 		}
+
+		protected static PropertyEventArgs NoFogEventArgs = Expr.PropertyEventArgs<Material>(x => x.NoFog);
+
 
 		public bool NoFog
 		{
@@ -561,11 +630,14 @@ namespace Toe.Marmalade.IwGx
 			{
 				if (this.noFog != value)
 				{
+					this.RaisePropertyChanging(NoFogEventArgs.Changing);
 					this.noFog = value;
-					this.RaisePropertyChanged("NoFog");
+					this.RaisePropertyChanged(NoFogEventArgs.Changed);
 				}
 			}
 		}
+
+		protected static PropertyEventArgs ShadeModeEventArgs = Expr.PropertyEventArgs<Material>(x => x.ShadeMode);
 
 		public ShadeMode ShadeMode
 		{
@@ -577,8 +649,9 @@ namespace Toe.Marmalade.IwGx
 			{
 				if (this.shadeMode != value)
 				{
+					this.RaisePropertyChanging(ShadeModeEventArgs.Changing);
 					this.shadeMode = value;
-					this.RaisePropertyChanged("ShadeMode");
+					this.RaisePropertyChanged(ShadeModeEventArgs.Changed);
 				}
 			}
 		}
@@ -599,6 +672,8 @@ namespace Toe.Marmalade.IwGx
 			}
 		}
 
+		protected static PropertyEventArgs SpecularPowerEventArgs = Expr.PropertyEventArgs<Material>(x => x.SpecularPower);
+
 		public byte SpecularPower
 		{
 			get
@@ -609,12 +684,21 @@ namespace Toe.Marmalade.IwGx
 			{
 				if (this.SpecularPower != value)
 				{
+					this.RaisePropertyChanging(SpecularPowerEventArgs.Changing);
+					this.RaisePropertyChanging(ColSpecularEventArgs.Changing);
 					this.colSpecular = Color.FromArgb(value, this.colSpecular.R, this.colSpecular.G, this.colSpecular.B);
-					this.RaisePropertyChanged("SpecularPower");
-					this.RaisePropertyChanged("ColSpecular");
+					this.RaisePropertyChanged(SpecularPowerEventArgs.Changed);
+					this.RaisePropertyChanged(ColSpecularEventArgs.Changed);
 				}
 			}
 		}
+	
+
+		protected static PropertyEventArgs Texture0EventArgs = Expr.PropertyEventArgs<Material>(x => x.Texture0);
+		protected static PropertyEventArgs Texture1EventArgs = Expr.PropertyEventArgs<Material>(x => x.Texture1);
+		protected static PropertyEventArgs Texture2EventArgs = Expr.PropertyEventArgs<Material>(x => x.Texture2);
+		protected static PropertyEventArgs Texture3EventArgs = Expr.PropertyEventArgs<Material>(x => x.Texture3);
+		protected static PropertyEventArgs ShaderTechniqueEventArgs = Expr.PropertyEventArgs<Material>(x => x.ShaderTechnique);
 
 		public ResourceReference Texture0
 		{
@@ -648,6 +732,8 @@ namespace Toe.Marmalade.IwGx
 			}
 		}
 
+		protected static PropertyEventArgs VertexShaderEventArgs = Expr.PropertyEventArgs<Material>(x => x.VertexShader);
+
 		public string VertexShader
 		{
 			get
@@ -658,11 +744,14 @@ namespace Toe.Marmalade.IwGx
 			{
 				if (this.vertexShader != value)
 				{
+					this.RaisePropertyChanging(VertexShaderEventArgs.Changing);
 					this.vertexShader = value;
-					this.RaisePropertyChanged("VertexShader");
+					this.RaisePropertyChanged(VertexShaderEventArgs.Changed);
 				}
 			}
 		}
+
+		protected static PropertyEventArgs ZDepthOfsEventArgs = Expr.PropertyEventArgs<Material>(x => x.ZDepthOfs);
 
 		public int ZDepthOfs
 		{
@@ -674,11 +763,14 @@ namespace Toe.Marmalade.IwGx
 			{
 				if (this.zDepthOfs != value)
 				{
+					this.RaisePropertyChanging(ZDepthOfsEventArgs.Changing);
 					this.zDepthOfs = value;
-					this.RaisePropertyChanged("ZDepthOfs");
+					this.RaisePropertyChanged(ZDepthOfsEventArgs.Changed);
 				}
 			}
 		}
+
+		protected static PropertyEventArgs ZDepthOfsHWEventArgs = Expr.PropertyEventArgs<Material>(x => x.ZDepthOfsHW);
 
 		public int ZDepthOfsHW
 		{
@@ -690,8 +782,9 @@ namespace Toe.Marmalade.IwGx
 			{
 				if (this.zDepthOfsHw != value)
 				{
+					this.RaisePropertyChanging(ZDepthOfsHWEventArgs.Changing);
 					this.zDepthOfsHw = value;
-					this.RaisePropertyChanged("ZDepthOfsHW");
+					this.RaisePropertyChanged(ZDepthOfsHWEventArgs.Changed);
 				}
 			}
 		}
@@ -700,7 +793,9 @@ namespace Toe.Marmalade.IwGx
 
 		#region Properties
 
-		protected bool AtlasMaterial
+		protected static PropertyEventArgs AtlasMaterialEventArgs = Expr.PropertyEventArgs<Material>(x => x.AtlasMaterial);
+
+		public bool AtlasMaterial
 		{
 			get
 			{
@@ -710,9 +805,9 @@ namespace Toe.Marmalade.IwGx
 			{
 				if (this.atlasMaterial != value)
 				{
-					this.RaisePropertyChanging("AtlasMaterial");
+					this.RaisePropertyChanging(AtlasMaterialEventArgs.Changing);
 					this.atlasMaterial = value;
-					this.RaisePropertyChanged("AtlasMaterial");
+					this.RaisePropertyChanged(AtlasMaterialEventArgs.Changed);
 				}
 			}
 		}
@@ -974,7 +1069,7 @@ namespace Toe.Marmalade.IwGx
 
 		private void MatAnimPropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
-			this.RaisePropertyChanged("MatAnim");
+			this.RaisePropertyChanged(MatAnimEventArgs.Changed);
 		}
 
 		private void SetFiltering(int i)

@@ -16,6 +16,10 @@ namespace Toe.Marmalade.IwResManager
 
 		public static readonly uint TypeHash = Hash.Get("CIwResGroup");
 
+		protected static PropertyEventArgs FlagsEventArgs = Expr.PropertyEventArgs<ResGroup>(x => x.Flags);
+
+		protected static PropertyEventArgs IsSharedEventArgs = Expr.PropertyEventArgs<ResGroup>(x => x.IsShared);
+
 		private readonly IComponentContext context;
 
 		private readonly IList<Managed> embeddedResources;
@@ -83,9 +87,9 @@ namespace Toe.Marmalade.IwResManager
 			{
 				if (this.flags != value)
 				{
-					this.RaisePropertyChanging("Flags");
+					this.RaisePropertyChanging(FlagsEventArgs.Changing);
 					this.flags = value;
-					this.RaisePropertyChanged("Flags");
+					this.RaisePropertyChanged(FlagsEventArgs.Changed);
 				}
 			}
 		}
@@ -100,9 +104,9 @@ namespace Toe.Marmalade.IwResManager
 			{
 				if (this.isShared != value)
 				{
-					this.RaisePropertyChanging("IsShared");
+					this.RaisePropertyChanging(IsSharedEventArgs.Changing);
 					this.isShared = value;
-					this.RaisePropertyChanged("IsShared");
+					this.RaisePropertyChanged(IsSharedEventArgs.Changed);
 				}
 			}
 		}

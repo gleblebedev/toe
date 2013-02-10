@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <Title>
+        PropertyWithNotification
+      </Title>
+    </Header>
+    <Snippet>
+      <References>
+        <Reference>
+          <!--<Assembly>System.Windows.Forms.dll</Assembly>-->
+        </Reference>
+      </References>
+      <Declarations>
+        <Literal>
+          <ID>Type</ID>
+          <ToolTip>Replace with a property type.</ToolTip>
+          <Default>object</Default>
+        </Literal>
+        <Literal>
+          <ID>Name</ID>
+          <!--<Type>System.Data.SqlClient.SqlConnection</Type>-->
+          <ToolTip>Replace with a property name.</ToolTip>
+          <Default>Property</Default>
+        </Literal>
+        <Literal>
+          <ID>Backfield</ID>
+          <!--<Type>System.Data.SqlClient.SqlConnection</Type>-->
+          <ToolTip>Replace with a back field name.</ToolTip>
+          <Default>property</Default>
+        </Literal>
+        <Literal>
+          <ID>Class</ID>
+          <!--<Type>System.Data.SqlClient.SqlConnection</Type>-->
+          <ToolTip>Replace with a host class name.</ToolTip>
+          <Default>object</Default>
+        </Literal>
+      </Declarations>
+      <Code Language="CSharp">
+        <![CDATA[protected static PropertyEventArgs $Name$EventArgs = Expr.PropertyEventArgs<$Class$>(x => x.$Name$);
+        
+        private $Type$ $Backfield$;
+        
+        public $Type$ $Name$
+		{
+			get
+			{
+				return this.$Backfield$;
+			}
+			set
+			{
+				if (this.$Backfield$ != value)
+				{
+					this.RaisePropertyChanging($Name$EventArgs.Changing);
+					this.$Backfield$ = value;
+					this.RaisePropertyChanged($Name$EventArgs.Changed);
+				}
+			}
+		}]]>
+      </Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>

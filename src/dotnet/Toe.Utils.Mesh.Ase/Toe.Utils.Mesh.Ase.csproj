@@ -72,6 +72,10 @@
       <Project>{91EF330C-981F-49F0-8BD6-5D8FA36B2871}</Project>
       <Name>Toe.Utils.TextParser</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Toe.Utils\Toe.Utils.csproj">
+      <Project>{7F30E400-0F58-4190-8AE9-111CE57F61E4}</Project>
+      <Name>Toe.Utils</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

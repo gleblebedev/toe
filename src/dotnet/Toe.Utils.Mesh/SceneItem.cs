@@ -2,10 +2,11 @@ using System.ComponentModel;
 
 namespace Toe.Utils.Mesh
 {
+	
 	/// <summary>
 	/// Generic material.
 	/// </summary>
-	public class SceneItem : ISceneItem, INotifyPropertyChanged
+	public class SceneItem : ClassWithNotification, ISceneItem
 	{
 		#region Constants and Fields
 
@@ -30,11 +31,7 @@ namespace Toe.Utils.Mesh
 
 		#endregion
 
-		#region Public Events
-
-		public event PropertyChangedEventHandler PropertyChanged;
-
-		#endregion
+		
 
 		#region Public Properties
 
@@ -97,24 +94,6 @@ namespace Toe.Utils.Mesh
 
 		#endregion
 
-		#region Methods
-
-		protected virtual void RaisePropertyChanged(string property)
-		{
-			if (this.PropertyChanged != null)
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(property));
-			}
-		}
-
-		protected virtual void RaisePropertyChanged(PropertyChangedEventArgs property)
-		{
-			if (this.PropertyChanged != null)
-			{
-				this.PropertyChanged(this, property);
-			}
-		}
-
-		#endregion
+	
 	}
 }

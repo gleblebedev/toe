@@ -71,6 +71,8 @@ namespace Toe.Marmalade.IwAnim
 			}
 		}
 
+		protected static PropertyEventArgs ParentEventArgs = Expr.PropertyEventArgs<AnimBone>(x => x.Parent);
+
 		public int Parent
 		{
 			get
@@ -81,8 +83,9 @@ namespace Toe.Marmalade.IwAnim
 			{
 				if (this.parent != value)
 				{
+					this.RaisePropertyChanging(ParentEventArgs.Changing);
 					this.parent = value;
-					this.RaisePropertyChanged("Parent");
+					this.RaisePropertyChanged(ParentEventArgs.Changed);
 				}
 			}
 		}
@@ -111,18 +114,21 @@ namespace Toe.Marmalade.IwAnim
 			}
 		}
 
+		protected static PropertyEventArgs FlagsEventArgs = Expr.PropertyEventArgs<AnimBone>(x => x.Flags);
+
 		public ushort Flags
 		{
 			get
 			{
-				return flags;
+				return this.flags;
 			}
 			set
 			{
-				if (flags != value)
+				if (this.flags != value)
 				{
-					flags = value;
-					this.RaisePropertyChanged("Flags");
+					this.RaisePropertyChanging(FlagsEventArgs.Changing);
+					this.flags = value;
+					this.RaisePropertyChanged(FlagsEventArgs.Changed);
 				}
 			}
 		}

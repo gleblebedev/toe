@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ClassWithNotification.cs" />
     <Compile Include="Expr.cs" />
     <Compile Include="Hash.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

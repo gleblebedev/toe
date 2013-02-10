@@ -118,13 +118,13 @@ namespace Toe.Marmalade.TextFiles.IwGraphics
 				if (attribute == "useGeo")
 				{
 					parser.Consume();
-					mesh.useGeo = parser.ConsumeString();
+					mesh.UseGeo = parser.ConsumeString();
 					continue;
 				}
 				if (attribute == "useGroup")
 				{
 					parser.Consume();
-					mesh.useGroup = parser.ConsumeString();
+					mesh.UseGroup = parser.ConsumeString();
 					continue;
 				}
 				if (attribute == "scale")

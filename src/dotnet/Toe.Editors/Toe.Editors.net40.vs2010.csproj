@@ -118,6 +118,10 @@
       <Project>{9D139D7D-CFAD-4B6A-9862-EB856B36A83E}</Project>
       <Name>Toe.Utils.Mesh.Ase</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Toe.Utils\Toe.Utils.csproj">
+      <Project>{7F30E400-0F58-4190-8AE9-111CE57F61E4}</Project>
+      <Name>Toe.Utils</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Base3DEditor.resx">

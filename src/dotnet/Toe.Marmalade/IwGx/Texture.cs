@@ -1,8 +1,5 @@
 using OpenTK;
-using OpenTK.Graphics;
-using OpenTK.Graphics.OpenGL;
 
-using Toe.Resources;
 using Toe.Utils;
 
 namespace Toe.Marmalade.IwGx
@@ -14,6 +11,14 @@ namespace Toe.Marmalade.IwGx
 		public static readonly uint TypeHash = Hash.Get("CIwTexture");
 
 		public Vector2 UVScale;
+
+		protected static PropertyEventArgs FlagsEventArgs = Expr.PropertyEventArgs<Texture>(x => x.Flags);
+
+		protected static PropertyEventArgs FormatHWEventArgs = Expr.PropertyEventArgs<Texture>(x => x.FormatHW);
+
+		protected static PropertyEventArgs FormatSWEventArgs = Expr.PropertyEventArgs<Texture>(x => x.FormatSW);
+
+		protected static PropertyEventArgs ImageEventArgs = Expr.PropertyEventArgs<Texture>(x => x.Image);
 
 		private uint flags;
 
@@ -45,8 +50,9 @@ namespace Toe.Marmalade.IwGx
 			{
 				if (this.flags != value)
 				{
+					this.RaisePropertyChanging(FlagsEventArgs.Changing);
 					this.flags = value;
-					this.RaisePropertyChanged("Flags");
+					this.RaisePropertyChanged(FlagsEventArgs.Changed);
 				}
 			}
 		}
@@ -61,8 +67,9 @@ namespace Toe.Marmalade.IwGx
 			{
 				if (this.formatHw != value)
 				{
+					this.RaisePropertyChanging(FormatHWEventArgs.Changing);
 					this.formatHw = value;
-					this.RaisePropertyChanged("FormatHW");
+					this.RaisePropertyChanged(FormatHWEventArgs.Changed);
 				}
 			}
 		}
@@ -77,8 +84,9 @@ namespace Toe.Marmalade.IwGx
 			{
 				if (this.formatSw != value)
 				{
+					this.RaisePropertyChanging(FormatSWEventArgs.Changing);
 					this.formatSw = value;
-					this.RaisePropertyChanged("FormatSW");
+					this.RaisePropertyChanged(FormatSWEventArgs.Changed);
 				}
 			}
 		}
@@ -93,14 +101,14 @@ namespace Toe.Marmalade.IwGx
 			{
 				if (this.image != value)
 				{
+					this.RaisePropertyChanging(ImageEventArgs.Changing);
 					this.image = value;
-					this.RaisePropertyChanged("Image");
+					this.RaisePropertyChanged(ImageEventArgs.Changed);
 				}
 			}
 		}
 
 		#endregion
-
 
 		#region Methods
 
@@ -111,8 +119,6 @@ namespace Toe.Marmalade.IwGx
 			{
 			}
 		}
-
-		
 
 		#endregion
 	}
