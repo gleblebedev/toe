@@ -308,12 +308,12 @@ namespace Toe.Utils.Mesh.Bsp.Q3
 			this.Stream.ReadVector3(out vertex.vNormal);
 
 			var lengthSquared = vertex.vNormal.LengthSquared;
-			if (lengthSquared < 0.9f || lengthSquared > 1.1f)
+			if (lengthSquared != 0.0f && (lengthSquared < 0.9f || lengthSquared > 1.1f))
 			{
 				throw new BspFormatException("Probably wrong format of vertex");
 			}
 
-			vertex.color = this.Stream.ReadARGB();
+			vertex.color = this.Stream.ReadBGRA();
 		}
 	}
 

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
@@ -57,6 +58,7 @@ namespace Toe.Editors
 
 		private ToeGraphicsContext graphicsContext;
 
+		private Timer keysAnimationTimer;
 		#endregion
 
 		//private GLControl glControl;
@@ -69,7 +71,7 @@ namespace Toe.Editors
 			this.content = content;
 			graphicsContext = context.Resolve<ToeGraphicsContext>();
 			this.camera = new EditorCamera(context.Resolve<IEditorOptions<EditorCameraOptions>>());
-
+			this.camera.PropertyChanged += OnCameraPropertyChanged;
 			this.InitializeComponent();
 			this.Dock = DockStyle.Fill;
 			//this.glControl = new GLControl(GraphicsMode.Default, 1, 0, GraphicsContextFlags.Default);
@@ -82,12 +84,21 @@ namespace Toe.Editors
 			this.glControl.MouseEnter += this.OnSceneMouseEnter;
 			this.glControl.MouseLeave += this.OnSceneMouseLeave;
 			this.glControl.MouseWheel += this.OnSceneMouseWheel;
+			this.glControl.KeyDown += this.OnControlKeyDown;
+			this.glControl.KeyUp += this.OnControlKeyUp;
+			this.glControl.GotFocus += this.OnSceneGotFocus;
+			this.glControl.LostFocus += this.OnSceneLostFocus;
 			this.Camera.LookAt(new Vector3(512, 64, 1024), new Vector3(0, 0, 0));
 			this.CameraController = new TargetCameraController { Camera = this.Camera };
 			this.yUpToolStripMenuItem.Click += this.SelectYUp;
 			this.zUpToolStripMenuItem.Click += this.SelectZUp;
 			this.UpdateCoordinateSystemIcon();
 			this.UpdateLighingIcon();
+		}
+
+		private void OnCameraPropertyChanged(object sender, PropertyChangedEventArgs e)
+		{
+			RefreshScene();
 		}
 
 		#endregion
@@ -146,6 +157,25 @@ namespace Toe.Editors
 
 		#region Methods
 
+		protected void OnControlKeyDown(object sender, KeyEventArgs e)
+		{
+			if (this.cameraController != null) this.cameraController.KeyDown(e);
+	
+		}
+		protected void OnControlKeyUp(object sender, KeyEventArgs e)
+		{
+			if (this.cameraController != null) this.cameraController.KeyUp(e);
+	
+		}
+		private void OnSceneLostFocus(object sender, EventArgs e)
+		{
+			if (this.cameraController != null) this.cameraController.LostFocus();
+		}
+
+		private void OnSceneGotFocus(object sender, EventArgs e)
+		{
+			if (this.cameraController != null) this.cameraController.GotFocus();
+		}
 		protected void RenderBox(float size)
 		{
 			
@@ -458,7 +488,7 @@ namespace Toe.Editors
 			// Use all of the glControl painting area
 			graphicsContext.SetViewport(0, 0, w, h);
 
-			this.Camera.AspectRation = w / (float)h;
+			this.Camera.AspectRatio = w / (float)h;
 		}
 
 		private void ToggleLightingClick(object sender, EventArgs e)

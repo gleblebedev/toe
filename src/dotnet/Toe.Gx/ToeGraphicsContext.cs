@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.IO;
 using System.Threading;
 
 using OpenTK;
@@ -141,7 +142,7 @@ namespace Toe.Gx
 			if (this.vertexBufferCount == 0)
 				return;
 
-			SetMaterial(null);
+			SetMaterial((Material)null);
 			DisableLighting();
 
 			//SetTexture(0, null);
@@ -198,7 +199,7 @@ namespace Toe.Gx
 
 			foreach (var surface in mesh.Submeshes)
 			{
-				//this.SetMaterial(surface.Material.Resource as Material);
+				this.SetMaterial(surface.Material);
 
 				var p = this.ApplyMaterialShader(mesh);
 				if (p == null)
@@ -210,6 +211,7 @@ namespace Toe.Gx
 				this.Render(mesh, surface);
 			}
 		}
+
 
 		public void RenderDebugLine(Vector3 from, Vector3 to, Color color)
 		{
@@ -250,6 +252,45 @@ namespace Toe.Gx
 					LightParameter.Position,
 					new[] { this.light.Position.X, this.light.Position.Y, this.light.Position.Z, 1.0f });
 			}
+		}
+		private void SetMaterial(IMaterial material)
+		{
+			if (material == null)
+			{
+				GL.UseProgram(0);
+				return;
+			}
+			if (material.RenderData as Material == null)
+			{
+				material.RenderData = ConvertMaterial(material);
+			}
+			SetMaterial(material.RenderData as Material);
+		}
+
+		private Material ConvertMaterial(IMaterial src)
+		{
+			var dst = new Material(resourceManager);
+			dst.Name = src.Name;
+			if (src.Effect.Ambient != null)
+				dst.ColAmbient = src.Effect.Ambient.GetColor();
+			if (src.Effect.Diffuse != null)
+			{
+				switch (src.Effect.Diffuse.Type)
+				{
+					case ColorSourceType.SolidColor:
+					case ColorSourceType.Function:
+						dst.ColDiffuse = src.Effect.Diffuse.GetColor();
+						break;
+					case ColorSourceType.Image:
+						var fileReference = src.Effect.Diffuse.GetImagePath();
+						if (File.Exists(fileReference))
+							dst.Texture0.FileReference = fileReference;
+						break;
+					default:
+						throw new ArgumentOutOfRangeException();
+				}
+			}
+			return dst;
 		}
 
 		public void SetMaterial(Material m)

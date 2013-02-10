@@ -72,6 +72,14 @@ namespace Toe.Utils.Mesh.Bsp
 			var b = (byte)stream.ReadByte();
 			return Color.FromArgb(a,r,g,b);
 		}
+		public static Color ReadBGRA(this Stream stream)
+		{
+			var b = (byte)stream.ReadByte();
+			var g = (byte)stream.ReadByte();
+			var r = (byte)stream.ReadByte();
+			var a = (byte)stream.ReadByte();
+			return Color.FromArgb(a, r, g, b);
+		}
 		public static int ReadInt32(this Stream stream)
 		{
 			return (int)stream.ReadUInt32();

@@ -67,6 +67,27 @@ namespace Toe.Editors
 		{
 		}
 
+		public void KeyDown(KeyEventArgs keyEventArgs)
+		{
+			throw new System.NotImplementedException();
+		}
+
+		public void KeyUp(KeyEventArgs keyEventArgs)
+		{
+			throw new System.NotImplementedException();
+		}
+
+		public void LostFocus()
+		{
+			
+		}
+
+		public void GotFocus()
+		{
+			
+		}
+
 		#endregion
 	}
+
 }

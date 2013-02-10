@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Drawing;
 
 namespace Toe.Utils.Mesh
 {
@@ -11,6 +12,14 @@ namespace Toe.Utils.Mesh
 			get
 			{
 				return ColorSourceType.Image;
+			}
+		}
+
+		public bool IsColor
+		{
+			get
+			{
+				return false;
 			}
 		}
 
@@ -37,6 +46,27 @@ namespace Toe.Utils.Mesh
 			}
 		}
 
+		public Color GetColor()
+		{
+			return Color.White;
+		}
 
+		public bool IsImage
+		{
+			get
+			{
+				return true;
+			}
+		}
+
+		public string GetImagePath()
+		{
+			return this.image.GetFilePath();
+		}
+
+		public byte[] GetImageRawData()
+		{
+			return this.image.GetRawData();
+		}
 	}
 }

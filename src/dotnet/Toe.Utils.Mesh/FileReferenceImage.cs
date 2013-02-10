@@ -34,5 +34,15 @@ namespace Toe.Utils.Mesh
 		{
 			return path??"<no_file>";
 		}
+
+		public string GetFilePath()
+		{
+			return Path;
+		}
+
+		public byte[] GetRawData()
+		{
+			throw new System.NotImplementedException();
+		}
 	}
 }

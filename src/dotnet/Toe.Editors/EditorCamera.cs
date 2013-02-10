@@ -1,4 +1,5 @@
 using System;
+using System.Data.SqlTypes;
 using System.Diagnostics;
 
 using OpenTK;
@@ -6,16 +7,17 @@ using OpenTK.Graphics.OpenGL;
 
 using Toe.Editors.Interfaces;
 using Toe.Gx;
+using Toe.Utils;
 
 namespace Toe.Editors
 {
-	public class EditorCamera
+	public class EditorCamera : ClassWithNotification
 	{
 		#region Constants and Fields
 
 		private readonly IEditorOptions<EditorCameraOptions> cameraOptions;
 
-		private float aspectRation = 1;
+		private float aspectRatio = 1;
 
 		private CoordinateSystem coordinateSystem = CoordinateSystem.ZUp;
 
@@ -29,7 +31,7 @@ namespace Toe.Editors
 
 		private float zFar = 2048.0f;
 
-		private float zNear = 1.0f;
+		private float zNear = 16.0f;
 
 		#endregion
 
@@ -45,17 +47,28 @@ namespace Toe.Editors
 
 		#region Public Properties
 
-		public float AspectRation
+		protected static PropertyEventArgs AspectRatioEventArgs = Expr.PropertyEventArgs<EditorCamera>(x => x.AspectRatio);
+
+		public float AspectRatio
 		{
 			get
 			{
-				return this.aspectRation;
+				return this.aspectRatio;
 			}
 			set
 			{
-				this.aspectRation = value;
+				if (this.aspectRatio != value)
+				{
+					this.RaisePropertyChanging(AspectRatioEventArgs.Changing);
+					this.aspectRatio = value;
+					this.RaisePropertyChanged(AspectRatioEventArgs.Changed);
+				}
 			}
 		}
+
+		protected static PropertyEventArgs CoordinateSystemEventArgs = Expr.PropertyEventArgs<EditorCamera>(x => x.CoordinateSystem);
+
+		
 
 		public CoordinateSystem CoordinateSystem
 		{
@@ -67,13 +80,16 @@ namespace Toe.Editors
 			{
 				if (this.coordinateSystem != value)
 				{
+					this.RaisePropertyChanging(CoordinateSystemEventArgs.Changing);
 					this.coordinateSystem = value;
 					this.cameraOptions.Options.CoordinateSystem = value;
 					this.cameraOptions.Save();
 					this.LookAt(this.pos, this.pos + this.Forward);
+					this.RaisePropertyChanged(CoordinateSystemEventArgs.Changed);
 				}
 			}
 		}
+		
 
 		public Vector3 Forward
 		{
@@ -95,6 +111,8 @@ namespace Toe.Editors
 			}
 		}
 
+		protected static PropertyEventArgs PosEventArgs = Expr.PropertyEventArgs<EditorCamera>(x => x.Pos);
+
 		public Vector3 Pos
 		{
 			get
@@ -103,7 +121,12 @@ namespace Toe.Editors
 			}
 			set
 			{
-				this.pos = value;
+				if (this.pos != value)
+				{
+					this.RaisePropertyChanging(PosEventArgs.Changing);
+					this.pos = value;
+					this.RaisePropertyChanged(PosEventArgs.Changed);
+				}
 			}
 		}
 
@@ -115,6 +138,8 @@ namespace Toe.Editors
 			}
 		}
 
+		protected static PropertyEventArgs RotEventArgs = Expr.PropertyEventArgs<EditorCamera>(x => x.Rot);
+
 		public Quaternion Rot
 		{
 			get
@@ -123,7 +148,12 @@ namespace Toe.Editors
 			}
 			set
 			{
-				this.rot = value;
+				if (this.rot != value)
+				{
+					this.RaisePropertyChanging(RotEventArgs.Changing);
+					this.rot = value;
+					this.RaisePropertyChanged(RotEventArgs.Changed);
+				}
 			}
 		}
 
@@ -360,12 +390,12 @@ namespace Toe.Editors
 			if (this.ortho)
 			{
 				float w = 1024;
-				float h = 1024 / this.aspectRation;
+				float h = 1024 / this.aspectRatio;
 				CreateOrthographicOffCenter(-w / 2, w / 2, -h / 2, h / 2, -this.zFar, this.zFar, out projection);
 			}
 			else
 			{
-				CreatePerspectiveFieldOfView(this.fovy, this.aspectRation, this.zNear, this.zFar, out projection);
+				CreatePerspectiveFieldOfView(this.fovy, this.aspectRatio, this.zNear, this.zFar, out projection);
 			}
 
 			graphicsContext.SetProjection(ref projection);

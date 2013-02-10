@@ -1,3 +1,4 @@
+using System;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -9,9 +10,32 @@ namespace Toe.Editors
 	{
 		#region Constants and Fields
 
+		private readonly Timer animationTimer;
+
+		private bool cameraForward;
+
+		private Vector3 cameraVelocity;
+
 		private Point? lastKnownMousePosition;
 
 		private float targetDistance = 1024;
+
+		private bool cameraBackward;
+
+		private bool cameraStrifeLeft;
+
+		private bool cameraStrifeRight;
+
+		#endregion
+
+		#region Constructors and Destructors
+
+		public TargetCameraController()
+		{
+			this.animationTimer = new Timer();
+			this.animationTimer.Interval = 1000 / 30;
+			this.animationTimer.Tick += this.OnKeyAnimationTimer;
+		}
 
 		#endregion
 
@@ -41,6 +65,57 @@ namespace Toe.Editors
 
 		public void Detach(GLControl gl)
 		{
+		}
+
+		public void KeyDown(KeyEventArgs keyEventArgs)
+		{
+			switch (keyEventArgs.KeyCode)
+			{
+				case Keys.W:
+					this.cameraForward = true;
+					break;
+				case Keys.S:
+					this.cameraBackward = true;
+					break;
+				case Keys.A:
+					this.cameraStrifeLeft = true;
+					break;
+				case Keys.D:
+					this.cameraStrifeRight = true;
+					break;
+			}
+			this.EnableAnimationIfNecessery();
+		}
+
+		public void KeyUp(KeyEventArgs keyEventArgs)
+		{
+			switch (keyEventArgs.KeyCode)
+			{
+				case Keys.W:
+					this.cameraForward = false;
+					break;
+				case Keys.S:
+					this.cameraBackward = false;
+					break;
+				case Keys.A:
+					this.cameraStrifeLeft = false;
+					break;
+				case Keys.D:
+					this.cameraStrifeRight = false;
+					break;
+			}
+			this.EnableAnimationIfNecessery();
+		}
+
+		public void LostFocus()
+		{
+			cameraForward = false;
+			this.EnableAnimationIfNecessery();
+		}
+
+		public void GotFocus()
+		{
+			
 		}
 
 		public void MouseEnter()
@@ -89,6 +164,52 @@ namespace Toe.Editors
 		public void MouseWheel(float delta, Point location)
 		{
 			this.Camera.Pos = this.Camera.Pos + this.Camera.Forward * delta;
+		}
+
+		#endregion
+
+		#region Methods
+
+		private void EnableAnimationIfNecessery()
+		{
+			if (this.cameraForward || this.cameraBackward || this.cameraStrifeLeft || this.cameraStrifeRight)
+			{
+				this.animationTimer.Start();
+			}
+			else
+			{
+				this.animationTimer.Stop();
+			}
+		}
+
+		private void OnKeyAnimationTimer(object sender, EventArgs e)
+		{
+			this.UpdateCameraVelocity();
+			this.Camera.Pos += this.cameraVelocity;
+		}
+
+		private void UpdateCameraVelocity()
+		{
+			Vector3 v = Vector3.Zero;
+			float speed = 10.0f;
+			if (this.cameraForward)
+			{
+				v += this.Camera.Forward;
+			}
+			if (this.cameraBackward)
+			{
+				v -= this.Camera.Forward;
+			}
+			if (this.cameraStrifeRight)
+			{
+				v += this.Camera.Right;
+			}
+			if (this.cameraStrifeLeft)
+			{
+				v -= this.Camera.Right;
+			}
+			v *= speed;
+			this.cameraVelocity = v;
 		}
 
 		#endregion

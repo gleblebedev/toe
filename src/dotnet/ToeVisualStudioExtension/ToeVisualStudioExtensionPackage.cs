@@ -25,6 +25,8 @@ using Toe.Marmalade.TextureFiles;
 using Toe.Resources;
 using Toe.ToeVsExt;
 using Toe.Utils.Mesh.Ase;
+using Toe.Utils.Mesh.Bsp;
+using Toe.Utils.Mesh.Dae;
 
 using IContainer = Autofac.IContainer;
 using ResourceFileItem = Toe.Marmalade.TextFiles.ResourceFileItem;
@@ -59,14 +61,27 @@ namespace TinyOpenEngine.ToeVisualStudioExtension
 		TemplateDir = "Templates", NameResourceID = 105, DefaultName = "Skin")]
 	[ProvideEditorExtension(typeof(EditorFactory), ".skel", 50, ProjectGuid = "{A2FE74E1-B743-11d0-AE1A-00A0C90FFFC3}",
 		TemplateDir = "Templates", NameResourceID = 105, DefaultName = "Skeleton")]
+
 	[ProvideEditorExtension(typeof(EditorFactory), ".mtl", 50, ProjectGuid = "{A2FE74E1-B743-11d0-AE1A-00A0C90FFFC3}",
 		TemplateDir = "Templates", NameResourceID = 105, DefaultName = "Material")]
+
 	[ProvideEditorExtension(typeof(EditorFactory), ".tga", 50, ProjectGuid = "{A2FE74E1-B743-11d0-AE1A-00A0C90FFFC3}",
-		TemplateDir = "Templates", NameResourceID = 105, DefaultName = "Material")]
+		TemplateDir = "Templates", NameResourceID = 105, DefaultName = "Texture")]
+
 	[ProvideEditorExtension(typeof(EditorFactory), ".bmp", 50, ProjectGuid = "{A2FE74E1-B743-11d0-AE1A-00A0C90FFFC3}",
-		TemplateDir = "Templates", NameResourceID = 105, DefaultName = "Material")]
+		TemplateDir = "Templates", NameResourceID = 105, DefaultName = "Texture")]
+
+	[ProvideEditorExtension(typeof(EditorFactory), ".jpg", 50, ProjectGuid = "{A2FE74E1-B743-11d0-AE1A-00A0C90FFFC3}",
+		TemplateDir = "Templates", NameResourceID = 105, DefaultName = "Texture")]
+
+	[ProvideEditorExtension(typeof(EditorFactory), ".png", 50, ProjectGuid = "{A2FE74E1-B743-11d0-AE1A-00A0C90FFFC3}",
+		TemplateDir = "Templates", NameResourceID = 105, DefaultName = "Texture")]
+
+	[ProvideEditorExtension(typeof(EditorFactory), ".bsp", 50, ProjectGuid = "{A2FE74E1-B743-11d0-AE1A-00A0C90FFFC3}",
+	TemplateDir = "Templates", NameResourceID = 105, DefaultName = "BSP")]
+
 	[ProvideEditorExtension(typeof(EditorFactory), ".bin", 1000, ProjectGuid = "{A2FE74E1-B743-11d0-AE1A-00A0C90FFFC3}",
-		NameResourceID = 105)]
+		NameResourceID = 105, DefaultName = "GroupBinary")]
 	[ProvideKeyBindingTable(GuidList.guidToeVisualStudioExtensionEditorFactoryString, 102)]
 	[ProvideEditorLogicalView(typeof(EditorFactory), "{7651a703-06e5-11d1-8ebd-00a0c90f26ea}")]
 	[Guid(GuidList.guidToeVisualStudioExtensionPkgString)]
@@ -144,6 +159,8 @@ namespace TinyOpenEngine.ToeVisualStudioExtension
 			cb.RegisterModule<GenericSceneEditorsAutofacModule>();
 			cb.RegisterModule<MarmaladeAutofacModule>();
 			cb.RegisterModule<AseAutofacModule>();
+			cb.RegisterModule<DaeAutofacModule>();
+			cb.RegisterModule<BspAutofacModule>();
 			cb.RegisterModule<MarmaladeTextFilesAutofacModule>();
 			cb.RegisterModule<MarmaladeBinaryFilesAutofacModule>();
 			cb.RegisterModule<MarmaladeTextureFilesAutofacModule>();

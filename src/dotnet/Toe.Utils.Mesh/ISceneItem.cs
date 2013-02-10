@@ -19,5 +19,11 @@ namespace Toe.Utils.Mesh
 		/// Set of additional parameters beyond default set.
 		/// </summary>
 		IParameterCollection Parameters { get; }
+
+		/// <summary>
+		/// Render specific data.
+		/// </summary>
+		object RenderData { get; set; }
+
 	}
 }

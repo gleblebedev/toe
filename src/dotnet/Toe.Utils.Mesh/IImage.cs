@@ -5,6 +5,7 @@ namespace Toe.Utils.Mesh
 	/// </summary>
 	public interface IImage : ISceneItem
 	{
-		
+		string GetFilePath();
+		byte[] GetRawData();
 	}
 }

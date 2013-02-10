@@ -54,6 +54,27 @@ namespace Toe.Utils.Mesh
 			}
 		}
 
+		protected static PropertyEventArgs RenderDataEventArgs = Expr.PropertyEventArgs<SceneItem>(x => x.RenderData);
+
+		private object renderData;
+
+		public object RenderData
+		{
+			get
+			{
+				return this.renderData;
+			}
+			set
+			{
+				if (this.renderData != value)
+				{
+					this.RaisePropertyChanging(RenderDataEventArgs.Changing);
+					this.renderData = value;
+					this.RaisePropertyChanged(RenderDataEventArgs.Changed);
+				}
+			}
+		}
+
 		/// <summary>
 		/// Name of the scene item.
 		/// </summary>
