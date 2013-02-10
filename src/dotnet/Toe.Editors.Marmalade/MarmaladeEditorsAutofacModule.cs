@@ -8,8 +8,6 @@ using Toe.Marmalade.IwGraphics;
 using Toe.Marmalade.IwGx;
 using Toe.Marmalade.IwResManager;
 using Toe.Resources;
-using Toe.Utils.Marmalade.IwGraphics;
-using Toe.Utils.Marmalade.IwGx;
 
 namespace Toe.Editors.Marmalade
 {

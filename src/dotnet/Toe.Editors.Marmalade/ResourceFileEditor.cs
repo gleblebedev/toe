@@ -35,11 +35,10 @@ namespace Toe.Editors.Marmalade
 			this.history = new CommandHistory();
 			this.editorEnvironment = editorEnvironment;
 			this.resourceManager = resourceManager;
-			this.history = this.history;
-			this.Dock = DockStyle.Fill;
 			this.history.PropertyChanged += this.NotifyHistoryChanged;
 			this.InitializeComponent();
 			this.InitializeEditor();
+			this.Dock = DockStyle.Fill;
 		}
 
 		#endregion

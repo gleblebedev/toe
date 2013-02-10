@@ -5,13 +5,13 @@ namespace Toe.Utils.Mesh.Bsp
 {
 	public abstract class BaseBspReader
 	{
-		private Scene scene;
+		private IScene scene;
 
 		private Stream stream;
 
 		private long startOfTheFile;
 
-		public Scene Scene
+		public IScene Scene
 		{
 			get
 			{
@@ -25,6 +25,11 @@ namespace Toe.Utils.Mesh.Bsp
 			{
 				return this.stream;
 			}
+			set
+			{
+				this.stream = value;
+				this.startOfTheFile = stream.Position;
+			}
 		}
 
 		public long StartOfTheFile
@@ -35,18 +40,29 @@ namespace Toe.Utils.Mesh.Bsp
 			}
 		}
 
-		
+		public string GameRootPath
+		{
+			get
+			{
+				return this.gameRootPath;
+			}
+			set
+			{
+				this.gameRootPath = value;
+			}
+		}
+
+		private string gameRootPath;
+
 
 		/// <summary>
 		/// Load generic scene from BSP file.
 		/// </summary>
 		/// <param name="stream"> </param>
 		/// <returns>Loaded scene.</returns>
-		public virtual IScene LoadScene(Stream stream)
+		public virtual IScene LoadScene()
 		{
-			this.stream = stream;
 			this.scene = new Scene();
-			this.startOfTheFile = stream.Position;
 
 			ReadHeader();
 			ReadVertices();

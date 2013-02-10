@@ -14,7 +14,7 @@ using Microsoft.Xna.Framework;
 
 namespace Toe.Utils.Mesh
 {
-	public class StreamMesh : IMesh
+	public class StreamMesh : SceneItem, IMesh
 	{
 		#region Constants and Fields
 
@@ -39,31 +39,13 @@ namespace Toe.Utils.Mesh
 		public string useGroup { get; set; }
 
 		#endregion
-		/// <summary>
-		/// Collection of source specific parameters.
-		/// </summary>
-		private IParameterCollection parameters;
-
+	
 		private MeshStream<Vector3> binormals = new MeshStream<Vector3>();
 
 		private MeshStream<Vector3> tangents = new MeshStream<Vector3>();
 
 		#region Implementation of ISceneItem
 
-		/// <summary>
-		/// Collection of source specific parameters.
-		/// </summary>
-		public IParameterCollection Parameters
-		{
-			get
-			{
-				return this.parameters ?? (this.parameters = new DynamicCollection());
-			}
-			set
-			{
-				this.parameters = value;
-			}
-		}
 
 		#endregion
 		#region Public Properties
@@ -83,8 +65,6 @@ namespace Toe.Utils.Mesh
 				return this.colors;
 			}
 		}
-
-		public string Name { get; set; }
 
 		public string BaseName { get; set; }
 

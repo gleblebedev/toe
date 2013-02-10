@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 
 using OpenTK;
 
@@ -6,6 +7,7 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 {
 	public class BaseHL2BspReader : BaseBspReader
 	{
+
 		protected SourceFileHeader header = new SourceFileHeader();
 
 		private Vector3[] vertices;

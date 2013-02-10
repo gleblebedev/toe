@@ -24,11 +24,7 @@ namespace Toe.Utils.Mesh
 		{
 			this.Add(this.mesh.VertexBuffer.Add(v));
 		}
-		public object RenderData
-		{
-			get;
-			set;
-		}
+
 		#region Overrides of BaseSubmesh
 
 		/// <summary>

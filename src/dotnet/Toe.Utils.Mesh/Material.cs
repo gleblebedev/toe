@@ -1,32 +1,30 @@
+using System.ComponentModel;
+
 namespace Toe.Utils.Mesh
 {
 	/// <summary>
 	/// Generic material.
 	/// </summary>
-	public class SceneMaterial: IMaterial
+	public class SceneMaterial:SceneItem, IMaterial
 	{
-		/// <summary>
-		/// Collection of source specific parameters.
-		/// </summary>
-		private IParameterCollection parameters;
+		protected static PropertyChangedEventArgs EffectChangedEventArgs = new PropertyChangedEventArgs(Expr.Path<SceneMaterial>(a=>a.Effect));
 
-		#region Implementation of ISceneItem
+		private IEffect effect;
 
-		/// <summary>
-		/// Collection of source specific parameters.
-		/// </summary>
-		public IParameterCollection Parameters
+		public IEffect Effect
 		{
 			get
 			{
-				return this.parameters ?? (this.parameters = new DynamicCollection());
+				return this.effect;
 			}
 			set
 			{
-				this.parameters = value;
+				if (this.effect != value)
+				{
+					this.effect = value;
+					RaisePropertyChanged(EffectChangedEventArgs);
+				}
 			}
 		}
-
-		#endregion
 	}
 }

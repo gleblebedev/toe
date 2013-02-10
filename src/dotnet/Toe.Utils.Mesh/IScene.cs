@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Toe.Utils.Mesh
 {
 	/// <summary>
@@ -5,5 +7,9 @@ namespace Toe.Utils.Mesh
 	/// </summary>
 	public interface IScene : ISceneItem, INodeContainer
 	{
+		IList<IImage> Images { get; }
+		IList<IEffect> Effects { get; }
+		IList<IMaterial> Materials { get; }
+		IList<IMesh> Geometries { get; }
 	}
 }

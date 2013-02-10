@@ -80,7 +80,7 @@ namespace Toe.Utils.Mesh.Ase
 					break;
 				if (0 == string.Compare(attr, "*NODE_NAME", StringComparison.InvariantCultureIgnoreCase))
 				{
-					node.Name = parser.Consume();
+					node.Id = parser.Consume();
 					continue;
 				}
 				if (0 == string.Compare(attr, "*NODE_TM", StringComparison.InvariantCultureIgnoreCase))
@@ -539,7 +539,7 @@ namespace Toe.Utils.Mesh.Ase
 					break;
 				if (0==string.Compare(attr, "*SCENE_FILENAME", StringComparison.InvariantCultureIgnoreCase))
 				{
-					scene.Name = parser.Consume();
+					scene.Id = parser.Consume();
 					continue;
 				}
 				if (0==string.Compare(attr, "*SCENE_FIRSTFRAME", StringComparison.InvariantCultureIgnoreCase))

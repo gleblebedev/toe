@@ -43,7 +43,7 @@ namespace Toe.Editors
 					return s.Deserialize(w, type);
 				}
 			}
-			catch(Exception ex)
+			catch(Exception)
 			{
 				return null;
 			}

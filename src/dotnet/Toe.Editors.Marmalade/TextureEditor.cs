@@ -42,7 +42,7 @@ namespace Toe.Editors.Marmalade
 			this.InitializeComponent();
 
 			this.InitializeEditor();
-			base.RenderScene += this.RenderScene;
+			base.RenderScene += this.RenderTexScene;
 		}
 
 		#endregion
@@ -77,7 +77,7 @@ namespace Toe.Editors.Marmalade
 
 		#region Methods
 
-		protected void RenderScene(object sender, EventArgs args)
+		protected void RenderTexScene(object sender, EventArgs args)
 		{
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 

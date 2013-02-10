@@ -183,6 +183,7 @@
     <Content Include="ItemTemplate\skin.skin">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="app.config" />
     <None Include="packages.config" />
     <Compile Include="Guids.cs" />
     <Compile Include="Resources.Designer.cs">

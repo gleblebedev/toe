@@ -1,7 +1,11 @@
+using System.IO;
+
 namespace Toe.Utils.Mesh.Bsp.Q1
 {
 	public class BaseQ1HL2BspReader : BaseBspReader
 	{
+		
+
 		protected BspFileHeader header;
 
 		protected override void ReadHeader()
@@ -59,4 +63,5 @@ namespace Toe.Utils.Mesh.Bsp.Q1
 			
 		}
 	}
+
 }

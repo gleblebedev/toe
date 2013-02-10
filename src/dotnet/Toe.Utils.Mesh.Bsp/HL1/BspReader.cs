@@ -1,4 +1,6 @@
-﻿using Toe.Utils.Mesh.Bsp.Q1;
+﻿using System.IO;
+
+using Toe.Utils.Mesh.Bsp.Q1;
 
 namespace Toe.Utils.Mesh.Bsp.HL1
 {

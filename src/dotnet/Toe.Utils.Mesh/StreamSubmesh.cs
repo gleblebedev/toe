@@ -25,11 +25,7 @@ namespace Toe.Utils.Mesh
 		{
 			this.mesh = mesh;
 		}
-		public object RenderData
-		{
-			get;
-			set;
-		}
+	
 		private readonly List<StreamSubmeshIndexes> indices = new List<StreamSubmeshIndexes>();
 
 		public List<StreamSubmeshIndexes> Indices

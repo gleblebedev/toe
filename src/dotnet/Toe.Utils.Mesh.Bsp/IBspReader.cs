@@ -9,6 +9,10 @@ namespace Toe.Utils.Mesh.Bsp
 		/// </summary>
 		/// <param name="stream"> </param>
 		/// <returns>Loaded scene.</returns>
-		IScene LoadScene(Stream stream);
+		IScene LoadScene();
+
+		Stream Stream { get; set; }
+
+		string GameRootPath { get; set; }
 	}
 }

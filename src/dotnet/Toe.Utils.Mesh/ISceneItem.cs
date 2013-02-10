@@ -5,6 +5,19 @@ namespace Toe.Utils.Mesh
 	/// </summary>
 	public interface ISceneItem
 	{
+		/// <summary>
+		/// Identifier of the scene item.
+		/// </summary>
+		string Id { get; set; }
+
+		/// <summary>
+		/// Name of the scene item.
+		/// </summary>
+		string Name { get; set; }
+
+		/// <summary>
+		/// Set of additional parameters beyond default set.
+		/// </summary>
 		IParameterCollection Parameters { get; }
 	}
 }

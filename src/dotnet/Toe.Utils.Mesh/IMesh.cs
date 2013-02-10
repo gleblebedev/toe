@@ -14,8 +14,6 @@ namespace Toe.Utils.Mesh
 
 		ISubMesh CreateSubmesh();
 
-		string Name { get; }
-
 		object RenderData { get; set; }
 	}
 }

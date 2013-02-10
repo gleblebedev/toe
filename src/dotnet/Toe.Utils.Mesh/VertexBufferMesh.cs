@@ -14,7 +14,7 @@ namespace Toe.Utils.Mesh
 	/// The implemenation is not efficient!
 	/// Please use it in content pipeline only! It is NOT recommended to use it in production.
 	/// </summary>
-	public class VertexBufferMesh : IMesh
+	public class VertexBufferMesh : SceneItem, IMesh
 	{
 		#region Constants and Fields
 
@@ -25,8 +25,6 @@ namespace Toe.Utils.Mesh
 		#region Public Properties
 
 		private readonly List<ISubMesh> submeshes = new List<ISubMesh>();
-
-		public string Name { get; set; }
 
 		public object RenderData
 		{
@@ -51,27 +49,11 @@ namespace Toe.Utils.Mesh
 
 		#endregion
 
-		/// <summary>
-		/// Collection of source specific parameters.
-		/// </summary>
-		private IParameterCollection parameters;
+	
 
 		#region Implementation of ISceneItem
 
-		/// <summary>
-		/// Collection of source specific parameters.
-		/// </summary>
-		public IParameterCollection Parameters
-		{
-			get
-			{
-				return this.parameters ?? (this.parameters = new DynamicCollection());
-			}
-			set
-			{
-				this.parameters = value;
-			}
-		}
+	
 
 		#endregion
 

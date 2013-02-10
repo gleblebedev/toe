@@ -57,7 +57,18 @@ namespace Toe.Utils.Mesh.Bsp.Q3
 
 		private void ReadTexture(ref Quake3Texture quake3Texture)
 		{
-			quake3Texture.name = Encoding.ASCII.GetString(Stream.ReadBytes(64)).Trim(new char[] { ' ', '\0' });
+			var nameBytes = Stream.ReadBytes(64);
+			var nameRaw = Encoding.ASCII.GetString(nameBytes);
+			var trimmedName = nameRaw.TrimEnd(new char[] { ' ', '\0' });
+			//Removing "2" at the end of the name
+			//if (trimmedName.EndsWith("2"))
+			//    trimmedName = trimmedName.Substring(0, trimmedName.Length - 1);
+			//else
+			//{
+			//    trimmedName = trimmedName;
+			//}
+
+			quake3Texture.name = trimmedName;
 			quake3Texture.flags = Stream.ReadUInt32();
 			quake3Texture.contents = Stream.ReadUInt32();
 		}
@@ -76,7 +87,9 @@ namespace Toe.Utils.Mesh.Bsp.Q3
 
 		private void ReadEffect(ref Quake3Effects quake3Effects)
 		{
-			quake3Effects.name = Encoding.ASCII.GetString(Stream.ReadBytes(64)).Trim(new char[] { ' ', '\0' });
+			var nameBytes = Stream.ReadBytes(64);
+			var nameRaw = Encoding.ASCII.GetString(nameBytes);
+			quake3Effects.name = nameRaw.Trim(new char[] { ' ', '\0' });
 			quake3Effects.brush = Stream.ReadUInt32();
 			quake3Effects.unknown = Stream.ReadUInt32();
 		}
@@ -109,26 +122,30 @@ namespace Toe.Utils.Mesh.Bsp.Q3
 
 		protected override void BuildScene()
 		{
+			var maxTextures = textures.Length;
+
+			var streamMesh = new VertexBufferMesh();
+			VertexBufferSubmesh[] submeshes = new VertexBufferSubmesh[maxTextures];
+
+			this.BuildSubmeshes(maxTextures, submeshes, streamMesh);
+
 			var node = new Node();
 			Scene.Nodes.Add(node);
-			var streamMesh = new VertexBufferMesh();
 			node.Mesh = streamMesh;
 
-			var subMesh = streamMesh.CreateSubmesh() as VertexBufferSubmesh;
-			subMesh.VertexSourceType= VertexSourceType.TrianleList;
 			foreach (var quake3Face in faces)
 			{
 				switch (quake3Face.type)
 				{
 					case 2: //Patch
-						BuildPatch(quake3Face, streamMesh, subMesh);
+						BuildPatch(quake3Face, streamMesh, submeshes[quake3Face.texinfo_id]);
 						
 						break;
 					case 1: //Polygon
 					case 3: //Mesh
 						for (int i = 0; i < quake3Face.numMeshVerts ; ++i)
 						{
-							AddVertexToMesh(ref vertices[quake3Face.vertexIndex + meshverts[quake3Face.meshVertIndex + i]],  subMesh, streamMesh);
+							AddVertexToMesh(ref vertices[quake3Face.vertexIndex + meshverts[quake3Face.meshVertIndex + i]], submeshes[quake3Face.texinfo_id], streamMesh);
 						}
 						break;
 					case 4: //Billboard
@@ -136,6 +153,51 @@ namespace Toe.Utils.Mesh.Bsp.Q3
 				}
 			}
 			Scene.Geometries.Add(streamMesh);
+		}
+
+		private int[] BuildSubmeshes(int maxTextures, VertexBufferSubmesh[] submeshes, VertexBufferMesh streamMesh)
+		{
+			int[] textureToMaterial = new int[maxTextures];
+			foreach (var quake3Face in this.faces)
+			{
+				++textureToMaterial[quake3Face.texinfo_id];
+			}
+			for (int i = 0; i < maxTextures; ++i)
+			{
+				if (textureToMaterial[i] > 0)
+				{
+					submeshes[i] = streamMesh.CreateSubmesh() as VertexBufferSubmesh;
+
+					int index = this.Scene.Materials.Count;
+					var baseFileName = Path.Combine(this.GameRootPath, this.textures[i].name);
+					var imagePath = baseFileName;
+					if (!File.Exists(imagePath))
+					{
+						imagePath = baseFileName + ".jpg";
+						if (!File.Exists(imagePath))
+						{
+							imagePath = baseFileName + ".png";
+							if (!File.Exists(imagePath))
+							{
+								imagePath = baseFileName + ".tga";
+								if (!File.Exists(imagePath))
+								{
+									imagePath = this.textures[i].name;
+								}
+							}
+						}
+					}
+					var texture = new FileReferenceImage() { Path = imagePath };
+					this.Scene.Images.Add(texture);
+					var effect = new SceneEffect() { Diffuse = new ImageColorSource() { Image = texture } };
+					this.Scene.Effects.Add(effect);
+					var sceneMaterial = new SceneMaterial() { Effect = effect };
+					this.Scene.Materials.Add(sceneMaterial);
+					submeshes[i].Material = sceneMaterial;
+					textureToMaterial[i] = index;
+				}
+			}
+			return textureToMaterial;
 		}
 
 		private void BuildPatch(Quake3Face quake3Face, VertexBufferMesh streamMesh, VertexBufferSubmesh subMesh)

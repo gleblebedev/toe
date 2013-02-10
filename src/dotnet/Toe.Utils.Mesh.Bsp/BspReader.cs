@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -52,9 +53,30 @@ namespace Toe.Utils.Mesh.Bsp
 				else
 					throw new BspFormatException("Unknown Quake 3 BSP: " + magic);
 			}
-			stream.Position = pos;
 
-			return reader.LoadScene(stream);
+			stream.Position = pos;
+			reader.Stream = stream;
+			reader.GameRootPath = EvalGameRootPath(stream);
+			return reader.LoadScene();
+		}
+
+		private static string EvalGameRootPath(Stream stream)
+		{
+			var fileStream = stream as FileStream;
+			if (fileStream == null) return Directory.GetCurrentDirectory();
+
+			var name = Path.GetDirectoryName(Path.GetFullPath(fileStream.Name));
+			var gameRoot = name;
+			for (; ; )
+			{
+				var root = Path.GetDirectoryName(gameRoot);
+				if (root == null) return name;
+				if (string.Compare(Path.GetFileName(gameRoot), "maps",StringComparison.InvariantCultureIgnoreCase)==0)
+				{
+					return root;
+				}
+				gameRoot = root;
+			}
 		}
 
 		#endregion
