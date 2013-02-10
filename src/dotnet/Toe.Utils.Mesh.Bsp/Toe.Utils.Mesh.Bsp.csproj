@@ -63,8 +63,13 @@
     <Compile Include="HL2\BspReader17.cs" />
     <Compile Include="HL2\BspReader19.cs" />
     <Compile Include="HL2\BspReader21.cs" />
+    <Compile Include="HL2\SourceFace.cs" />
     <Compile Include="HL2\SourceFileEntry.cs" />
     <Compile Include="HL2\SourceFileHeader.cs" />
+    <Compile Include="HL2\SourcePlane.cs" />
+    <Compile Include="HL2\SourceTexData.cs" />
+    <Compile Include="HL2\SourceTexInfo.cs" />
+    <Compile Include="HL2\SourceEdge.cs" />
     <Compile Include="IBspReader.cs" />
     <Compile Include="Q1\BaseQ1HL2BspReader.cs" />
     <Compile Include="Q1\BspFileEntry.cs" />

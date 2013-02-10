@@ -40,7 +40,7 @@ namespace Toe.Utils.Mesh.Bsp
 			}
 		}
 
-		public string GameRootPath
+		public virtual string GameRootPath
 		{
 			get
 			{
@@ -66,6 +66,8 @@ namespace Toe.Utils.Mesh.Bsp
 
 			ReadHeader();
 			ReadVertices();
+			ReadEdges();
+			ReadPlanes();
 			ReadTextures();
 			ReadEffects();
 			ReadLightmaps();
@@ -74,6 +76,16 @@ namespace Toe.Utils.Mesh.Bsp
 			this.BuildScene();
 
 			return scene;
+		}
+
+		protected virtual void ReadPlanes()
+		{
+			
+		}
+
+		protected virtual void ReadEdges()
+		{
+			
 		}
 
 		protected virtual void ReadVisibilityGraph()

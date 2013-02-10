@@ -1,6 +1,8 @@
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Text;
 
 using OpenTK;
 
@@ -56,6 +58,18 @@ namespace Toe.Utils.Mesh.Bsp
 			}
 			return res;
 		}
+		public static string ReadStringZ(this Stream stream)
+		{
+			List<byte> buf = new List<byte>(256);
+			for (; ; )
+			{
+				var b =stream.ReadByte();
+				if (b<0 || b==0)
+					break;
+				buf.Add((byte)b);
+			}
+			return Encoding.UTF8.GetString(buf.ToArray());
+		}
 		public static uint ReadUInt32(this Stream stream)
 		{
 			var a0 = (uint)stream.ReadByte();
@@ -63,6 +77,18 @@ namespace Toe.Utils.Mesh.Bsp
 			var a2 = (uint)stream.ReadByte();
 			var a3 = (uint)stream.ReadByte();
 			return ((a3 << 24) | (a2 << 16) | (a1 << 8) | (a0));
+		}
+		public static ushort ReadUInt16(this Stream stream)
+		{
+			var a0 = (ushort)stream.ReadByte();
+			var a1 = (ushort)stream.ReadByte();
+			return (ushort)((a1 << 8) | (a0));
+		}
+		public static short ReadInt16(this Stream stream)
+		{
+			var a0 = (short)stream.ReadByte();
+			var a1 = (short)stream.ReadByte();
+			return (short)((a1 << 8) | (a0));
 		}
 		public static Color ReadARGB(this Stream stream)
 		{

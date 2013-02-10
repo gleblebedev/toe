@@ -29,7 +29,7 @@ namespace Toe.Editors
 
 		private Quaternion rot = Quaternion.Identity;
 
-		private float zFar = 2048.0f;
+		private float zFar = 4*2048.0f;
 
 		private float zNear = 16.0f;
 
