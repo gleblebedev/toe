@@ -1,10 +1,6 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 
 using OpenTK;
-using OpenTK.Graphics.OpenGL;
 
 namespace Toe.Utils.Mesh
 {
@@ -18,138 +14,79 @@ namespace Toe.Utils.Mesh
 	{
 		#region Constants and Fields
 
+		private readonly List<ISubMesh> submeshes = new List<ISubMesh>();
+
 		private readonly OptimizedList<Vertex> vertexBuffer = new OptimizedList<Vertex>();
+
+		private bool areBoundsValid;
+
+		private Vector3 boundingBoxMax;
+
+		private Vector3 boundingBoxMin;
+
+		private Vector3 boundingSphereCenter;
+
+		private float boundingSphereR;
+
+		private bool isBinormalStreamAvailable = true;
+
+		private bool isColorStreamAvailable = true;
+
+		private bool isNormalStreamAvailable = true;
+
+		private bool isTangentStreamAvailable = true;
+
+		private bool isUV0StreamAvailable = true;
+
+		private bool isUV1StreamAvailable = true;
 
 		#endregion
 
 		#region Public Properties
 
-		private readonly List<ISubMesh> submeshes = new List<ISubMesh>();
-
-		public object RenderData
-		{
-			get; set;
-		}
-
-		public IList<ISubMesh> Submeshes
+		public Vector3 BoundingBoxMax
 		{
 			get
 			{
-				return submeshes;
+				this.CalculateBounds();
+				return this.boundingBoxMax;
 			}
 		}
 
-		public OptimizedList<Vertex> VertexBuffer
+		public Vector3 BoundingBoxMin
 		{
 			get
 			{
-				return this.vertexBuffer;
+				this.CalculateBounds();
+				return this.boundingBoxMin;
 			}
 		}
 
-		#endregion
-
-	
-
-		#region Implementation of ISceneItem
-
-	
-
-		#endregion
-
-		#region Public Methods and Operators
-
-		public ISubMesh CreateSubmesh()
+		public Vector3 BoundingSphereCenter
 		{
-			var streamSubmesh = new VertexBufferSubmesh(this);
-			this.Submeshes.Add(streamSubmesh);
-			return streamSubmesh;
+			get
+			{
+				this.CalculateBounds();
+				return this.boundingSphereCenter;
+			}
 		}
 
-		#endregion
-
-
-
-		#region Implementation of IVertexSource
+		public float BoundingSphereR
+		{
+			get
+			{
+				this.CalculateBounds();
+				return this.boundingSphereR;
+			}
+		}
 
 		public int Count
 		{
 			get
 			{
-				return vertexBuffer.Count;
+				return this.vertexBuffer.Count;
 			}
 		}
-
-		public bool IsVertexStreamAvailable
-		{
-			get
-			{
-				return true;
-			}
-		}
-
-		public void VisitVertices(Vector3VisitorCallback callback)
-		{
-			foreach (var vertex in VertexBuffer)
-			{
-				var v = vertex.Position;
-				callback(ref v);
-			}
-		}
-
-		public void VisitNormals(Vector3VisitorCallback callback)
-		{
-			foreach (var vertex in VertexBuffer)
-			{
-				var v = vertex.Normal;
-				callback(ref v);
-			}
-		}
-
-		public void VisitColors(ColorVisitorCallback callback)
-		{
-			foreach (var vertex in VertexBuffer)
-			{
-				var v = vertex.Color;
-				callback(ref v);
-			}
-		}
-
-		public void VisitUV(int stage, Vector3VisitorCallback callback)
-		{
-			if (stage == 0)
-			{
-				foreach (var vertex in VertexBuffer)
-				{
-					var v = vertex.UV0;
-					callback(ref v);
-				}
-			}
-			else
-			{
-				foreach (var vertex in VertexBuffer)
-				{
-					var v = vertex.UV1;
-					callback(ref v);
-				}
-			}
-		}
-
-		private bool isNormalStreamAvailable = true;
-
-		public bool IsNormalStreamAvailable
-		{
-			get
-			{
-				return this.isNormalStreamAvailable;
-			}
-			set
-			{
-				this.isNormalStreamAvailable = value;
-			}
-		}
-
-		private bool isBinormalStreamAvailable = true;
 
 		public bool IsBinormalStreamAvailable
 		{
@@ -163,7 +100,29 @@ namespace Toe.Utils.Mesh
 			}
 		}
 
-		private bool isTangentStreamAvailable = true;
+		public bool IsColorStreamAvailable
+		{
+			get
+			{
+				return this.isColorStreamAvailable;
+			}
+			set
+			{
+				this.isColorStreamAvailable = value;
+			}
+		}
+
+		public bool IsNormalStreamAvailable
+		{
+			get
+			{
+				return this.isNormalStreamAvailable;
+			}
+			set
+			{
+				this.isNormalStreamAvailable = value;
+			}
+		}
 
 		public bool IsTangentStreamAvailable
 		{
@@ -177,22 +136,6 @@ namespace Toe.Utils.Mesh
 			}
 		}
 
-		private bool isColorStreamAvailable = true;
-
-		public bool IsColorStreamAvailable
-		{
-			get
-			{
-				return this.isColorStreamAvailable;
-			}
-			set
-			{
-				this.isColorStreamAvailable = value;
-			}
-		}
-
-		private bool isUV0StreamAvailable = true;
-
 		public bool IsUV0StreamAvailable
 		{
 			get
@@ -204,8 +147,6 @@ namespace Toe.Utils.Mesh
 				this.isUV0StreamAvailable = value;
 			}
 		}
-
-		private bool isUV1StreamAvailable = true;
 
 		public bool IsUV1StreamAvailable
 		{
@@ -219,21 +160,29 @@ namespace Toe.Utils.Mesh
 			}
 		}
 
-		public void VisitTangents(Vector3VisitorCallback callback)
+		public bool IsVertexStreamAvailable
 		{
-			foreach (var vertex in VertexBuffer)
+			get
 			{
-				var v = vertex.Tangent;
-				callback(ref v);
+				return true;
 			}
 		}
 
-		public void VisitBinormals(Vector3VisitorCallback callback)
+		public object RenderData { get; set; }
+
+		public IList<ISubMesh> Submeshes
 		{
-			foreach (var vertex in VertexBuffer)
+			get
 			{
-				var v = vertex.Binormal;
-				callback(ref v);
+				return this.submeshes;
+			}
+		}
+
+		public OptimizedList<Vertex> VertexBuffer
+		{
+			get
+			{
+				return this.vertexBuffer;
 			}
 		}
 
@@ -241,9 +190,139 @@ namespace Toe.Utils.Mesh
 		{
 			get
 			{
-				if (submeshes.Count > 0) return submeshes[0].VertexSourceType;
+				if (this.submeshes.Count > 0)
+				{
+					return this.submeshes[0].VertexSourceType;
+				}
 				return VertexSourceType.TrianleList;
 			}
+		}
+
+		#endregion
+
+		#region Public Methods and Operators
+
+		public ISubMesh CreateSubmesh()
+		{
+			var streamSubmesh = new VertexBufferSubmesh(this);
+			this.Submeshes.Add(streamSubmesh);
+			return streamSubmesh;
+		}
+
+		public void InvalidateBounds()
+		{
+			this.areBoundsValid = false;
+		}
+
+		public void VisitBinormals(Vector3VisitorCallback callback)
+		{
+			foreach (var vertex in this.VertexBuffer)
+			{
+				var v = vertex.Binormal;
+				callback(ref v);
+			}
+		}
+
+		public void VisitColors(ColorVisitorCallback callback)
+		{
+			foreach (var vertex in this.VertexBuffer)
+			{
+				var v = vertex.Color;
+				callback(ref v);
+			}
+		}
+
+		public void VisitNormals(Vector3VisitorCallback callback)
+		{
+			foreach (var vertex in this.VertexBuffer)
+			{
+				var v = vertex.Normal;
+				callback(ref v);
+			}
+		}
+
+		public void VisitTangents(Vector3VisitorCallback callback)
+		{
+			foreach (var vertex in this.VertexBuffer)
+			{
+				var v = vertex.Tangent;
+				callback(ref v);
+			}
+		}
+
+		public void VisitUV(int stage, Vector3VisitorCallback callback)
+		{
+			if (stage == 0)
+			{
+				foreach (var vertex in this.VertexBuffer)
+				{
+					var v = vertex.UV0;
+					callback(ref v);
+				}
+			}
+			else
+			{
+				foreach (var vertex in this.VertexBuffer)
+				{
+					var v = vertex.UV1;
+					callback(ref v);
+				}
+			}
+		}
+
+		public void VisitVertices(Vector3VisitorCallback callback)
+		{
+			foreach (var vertex in this.VertexBuffer)
+			{
+				var v = vertex.Position;
+				callback(ref v);
+			}
+		}
+
+		#endregion
+
+		#region Methods
+
+		protected void CalculateBounds()
+		{
+			if (this.areBoundsValid)
+			{
+				return;
+			}
+			this.areBoundsValid = true;
+
+			boundingBoxMin = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
+			boundingBoxMax = new Vector3(float.MinValue, float.MinValue, float.MinValue);
+			for (int index = 0; index < this.VertexBuffer.Count; index++)
+			{
+				var position = this.VertexBuffer[index].Position;
+				if (this.boundingBoxMax.X < position.X)
+				{
+					this.boundingBoxMax.X = position.X;
+				}
+				if (this.boundingBoxMax.Y < position.Y)
+				{
+					this.boundingBoxMax.Y = position.Y;
+				}
+				if (this.boundingBoxMax.Z < position.Z)
+				{
+					this.boundingBoxMax.Z = position.Z;
+				}
+				if (this.boundingBoxMin.X > position.X)
+				{
+					this.boundingBoxMin.X = position.X;
+				}
+				if (this.boundingBoxMin.Y > position.Y)
+				{
+					this.boundingBoxMin.Y = position.Y;
+				}
+				if (this.boundingBoxMin.Z > position.Z)
+				{
+					this.boundingBoxMin.Z = position.Z;
+				}
+			}
+			boundingSphereCenter = (boundingBoxMax + boundingBoxMin) * 0.5f;
+			boundingSphereR = (boundingBoxMax - boundingBoxMin).Length * 0.5f;
 		}
 
 		#endregion

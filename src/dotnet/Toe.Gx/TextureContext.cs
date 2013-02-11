@@ -10,6 +10,7 @@ namespace Toe.Gx
 {
 	public class TextureContext: IContextData, IDisposable
 	{
+		
 		~TextureContext()
 		{
 			this.Dispose(false);

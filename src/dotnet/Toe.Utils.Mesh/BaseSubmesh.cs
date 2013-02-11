@@ -1,12 +1,71 @@
-
 using System.Collections;
 using System.Collections.Generic;
+
+using OpenTK;
 
 namespace Toe.Utils.Mesh
 {
 	public abstract class BaseSubmesh : ISubMesh
 	{
+		#region Constants and Fields
+
+		private bool areBoundsValid;
+
+		protected Vector3 boundingBoxMax;
+
+		protected Vector3 boundingBoxMin;
+
+		protected Vector3 boundingSphereCenter;
+
+		protected float boundingSphereR;
+
 		private IMaterial material;
+
+		private string name;
+
+		private VertexSourceType vertexSourceType = VertexSourceType.TrianleList;
+
+		#endregion
+
+		#region Public Properties
+
+		public Vector3 BoundingBoxMax
+		{
+			get
+			{
+				this.CalculateBounds();
+				return this.boundingBoxMax;
+			}
+		}
+
+		public Vector3 BoundingBoxMin
+		{
+			get
+			{
+				this.CalculateBounds();
+				return this.boundingBoxMin;
+			}
+		}
+
+		public Vector3 BoundingSphereCenter
+		{
+			get
+			{
+				this.CalculateBounds();
+				return this.boundingSphereCenter;
+			}
+		}
+
+		public float BoundingSphereR
+		{
+			get
+			{
+				this.CalculateBounds();
+				return this.boundingSphereR;
+			}
+		}
+
+		public abstract int Count { get; }
 
 		public IMaterial Material
 		{
@@ -22,12 +81,6 @@ namespace Toe.Utils.Mesh
 				}
 			}
 		}
-		public object RenderData
-		{
-			get;
-			set;
-		}
-		private string name;
 
 		public string Name
 		{
@@ -44,7 +97,23 @@ namespace Toe.Utils.Mesh
 			}
 		}
 
-		#region Implementation of IEnumerable
+		public object RenderData { get; set; }
+
+		public virtual VertexSourceType VertexSourceType
+		{
+			get
+			{
+				return this.vertexSourceType;
+			}
+			set
+			{
+				this.vertexSourceType = value;
+			}
+		}
+
+		#endregion
+
+		#region Public Methods and Operators
 
 		/// <summary>
 		/// Returns an enumerator that iterates through the collection.
@@ -54,6 +123,15 @@ namespace Toe.Utils.Mesh
 		/// </returns>
 		/// <filterpriority>1</filterpriority>
 		public abstract IEnumerator<int> GetEnumerator();
+
+		public void InvalidateBounds()
+		{
+			this.areBoundsValid = false;
+		}
+
+		#endregion
+
+		#region Explicit Interface Methods
 
 		/// <summary>
 		/// Returns an enumerator that iterates through a collection.
@@ -69,24 +147,19 @@ namespace Toe.Utils.Mesh
 
 		#endregion
 
-		#region Implementation of IVertexSource
+		#region Methods
 
-		VertexSourceType vertexSourceType = VertexSourceType.TrianleList;
-
-		public abstract int Count { get; }
-
-		public virtual VertexSourceType VertexSourceType
+		protected void CalculateBounds()
 		{
-			get
+			if (this.areBoundsValid)
 			{
-				return vertexSourceType;
+				return;
 			}
-			set
-			{
-				vertexSourceType = value;
-			}
+			this.areBoundsValid = true;
+			CalculateActualBounds();
 		}
 
+		protected abstract void CalculateActualBounds();
 
 		#endregion
 	}

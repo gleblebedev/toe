@@ -53,7 +53,9 @@
     <Compile Include="DefaultProgramOptions.cs" />
     <Compile Include="DefaultShaders.cs" />
     <Compile Include="DefaultVertexShaderOptions.cs" />
+    <Compile Include="Frustum.cs" />
     <Compile Include="LightArgs.cs" />
+    <Compile Include="NormalizedPlane.cs" />
     <Compile Include="ShaderContext.cs" />
     <Compile Include="TextureContext.cs" />
     <Compile Include="ToeGraphicsContext.cs" />

@@ -6,6 +6,8 @@ using System.Windows.Forms;
 
 using Autofac;
 
+using OpenTK;
+
 using Toe.Editors;
 using Toe.Editors.GenericScene;
 using Toe.Editors.Interfaces;
@@ -41,6 +43,16 @@ namespace Toe.Editor
 		[STAThread]
 		private static void Main()
 		{
+			Matrix4 m = Matrix4.CreatePerspectiveFieldOfView((float)Math.PI/2.0f, 1, 10, 200);
+			Vector4 vv;
+			Vector3 v3;
+			var v = new Vector4(200, 200, -200,1);
+			Vector4.Transform(ref v, ref m, out vv);
+			v3 = new Vector3(vv.X / vv.W, vv.Y / vv.W, vv.Z / vv.W);
+			v = new Vector4(10, 10, -10,1);
+			Vector4.Transform(ref v, ref m, out vv);
+			v3 = new Vector3(vv.X / vv.W, vv.Y / vv.W, vv.Z / vv.W);
+
 			AppDomain.CurrentDomain.UnhandledException += OnException;
 			var cb = new ContainerBuilder();
 			cb.RegisterModule<BaseEditorsAutofacModule>();

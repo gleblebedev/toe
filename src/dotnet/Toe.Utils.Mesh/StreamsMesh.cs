@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -19,11 +17,9 @@ namespace Toe.Utils.Mesh
 		#region Constants and Fields
 
 		public MeshStream<VertexWeight> weights = new MeshStream<VertexWeight>();
-		public object RenderData
-		{
-			get;
-			set;
-		}
+
+		private readonly MeshStream<Vector3> binormals = new MeshStream<Vector3>();
+
 		private readonly BoneCollection bones = new BoneCollection();
 
 		private readonly MeshStream<Color> colors = new MeshStream<Color>();
@@ -32,29 +28,77 @@ namespace Toe.Utils.Mesh
 
 		private readonly List<ISubMesh> submeshes = new List<ISubMesh>();
 
+		private readonly MeshStream<Vector3> tangents = new MeshStream<Vector3>();
+
 		private readonly List<MeshStream<Vector3>> uv = new List<MeshStream<Vector3>>();
 
 		private readonly MeshStream<Vector3> vertices = new MeshStream<Vector3>();
 
-		public string useGroup { get; set; }
+		private bool areBoundsValid;
+
+		private Vector3 boundingBoxMax;
+
+		private Vector3 boundingBoxMin;
+
+		private Vector3 boundingSphereCenter;
+
+		private float boundingSphereR;
 
 		#endregion
-	
-		private MeshStream<Vector3> binormals = new MeshStream<Vector3>();
 
-		private MeshStream<Vector3> tangents = new MeshStream<Vector3>();
-
-		#region Implementation of ISceneItem
-
-
-		#endregion
 		#region Public Properties
+
+		public string BaseName { get; set; }
+
+		public MeshStream<Vector3> Binormals
+		{
+			get
+			{
+				return this.binormals;
+			}
+		}
 
 		public BoneCollection Bones
 		{
 			get
 			{
 				return this.bones;
+			}
+		}
+
+		public Vector3 BoundingBoxMax
+		{
+			get
+			{
+				this.CalculateBounds();
+				return this.boundingBoxMax;
+			}
+		}
+
+		public Vector3 BoundingBoxMin
+		{
+			get
+			{
+				this.CalculateBounds();
+				return this.boundingBoxMin;
+			}
+		}
+
+		public Vector3 BoundingSphereCenter
+		{
+			get
+			{
+				this.CalculateBounds();
+				return this.boundingSphereCenter;
+			}
+		}
+
+		public float BoundingSphereR
+		{
+			get
+			{
+				this.CalculateBounds();
+				return this.boundingSphereR;
 			}
 		}
 
@@ -66,7 +110,71 @@ namespace Toe.Utils.Mesh
 			}
 		}
 
-		public string BaseName { get; set; }
+		public int Count
+		{
+			get
+			{
+				return this.submeshes.Sum(submesh => submesh.Count);
+			}
+		}
+
+		public bool IsBinormalStreamAvailable
+		{
+			get
+			{
+				return this.binormals != null && this.binormals.Count > 0;
+			}
+		}
+
+		public bool IsColorStreamAvailable
+		{
+			get
+			{
+				return this.colors != null && this.colors.Count > 0;
+			}
+		}
+
+		public bool IsNormalStreamAvailable
+		{
+			get
+			{
+				return this.normals != null && this.normals.Count > 0;
+			}
+		}
+
+		public bool IsTangentStreamAvailable
+		{
+			get
+			{
+				return this.tangents != null && this.tangents.Count > 0;
+			}
+		}
+
+		public bool IsUV0StreamAvailable
+		{
+			get
+			{
+				return this.uv.Count > 0 && this.uv[0].Count > 0;
+			}
+		}
+
+		public bool IsUV1StreamAvailable
+		{
+			get
+			{
+				return this.uv.Count > 1 && this.uv[1].Count > 0;
+			}
+		}
+
+		public bool IsVertexStreamAvailable
+		{
+			get
+			{
+				return this.vertices != null && this.vertices.Count > 0;
+			}
+		}
+
+		public uint NameHash { get; set; }
 
 		public MeshStream<Vector3> Normals
 		{
@@ -76,21 +184,7 @@ namespace Toe.Utils.Mesh
 			}
 		}
 
-		public MeshStream<Vector3> Binormals
-		{
-			get
-			{
-				return this.binormals;
-			}
-		}
-
-		public MeshStream<Vector3> Tangents
-		{
-			get
-			{
-				return this.tangents;
-			}
-		}
+		public object RenderData { get; set; }
 
 		public float Scale { get; set; }
 
@@ -103,6 +197,14 @@ namespace Toe.Utils.Mesh
 			get
 			{
 				return this.submeshes;
+			}
+		}
+
+		public MeshStream<Vector3> Tangents
+		{
+			get
+			{
+				return this.tangents;
 			}
 		}
 
@@ -132,9 +234,7 @@ namespace Toe.Utils.Mesh
 
 		public string useGeo { get; set; }
 
-		public uint NameHash { get; set; }
-
-
+		public string useGroup { get; set; }
 
 		#endregion
 
@@ -161,35 +261,30 @@ namespace Toe.Utils.Mesh
 			return this.UV[setId];
 		}
 
-		#endregion
-
-		
-
-		#region Implementation of IVertexSource
-
-		public int Count
+		public void InvalidateBounds()
 		{
-			get
-			{
-				return this.submeshes.Sum(submesh => submesh.Count);
-			}
+			this.areBoundsValid = false;
 		}
 
-		public bool IsVertexStreamAvailable
+		public void VisitBinormals(Vector3VisitorCallback callback)
 		{
-			get
-			{
-				return vertices != null && vertices.Count > 0;
-			}
-		}
-
-		public void VisitVertices(Vector3VisitorCallback callback)
-		{
-			foreach (StreamSubmesh submesh in submeshes)
+			foreach (StreamSubmesh submesh in this.submeshes)
 			{
 				foreach (var index in submesh.Indices)
 				{
-					var v = vertices[index.Vertex];
+					var v = this.binormals[index.Binormal];
+					callback(ref v);
+				}
+			}
+		}
+
+		public void VisitColors(ColorVisitorCallback callback)
+		{
+			foreach (StreamSubmesh submesh in this.submeshes)
+			{
+				foreach (var index in submesh.Indices)
+				{
+					var v = this.colors[index.Color];
 					callback(ref v);
 				}
 			}
@@ -197,45 +292,23 @@ namespace Toe.Utils.Mesh
 
 		public void VisitNormals(Vector3VisitorCallback callback)
 		{
-			foreach (StreamSubmesh submesh in submeshes)
+			foreach (StreamSubmesh submesh in this.submeshes)
 			{
 				foreach (var index in submesh.Indices)
 				{
-					var v = normals[index.Vertex];
+					var v = this.normals[index.Vertex];
 					callback(ref v);
 				}
 			}
 		}
 
-		public void VisitBinormals(Vector3VisitorCallback callback)
-		{
-			foreach (StreamSubmesh submesh in submeshes)
-			{
-				foreach (var index in submesh.Indices)
-				{
-					var v = binormals[index.Binormal];
-					callback(ref v);
-				}
-			}
-		}
 		public void VisitTangents(Vector3VisitorCallback callback)
 		{
-			foreach (StreamSubmesh submesh in submeshes)
+			foreach (StreamSubmesh submesh in this.submeshes)
 			{
 				foreach (var index in submesh.Indices)
 				{
-					var v = tangents[index.Tangent];
-					callback(ref v);
-				}
-			}
-		}
-		public void VisitColors(ColorVisitorCallback callback)
-		{
-			foreach (StreamSubmesh submesh in submeshes)
-			{
-				foreach (var index in submesh.Indices)
-				{
-					var v = colors[index.Color];
+					var v = this.tangents[index.Tangent];
 					callback(ref v);
 				}
 			}
@@ -243,10 +316,10 @@ namespace Toe.Utils.Mesh
 
 		public void VisitUV(int stage, Vector3VisitorCallback callback)
 		{
-			var uvstream = uv[stage];
-			if (stage==0)
+			var uvstream = this.uv[stage];
+			if (stage == 0)
 			{
-				foreach (StreamSubmesh submesh in submeshes)
+				foreach (StreamSubmesh submesh in this.submeshes)
 				{
 					foreach (var index in submesh.Indices)
 					{
@@ -257,7 +330,7 @@ namespace Toe.Utils.Mesh
 			}
 			else
 			{
-				foreach (StreamSubmesh submesh in submeshes)
+				foreach (StreamSubmesh submesh in this.submeshes)
 				{
 					foreach (var index in submesh.Indices)
 					{
@@ -268,54 +341,43 @@ namespace Toe.Utils.Mesh
 			}
 		}
 
-		public bool IsNormalStreamAvailable
+		public void VisitVertices(Vector3VisitorCallback callback)
 		{
-			get
+			foreach (StreamSubmesh submesh in this.submeshes)
 			{
-				return normals != null && normals.Count > 0;
+				foreach (var index in submesh.Indices)
+				{
+					var v = this.vertices[index.Vertex];
+					callback(ref v);
+				}
 			}
 		}
 
-		public bool IsBinormalStreamAvailable
-		{
-			get
-			{
-				return binormals != null && binormals.Count > 0;
-			}
-		}
+		#endregion
 
-		public bool IsTangentStreamAvailable
-		{
-			get
-			{
-				return tangents != null && tangents.Count > 0;
-			}
-		}
+		#region Methods
 
-		public bool IsColorStreamAvailable
+		protected void CalculateBounds()
 		{
-			get
+			if (this.areBoundsValid)
 			{
-				return colors != null && colors.Count > 0;
+				return;
 			}
-		}
-
-		public bool IsUV0StreamAvailable
-		{
-			get
+			this.areBoundsValid = true;
+			boundingBoxMin = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
+			boundingBoxMax = new Vector3(float.MinValue, float.MinValue, float.MinValue);
+			foreach (var vector3 in Vertices)
 			{
-				return uv.Count > 0 && uv[0].Count > 0;
+				if (boundingBoxMax.X < vector3.X) boundingBoxMax.X = vector3.X;
+				if (boundingBoxMax.Y < vector3.Y) boundingBoxMax.Y = vector3.Y;
+				if (boundingBoxMax.Z < vector3.Z) boundingBoxMax.Z = vector3.Z;
+				if (boundingBoxMin.X > vector3.X) boundingBoxMin.X = vector3.X;
+				if (boundingBoxMin.Y > vector3.Y) boundingBoxMin.Y = vector3.Y;
+				if (boundingBoxMin.Z > vector3.Z) boundingBoxMin.Z = vector3.Z;
 			}
+			boundingSphereCenter = (boundingBoxMax + boundingBoxMin) * 0.5f;
+			boundingSphereR = (boundingBoxMax - boundingBoxMin).Length * 0.5f;
 		}
-
-		public bool IsUV1StreamAvailable
-		{
-			get
-			{
-				return uv.Count > 1 && uv[1].Count > 0;
-			}
-		}
-
 
 		#endregion
 	}

@@ -40,6 +40,8 @@ namespace Toe.Gx
 
 		private bool flipCulling = true;
 
+		private Frustum frustum;
+
 		private int indexBufferCount;
 
 		private LightArgs light;
@@ -129,44 +131,6 @@ namespace Toe.Gx
 
 		#region Public Methods and Operators
 
-		public void Flush()
-		{
-			this.RenderVertexBuffer();
-			OpenTKHelper.Assert();
-			GL.Flush();
-			OpenTKHelper.Assert();
-		}
-
-		private void RenderVertexBuffer()
-		{
-			if (this.vertexBufferCount == 0)
-				return;
-
-			SetMaterial((Material)null);
-			DisableLighting();
-
-			//SetTexture(0, null);
-			//SetTexture(1, null);
-			//SetTexture(2, null);
-			//SetTexture(3, null);
-
-			this.SetModel(ref Matrix4.Identity);
-			//this.SetView(ref Matrix4.Identity);
-
-			//GL.Enable(EnableCap.CullFace);
-			//GL.CullFace(CullFaceMode.Front);
-
-			GL.Begin(BeginMode.Lines);
-			for (int i = 0; i < this.vertexBufferCount; ++i)
-			{
-				GL.Color4(this.vertexBuffer[i].Color);
-				GL.Vertex3(this.vertexBuffer[i].Position);
-			}
-			GL.End();
-			this.vertexBufferCount = 0;
-			this.indexBufferCount = 0;
-		}
-
 		public void DisableLighting()
 		{
 			GL.Disable(EnableCap.Lighting);
@@ -189,8 +153,32 @@ namespace Toe.Gx
 			this.lighting = true;
 		}
 
+		public void Flush()
+		{
+			this.RenderVertexBuffer();
+			OpenTKHelper.Assert();
+			GL.Flush();
+			OpenTKHelper.Assert();
+		}
+
+		public void ModelToWorld(ref Vector3 vec, out Vector3 r)
+		{
+			Vector3.Transform(ref vec, ref this.model, out r);
+		}
+
+		public void ModelToWorldView(ref Vector3 vec, out Vector3 r)
+		{
+			Vector3.Transform(ref vec, ref this.modelView, out r);
+		}
+
 		public void Render(IMesh mesh)
 		{
+			if (mesh == null)
+				return;
+
+			if (!frustum.CheckSphere(mesh.BoundingSphereCenter,mesh.BoundingSphereR))
+				return;
+
 			var vertexBufferRenderData = mesh.RenderData as VertexBufferRenderData;
 			if (vertexBufferRenderData == null)
 			{
@@ -199,6 +187,9 @@ namespace Toe.Gx
 
 			foreach (var surface in mesh.Submeshes)
 			{
+				if (!frustum.CheckSphere(surface.BoundingSphereCenter, surface.BoundingSphereR))
+					continue;
+
 				this.SetMaterial(surface.Material);
 
 				var p = this.ApplyMaterialShader(mesh);
@@ -212,11 +203,11 @@ namespace Toe.Gx
 			}
 		}
 
-
 		public void RenderDebugLine(Vector3 from, Vector3 to, Color color)
 		{
-			RenderDebugLine(ref from, ref to, ref color);
+			this.RenderDebugLine(ref from, ref to, ref color);
 		}
+
 		public void RenderDebugLine(ref Vector3 from, ref Vector3 to, ref Color color)
 		{
 			if (this.vertexBufferCount + 2 > this.vertexBuffer.Length)
@@ -253,45 +244,6 @@ namespace Toe.Gx
 					new[] { this.light.Position.X, this.light.Position.Y, this.light.Position.Z, 1.0f });
 			}
 		}
-		private void SetMaterial(IMaterial material)
-		{
-			if (material == null)
-			{
-				GL.UseProgram(0);
-				return;
-			}
-			if (material.RenderData as Material == null)
-			{
-				material.RenderData = ConvertMaterial(material);
-			}
-			SetMaterial(material.RenderData as Material);
-		}
-
-		private Material ConvertMaterial(IMaterial src)
-		{
-			var dst = new Material(resourceManager);
-			dst.Name = src.Name;
-			if (src.Effect.Ambient != null)
-				dst.ColAmbient = src.Effect.Ambient.GetColor();
-			if (src.Effect.Diffuse != null)
-			{
-				switch (src.Effect.Diffuse.Type)
-				{
-					case ColorSourceType.SolidColor:
-					case ColorSourceType.Function:
-						dst.ColDiffuse = src.Effect.Diffuse.GetColor();
-						break;
-					case ColorSourceType.Image:
-						var fileReference = src.Effect.Diffuse.GetImagePath();
-						if (File.Exists(fileReference))
-							dst.Texture0.FileReference = fileReference;
-						break;
-					default:
-						throw new ArgumentOutOfRangeException();
-				}
-			}
-			return dst;
-		}
 
 		public void SetMaterial(Material m)
 		{
@@ -312,11 +264,12 @@ namespace Toe.Gx
 
 		public void SetProjection(ref Matrix4 projection)
 		{
-			RenderVertexBuffer();
+			this.RenderVertexBuffer();
 			this.projection = projection;
 			GL.MatrixMode(MatrixMode.Projection);
 			GL.LoadMatrix(ref projection);
 			GL.MatrixMode(MatrixMode.Modelview);
+			Frustum.BuildFrustum(ref this.view, ref projection, out this.frustum);
 		}
 
 		public void SetTexture(int channel, Texture texture)
@@ -340,16 +293,17 @@ namespace Toe.Gx
 
 		public void SetView(ref Matrix4 view)
 		{
-			RenderVertexBuffer();
+			this.RenderVertexBuffer();
 			this.view = view;
 			this.modelView = view * this.model;
 			GL.MatrixMode(MatrixMode.Modelview);
 			GL.LoadMatrix(ref this.modelView);
+			Frustum.BuildFrustum(ref view, ref this.projection, out this.frustum);
 		}
 
 		public void SetViewport(int x, int y, int w, int h)
 		{
-			RenderVertexBuffer();
+			this.RenderVertexBuffer();
 			GL.Viewport(x, y, w, h);
 			this.args.inDisplaySize = new Vector2(w, h);
 			this.args.inDeviceSize = new Vector2(w, h);
@@ -473,6 +427,7 @@ namespace Toe.Gx
 			GL.UseProgram(0);
 			OpenTKHelper.Assert();
 		}
+
 		private ShaderTechniqueArgumentIndices ApplyMaterialShader(IVertexStreamSource mesh)
 		{
 			if (this.material == null)
@@ -730,6 +685,36 @@ namespace Toe.Gx
 			OpenTKHelper.Assert();
 		}
 
+		private Material ConvertMaterial(IMaterial src)
+		{
+			var dst = new Material(this.resourceManager);
+			dst.Name = src.Name;
+			if (src.Effect.Ambient != null)
+			{
+				dst.ColAmbient = src.Effect.Ambient.GetColor();
+			}
+			if (src.Effect.Diffuse != null)
+			{
+				switch (src.Effect.Diffuse.Type)
+				{
+					case ColorSourceType.SolidColor:
+					case ColorSourceType.Function:
+						dst.ColDiffuse = src.Effect.Diffuse.GetColor();
+						break;
+					case ColorSourceType.Image:
+						var fileReference = src.Effect.Diffuse.GetImagePath();
+						if (File.Exists(fileReference))
+						{
+							dst.Texture0.FileReference = fileReference;
+						}
+						break;
+					default:
+						throw new ArgumentOutOfRangeException();
+				}
+			}
+			return dst;
+		}
+
 		private void DropVertextBuffer()
 		{
 			this.vertexBufferCount = 0;
@@ -859,15 +844,52 @@ namespace Toe.Gx
 			this.Render(mesh, surface);
 		}
 
-		#endregion
+		private void RenderVertexBuffer()
+		{
+			if (this.vertexBufferCount == 0)
+			{
+				return;
+			}
 
-		public void ModelToWorld(ref Vector3 vec, out Vector3 r)
-		{
-			Vector3.Transform(ref vec, ref model, out r);
+			this.SetMaterial((Material)null);
+			this.DisableLighting();
+
+			//SetTexture(0, null);
+			//SetTexture(1, null);
+			//SetTexture(2, null);
+			//SetTexture(3, null);
+
+			this.SetModel(ref Matrix4.Identity);
+			//this.SetView(ref Matrix4.Identity);
+
+			//GL.Enable(EnableCap.CullFace);
+			//GL.CullFace(CullFaceMode.Front);
+
+			GL.Begin(BeginMode.Lines);
+			for (int i = 0; i < this.vertexBufferCount; ++i)
+			{
+				GL.Color4(this.vertexBuffer[i].Color);
+				GL.Vertex3(this.vertexBuffer[i].Position);
+			}
+			GL.End();
+			this.vertexBufferCount = 0;
+			this.indexBufferCount = 0;
 		}
-		public void ModelToWorldView(ref Vector3 vec, out Vector3 r)
+
+		private void SetMaterial(IMaterial material)
 		{
-			Vector3.Transform(ref vec, ref modelView, out r);
+			if (material == null)
+			{
+				GL.UseProgram(0);
+				return;
+			}
+			if (material.RenderData as Material == null)
+			{
+				material.RenderData = this.ConvertMaterial(material);
+			}
+			this.SetMaterial(material.RenderData as Material);
 		}
+
+		#endregion
 	}
 }

@@ -70,6 +70,40 @@ namespace Toe.Utils.Mesh
 			}
 		}
 
+		protected override void CalculateActualBounds()
+		{
+			foreach (var index in indices)
+			{
+				var position = this.mesh.Vertices[index.Vertex];
+				if (this.boundingBoxMax.X < position.X)
+				{
+					this.boundingBoxMax.X = position.X;
+				}
+				if (this.boundingBoxMax.Y < position.Y)
+				{
+					this.boundingBoxMax.Y = position.Y;
+				}
+				if (this.boundingBoxMax.Z < position.Z)
+				{
+					this.boundingBoxMax.Z = position.Z;
+				}
+				if (this.boundingBoxMin.X > position.X)
+				{
+					this.boundingBoxMin.X = position.X;
+				}
+				if (this.boundingBoxMin.Y > position.Y)
+				{
+					this.boundingBoxMin.Y = position.Y;
+				}
+				if (this.boundingBoxMin.Z > position.Z)
+				{
+					this.boundingBoxMin.Z = position.Z;
+				}
+			}
+			boundingSphereCenter = (boundingBoxMax + boundingBoxMin) * 0.5f;
+			boundingSphereR = (boundingBoxMax - boundingBoxMin).Length * 0.5f;
+		}
+
 		public override int Count
 		{
 			get

@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 
+using OpenTK;
+
 namespace Toe.Utils.Mesh
 {
 	/// <summary>
@@ -15,5 +17,14 @@ namespace Toe.Utils.Mesh
 		ISubMesh CreateSubmesh();
 
 		object RenderData { get; set; }
+
+		void InvalidateBounds();
+
+		Vector3 BoundingBoxMin { get; }
+		Vector3 BoundingBoxMax { get; }
+		Vector3 BoundingSphereCenter { get; }
+		float BoundingSphereR { get; }
 	}
+
+	
 }
