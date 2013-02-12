@@ -16,9 +16,25 @@ namespace Toe.Gx
 
 		private NormalizedPlane Right4;
 
+		private Vector3 cameraPosition;
+
+		public Vector3 CameraPosition
+		{
+			get
+			{
+				return this.cameraPosition;
+			}
+		}
+
 		public static void BuildFrustum(ref Matrix4 view, ref Matrix4 projection, out Frustum frustum)
 		{
-			var m = view * projection;
+			frustum = new Frustum();
+
+			var m = view;
+			m.Invert();
+			frustum.cameraPosition = new Vector3(m.M41, m.M42, m.M43);
+
+			m = view * projection;
 			m.Invert();
 			Vector3 farA, farB, farC, farD;
 			Vector3 nearA, nearB, nearC, nearD;
@@ -33,7 +49,6 @@ namespace Toe.Gx
 			PointFromProjectionToWorld(new Vector4(-1, -1, -1, 1), ref m, out nearC);
 			PointFromProjectionToWorld(new Vector4(1, -1, -1, 1), ref m, out nearD);
 
-			frustum = new Frustum();
 			NormalizedPlane.BuildPlane(ref nearA, ref nearB, ref nearC, out frustum.Front);
 			NormalizedPlane.BuildPlane(ref farA, ref farC, ref farB, out frustum.Back);
 

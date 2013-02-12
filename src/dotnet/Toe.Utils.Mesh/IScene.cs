@@ -11,5 +11,10 @@ namespace Toe.Utils.Mesh
 		IList<IEffect> Effects { get; }
 		IList<IMaterial> Materials { get; }
 		IList<IMesh> Geometries { get; }
+
+		/// <summary>
+		/// Visible surface determination provider.
+		/// </summary>
+		IVsdProvider VsdProvider { get; set; }
 	}
 }

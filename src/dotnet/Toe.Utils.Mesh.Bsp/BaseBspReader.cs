@@ -72,7 +72,10 @@ namespace Toe.Utils.Mesh.Bsp
 			ReadEffects();
 			ReadLightmaps();
 			ReadFaces();
-			ReadVisibilityGraph();
+			ReadNodes();
+			ReadVisibilityList();
+			ReadLeaves();
+
 			this.BuildScene();
 
 			return scene;
@@ -88,9 +91,17 @@ namespace Toe.Utils.Mesh.Bsp
 			
 		}
 
-		protected virtual void ReadVisibilityGraph()
+		protected virtual void ReadNodes()
 		{
 			
+		}
+		protected virtual void ReadLeaves()
+		{
+
+		}
+		protected virtual void ReadVisibilityList()
+		{
+
 		}
 		protected virtual void ReadTextures()
 		{

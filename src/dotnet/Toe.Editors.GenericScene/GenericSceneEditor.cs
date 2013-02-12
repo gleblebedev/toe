@@ -65,8 +65,10 @@ namespace Toe.Editors.GenericScene
 
 			if (scene != null)
 			{
+				graphicsContext.VsdProvider = scene.VsdProvider;
 				Matrix4 parent = Matrix4.Identity;
 				RenderSceneNodes(ref parent, scene.Nodes);
+				graphicsContext.VsdProvider = null;
 			}
 		}
 

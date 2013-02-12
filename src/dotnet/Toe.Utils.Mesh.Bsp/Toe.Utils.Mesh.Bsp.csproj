@@ -57,15 +57,25 @@
     <Compile Include="BspAutofacModule.cs" />
     <Compile Include="BaseBspReader.cs" />
     <Compile Include="BspFormatException.cs" />
+    <Compile Include="Utils\BspMaterialKey.cs" />
     <Compile Include="BspReader.cs" />
     <Compile Include="BspSceneFileFormat.cs" />
+    <Compile Include="Utils\BspSubmeshKey.cs" />
+    <Compile Include="BspVsdProvider.cs" />
+    <Compile Include="BspVsdTreeLeaf.cs" />
+    <Compile Include="BspVsdTreeNode.cs" />
     <Compile Include="HL2\BaseHL2BspReader.cs" />
     <Compile Include="HL2\BspReader17.cs" />
     <Compile Include="HL2\BspReader19.cs" />
     <Compile Include="HL2\BspReader21.cs" />
+    <Compile Include="HL2\SourceBoundingBox.cs" />
+    <Compile Include="HL2\SourceCluster.cs" />
+    <Compile Include="HL2\SourceCompressedLightCube.cs" />
     <Compile Include="HL2\SourceFace.cs" />
     <Compile Include="HL2\SourceFileEntry.cs" />
     <Compile Include="HL2\SourceFileHeader.cs" />
+    <Compile Include="HL2\SourceLeaf.cs" />
+    <Compile Include="HL2\SourceNode.cs" />
     <Compile Include="HL2\SourcePlane.cs" />
     <Compile Include="HL2\SourceTexData.cs" />
     <Compile Include="HL2\SourceTexInfo.cs" />
@@ -87,6 +97,7 @@
     <Compile Include="Q3\Quake3FileHeader.cs" />
     <Compile Include="Q3\Quake3Vertex.cs" />
     <Compile Include="StreamExt.cs" />
+    <Compile Include="Utils\MeshBuilder.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Toe.Utils.Mesh\Toe.Utils.Mesh.net40.vs2010.csproj">

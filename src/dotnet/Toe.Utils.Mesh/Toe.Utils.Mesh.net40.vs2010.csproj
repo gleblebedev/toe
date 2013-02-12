@@ -77,6 +77,7 @@
     <Compile Include="ISubMesh.cs" />
     <Compile Include="IVertexIndexSource.cs" />
     <Compile Include="IVertexStreamSource.cs" />
+    <Compile Include="IVsdProvider.cs" />
     <Compile Include="Material.cs" />
     <Compile Include="MaterialBinding.cs" />
     <Compile Include="MeshBone.cs" />

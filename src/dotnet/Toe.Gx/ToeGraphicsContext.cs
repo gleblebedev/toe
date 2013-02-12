@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Threading;
@@ -61,6 +62,8 @@ namespace Toe.Gx
 		private int vertexBufferCount;
 
 		private Matrix4 view = Matrix4.Identity;
+
+		private IVsdProvider vsdProvider;
 
 		#endregion
 
@@ -127,6 +130,23 @@ namespace Toe.Gx
 
 		public bool IsShadersEnabled { get; set; }
 
+		public IVsdProvider VsdProvider
+		{
+			get
+			{
+				return this.vsdProvider;
+			}
+			set
+			{
+				if (this.vsdProvider != value)
+				{
+					this.vsdProvider = value;
+					this.UpdateFrustum();
+					
+				}
+			}
+		}
+
 		#endregion
 
 		#region Public Methods and Operators
@@ -174,10 +194,14 @@ namespace Toe.Gx
 		public void Render(IMesh mesh)
 		{
 			if (mesh == null)
+			{
 				return;
+			}
 
-			if (!frustum.CheckSphere(mesh.BoundingSphereCenter,mesh.BoundingSphereR))
+			if (!this.frustum.CheckSphere(mesh.BoundingSphereCenter, mesh.BoundingSphereR))
+			{
 				return;
+			}
 
 			var vertexBufferRenderData = mesh.RenderData as VertexBufferRenderData;
 			if (vertexBufferRenderData == null)
@@ -185,10 +209,21 @@ namespace Toe.Gx
 				mesh.RenderData = vertexBufferRenderData = new VertexBufferRenderData(mesh);
 			}
 
-			foreach (var surface in mesh.Submeshes)
+			IEnumerable<ISubMesh> submeshes;
+			if (vsdProvider != null && vsdProvider.Level == mesh)
 			{
-				if (!frustum.CheckSphere(surface.BoundingSphereCenter, surface.BoundingSphereR))
+				submeshes = vsdProvider.GetVisibleSubMeshes();
+			}
+			else
+			{
+				submeshes = mesh.Submeshes;
+			}
+			foreach (var surface in submeshes)
+			{
+				if (!this.frustum.CheckSphere(surface.BoundingSphereCenter, surface.BoundingSphereR))
+				{
 					continue;
+				}
 
 				this.SetMaterial(surface.Material);
 
@@ -269,7 +304,7 @@ namespace Toe.Gx
 			GL.MatrixMode(MatrixMode.Projection);
 			GL.LoadMatrix(ref projection);
 			GL.MatrixMode(MatrixMode.Modelview);
-			Frustum.BuildFrustum(ref this.view, ref projection, out this.frustum);
+			this.UpdateFrustum();
 		}
 
 		public void SetTexture(int channel, Texture texture)
@@ -298,7 +333,7 @@ namespace Toe.Gx
 			this.modelView = view * this.model;
 			GL.MatrixMode(MatrixMode.Modelview);
 			GL.LoadMatrix(ref this.modelView);
-			Frustum.BuildFrustum(ref view, ref this.projection, out this.frustum);
+			this.UpdateFrustum();
 		}
 
 		public void SetViewport(int x, int y, int w, int h)
@@ -888,6 +923,15 @@ namespace Toe.Gx
 				material.RenderData = this.ConvertMaterial(material);
 			}
 			this.SetMaterial(material.RenderData as Material);
+		}
+
+		private void UpdateFrustum()
+		{
+			Frustum.BuildFrustum(ref this.view, ref this.projection, out this.frustum);
+			if (this.vsdProvider != null)
+			{
+				this.vsdProvider.CameraPosition = this.frustum.CameraPosition;
+			}
 		}
 
 		#endregion
