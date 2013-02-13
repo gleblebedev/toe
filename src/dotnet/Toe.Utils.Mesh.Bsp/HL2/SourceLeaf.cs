@@ -16,7 +16,5 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 		public short leafWaterDataID;        // -1 for not in water
 		public SourceCompressedLightCube ambientLighting;  // Precaculated light info for entities.
 		public short padding;                // padding to 4-byte boundary
-
-		public List<int> VisibleLeaves;
 	};
 }

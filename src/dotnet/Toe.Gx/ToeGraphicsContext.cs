@@ -220,10 +220,10 @@ namespace Toe.Gx
 			}
 			foreach (var surface in submeshes)
 			{
-				if (!this.frustum.CheckSphere(surface.BoundingSphereCenter, surface.BoundingSphereR))
-				{
-					continue;
-				}
+				//if (!this.frustum.CheckSphere(surface.BoundingSphereCenter, surface.BoundingSphereR))
+				//{
+				//    continue;
+				//}
 
 				this.SetMaterial(surface.Material);
 

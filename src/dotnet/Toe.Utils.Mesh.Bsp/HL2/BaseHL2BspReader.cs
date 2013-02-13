@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 
 using OpenTK;
 
@@ -38,6 +40,8 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 
 		private SourceLeaf[] leaves;
 
+		private SourceModel[] models;
+
 		private SourceCluster[] clusters;
 
 		private ushort[] leafFaces;
@@ -65,7 +69,7 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 		protected override void BuildScene()
 		{
 			CollectLeafsInCluster();
-			BuildVisibilityList();
+			//BuildVisibilityList();
 
 			var maxTextures = this.textures.Length;
 			var streamMesh = new VertexBufferMesh();
@@ -95,44 +99,136 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 					sourceNode.face_num = sourceNode.face_num;
 				}
 			}
-			List<int> visibleLeavesLookup = new List<int>();
-			List<int> visibleMeshesLookup = new List<int>();
-			var vsdLeaves = new BspVsdTreeLeaf[leaves.Length];
-			for (int index = 0; index < this.leaves.Length; index++)
+			bool[] usedFaces = new bool[this.faces.Length];
+
+			foreach (var usedFace in leafFaces)
 			{
-				var sourceNode = this.leaves[index];
-				vsdLeaves[index] = new BspVsdTreeLeaf()
+				usedFaces[usedFace] = true;
+			}
+			for (int index = 0; index < usedFaces.Length; index++)
+			{
+				if (!usedFaces[index])
 				{
-					Min = new Vector3(sourceNode.box.boxMinX, sourceNode.box.boxMinY, sourceNode.box.boxMinZ),
-					Max = new Vector3(sourceNode.box.boxMaxX, sourceNode.box.boxMaxY, sourceNode.box.boxMaxZ),
-					VisibleLeafsCount = sourceNode.VisibleLeaves.Count,
-					VisibleLeafsOffset = visibleLeavesLookup.Count,
-					VisibleMeshesOffset = visibleMeshesLookup.Count,
-				};
-				visibleLeavesLookup.AddRange(sourceNode.VisibleLeaves);
-
-				Dictionary<VertexBufferSubmesh,int> uniqueSubmeshes = new Dictionary<VertexBufferSubmesh, int>();
-				for (int f = sourceNode.firstleafface; f < sourceNode.firstleafface + sourceNode.numleaffaces;++f)
-				{
-					var faceIndex = leafFaces[f];
-					var texIndex = this.texInfo[this.faces[faceIndex].texinfo].texdata;
-					int lightmapIndex = 0;//this.faces[faceIndex].lightmap;
-					int meshIndex;
-					VertexBufferSubmesh subMesh = meshBuilder.EnsureSubMesh(new BspSubmeshKey(faceIndex, new BspMaterialKey(texIndex, lightmapIndex)), out meshIndex);
-					if (!uniqueSubmeshes.ContainsKey(subMesh))
-					{
-						visibleMeshesLookup.Add(meshIndex);
-						uniqueSubmeshes[subMesh] = meshIndex;
-					}
-					this.BuildFace(ref this.faces[index], subMesh, streamMesh);
+					Trace.WriteLine(string.Format("Face {0} is not references from leaves", index));
 				}
-
-					vsdLeaves[index].VisibleMeshesCount = visibleMeshesLookup.Count - vsdLeaves[index].VisibleMeshesOffset;
 			}
 
-			this.Scene.VsdProvider = new BspVsdProvider(vsdNodes, vsdLeaves, visibleLeavesLookup.ToArray(), visibleMeshesLookup.ToArray()) { Level = streamMesh };
+			List<int> visibleClustersLookup = new List<int>();
+			List<int> visibleMeshesLookup = new List<int>();
+			var vsdLeaves = new BspVsdTreeLeaf[leaves.Length];
+			var vsdClusters = new BspVsdTreeCluster[clusters.Length];
+			//int nodesMeshId;
+			//var nodesMesh = meshBuilder.EnsureSubMesh(new BspSubmeshKey(-1, new BspMaterialKey(0, 0)), out nodesMeshId);
+			//for (int index = 0; index < this.nodes.Length; index++)
+			//{
+			//    for (int j = nodes[index].face_id; j < nodes[index].face_id + nodes[index].face_num;++j )
+			//        this.BuildFace(ref this.faces[j], nodesMesh, streamMesh);
+			//}
+			for (int index = 0; index < this.leaves.Length; index++)
+			{
+				var sourceLeaf = this.leaves[index];
+				vsdLeaves[index] = new BspVsdTreeLeaf()
+					{
+						Min = new Vector3(sourceLeaf.box.boxMinX, sourceLeaf.box.boxMinY, sourceLeaf.box.boxMinZ),
+						Max = new Vector3(sourceLeaf.box.boxMaxX, sourceLeaf.box.boxMaxY, sourceLeaf.box.boxMaxZ),
+						Cluster = sourceLeaf.cluster,
+					};
+			}
+			Dictionary<int, bool> uniqueSubmeshes = new Dictionary<int, bool>();
+			for (int index = 0; index < this.clusters.Length; index++)
+			{
+				var sourceCluster = this.clusters[index];
+				vsdClusters[index] = new BspVsdTreeCluster()
+				{
+					VisibleClustersCount = sourceCluster.visiblity.Count,
+					VisibleClustersOffset = visibleClustersLookup.Count,
+					VisibleMeshesOffset = visibleMeshesLookup.Count,
+				};
+				
+				visibleClustersLookup.AddRange(sourceCluster.visiblity);
+
+				Dictionary<int, bool> uniqueFaces = new Dictionary<int, bool>();
+
+				foreach (var leafIndex in sourceCluster.leaves)
+				{
+					var sourceLeaf = this.leaves[leafIndex];
+					var faceBegin = sourceLeaf.firstleafface;
+					var faceEnd = faceBegin + sourceLeaf.numleaffaces;
+					for (int f = faceBegin; f < faceEnd; ++f)
+					{
+						uniqueFaces[leafFaces[f]] = true;
+					}
+				}
+				foreach (var uniqueFace in uniqueFaces)
+				{
+					int texIndex = 0;// this.texInfo[this.faces[faceIndex].texinfo].texdata;
+					int lightmapIndex = 0;//this.faces[faceIndex].lightmap;
+
+					int meshIndex;
+					VertexBufferSubmesh subMesh = meshBuilder.EnsureSubMesh(new BspSubmeshKey(index, new BspMaterialKey(texIndex, lightmapIndex)), out meshIndex);
+					if (!uniqueSubmeshes.ContainsKey(meshIndex))
+					{
+						visibleMeshesLookup.Add(meshIndex);
+						uniqueSubmeshes[meshIndex] = true;
+					}
+					this.BuildFace(ref this.faces[uniqueFace.Key], subMesh, streamMesh);
+					usedFaces[uniqueFace.Key] = true;
+				}
+				vsdClusters[index].VisibleMeshesCount = visibleMeshesLookup.Count - vsdClusters[index].VisibleMeshesOffset;
+			}
+
+			for (int index = 0; index < usedFaces.Length; index++)
+			{
+				if (!usedFaces[index])
+				{
+					for (int i = 0; i < this.models.Length; i++)
+					{
+						if (this.models[i].firstface <= index && this.models[i].firstface+this.models[i].numfaces > index)
+						{
+							Trace.WriteLine(string.Format("Lost face {0} belongs to model {1}", index, i));
+							break;
+						}
+					}
+					for (int i = 0; i < this.nodes.Length; i++)
+					{
+						if (this.nodes[i].face_id <= index && this.nodes[i].face_id + this.nodes[i].face_num > index)
+						{
+							Trace.WriteLine(string.Format("Lost face {0} belongs to node {1}", index, i));
+							break;
+						}
+					}
+					for (int i = 0; i < this.leaves.Length; i++)
+					{
+						var begin = this.leaves[i].firstleafface;
+						var end = begin+this.leaves[i].numleaffaces;
+						while (begin<end)
+						{
+							if (leafFaces[begin] == index)
+							{
+								Trace.WriteLine(string.Format("Lost face {0} belongs to leaf {1}", index, i));
+								break;
+							}
+							++begin;
+						}
+					}
+				}
+			}
+
+			this.Scene.VsdProvider = new BspVsdProvider()
+				{
+					VisibleClustersLookupTable = visibleClustersLookup.ToArray(),
+					VisibleMeshesLookupTable = visibleMeshesLookup.ToArray(),
+					Clusters = vsdClusters,
+					Leaves = vsdLeaves,
+					Models = (from model in models  select new BspVsdTreeModel{RootNode = model.headnode}).ToArray(),
+					Level = streamMesh, 
+					Nodes = vsdNodes
+				};
 
 			this.Scene.Geometries.Add(streamMesh);
+
+			int sumFaces = streamMesh.Submeshes.Sum(submesh => submesh.Count / 3);
+			int sumFaces2 = this.faces.Sum(sourceFace => sourceFace.numedges - 2);
 		}
 
 		private void CollectLeafsInCluster()
@@ -140,7 +236,7 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 			for (int i = 0; i < leaves.Length; ++i)
 			{
 				if (leaves[i].cluster >= 0)
-					clusters[leaves[i].cluster].lists.Add(i);
+					clusters[leaves[i].cluster].leaves.Add(i);
 			}
 		}
 
@@ -181,7 +277,7 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 				clusters[i].offset = Stream.ReadInt32();
 				clusters[i].phs = Stream.ReadInt32();
 				clusters[i].visiblity = new List<int>();
-				clusters[i].lists = new List<int>();
+				clusters[i].leaves = new List<int>();
 			}
 			for (int i = 0; i < num_clusters; ++i)
 			{
@@ -192,7 +288,7 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 					byte pvs_buffer = (byte)Stream.ReadByte();
 					if (pvs_buffer == 0)
 					{
-						c += 8 * Stream.ReadByte();
+						c += 8 * (byte)Stream.ReadByte();
 					}
 					else
 					{
@@ -200,6 +296,8 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 						{
 							if (0 != (pvs_buffer & bit))
 							{
+								if (c < 0)
+									throw new BspFormatException(string.Format("Cluster index is {0}", c));
 								clusters[i].visiblity.Add(c);
 							}
 						}
@@ -454,6 +552,38 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 			this.AssertStreamPossition(this.header.Surfedges.size + this.header.Surfedges.offset);
 		}
 
+		protected override void ReadModels()
+		{
+			this.SeekEntryAt(this.header.Models.offset);
+			int size = this.EvalNumItems(this.header.Models.size, 12*4);
+			this.models = new SourceModel[size];
+			for (int i = 0; i < size; ++i)
+			{
+				ReadModel(ref this.models[i]);
+			}
+			this.AssertStreamPossition(this.header.Models.size + this.header.Models.offset);
+		}
+
+		private void ReadModel(ref SourceModel sourceModel)
+		{
+			float x, y, z;
+			x = Stream.ReadSingle();
+			y = Stream.ReadSingle();
+			z = Stream.ReadSingle();
+			sourceModel.mins = new Vector3(x,y,z);
+			x = Stream.ReadSingle();
+			y = Stream.ReadSingle();
+			z = Stream.ReadSingle();
+			sourceModel.maxs = new Vector3(x, y, z);
+			x = Stream.ReadSingle();
+			y = Stream.ReadSingle();
+			z = Stream.ReadSingle();
+			sourceModel.origin = new Vector3(x, y, z);
+			sourceModel.headnode = Stream.ReadInt32();
+			sourceModel.firstface = Stream.ReadInt32();
+			sourceModel.numfaces = Stream.ReadInt32();
+		}
+
 		private void BuildFace(ref SourceFace face, VertexBufferSubmesh submesh, VertexBufferMesh streamMesh)
 		{
 			Vertex[] faceVertices = new Vertex[face.numedges];
@@ -587,21 +717,21 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 		//        }
 		//    }
 		//}
-		private void BuildVisibilityList()
-		{
-			for (int i = 0; i < leaves.Length; ++i)
-			{
-				Dictionary<int, bool> map = new Dictionary<int, bool>();
-				if (leaves[i].cluster >= 0)
-					foreach (var c in clusters[leaves[i].cluster].visiblity)
-						foreach (var l in clusters[c].lists)
-							map[l] = true;
-				leaves[i].VisibleLeaves = new List<int>();
-				foreach (var j in map.Keys)
-					if (i != j)
-						leaves[i].VisibleLeaves.Add(j);
-			}
-		}
+		//private void BuildVisibilityList()
+		//{
+		//    for (int i = 0; i < leaves.Length; ++i)
+		//    {
+		//        Dictionary<int, bool> map = new Dictionary<int, bool>();
+		//        if (leaves[i].cluster >= 0)
+		//            foreach (var c in clusters[leaves[i].cluster].visiblity)
+		//                foreach (var l in clusters[c].lists)
+		//                    map[l] = true;
+		//        leaves[i].VisibleLeaves = new List<int>();
+		//        foreach (var j in map.Keys)
+		//            if (i != j)
+		//                leaves[i].VisibleLeaves.Add(j);
+		//    }
+		//}
 		private void BuildVertex(Vector3 vector3, Vector3 vector4, SourceFace f, ref SourceTexInfo surf, out Vertex res)
 		{
 			res = new Vertex

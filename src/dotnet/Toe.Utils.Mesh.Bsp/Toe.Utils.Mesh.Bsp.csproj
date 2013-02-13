@@ -57,6 +57,7 @@
     <Compile Include="BspAutofacModule.cs" />
     <Compile Include="BaseBspReader.cs" />
     <Compile Include="BspFormatException.cs" />
+    <Compile Include="HL2\SourceModel.cs" />
     <Compile Include="Utils\BspMaterialKey.cs" />
     <Compile Include="BspReader.cs" />
     <Compile Include="BspSceneFileFormat.cs" />

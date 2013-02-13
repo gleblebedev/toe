@@ -65,6 +65,7 @@ namespace Toe.Utils.Mesh.Bsp
 			this.scene = new Scene();
 
 			ReadHeader();
+			this.ReadModels();
 			ReadVertices();
 			ReadEdges();
 			ReadPlanes();
@@ -143,5 +144,10 @@ namespace Toe.Utils.Mesh.Bsp
 		protected abstract void ReadHeader();
 
 		protected abstract void ReadVertices();
+
+		protected virtual void ReadModels()
+		{
+			
+		}
 	}
 }
