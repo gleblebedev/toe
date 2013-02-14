@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 
@@ -87,7 +88,27 @@ namespace Toe.Editors.GenericScene
 		private void RenderNodeAt(ref Matrix4 modelMatrix, INode node)
 		{
 			graphicsContext.SetModel(ref modelMatrix);
-			this.base3DEditor.RenderMesh(node.Mesh);
+
+			if (node.Mesh != null)
+				this.base3DEditor.RenderMesh(node.Mesh);
+
+			Vector3 v;
+			Vector3 center,x,y,z;
+			v = new Vector3(0,0,0);
+			Vector3.Transform(ref v, ref modelMatrix, out center);
+			float size = 120;
+			v = new Vector3(size, 0, 0);
+			Vector3.Transform(ref v, ref modelMatrix, out x);
+			v = new Vector3(0, size, 0);
+			Vector3.Transform(ref v, ref modelMatrix, out y);
+			v = new Vector3(0, 0, size);
+			Vector3.Transform(ref v, ref modelMatrix, out z);
+			Color c = Color.FromArgb(255, 255, 0, 0);
+			graphicsContext.RenderDebugLine(ref center, ref x, ref c);
+			c = Color.FromArgb(255, 0, 255, 0);
+			graphicsContext.RenderDebugLine(ref center, ref y, ref c);
+			c = Color.FromArgb(255, 0, 0, 255);
+			graphicsContext.RenderDebugLine(ref center, ref z, ref c);
 		}
 
 		private void InitializeComponent()

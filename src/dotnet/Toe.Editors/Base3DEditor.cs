@@ -57,6 +57,12 @@ namespace Toe.Editors
 		private ToolStripMenuItem zUpToolStripMenuItem;
 
 		private ToeGraphicsContext graphicsContext;
+		private ToolStripDropDownButton renderWireButton;
+		private ToolStripMenuItem renderWireframeMenuItem;
+		private ToolStripMenuItem hideWireframeMenuItem;
+		private ToolStripDropDownButton renderNormalsButton;
+		private ToolStripMenuItem renderNormalsMenuItem;
+		private ToolStripMenuItem hideNormalsMenuItem;
 
 		private Timer keysAnimationTimer;
 		#endregion
@@ -310,69 +316,80 @@ namespace Toe.Editors
 
 		private void InitializeComponent()
 		{
-			this.toolStrip1 = new ToolStrip();
-			this.coordinateSystemButton = new ToolStripDropDownButton();
-			this.zUpToolStripMenuItem = new ToolStripMenuItem();
-			this.yUpToolStripMenuItem = new ToolStripMenuItem();
-			this.lightingButton = new ToolStripButton();
-			this.glControl = new GLControl();
-			this.errPanel = new StackPanel();
-			this.errButton = new Button();
-			this.errMessage = new Label();
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Base3DEditor));
+			this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+			this.coordinateSystemButton = new System.Windows.Forms.ToolStripDropDownButton();
+			this.zUpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.yUpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.lightingButton = new System.Windows.Forms.ToolStripButton();
+			this.glControl = new OpenTK.GLControl();
+			this.errPanel = new Toe.Editors.Interfaces.Panels.StackPanel();
+			this.errButton = new System.Windows.Forms.Button();
+			this.errMessage = new System.Windows.Forms.Label();
+			this.renderWireButton = new System.Windows.Forms.ToolStripDropDownButton();
+			this.renderNormalsButton = new System.Windows.Forms.ToolStripDropDownButton();
+			this.renderWireframeMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.hideWireframeMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.renderNormalsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.hideNormalsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStrip1.SuspendLayout();
 			this.errPanel.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// toolStrip1
 			// 
-			this.toolStrip1.Items.AddRange(new ToolStripItem[] { this.coordinateSystemButton, this.lightingButton });
-			this.toolStrip1.Location = new Point(0, 0);
+			this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.coordinateSystemButton,
+            this.lightingButton,
+            this.renderWireButton,
+            this.renderNormalsButton});
+			this.toolStrip1.Location = new System.Drawing.Point(0, 0);
 			this.toolStrip1.Name = "toolStrip1";
-			this.toolStrip1.Size = new Size(150, 25);
+			this.toolStrip1.Size = new System.Drawing.Size(550, 25);
 			this.toolStrip1.TabIndex = 0;
 			this.toolStrip1.Text = "toolStrip1";
 			// 
 			// coordinateSystemButton
 			// 
-			this.coordinateSystemButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
-			this.coordinateSystemButton.DropDownItems.AddRange(
-				new ToolStripItem[] { this.zUpToolStripMenuItem, this.yUpToolStripMenuItem });
-			this.coordinateSystemButton.Image = Toe.Editors.Properties.Resources.zup;
-			this.coordinateSystemButton.ImageTransparentColor = Color.Magenta;
+			this.coordinateSystemButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.coordinateSystemButton.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.zUpToolStripMenuItem,
+            this.yUpToolStripMenuItem});
+			this.coordinateSystemButton.Image = global::Toe.Editors.Properties.Resources.zup;
+			this.coordinateSystemButton.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.coordinateSystemButton.Name = "coordinateSystemButton";
-			this.coordinateSystemButton.Size = new Size(29, 22);
+			this.coordinateSystemButton.Size = new System.Drawing.Size(29, 22);
 			this.coordinateSystemButton.Text = "toolStripDropDownButton1";
 			// 
 			// zUpToolStripMenuItem
 			// 
-			this.zUpToolStripMenuItem.Image = Toe.Editors.Properties.Resources.zup;
+			this.zUpToolStripMenuItem.Image = global::Toe.Editors.Properties.Resources.zup;
 			this.zUpToolStripMenuItem.Name = "zUpToolStripMenuItem";
-			this.zUpToolStripMenuItem.Size = new Size(152, 22);
+			this.zUpToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.zUpToolStripMenuItem.Text = "Z-Up";
 			// 
 			// yUpToolStripMenuItem
 			// 
-			this.yUpToolStripMenuItem.Image = Toe.Editors.Properties.Resources.yup;
+			this.yUpToolStripMenuItem.Image = global::Toe.Editors.Properties.Resources.yup;
 			this.yUpToolStripMenuItem.Name = "yUpToolStripMenuItem";
-			this.yUpToolStripMenuItem.Size = new Size(152, 22);
+			this.yUpToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.yUpToolStripMenuItem.Text = "Y-Up";
 			// 
 			// lightingButton
 			// 
-			this.lightingButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
-			this.lightingButton.ImageTransparentColor = Color.Magenta;
+			this.lightingButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.lightingButton.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.lightingButton.Name = "lightingButton";
-			this.lightingButton.Size = new Size(23, 22);
+			this.lightingButton.Size = new System.Drawing.Size(23, 22);
 			this.lightingButton.Text = "lighingButton";
-			this.lightingButton.Click += this.ToggleLightingClick;
 			// 
 			// glControl
 			// 
-			this.glControl.BackColor = Color.Black;
-			this.glControl.Dock = DockStyle.Fill;
-			this.glControl.Location = new Point(0, 25);
+			this.glControl.BackColor = System.Drawing.Color.Black;
+			this.glControl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.glControl.Location = new System.Drawing.Point(0, 25);
 			this.glControl.Name = "glControl";
-			this.glControl.Size = new Size(150, 125);
+			this.glControl.Size = new System.Drawing.Size(550, 425);
 			this.glControl.TabIndex = 1;
 			this.glControl.VSync = false;
 			// 
@@ -381,31 +398,82 @@ namespace Toe.Editors
 			this.errPanel.AutoScroll = true;
 			this.errPanel.Controls.Add(this.errButton);
 			this.errPanel.Controls.Add(this.errMessage);
-			this.errPanel.Dock = DockStyle.Fill;
-			this.errPanel.Location = new Point(0, 25);
+			this.errPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.errPanel.Location = new System.Drawing.Point(0, 25);
 			this.errPanel.Name = "errPanel";
-			this.errPanel.Size = new Size(150, 125);
+			this.errPanel.Size = new System.Drawing.Size(550, 425);
 			this.errPanel.TabIndex = 2;
 			this.errPanel.Visible = false;
 			// 
 			// errButton
 			// 
-			this.errButton.Location = new Point(3, 3);
+			this.errButton.Location = new System.Drawing.Point(3, 3);
 			this.errButton.Name = "errButton";
-			this.errButton.Size = new Size(150, 23);
+			this.errButton.Size = new System.Drawing.Size(550, 23);
 			this.errButton.TabIndex = 1;
 			this.errButton.Text = "Retry";
 			this.errButton.UseVisualStyleBackColor = true;
-			this.errButton.Click += this.errButton_Click;
 			// 
 			// errMessage
 			// 
 			this.errMessage.AutoSize = true;
-			this.errMessage.Location = new Point(3, 29);
+			this.errMessage.Location = new System.Drawing.Point(3, 29);
 			this.errMessage.Name = "errMessage";
-			this.errMessage.Size = new Size(150, 13);
+			this.errMessage.Size = new System.Drawing.Size(550, 13);
 			this.errMessage.TabIndex = 0;
 			this.errMessage.Text = "Render error";
+			// 
+			// renderWireButton
+			// 
+			this.renderWireButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.renderWireButton.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.renderWireframeMenuItem,
+            this.hideWireframeMenuItem});
+			this.renderWireButton.Image = ((System.Drawing.Image)(resources.GetObject("renderWireButton.Image")));
+			this.renderWireButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.renderWireButton.Name = "renderWireButton";
+			this.renderWireButton.Size = new System.Drawing.Size(29, 22);
+			this.renderWireButton.Text = "toolStripDropDownButton1";
+			// 
+			// renderNormalsButton
+			// 
+			this.renderNormalsButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.renderNormalsButton.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.renderNormalsMenuItem,
+            this.hideNormalsMenuItem});
+			this.renderNormalsButton.Image = ((System.Drawing.Image)(resources.GetObject("renderNormalsButton.Image")));
+			this.renderNormalsButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.renderNormalsButton.Name = "renderNormalsButton";
+			this.renderNormalsButton.Size = new System.Drawing.Size(29, 22);
+			this.renderNormalsButton.Text = "toolStripDropDownButton2";
+			// 
+			// renderWireframeMenuItem
+			// 
+			this.renderWireframeMenuItem.Name = "renderWireframeMenuItem";
+			this.renderWireframeMenuItem.Size = new System.Drawing.Size(169, 22);
+			this.renderWireframeMenuItem.Text = "Render Wireframe";
+			this.renderWireframeMenuItem.Click += new System.EventHandler(this.SelectWireframeOn);
+			// 
+			// hideWireframeMenuItem
+			// 
+			this.hideWireframeMenuItem.Name = "hideWireframeMenuItem";
+			this.hideWireframeMenuItem.Size = new System.Drawing.Size(169, 22);
+			this.hideWireframeMenuItem.Text = "Hide Wireframe";
+			this.hideWireframeMenuItem.Click += new System.EventHandler(this.SelectWireframeOff);
+			// 
+			// renderNormalsMenuItem
+			// 
+			this.renderNormalsMenuItem.Name = "renderNormalsMenuItem";
+			this.renderNormalsMenuItem.Size = new System.Drawing.Size(157, 22);
+			this.renderNormalsMenuItem.Text = "Render normals";
+			this.renderNormalsMenuItem.Click += new System.EventHandler(this.SelectNormalsOn);
+			// 
+			// hideNormalsMenuItem
+			// 
+			this.hideNormalsMenuItem.Name = "hideNormalsMenuItem";
+			this.hideNormalsMenuItem.Size = new System.Drawing.Size(157, 22);
+			this.hideNormalsMenuItem.Text = "Hide normals";
+			this.hideNormalsMenuItem.Click += new System.EventHandler(this.SelectNormalsOff);
 			// 
 			// Base3DEditor
 			// 
@@ -413,12 +481,14 @@ namespace Toe.Editors
 			this.Controls.Add(this.glControl);
 			this.Controls.Add(this.toolStrip1);
 			this.Name = "Base3DEditor";
+			this.Size = new System.Drawing.Size(550, 450);
 			this.toolStrip1.ResumeLayout(false);
 			this.toolStrip1.PerformLayout();
 			this.errPanel.ResumeLayout(false);
 			this.errPanel.PerformLayout();
 			this.ResumeLayout(false);
 			this.PerformLayout();
+
 		}
 
 		private void OnSceneMouseEnter(object sender, EventArgs e)
@@ -455,6 +525,38 @@ namespace Toe.Editors
 			}
 		}
 
+		protected void SelectWireframeOn(object sender, EventArgs e)
+		{
+			if (this.options.Options.Wireframe != true)
+			{
+				this.options.Options.Wireframe = true;
+				//TODO: update icon
+			}
+		}
+		protected void SelectWireframeOff(object sender, EventArgs e)
+		{
+			if (this.options.Options.Wireframe != false)
+			{
+				this.options.Options.Wireframe = false;
+				//TODO: update icon
+			}
+		}
+		protected void SelectNormalsOn(object sender, EventArgs e)
+		{
+			if (this.options.Options.Normals != true)
+			{
+				this.options.Options.Normals = true;
+				//TODO: update icon
+			}
+		}
+		protected void SelectNormalsOff(object sender, EventArgs e)
+		{
+			if (this.options.Options.Normals != false)
+			{
+				this.options.Options.Normals = false;
+				//TODO: update icon
+			}
+		}
 		private void SelectYUp(object sender, EventArgs e)
 		{
 			if (this.Camera.CoordinateSystem != CoordinateSystem.YUp)
