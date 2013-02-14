@@ -98,10 +98,10 @@ namespace Toe.Utils.Mesh.Bsp
 			foreach (dynamic enitity in enitities)
 			{
 				var origin = enitity.origin as Vector3?;
-				var node = new Node(){Position = origin.Value};
-				scene.Nodes.Add(node);
 				if (origin.HasValue)
 				{
+					var node = new Node() { Position = origin.Value };
+					scene.Nodes.Add(node);
 					var model = enitity.model as string;
 					if (!string.IsNullOrEmpty(model))
 					{

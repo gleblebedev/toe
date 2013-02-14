@@ -629,6 +629,7 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 			Vector2 minUV0 = new Vector2(float.MaxValue, float.MaxValue);
 			Vector2 minUV1 = new Vector2(float.MaxValue, float.MaxValue);
 			Vector2 maxUV1 = new Vector2(float.MinValue, float.MinValue);
+			int nextShouldBe = -1;
 			for (int index = 0; index < faceVertices.Length; index++)
 			{
 				var listOfEdgesIndex = face.firstedge + index;
@@ -667,7 +668,9 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 					throw new BspFormatException(
 						string.Format("Vertex index {0} is out of range [0..{1}]", edgesvertex1, this.vertices.Length - 1));
 				}
-
+				if (nextShouldBe >= 0 && nextShouldBe != edgesvertex0)
+					throw new BspFormatException(string.Format("Wrong edge order"));
+				nextShouldBe = edgesvertex1;
 				Vertex vertex;
 				this.BuildVertex(
 					this.vertices[(short)edgesvertex0],
