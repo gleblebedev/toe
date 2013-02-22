@@ -162,25 +162,43 @@ int main()
     IwGraphicsInit();
 	IwAnimInit();
 
-	LogFileOperations();
+	//LogFileOperations();
 	
     // Set the background colour to (opaque) blue
     IwGxSetColClear(0, 0, 0, 0xff);
 
-	CIwResGroup* g = IwGetResManager()->LoadGroup("male_lod0.group");
-	CIwResList* texures = g->GetListNamed("CIwAnimSkin");
-	CIwAnimSkin* t = (CIwAnimSkin*)texures->m_Resources[0];
-	CIwModel* head = (CIwModel*)g->GetResNamed("male_head_0_lod0","CIwModel");
-	CIwModel* torso = (CIwModel*)g->GetResNamed("male_torse_jacket0_lod0","CIwModel");
-	CIwModel* legs = (CIwModel*)g->GetResNamed("male_legs_trousers0_lod0","CIwModel");
-	CIwAnimSkin* headSkin = (CIwAnimSkin*)g->GetResNamed("male_head_0_lod0","CIwAnimSkin");
-	CIwAnimSkin* torsoSkin = (CIwAnimSkin*)g->GetResNamed("male_torse_jacket0_lod0","CIwAnimSkin");
-	CIwAnimSkin* legsSkin = (CIwAnimSkin*)g->GetResNamed("male_legs_trousers0_lod0","CIwAnimSkin");
+	//CIwResGroup* g = IwGetResManager()->LoadGroup("male_lod0.group");
+	//CIwResList* texures = g->GetListNamed("CIwAnimSkin");
+	//CIwAnimSkin* t = (CIwAnimSkin*)texures->m_Resources[0];
+	//CIwModel* head = (CIwModel*)g->GetResNamed("male_head_0_lod0","CIwModel");
+	//CIwModel* torso = (CIwModel*)g->GetResNamed("male_torse_jacket0_lod0","CIwModel");
+	//CIwModel* legs = (CIwModel*)g->GetResNamed("male_legs_trousers0_lod0","CIwModel");
+	//CIwAnimSkin* headSkin = (CIwAnimSkin*)g->GetResNamed("male_head_0_lod0","CIwAnimSkin");
+	//CIwAnimSkin* torsoSkin = (CIwAnimSkin*)g->GetResNamed("male_torse_jacket0_lod0","CIwAnimSkin");
+	//CIwAnimSkin* legsSkin = (CIwAnimSkin*)g->GetResNamed("male_legs_trousers0_lod0","CIwAnimSkin");
 
-	CIwAnimSkel* skel = (CIwAnimSkel*)g->GetResNamed("male_skel_lod0","CIwAnimSkel");
-	CIwAnimPlayer* player = new CIwAnimPlayer;
-    player->SetSkel(skel);
+	//CIwAnimSkel* skel = (CIwAnimSkel*)g->GetResNamed("male_skel_lod0","CIwAnimSkel");
+	//CIwAnimPlayer* player = new CIwAnimPlayer;
+ //   player->SetSkel(skel);
 	CIwMaterial* mat  = new CIwMaterial();
+	mat->SetCullMode(CIwMaterial::CULL_FRONT);
+	mat->SetEffectPreset(CIwMaterial::EFFECT_NORMAL_MAPPING);
+	IwGxLightingOn();
+
+    CIwFVec3 dd1(1.0f, 0.0f, 0.0f);
+	IwGxSetLightType(0, IW_GX_LIGHT_DIFFUSE);
+    IwGxSetLightCol(0, 0x80, 0x80, 0x80);
+    IwGxSetLightDirn(0, &dd1);
+
+    CIwFVec3 dd2(0.0f, 1.0f, 0.0f);
+	IwGxSetLightType(1, IW_GX_LIGHT_DIFFUSE);
+    IwGxSetLightCol(1, 0x80, 0x80, 0x80);
+    IwGxSetLightDirn(1, &dd2);
+
+    IwGxLightingAmbient(false);
+    IwGxLightingDiffuse(true);
+    IwGxLightingSpecular(true);
+	
     // Loop forever, until the user or the OS performs some action to quit the app
     while (!s3eDeviceCheckQuitRequest())
     {
@@ -215,20 +233,23 @@ int main()
 		fmodel.SetIdentity();
 		IwGxSetModelMatrix(&fmodel);
 
-		IwAnimSetSkelContext(player->GetSkel());
+	/*	IwAnimSetSkelContext(player->GetSkel());
 		IwAnimSetSkinContext(headSkin);
 		head->Render();
 		IwAnimSetSkinContext(torsoSkin);
 		torso->Render();
 		IwAnimSetSkinContext(legsSkin);
-		legs->Render();
+		legs->Render();*/
 
 	    IwAnimSetSkelContext(NULL);
 	    IwAnimSetSkinContext(NULL);
 
-			IwGxSetMaterial(mat);
+		IwGxSetMaterial(mat);
 		static CIwFVec3 verts[6] = {CIwFVec3(0,0,0),CIwFVec3(1000,0,0),CIwFVec3(0,0,0),CIwFVec3(0,1000,0),CIwFVec3(0,0,0),CIwFVec3(0,0,1000)};
 		IwGxSetVertStream(verts,6);
+
+		static CIwFVec3 norms[6] = {CIwFVec3(0,0,1),CIwFVec3(0,0,1),CIwFVec3(0,0,1),CIwFVec3(0,0,1),CIwFVec3(0,0,1),CIwFVec3(0,0,1)};
+		IwGxSetNormStream(norms,6);
 
 		static CIwColour cols[6];
 		cols[0].Set(255,0,0,255);
@@ -241,6 +262,9 @@ int main()
 		static uint16 indices [6] = {0,1,2,3,4,5};
 		IwGxDrawPrims(IW_GX_LINE_LIST, indices,6);
 
+		static uint16 indices2 [3] = {0,2,3};
+		IwGxDrawPrims(IW_GX_TRI_LIST, indices2,3);
+
         // Standard EGL-style flush of drawing to the surface
         IwGxFlush();
 
@@ -250,9 +274,9 @@ int main()
         // Sleep for 0ms to allow the OS to process events etc.
         s3eDeviceYield(0);
     }
-	delete mat;
+	/*delete mat;
 	delete player;
-	IwGetResManager()->DestroyGroup(g);
+	IwGetResManager()->DestroyGroup(g);*/
 
 	IwAnimTerminate();
     IwGraphicsTerminate();

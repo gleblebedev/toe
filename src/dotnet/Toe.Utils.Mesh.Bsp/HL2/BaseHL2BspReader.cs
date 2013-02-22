@@ -869,6 +869,7 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 			this.Scene.Images.Add(texture);
 			var effect = new SceneEffect
 			{
+				CullMode = CullMode.None,
 			//Diffuse = new ImageColorSource { Image = texture }
 			};
 			this.Scene.Effects.Add(effect);

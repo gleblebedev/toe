@@ -36,7 +36,7 @@ namespace Toe.Editors.Marmalade
 			this.Camera.Ortho = false;
 			this.Camera.ZNear = 16.0f;
 			this.Camera.ZFar = 2048.0f;
-			base.RenderScene += this.RenderScene;
+			base.RenderScene += this.RenderMaterialScene;
 			box = BoxBuilder.BuildSoftEdgedBox(250);
 		}
 
@@ -44,7 +44,9 @@ namespace Toe.Editors.Marmalade
 
 		#region Methods
 
-		protected new void RenderScene(object sender, EventArgs args)
+		//private LightArgs light = LightArgs.Default;
+
+		protected void RenderMaterialScene(object sender, EventArgs args)
 		{
 			GL.ClearColor(0.2f, 0.2f, 0.4f, 1f);
 
@@ -59,24 +61,22 @@ namespace Toe.Editors.Marmalade
 				return;
 			}
 
-			GL.PushAttrib(AttribMask.AllAttribBits);
+			//GL.PushAttrib(AttribMask.AllAttribBits);
 
-			if (this.options.Options.Lighting)
-			{
-				GL.Enable(EnableCap.Lighting);
-				GL.Enable(EnableCap.Light0);
-				GL.Light(
-					LightName.Light0, LightParameter.Position, new[] { this.Camera.Pos.X, this.Camera.Pos.Y, this.Camera.Pos.Z, 1.0f });
-			}
-			else
-			{
-				GL.Disable(EnableCap.Lighting);
-			}
+			//if (this.options.Options.Lighting)
+			//{
+			//    light.Position = this.Camera.Pos;
+			//    graphicsContext.SetLight0(ref light);
+			//}
+			//else
+			//{
+			//    GL.Disable(EnableCap.Lighting);
+			//}
 			graphicsContext.SetMaterial(this.editor.Material);
-			graphicsContext.Render(box);
+			this.RenderMesh(box);
 			graphicsContext.SetMaterial(null);
 
-			GL.PopAttrib();
+			//GL.PopAttrib();
 		}
 
 		#endregion

@@ -311,9 +311,9 @@ namespace Toe.Marmalade.BinaryFiles.IwGraphics
 			var indices = parser.ConsumeUInt16Array((int)numItems);
 			for (int i = 0; i < indices.Length;)
 			{
-				UInt16 c = indices[i++];
-				UInt16 b = indices[i++];
 				UInt16 a = indices[i++];
+				UInt16 b = indices[i++];
+				UInt16 c = indices[i++];
 				streamSubmesh.Indices.Add(a);
 				streamSubmesh.Indices.Add(b);
 				streamSubmesh.Indices.Add(c);

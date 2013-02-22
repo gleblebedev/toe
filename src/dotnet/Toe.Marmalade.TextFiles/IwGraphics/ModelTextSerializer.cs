@@ -427,11 +427,11 @@ namespace Toe.Marmalade.TextFiles.IwGraphics
 					parser.Consume();
 					ParseQuad(parser,tmp);
 					submesh.Indices.Add(tmp[0]);
+					submesh.Indices.Add(tmp[2]);
 					submesh.Indices.Add(tmp[1]);
-					submesh.Indices.Add(tmp[2]);
 					submesh.Indices.Add(tmp[0]);
-					submesh.Indices.Add(tmp[2]);
 					submesh.Indices.Add(tmp[3]);
+					submesh.Indices.Add(tmp[2]);
 					continue;
 				}
 				parser.UnknownLexemError();
@@ -499,8 +499,8 @@ namespace Toe.Marmalade.TextFiles.IwGraphics
 					parser.Consume();
 					ParseTriangle(parser, tmp);
 					submesh.Indices.Add(tmp[0]);
-					submesh.Indices.Add(tmp[1]);
 					submesh.Indices.Add(tmp[2]);
+					submesh.Indices.Add(tmp[1]);
 					continue;
 				}
 				parser.UnknownLexemError();

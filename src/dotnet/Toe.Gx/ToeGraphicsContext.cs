@@ -15,6 +15,8 @@ using Toe.Utils;
 using Toe.Utils.Marmalade.IwGx;
 using Toe.Utils.Mesh;
 
+using CullMode = Toe.Utils.Mesh.CullMode;
+
 namespace Toe.Gx
 {
 	public class ToeGraphicsContext : IDisposable
@@ -287,6 +289,46 @@ namespace Toe.Gx
 			{
 				GL.UseProgram(0);
 			}
+			this.ApplyMaterialCommonFixedPipeline();
+		}
+
+		private void ApplyMaterialCommonFixedPipeline()
+		{
+			if (this.material != null)
+			{
+				switch (this.material.ShadeMode)
+				{
+					case ShadeMode.FLAT:
+						GL.ShadeModel(ShadingModel.Flat);
+						break;
+					case ShadeMode.GOURAUD:
+						GL.ShadeModel(ShadingModel.Smooth);
+						break;
+					default:
+						throw new ArgumentOutOfRangeException();
+				}
+				switch (this.material.CullMode)
+				{
+					case Utils.Marmalade.IwGx.CullMode.FRONT:
+						GL.Enable(EnableCap.CullFace);
+						GL.CullFace(CullFaceMode.Front);
+						break;
+					case Utils.Marmalade.IwGx.CullMode.BACK:
+						GL.Enable(EnableCap.CullFace);
+						GL.CullFace(CullFaceMode.Back);
+						break;
+					case Utils.Marmalade.IwGx.CullMode.NONE:
+						GL.Disable(EnableCap.CullFace);
+						break;
+					default:
+						throw new ArgumentOutOfRangeException();
+				}
+			}
+			else
+			{
+				GL.Disable(EnableCap.CullFace);
+				GL.ShadeModel(ShadingModel.Smooth);
+			}
 		}
 
 		public void SetModel(ref Matrix4 model)
@@ -539,9 +581,9 @@ namespace Toe.Gx
 			this.ApplyFiltering();
 			this.SetTexture(1, this.material.Texture1.Resource as Texture);
 			this.ApplyFiltering();
-			this.SetTexture(2, this.material.Texture1.Resource as Texture);
+			this.SetTexture(2, this.material.Texture2.Resource as Texture);
 			this.ApplyFiltering();
-			this.SetTexture(3, this.material.Texture1.Resource as Texture);
+			this.SetTexture(3, this.material.Texture3.Resource as Texture);
 			this.ApplyFiltering();
 			GL.ActiveTexture(TextureUnit.Texture0);
 		}
@@ -727,6 +769,20 @@ namespace Toe.Gx
 			if (src.Effect.Ambient != null)
 			{
 				dst.ColAmbient = src.Effect.Ambient.GetColor();
+			}
+			switch (src.Effect.CullMode)
+			{
+				case CullMode.Front:
+					dst.CullMode = Utils.Marmalade.IwGx.CullMode.FRONT;
+					break;
+				case CullMode.Back:
+					dst.CullMode = Utils.Marmalade.IwGx.CullMode.BACK;
+					break;
+				case CullMode.None:
+					dst.CullMode = Utils.Marmalade.IwGx.CullMode.NONE;
+					break;
+				default:
+					throw new ArgumentOutOfRangeException();
 			}
 			if (src.Effect.Diffuse != null)
 			{

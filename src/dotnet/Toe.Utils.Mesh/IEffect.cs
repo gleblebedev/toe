@@ -15,5 +15,7 @@ namespace Toe.Utils.Mesh
 		float Shininess { get; set; }
 		float Reflectivity { get; set; }
 		float Transparency { get; set; }
+
+		CullMode CullMode { get; set; }
 	}
 }

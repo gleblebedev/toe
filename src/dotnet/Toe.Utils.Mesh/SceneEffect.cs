@@ -2,8 +2,35 @@ using System.ComponentModel;
 
 namespace Toe.Utils.Mesh
 {
+	public enum CullMode
+	{
+		Front,
+		Back,
+		None,
+	}
 	public class SceneEffect:SceneItem, IEffect
 	{
+		protected static PropertyEventArgs CullModeEventArgs = Expr.PropertyEventArgs<SceneEffect>(x => x.CullMode);
+
+		private CullMode cullMode;
+
+		public CullMode CullMode
+		{
+			get
+			{
+				return this.cullMode;
+			}
+			set
+			{
+				if (this.cullMode != value)
+				{
+					this.RaisePropertyChanging(CullModeEventArgs.Changing);
+					this.cullMode = value;
+					this.RaisePropertyChanged(CullModeEventArgs.Changed);
+				}
+			}
+		}
+
 		protected static PropertyEventArgs DiffuseEventArgs = Expr.PropertyEventArgs<SceneEffect>(x => x.Diffuse);
 
 		private IColorSource diffuse;

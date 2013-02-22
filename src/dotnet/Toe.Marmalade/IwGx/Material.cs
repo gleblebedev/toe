@@ -351,7 +351,9 @@ namespace Toe.Marmalade.IwGx
 
 		protected static PropertyEventArgs CullModeEventArgs = Expr.PropertyEventArgs<Material>(x => x.CullMode);
 
-	
+		/// <summary>
+		/// Backface culling is a property of the material. For example, CULL_FRONT is equivalent to glCullFace(GL_FRONT).
+		/// </summary>
 		public CullMode CullMode
 		{
 			get
