@@ -2,18 +2,41 @@ namespace Toe.Utils.Mesh.Bsp.Utils
 {
 	public interface IMaterialProvider
 	{
+		#region Public Methods and Operators
+
 		IMaterial CreateMaterial(BspMaterialKey material);
+
+		#endregion
 	}
+
 	public struct BspMaterialKey
 	{
-		private readonly int material;
+		#region Constants and Fields
 
 		private readonly int lightmap;
+
+		private readonly int material;
+
+		#endregion
+
+		#region Constructors and Destructors
 
 		internal BspMaterialKey(int material, int lightmap)
 		{
 			this.material = material;
 			this.lightmap = lightmap;
+		}
+
+		#endregion
+
+		#region Public Properties
+
+		public int Lightmap
+		{
+			get
+			{
+				return this.lightmap;
+			}
 		}
 
 		public int Material
@@ -24,12 +47,18 @@ namespace Toe.Utils.Mesh.Bsp.Utils
 			}
 		}
 
-		public int Lightmap
+		#endregion
+
+		#region Public Methods and Operators
+
+		public static bool operator ==(BspMaterialKey left, BspMaterialKey right)
 		{
-			get
-			{
-				return this.lightmap;
-			}
+			return left.Equals(right);
+		}
+
+		public static bool operator !=(BspMaterialKey left, BspMaterialKey right)
+		{
+			return !left.Equals(right);
 		}
 
 		public bool Equals(BspMaterialKey other)
@@ -72,14 +101,6 @@ namespace Toe.Utils.Mesh.Bsp.Utils
 			}
 		}
 
-		public static bool operator ==(BspMaterialKey left, BspMaterialKey right)
-		{
-			return left.Equals(right);
-		}
-
-		public static bool operator !=(BspMaterialKey left, BspMaterialKey right)
-		{
-			return !left.Equals(right);
-		}
+		#endregion
 	}
 }

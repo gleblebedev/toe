@@ -2,15 +2,25 @@ namespace Toe.Utils.Mesh.Bsp.Utils
 {
 	internal struct BspSubmeshKey
 	{
+		#region Constants and Fields
+
 		private readonly int cluster;
 
 		private readonly BspMaterialKey material;
+
+		#endregion
+
+		#region Constructors and Destructors
 
 		internal BspSubmeshKey(int cluster, BspMaterialKey material)
 		{
 			this.cluster = cluster;
 			this.material = material;
 		}
+
+		#endregion
+
+		#region Public Properties
 
 		public int Cluster
 		{
@@ -26,6 +36,20 @@ namespace Toe.Utils.Mesh.Bsp.Utils
 			{
 				return this.material;
 			}
+		}
+
+		#endregion
+
+		#region Public Methods and Operators
+
+		public static bool operator ==(BspSubmeshKey left, BspSubmeshKey right)
+		{
+			return left.Equals(right);
+		}
+
+		public static bool operator !=(BspSubmeshKey left, BspSubmeshKey right)
+		{
+			return !left.Equals(right);
 		}
 
 		public bool Equals(BspSubmeshKey other)
@@ -68,14 +92,6 @@ namespace Toe.Utils.Mesh.Bsp.Utils
 			}
 		}
 
-		public static bool operator ==(BspSubmeshKey left, BspSubmeshKey right)
-		{
-			return left.Equals(right);
-		}
-
-		public static bool operator !=(BspSubmeshKey left, BspSubmeshKey right)
-		{
-			return !left.Equals(right);
-		}
+		#endregion
 	}
 }

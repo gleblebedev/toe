@@ -2,123 +2,109 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 {
 	public struct SourceFileHeader
 	{
-		public uint magic; // magic number ("VBSP")
+		#region Constants and Fields
 
-		public uint version;
+		public SourceFileEntry AreaPortals; //Portals between areas
 
-		public SourceFileEntry Entities; //Map entities
-
-		public SourceFileEntry Planes; //Plane array
-
-		public SourceFileEntry Texdata; //Index to texture names
-
-		public SourceFileEntry Vertexes; //Vertex array
-
-		public SourceFileEntry Visibility; //Compressed visibility bit arrays
-
-		public SourceFileEntry Nodes; //BSP tree nodes  
-
-		public SourceFileEntry Texinfo; //Face texture array
-
-		public SourceFileEntry Faces; //Face array
-
-		public SourceFileEntry Lighting; //Lightmap samples
-
-		public SourceFileEntry Occlusion; //Occlusion data(?)
-
-		public SourceFileEntry Leafs; //BSP tree leaf nodes
-
-		public SourceFileEntry Unused11; //
-
-		public SourceFileEntry Edges; //Edge array
-
-		public SourceFileEntry Surfedges; //Index of edges
-
-		public SourceFileEntry Models; //Brush models (geometry of brush entities)
-
-		public SourceFileEntry Worldlights; //Light entities
-
-		public SourceFileEntry LeafFaces; //Index to faces in each leaf
-
-		public SourceFileEntry LeafBrushes; //Index to brushes in each leaf
+		public SourceFileEntry Areas; //Area array
 
 		public SourceFileEntry Brushes; //Brush array
 
 		public SourceFileEntry Brushsides; //Brushside array
 
-		public SourceFileEntry Areas; //Area array
-
-		public SourceFileEntry AreaPortals; //Portals between areas
-
-		public SourceFileEntry Portals; //Polygons defining the boundary between adjacent leaves(?)
-
-		public SourceFileEntry Clusters; //Leaves that are enterable by the player
-
-		public SourceFileEntry PortalVerts; //Vertices of portal polygons
+		public SourceFileEntry ClipPortalVerts; //(?)
 
 		public SourceFileEntry Clusterportals; //Polygons defining the boundary between adjacent clusters(?)
 
-		public SourceFileEntry Dispinfo; //Displacement surface array
+		public SourceFileEntry Clusters; //Leaves that are enterable by the player
 
-		public SourceFileEntry OriginalFaces; //Brush faces array before BSP splitting
-
-		public SourceFileEntry Unused28; //
-
-		public SourceFileEntry PhysCollide; //Physics collision data(?)
-
-		public SourceFileEntry VertNormals; //Vertex normals(?)
-
-		public SourceFileEntry VertNormalIndices; //Vertex normal index array(?)
+		public SourceFileEntry Cubemaps; //Env_cubemap location array
 
 		public SourceFileEntry DispLightmapAlphas; //Displacement lightmap data(?)
 
+		public SourceFileEntry DispLightmapSamplePos; //Displacement lightmap data(?)
+
+		public SourceFileEntry DispTris; //Displacement surface triangles
+
 		public SourceFileEntry DispVerts; //Vertices of displacement surface meshes
 
-		public SourceFileEntry DispLightmapSamplePos; //Displacement lightmap data(?)
+		public SourceFileEntry Dispinfo; //Displacement surface array
+
+		public SourceFileEntry Edges; //Edge array
+
+		public SourceFileEntry Entities; //Map entities
+
+		public SourceFileEntry FaceMacroTextureInfo; //(?)
+
+		public SourceFileEntry Faces; //Face array
 
 		public SourceFileEntry GameLump; //Game-specific data lump
 
+		public SourceFileEntry LeafBrushes; //Index to brushes in each leaf
+
+		public SourceFileEntry LeafFaces; //Index to faces in each leaf
+
+		public SourceFileEntry LeafMinDistToWater; //(?)
+
 		public SourceFileEntry LeafWaterData; // (?)
 
-		public SourceFileEntry Primitives; //Non-polygonal primatives(?)
+		public SourceFileEntry LeaflightHDR1; //HDR related leaf lighting data(?)
 
-		public SourceFileEntry PrimVerts; // (?)
+		public SourceFileEntry LeaflightHDR2; //HDR related leaf lighting data(?)
 
-		public SourceFileEntry PrimIndices; //(?)
+		public SourceFileEntry Leafs; //BSP tree leaf nodes
+
+		public SourceFileEntry Lighting; //Lightmap samples
+
+		public SourceFileEntry LightingHDR; //HDR related lighting data(?)
+
+		public SourceFileEntry Models; //Brush models (geometry of brush entities)
+
+		public SourceFileEntry Nodes; //BSP tree nodes  
+
+		public SourceFileEntry Occlusion; //Occlusion data(?)
+
+		public SourceFileEntry OriginalFaces; //Brush faces array before BSP splitting
+
+		public SourceFileEntry Overlays; //Info_overlay array       
 
 		public SourceFileEntry Pakfile; //Embedded uncompressed-Zip format file
 
-		public SourceFileEntry ClipPortalVerts; //(?)
+		public SourceFileEntry PhysCollide; //Physics collision data(?)
 
-		public SourceFileEntry Cubemaps; //Env_cubemap location array
+		public SourceFileEntry PhysCollideSurface; //Physics collision surface data(?)
+
+		public SourceFileEntry Planes; //Plane array
+
+		public SourceFileEntry PortalVerts; //Vertices of portal polygons
+
+		public SourceFileEntry Portals; //Polygons defining the boundary between adjacent leaves(?)
+
+		public SourceFileEntry PrimIndices; //(?)
+
+		public SourceFileEntry PrimVerts; // (?)
+
+		public SourceFileEntry Primitives; //Non-polygonal primatives(?)
+
+		public SourceFileEntry Surfedges; //Index of edges
+
+		public SourceFileEntry Texdata; //Index to texture names
 
 		public SourceFileEntry TexdataStringData; //Texture name data
 
 		public SourceFileEntry TexdataStringTable; //Index array into texdata string data
 
-		public SourceFileEntry Overlays; //Info_overlay array       
+		public SourceFileEntry Texinfo; //Face texture array
 
-		public SourceFileEntry LeafMinDistToWater; //(?)
+		public SourceFileEntry Unused11; //
 
-		public SourceFileEntry FaceMacroTextureInfo; //(?)
-
-		public SourceFileEntry DispTris; //Displacement surface triangles
-
-		public SourceFileEntry PhysCollideSurface; //Physics collision surface data(?)
+		public SourceFileEntry Unused28; //
 
 		public SourceFileEntry Unused50; //
 
 		public SourceFileEntry Unused51; //
 
 		public SourceFileEntry Unused52; //
-
-		public SourceFileEntry LightingHDR; //HDR related lighting data(?)
-
-		public SourceFileEntry WorldlightsHDR; //HDR related worldlight data(?)
-
-		public SourceFileEntry LeaflightHDR1; //HDR related leaf lighting data(?)
-
-		public SourceFileEntry LeaflightHDR2; //HDR related leaf lighting data(?)
 
 		public SourceFileEntry Unused57;
 
@@ -134,6 +120,24 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 
 		public SourceFileEntry Unused63;
 
+		public SourceFileEntry VertNormalIndices; //Vertex normal index array(?)
+
+		public SourceFileEntry VertNormals; //Vertex normals(?)
+
+		public SourceFileEntry Vertexes; //Vertex array
+
+		public SourceFileEntry Visibility; //Compressed visibility bit arrays
+
+		public SourceFileEntry Worldlights; //Light entities
+
+		public SourceFileEntry WorldlightsHDR; //HDR related worldlight data(?)
+
+		public uint magic; // magic number ("VBSP")
+
 		public uint revision;
+
+		public uint version;
+
+		#endregion
 	}
 }

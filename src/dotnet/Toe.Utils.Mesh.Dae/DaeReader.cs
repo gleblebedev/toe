@@ -14,11 +14,11 @@ namespace Toe.Utils.Mesh.Dae
 	{
 		#region Constants and Fields
 
+		private string basePath;
+
 		private XElement collada;
 
 		private ColladaSchema schema;
-
-		private string basePath;
 
 		#endregion
 
@@ -67,6 +67,73 @@ namespace Toe.Utils.Mesh.Dae
 			dstMesh.IsBinormalStreamAvailable |= meshInputs.Binormal != null;
 		}
 
+		private void CopySkin(Scene scene, XElement instance, MeshSkinAndMaterials sam)
+		{
+			var bind = instance.Element(this.schema.bindMaterialName);
+			if (bind != null)
+			{
+				var technique_common = bind.Element(this.schema.techniqueCommonName);
+				if (technique_common != null)
+				{
+					var ms = new MaterialSet();
+					foreach (var instanceMaterial in technique_common.Elements(this.schema.instanceMaterialName))
+					{
+						var symbol = instanceMaterial.AttributeValue(this.schema.symbolName);
+						var target = instanceMaterial.AttributeValue(this.schema.targetName);
+						var matId =
+							this.collada.Element(this.schema.libraryMaterialsName).ElementByUrl(target).AttributeValue(this.schema.idName);
+						ms.Add(symbol, (from m in scene.Materials where m.Id == matId select m).First());
+					}
+					sam.Materials.Add(ms);
+				}
+			}
+		}
+
+		private MeshSkinAndMaterials FindContext(Scene scene, XElement geometry)
+		{
+			var sam = new MeshSkinAndMaterials();
+
+			var geometryId = "#" + geometry.AttributeValue(this.schema.idName);
+
+			var controllers = this.collada.Element(this.schema.libraryControllersName);
+			if (controllers != null)
+			{
+				sam.SkinController = (from controller in controllers.Elements(this.schema.controllerName)
+				                      let skin = controller.Element(this.schema.skinName)
+				                      where skin != null && skin.AttributeValue(this.schema.sourceAttributeName) == geometryId
+				                      select controller).FirstOrDefault();
+			}
+
+			string controllerId = "#";
+
+			if (sam.SkinController != null)
+			{
+				controllerId = "#" + sam.SkinController.AttributeValue(this.schema.idName);
+			}
+
+			var libScenes = this.collada.Element(this.schema.libraryVisualScenesName);
+			if (libScenes != null)
+			{
+				foreach (var visualScene in libScenes.Elements(this.schema.visualSceneName))
+				{
+					foreach (var node in visualScene.Descendants(this.schema.nodeName))
+					{
+						var instanceGeo = node.Element(this.schema.instanceGeometryName);
+						if (instanceGeo != null && instanceGeo.AttributeValue(this.schema.urlName) == geometryId)
+						{
+							this.CopySkin(scene, instanceGeo, sam);
+						}
+						var instanceCtrl = node.Element(this.schema.instanceControllerName);
+						if (instanceCtrl != null && instanceCtrl.AttributeValue(this.schema.urlName) == controllerId)
+						{
+							this.CopySkin(scene, instanceCtrl, sam);
+						}
+					}
+				}
+			}
+			return sam;
+		}
+
 		private Color GetColor(int index, int stride, Input input, int[] poligonArray)
 		{
 			return input.SourceData.GetColor(poligonArray[index * stride + input.Offset]);
@@ -113,8 +180,7 @@ namespace Toe.Utils.Mesh.Dae
 				if (texAttr != null)
 				{
 					var sampler = (from p1 in element.Parent.Parent.Parent.Elements()
-					               where
-					               	p1.Name == this.schema.newparamName && p1.AttributeValue(this.schema.sidName) == texAttr.Value
+					               where p1.Name == this.schema.newparamName && p1.AttributeValue(this.schema.sidName) == texAttr.Value
 					               select p1).FirstOrDefault();
 					if (sampler != null)
 					{
@@ -218,7 +284,7 @@ namespace Toe.Utils.Mesh.Dae
 			if (meshInputs.TexCoord0 != null)
 			{
 				var vector3 = GetVector3(index, meshInputs.Stride, meshInputs.TexCoord0, poligonArray);
-				vertex.UV0 = new Vector3(vector3.X,1.0f-vector3.Y,vector3.Z);
+				vertex.UV0 = new Vector3(vector3.X, 1.0f - vector3.Y, vector3.Z);
 			}
 			if (meshInputs.TexCoord1 != null)
 			{
@@ -255,7 +321,7 @@ namespace Toe.Utils.Mesh.Dae
 
 		private void ParseGeometry(Scene scene, XElement geometry)
 		{
-			var skinAndMaterials = FindContext(scene, geometry);
+			var skinAndMaterials = this.FindContext(scene, geometry);
 
 			var mesh = geometry.Element(this.schema.meshName);
 
@@ -271,70 +337,6 @@ namespace Toe.Utils.Mesh.Dae
 				string.Format("Geometry type at {0} not supported yet.", geometry.AttributeValue(this.schema.idName)));
 		}
 
-		private MeshSkinAndMaterials FindContext(Scene scene, XElement geometry)
-		{
-			var sam = new MeshSkinAndMaterials();
-
-			var geometryId = "#" + geometry.AttributeValue(schema.idName);
-
-			var controllers = collada.Element(schema.libraryControllersName);
-			if (controllers != null)
-			{
-				sam.SkinController = (from controller in controllers.Elements(schema.controllerName)
-				let skin = controller.Element(schema.skinName)
-									  where skin != null && skin.AttributeValue(schema.sourceAttributeName) == geometryId
-				select controller).FirstOrDefault();
-			}
-
-			string controllerId = "#";
-
-			if (sam.SkinController != null)
-				controllerId = "#" + sam.SkinController.AttributeValue(schema.idName);
-
-			var libScenes = collada.Element(schema.libraryVisualScenesName);
-			if (libScenes != null)
-			{
-				foreach (var visualScene in libScenes.Elements(schema.visualSceneName))
-				{
-					foreach (var node in visualScene.Descendants(schema.nodeName))
-					{
-						var instanceGeo = node.Element(schema.instanceGeometryName);
-						if (instanceGeo != null && instanceGeo.AttributeValue(schema.urlName) == geometryId)
-						{
-							CopySkin(scene, instanceGeo, sam);
-						}
-						var instanceCtrl = node.Element(schema.instanceControllerName);
-						if (instanceCtrl != null && instanceCtrl.AttributeValue(schema.urlName) == controllerId)
-						{
-							CopySkin(scene, instanceCtrl, sam);
-						}
-					}
-				}
-			}
-			return sam;
-		}
-
-		private void CopySkin(Scene scene, XElement instance, MeshSkinAndMaterials sam)
-		{
-			var bind = instance.Element(schema.bindMaterialName);
-			if(bind != null)
-			{
-				var technique_common = bind.Element(schema.techniqueCommonName);
-				if (technique_common != null)
-				{
-					var ms = new MaterialSet();
-					foreach (var instanceMaterial in technique_common.Elements(schema.instanceMaterialName))
-					{
-						var symbol = instanceMaterial.AttributeValue(schema.symbolName);
-						var target = instanceMaterial.AttributeValue(schema.targetName);
-						var matId = collada.Element(schema.libraryMaterialsName).ElementByUrl(target).AttributeValue(schema.idName);
-						ms.Add(symbol, (from m in scene.Materials where m.Id == matId select m).First());
-					}
-					sam.Materials.Add(ms);
-				}
-			}
-		}
-
 		private void ParseIdAndName(XElement effect, ISceneItem sceneEffect)
 		{
 			var idAttr = effect.Attribute(this.schema.idName);
@@ -348,10 +350,10 @@ namespace Toe.Utils.Mesh.Dae
 
 		private void ParseImage(Scene scene, XElement image)
 		{
-			var initFrom = image.ElementValue(schema.initFromName);
+			var initFrom = image.ElementValue(this.schema.initFromName);
 			if (!string.IsNullOrEmpty(initFrom))
 			{
-				var fileReferenceImage = new FileReferenceImage() { Path = Path.Combine(basePath, initFrom) };
+				var fileReferenceImage = new FileReferenceImage { Path = Path.Combine(this.basePath, initFrom) };
 				this.ParseIdAndName(image, fileReferenceImage);
 				scene.Images.Add(fileReferenceImage);
 				return;
@@ -525,13 +527,14 @@ namespace Toe.Utils.Mesh.Dae
 			}
 		}
 
-		private void ParsePolygons(XElement mesh, MeshSkinAndMaterials skinAndMaterials, VertexBufferMesh dstMesh, XElement element)
+		private void ParsePolygons(
+			XElement mesh, MeshSkinAndMaterials skinAndMaterials, VertexBufferMesh dstMesh, XElement element)
 		{
 			var meshInputs = new MeshInputMap();
 			this.ParseInputs(meshInputs, element, mesh);
 
 			var subMesh = (VertexBufferSubmesh)dstMesh.CreateSubmesh();
-			subMesh.Material = skinAndMaterials.GetAnyMaterialFor(element.AttributeValue(schema.materialAttributeName));
+			subMesh.Material = skinAndMaterials.GetAnyMaterialFor(element.AttributeValue(this.schema.materialAttributeName));
 			subMesh.VertexSourceType = VertexSourceType.TrianleList;
 
 			SetAvailableStreams(dstMesh, meshInputs);
@@ -546,7 +549,8 @@ namespace Toe.Utils.Mesh.Dae
 			}
 		}
 
-		private void ParsePolylist(XElement mesh, MeshSkinAndMaterials skinAndMaterials, VertexBufferMesh dstMesh, XElement element)
+		private void ParsePolylist(
+			XElement mesh, MeshSkinAndMaterials skinAndMaterials, VertexBufferMesh dstMesh, XElement element)
 		{
 			var meshInputs = new MeshInputMap();
 			this.ParseInputs(meshInputs, element, mesh);
@@ -561,7 +565,7 @@ namespace Toe.Utils.Mesh.Dae
 			this.ParseIntArray(element.ElementValue(this.schema.pName), p);
 
 			var subMesh = (VertexBufferSubmesh)dstMesh.CreateSubmesh();
-			subMesh.Material = skinAndMaterials.GetAnyMaterialFor(element.AttributeValue(schema.materialAttributeName));
+			subMesh.Material = skinAndMaterials.GetAnyMaterialFor(element.AttributeValue(this.schema.materialAttributeName));
 			if (isAllTheSame)
 			{
 				if (firstSize == 3)
@@ -624,7 +628,8 @@ namespace Toe.Utils.Mesh.Dae
 			this.ParseNodes(scene, scene, visualScene.Elements(this.schema.nodeName));
 		}
 
-		private void ParseTriangles(XElement mesh, MeshSkinAndMaterials skinAndMaterials, VertexBufferMesh dstMesh, XElement element)
+		private void ParseTriangles(
+			XElement mesh, MeshSkinAndMaterials skinAndMaterials, VertexBufferMesh dstMesh, XElement element)
 		{
 			var meshInputs = new MeshInputMap();
 			this.ParseInputs(meshInputs, element, mesh);
@@ -633,7 +638,7 @@ namespace Toe.Utils.Mesh.Dae
 			this.ParseIntArray(element.ElementValue(this.schema.pName), p);
 
 			var subMesh = (VertexBufferSubmesh)dstMesh.CreateSubmesh();
-			subMesh.Material = skinAndMaterials.GetAnyMaterialFor(element.AttributeValue(schema.materialAttributeName));
+			subMesh.Material = skinAndMaterials.GetAnyMaterialFor(element.AttributeValue(this.schema.materialAttributeName));
 			subMesh.VertexSourceType = VertexSourceType.TrianleList;
 
 			this.ParseElements(p, subMesh, meshInputs, meshInputs.Count * 3);

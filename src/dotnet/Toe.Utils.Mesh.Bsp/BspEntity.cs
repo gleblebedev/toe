@@ -4,34 +4,54 @@ using System.Dynamic;
 
 namespace Toe.Utils.Mesh.Bsp
 {
-	public class BspEntity : DynamicObject 
+	public class BspEntity : DynamicObject
 	{
-		private Dictionary<string, object> _members = new Dictionary<string, object>();
+		#region Constants and Fields
+
+		private readonly Dictionary<string, object> _members = new Dictionary<string, object>();
+
+		#endregion
+
+		#region Public Indexers
+
+		public object this[string key]
+		{
+			get
+			{
+				object v;
+				if (!this._members.TryGetValue(key, out v))
+				{
+					return null;
+				}
+				return v;
+			}
+			set
+			{
+				this._members[key] = value;
+			}
+		}
+
+		#endregion
+
+		#region Public Methods and Operators
 
 		/// <summary>
-		/// When a new property is set, 
-		/// add the property name and value to the dictionary
-		/// </summary>     
-		public override bool TrySetMember
-			 (SetMemberBinder binder, object value)
+		/// Return all dynamic member names
+		/// </summary>
+		/// <returns>
+		public override IEnumerable<string> GetDynamicMemberNames()
 		{
-			if (!_members.ContainsKey(binder.Name))
-				_members.Add(binder.Name, value);
-			else
-				_members[binder.Name] = value;
-
-			return true;
+			return this._members.Keys;
 		}
 
 		/// <summary>
 		/// When user accesses something, return the value if we have it
 		/// </summary>      
-		public override bool TryGetMember
-			   (GetMemberBinder binder, out object result)
+		public override bool TryGetMember(GetMemberBinder binder, out object result)
 		{
-			if (_members.ContainsKey(binder.Name))
+			if (this._members.ContainsKey(binder.Name))
 			{
-				result = _members[binder.Name];
+				result = this._members[binder.Name];
 				return true;
 			}
 			else
@@ -45,13 +65,11 @@ namespace Toe.Utils.Mesh.Bsp
 		/// <summary>
 		/// If a property value is a delegate, invoke it
 		/// </summary>     
-		public override bool TryInvokeMember
-		   (InvokeMemberBinder binder, object[] args, out object result)
+		public override bool TryInvokeMember(InvokeMemberBinder binder, object[] args, out object result)
 		{
-			if (_members.ContainsKey(binder.Name)
-					  && _members[binder.Name] is Delegate)
+			if (this._members.ContainsKey(binder.Name) && this._members[binder.Name] is Delegate)
 			{
-				result = (_members[binder.Name] as Delegate).DynamicInvoke(args);
+				result = (this._members[binder.Name] as Delegate).DynamicInvoke(args);
 				return true;
 			}
 			else
@@ -60,28 +78,24 @@ namespace Toe.Utils.Mesh.Bsp
 			}
 		}
 
-
 		/// <summary>
-		/// Return all dynamic member names
-		/// </summary>
-		/// <returns>
-		public override IEnumerable<string> GetDynamicMemberNames()
+		/// When a new property is set, 
+		/// add the property name and value to the dictionary
+		/// </summary>     
+		public override bool TrySetMember(SetMemberBinder binder, object value)
 		{
-			return _members.Keys;
+			if (!this._members.ContainsKey(binder.Name))
+			{
+				this._members.Add(binder.Name, value);
+			}
+			else
+			{
+				this._members[binder.Name] = value;
+			}
+
+			return true;
 		}
 
-		public object this[string key]
-		{
-			get
-			{
-				object v;
-				if (!_members.TryGetValue(key, out v)) return null;
-				return v;
-			}
-			set
-			{
-				_members[key] = value;
-			}
-		}
+		#endregion
 	}
 }

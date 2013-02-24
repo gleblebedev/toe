@@ -7,21 +7,32 @@ namespace Toe.Utils.Mesh.Ase
 {
 	public class AseParser : BaseTextParser
 	{
-		private TextReader reader;
+		#region Constants and Fields
+
+		private readonly TextReader reader;
+
+		private readonly StringBuilder sb = new StringBuilder();
+
+		private int line;
 
 		private int nextChar;
 
-		readonly StringBuilder sb = new StringBuilder();
+		private int pos;
 
-		private int line = 0;
+		#endregion
 
-		private int pos = 0;
+		#region Constructors and Destructors
 
 		public AseParser(TextReader reader)
 		{
 			this.reader = reader;
 			this.nextChar = reader.Read();
 		}
+
+		#endregion
+
+		#region Methods
+
 		protected override string GetSourceName()
 		{
 			var where = "input stream";
@@ -38,6 +49,7 @@ namespace Toe.Utils.Mesh.Ase
 			}
 			return string.Format("{0} line:{1} pos:{2}", @where, this.line, this.pos);
 		}
+
 		protected override void ReadLexem()
 		{
 			while (this.nextChar >= 0 && char.IsWhiteSpace((char)this.nextChar))
@@ -61,7 +73,7 @@ namespace Toe.Utils.Mesh.Ase
 					this.ReadNextChar();
 				}
 				this.ReadNextChar();
-				this.Lexem = sb.ToString();
+				this.Lexem = this.sb.ToString();
 				return;
 			}
 			while (this.nextChar >= 0 && !char.IsWhiteSpace((char)this.nextChar))
@@ -69,7 +81,7 @@ namespace Toe.Utils.Mesh.Ase
 				this.sb.Append((char)this.nextChar);
 				this.ReadNextChar();
 			}
-			this.Lexem = sb.ToString();
+			this.Lexem = this.sb.ToString();
 		}
 
 		protected int ReadNextChar()
@@ -77,14 +89,16 @@ namespace Toe.Utils.Mesh.Ase
 			this.nextChar = this.reader.Read();
 			if (this.nextChar == '\n')
 			{
-				++line;
-				pos = 0;
+				++this.line;
+				this.pos = 0;
 			}
 			else if (this.nextChar == '\r')
 			{
-				++pos;
+				++this.pos;
 			}
 			return this.nextChar;
 		}
+
+		#endregion
 	}
 }

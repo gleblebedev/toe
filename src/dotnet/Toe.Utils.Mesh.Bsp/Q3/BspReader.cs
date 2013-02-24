@@ -29,15 +29,15 @@ namespace Toe.Utils.Mesh.Bsp.Q3
 		{
 			var maxTextures = this.textures.Length;
 
-			var streamMesh = new VertexBufferMesh()
-			{
-				IsNormalStreamAvailable = true,
-				IsUV0StreamAvailable = true,
-				IsUV1StreamAvailable = true,
-				IsColorStreamAvailable = true,
-				IsBinormalStreamAvailable = false,
-				IsTangentStreamAvailable = false,
-			};
+			var streamMesh = new VertexBufferMesh
+				{
+					IsNormalStreamAvailable = true,
+					IsUV0StreamAvailable = true,
+					IsUV1StreamAvailable = true,
+					IsColorStreamAvailable = true,
+					IsBinormalStreamAvailable = false,
+					IsTangentStreamAvailable = false,
+				};
 			VertexBufferSubmesh[] submeshes = new VertexBufferSubmesh[maxTextures];
 
 			this.BuildSubmeshes(maxTextures, submeshes, streamMesh);

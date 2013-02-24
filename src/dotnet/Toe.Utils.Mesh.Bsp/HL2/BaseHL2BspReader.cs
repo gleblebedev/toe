@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -21,9 +20,23 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 
 		protected SourceTexData[] textures;
 
+		private bool buildBsp;
+
+		private SourceCluster[] clusters;
+
 		private SourceEdge[] edges;
 
+		private string entitiesInfo;
+
+		private ushort[] leafFaces;
+
+		private SourceLeaf[] leaves;
+
 		private int[] listOfEdges;
+
+		private SourceModel[] models;
+
+		private SourceNode[] nodes;
 
 		private SourcePlane[] planes;
 
@@ -36,18 +49,6 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 		private uint[] texdataStringTable;
 
 		private Vector3[] vertices;
-
-		private SourceNode[] nodes;
-
-		private SourceLeaf[] leaves;
-
-		private SourceModel[] models;
-
-		private SourceCluster[] clusters;
-
-		private ushort[] leafFaces;
-
-		private string entitiesInfo;
 
 		#endregion
 
@@ -67,19 +68,40 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 
 		#endregion
 
+		#region Public Methods and Operators
+
+		public IMaterial CreateMaterial(BspMaterialKey material)
+		{
+			var baseFileName = this.GetMaterialFileName(material.Material);
+			var imagePath = baseFileName;
+			var texture = new FileReferenceImage { Path = imagePath };
+			this.Scene.Images.Add(texture);
+			var effect = new SceneEffect
+				{
+					CullMode = CullMode.None,
+					//Diffuse = new ImageColorSource { Image = texture }
+				};
+			this.Scene.Effects.Add(effect);
+			var sceneMaterial = new SceneMaterial { Effect = effect };
+			this.Scene.Materials.Add(sceneMaterial);
+			return sceneMaterial;
+		}
+
+		#endregion
+
 		#region Methods
 
 		protected override void BuildScene()
 		{
-			CollectLeafsInCluster();
+			this.CollectLeafsInCluster();
 			//BuildVisibilityList();
 
 			var node = new Node();
 			this.Scene.Nodes.Add(node);
 
-			if (buildBsp)
+			if (this.buildBsp)
 			{
-				var streamMesh = new VertexBufferMesh()
+				var streamMesh = new VertexBufferMesh
 					{
 						IsNormalStreamAvailable = true,
 						IsUV0StreamAvailable = true,
@@ -92,19 +114,19 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 				var meshBuilder = new MeshBuilder(streamMesh, this);
 				node.Mesh = streamMesh;
 
-				var vsdNodes = new BspVsdTreeNode[nodes.Length];
+				var vsdNodes = new BspVsdTreeNode[this.nodes.Length];
 				for (int index = 0; index < this.nodes.Length; index++)
 				{
 					var sourceNode = this.nodes[index];
 					vsdNodes[index] = new BspVsdTreeNode
-					{
-						Min = new Vector3(sourceNode.box.boxMinX, sourceNode.box.boxMinY, sourceNode.box.boxMinZ),
-						Max = new Vector3(sourceNode.box.boxMaxX, sourceNode.box.boxMaxY, sourceNode.box.boxMaxZ),
-						PositiveNodeIndex = sourceNode.front,
-						NegativeNodeIndex = sourceNode.back,
-						N = planes[sourceNode.planenum].normal,
-						D = planes[sourceNode.planenum].dist,
-					};
+						{
+							Min = new Vector3(sourceNode.box.boxMinX, sourceNode.box.boxMinY, sourceNode.box.boxMinZ),
+							Max = new Vector3(sourceNode.box.boxMaxX, sourceNode.box.boxMaxY, sourceNode.box.boxMaxZ),
+							PositiveNodeIndex = sourceNode.front,
+							NegativeNodeIndex = sourceNode.back,
+							N = this.planes[sourceNode.planenum].normal,
+							D = this.planes[sourceNode.planenum].dist,
+						};
 					if (sourceNode.face_num > 0)
 					{
 						//TODO: put this faces into geometry
@@ -114,8 +136,8 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 
 				List<int> visibleClustersLookup = new List<int>();
 				List<int> visibleMeshesLookup = new List<int>();
-				var vsdLeaves = new BspVsdTreeLeaf[leaves.Length];
-				var vsdClusters = new BspVsdTreeCluster[clusters.Length];
+				var vsdLeaves = new BspVsdTreeLeaf[this.leaves.Length];
+				var vsdClusters = new BspVsdTreeCluster[this.clusters.Length];
 				//int nodesMeshId;
 				//var nodesMesh = meshBuilder.EnsureSubMesh(new BspSubmeshKey(-1, new BspMaterialKey(0, 0)), out nodesMeshId);
 				//for (int index = 0; index < this.nodes.Length; index++)
@@ -126,7 +148,7 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 				for (int index = 0; index < this.leaves.Length; index++)
 				{
 					var sourceLeaf = this.leaves[index];
-					vsdLeaves[index] = new BspVsdTreeLeaf()
+					vsdLeaves[index] = new BspVsdTreeLeaf
 						{
 							Min = new Vector3(sourceLeaf.box.boxMinX, sourceLeaf.box.boxMinY, sourceLeaf.box.boxMinZ),
 							Max = new Vector3(sourceLeaf.box.boxMaxX, sourceLeaf.box.boxMaxY, sourceLeaf.box.boxMaxZ),
@@ -137,12 +159,12 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 				{
 					Dictionary<int, bool> uniqueSubmeshes = new Dictionary<int, bool>();
 					var sourceCluster = this.clusters[index];
-					vsdClusters[index] = new BspVsdTreeCluster()
-					{
-						VisibleClustersCount = sourceCluster.visiblity.Count,
-						VisibleClustersOffset = visibleClustersLookup.Count,
-						VisibleMeshesOffset = visibleMeshesLookup.Count,
-					};
+					vsdClusters[index] = new BspVsdTreeCluster
+						{
+							VisibleClustersCount = sourceCluster.visiblity.Count,
+							VisibleClustersOffset = visibleClustersLookup.Count,
+							VisibleMeshesOffset = visibleMeshesLookup.Count,
+						};
 
 					visibleClustersLookup.AddRange(sourceCluster.visiblity);
 
@@ -155,16 +177,17 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 						var faceEnd = faceBegin + sourceLeaf.numleaffaces;
 						for (int f = faceBegin; f < faceEnd; ++f)
 						{
-							uniqueFaces[leafFaces[f]] = true;
+							uniqueFaces[this.leafFaces[f]] = true;
 						}
 					}
 					foreach (var uniqueFace in uniqueFaces)
 					{
-						int texIndex = 0;// this.texInfo[this.faces[faceIndex].texinfo].texdata;
-						int lightmapIndex = 0;//this.faces[faceIndex].lightmap;
+						int texIndex = 0; // this.texInfo[this.faces[faceIndex].texinfo].texdata;
+						int lightmapIndex = 0; //this.faces[faceIndex].lightmap;
 
 						int meshIndex;
-						VertexBufferSubmesh subMesh = meshBuilder.EnsureSubMesh(new BspSubmeshKey(index, new BspMaterialKey(texIndex, lightmapIndex)), out meshIndex);
+						VertexBufferSubmesh subMesh =
+							meshBuilder.EnsureSubMesh(new BspSubmeshKey(index, new BspMaterialKey(texIndex, lightmapIndex)), out meshIndex);
 						if (!uniqueSubmeshes.ContainsKey(meshIndex))
 						{
 							visibleMeshesLookup.Add(meshIndex);
@@ -212,13 +235,13 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 				//    }
 				//}
 
-				this.Scene.VsdProvider = new BspVsdProvider()
+				this.Scene.VsdProvider = new BspVsdProvider
 					{
 						VisibleClustersLookupTable = visibleClustersLookup.ToArray(),
 						VisibleMeshesLookupTable = visibleMeshesLookup.ToArray(),
 						Clusters = vsdClusters,
 						Leaves = vsdLeaves,
-						Models = (from model in models select new BspVsdTreeModel { RootNode = model.headnode }).ToArray(),
+						Models = (from model in this.models select new BspVsdTreeModel { RootNode = model.headnode }).ToArray(),
 						Level = streamMesh,
 						Nodes = vsdNodes
 					};
@@ -228,69 +251,41 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 			else
 			{
 				this.BuildAdditionalNodes();
-				node.Mesh = Scene.Geometries[0];
+				node.Mesh = this.Scene.Geometries[0];
 			}
 
-			this.BuildEntityNodes(entitiesInfo);
+			this.BuildEntityNodes(this.entitiesInfo);
 		}
 
-		private bool buildBsp = false;
 		protected override object ConvertEntityProperty(string key, string val)
 		{
 			switch (key)
 			{
 				default:
-					return base.ConvertEntityProperty(key,val);
-			}
-		}
-		private void BuildAdditionalNodes()
-		{
-			for (int i = buildBsp?1:0; i < this.models.Length; ++i)
-			{
-				this.BuildModelAsNode(ref this.models[i]);
+					return base.ConvertEntityProperty(key, val);
 			}
 		}
 
-		private void BuildModelAsNode(ref SourceModel sourceModel)
+		protected void ReadBBox(ref SourceBoundingBox box)
 		{
-			var streamMesh2 = new VertexBufferMesh()
-			{
-				IsNormalStreamAvailable = true,
-				IsUV0StreamAvailable = true,
-				IsUV1StreamAvailable = true,
-				IsColorStreamAvailable = true,
-				IsBinormalStreamAvailable = false,
-				IsTangentStreamAvailable = false,
-			};
-			var meshBuilder2 = new MeshBuilder(streamMesh2, this);
-			var beginModelFace = sourceModel.firstface;
-			var endModelFace = beginModelFace + sourceModel.numfaces;
-			for (int index = beginModelFace; index < endModelFace; ++index)
-			{
-				//if (!usedFaces[index])
-				{
-					int meshIndex;
-					VertexBufferSubmesh subMesh2 = meshBuilder2.EnsureSubMesh(new BspSubmeshKey(0, new BspMaterialKey(0, 0)), out meshIndex);
-					this.BuildFace(ref this.faces[index], subMesh2, streamMesh2);
-					//Trace.WriteLine(string.Format("Face {0} is not references from leaves", index));
-				}
-			}
-			this.Scene.Geometries.Add(streamMesh2);
+			box.boxMinX = this.Stream.ReadInt16();
+			box.boxMinY = this.Stream.ReadInt16();
+			box.boxMinZ = this.Stream.ReadInt16();
+			box.boxMaxX = this.Stream.ReadInt16();
+			box.boxMaxY = this.Stream.ReadInt16();
+			box.boxMaxZ = this.Stream.ReadInt16();
 		}
 
-		private void CollectLeafsInCluster()
+		protected void ReadCompressedLightCube(ref SourceCompressedLightCube ambientLighting)
 		{
-			for (int i = 0; i < leaves.Length; ++i)
-			{
-				if (leaves[i].cluster >= 0)
-					clusters[leaves[i].cluster].leaves.Add(i);
-			}
+			ambientLighting.UnknownData0 = this.Stream.ReadUInt32();
+			ambientLighting.UnknownData1 = this.Stream.ReadUInt32();
+			ambientLighting.UnknownData2 = this.Stream.ReadUInt32();
+			ambientLighting.UnknownData3 = this.Stream.ReadUInt32();
+			ambientLighting.UnknownData4 = this.Stream.ReadUInt32();
+			ambientLighting.UnknownData5 = this.Stream.ReadUInt32();
 		}
-		protected override void ReadEntities()
-		{
-			this.SeekEntryAt(this.header.Entities.offset);
-			this.entitiesInfo = Encoding.UTF8.GetString(Stream.ReadBytes((int)this.header.Entities.size)).Trim(new char[]{'\0'});
-		}
+
 		protected override void ReadEdges()
 		{
 			this.SeekEntryAt(this.header.Edges.offset);
@@ -302,125 +297,12 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 			}
 			this.AssertStreamPossition(this.header.Edges.size + this.header.Edges.offset);
 		}
-		protected override void ReadNodes()
-		{
-			this.SeekEntryAt(this.header.Nodes.offset);
-			var size = this.EvalNumItems(this.header.Nodes.size, 32);
-			this.nodes = new SourceNode[size];
-			for (int i = 0; i < size; ++i)
-			{
-				this.ReadNode(ref this.nodes[i]);
-			}
-			this.AssertStreamPossition(this.header.Nodes.size + this.header.Nodes.offset);
-		}
-		protected override void ReadLeaves()
-		{
-			this.ReadLeaves(32);
-		}
-		protected override void ReadVisibilityList()
-		{
-			SeekEntryAt(this.header.Visibility.offset);
-			var pos = Stream.Position;
-			int num_clusters = Stream.ReadInt32();
-			clusters = new SourceCluster[num_clusters];
-			for (int i = 0; i < num_clusters; ++i)
-			{
-				clusters[i].offset = Stream.ReadInt32();
-				clusters[i].phs = Stream.ReadInt32();
-				clusters[i].visiblity = new List<int>();
-				clusters[i].leaves = new List<int>();
-			}
-			for (int i = 0; i < num_clusters; ++i)
-			{
-				
-				this.Stream.Position = pos + clusters[i].offset;
-				for (int c = 0; c < num_clusters; )
-				{
-					byte pvs_buffer = (byte)Stream.ReadByte();
-					if (pvs_buffer == 0)
-					{
-						c += 8 * (byte)Stream.ReadByte();
-					}
-					else
-					{
-						for (byte bit = 1; bit != 0; bit *= 2, c++)
-						{
-							if (0 != (pvs_buffer & bit))
-							{
-								if (c < 0)
-									throw new BspFormatException(string.Format("Cluster index is {0}", c));
-								clusters[i].visiblity.Add(c);
-							}
-						}
-					}
 
-				}
-			}
-		}
-		protected void ReadLeaves(int itemSize)
+		protected override void ReadEntities()
 		{
-			this.SeekEntryAt(this.header.Leafs.offset);
-			var size = this.EvalNumItems(this.header.Leafs.size, itemSize);
-			this.leaves = new SourceLeaf[size];
-			for (int i = 0; i < size; ++i)
-			{
-				this.ReadLeaf(ref this.leaves[i]);
-			}
-			this.AssertStreamPossition(this.header.Leafs.size + this.header.Leafs.offset);
-
-			this.SeekEntryAt(this.header.LeafFaces.offset);
-			size = this.EvalNumItems(this.header.LeafFaces.size, 2);
-			this.leafFaces = new ushort[size];
-			for (int i = 0; i < size; ++i)
-			{
-				leafFaces[i] = Stream.ReadUInt16();
-			}
-			this.AssertStreamPossition(this.header.LeafFaces.size + this.header.LeafFaces.offset);
-		}
-
-		protected virtual void ReadLeaf(ref SourceLeaf sourceLeaf)
-		{
-			sourceLeaf.contents = Stream.ReadInt32();               // OR of all brushes (not needed?)
-			sourceLeaf.cluster = Stream.ReadInt16();               // cluster this leaf is in
-			sourceLeaf.area_flags = Stream.ReadInt16();                 // area this leaf is in
-			this.ReadBBox(ref sourceLeaf.box);
-			sourceLeaf.firstleafface = Stream.ReadUInt16();          // index into leaffaces
-			sourceLeaf.numleaffaces = Stream.ReadUInt16();
-			sourceLeaf.firstleafbrush = Stream.ReadUInt16();         // index into leafbrushes
-			sourceLeaf.numleafbrushes = Stream.ReadUInt16();
-			sourceLeaf.leafWaterDataID = Stream.ReadInt16();        // -1 for not in water
-			sourceLeaf.padding = Stream.ReadInt16();                // padding to 4-byte boundary
-		}
-		protected void ReadCompressedLightCube(ref SourceCompressedLightCube ambientLighting)
-		{
-			ambientLighting.UnknownData0 = Stream.ReadUInt32();
-			ambientLighting.UnknownData1 = Stream.ReadUInt32();
-			ambientLighting.UnknownData2 = Stream.ReadUInt32();
-			ambientLighting.UnknownData3 = Stream.ReadUInt32();
-			ambientLighting.UnknownData4 = Stream.ReadUInt32();
-			ambientLighting.UnknownData5 = Stream.ReadUInt32();
-		}
-
-		protected virtual void ReadNode(ref SourceNode sourceNode)
-		{
-			sourceNode.planenum = Stream.ReadInt32();
-			sourceNode.front = Stream.ReadInt32();
-			sourceNode.back = Stream.ReadInt32();
-			ReadBBox(ref sourceNode.box);
-			sourceNode.face_id = Stream.ReadUInt16();
-			sourceNode.face_num = Stream.ReadUInt16();
-			sourceNode.area = Stream.ReadInt16();
-			sourceNode.paddding = Stream.ReadInt16();
-		}
-
-		protected void ReadBBox(ref SourceBoundingBox box)
-		{
-			box.boxMinX = Stream.ReadInt16();
-			box.boxMinY = Stream.ReadInt16();
-			box.boxMinZ = Stream.ReadInt16();
-			box.boxMaxX = Stream.ReadInt16();
-			box.boxMaxY = Stream.ReadInt16();
-			box.boxMaxZ = Stream.ReadInt16();
+			this.SeekEntryAt(this.header.Entities.offset);
+			this.entitiesInfo =
+				Encoding.UTF8.GetString(this.Stream.ReadBytes((int)this.header.Entities.size)).Trim(new[] { '\0' });
 		}
 
 		protected virtual void ReadEntry(ref SourceFileEntry entry)
@@ -534,6 +416,82 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 			this.header.revision = this.Stream.ReadUInt32();
 		}
 
+		protected virtual void ReadLeaf(ref SourceLeaf sourceLeaf)
+		{
+			sourceLeaf.contents = this.Stream.ReadInt32(); // OR of all brushes (not needed?)
+			sourceLeaf.cluster = this.Stream.ReadInt16(); // cluster this leaf is in
+			sourceLeaf.area_flags = this.Stream.ReadInt16(); // area this leaf is in
+			this.ReadBBox(ref sourceLeaf.box);
+			sourceLeaf.firstleafface = this.Stream.ReadUInt16(); // index into leaffaces
+			sourceLeaf.numleaffaces = this.Stream.ReadUInt16();
+			sourceLeaf.firstleafbrush = this.Stream.ReadUInt16(); // index into leafbrushes
+			sourceLeaf.numleafbrushes = this.Stream.ReadUInt16();
+			sourceLeaf.leafWaterDataID = this.Stream.ReadInt16(); // -1 for not in water
+			sourceLeaf.padding = this.Stream.ReadInt16(); // padding to 4-byte boundary
+		}
+
+		protected override void ReadLeaves()
+		{
+			this.ReadLeaves(32);
+		}
+
+		protected void ReadLeaves(int itemSize)
+		{
+			this.SeekEntryAt(this.header.Leafs.offset);
+			var size = this.EvalNumItems(this.header.Leafs.size, itemSize);
+			this.leaves = new SourceLeaf[size];
+			for (int i = 0; i < size; ++i)
+			{
+				this.ReadLeaf(ref this.leaves[i]);
+			}
+			this.AssertStreamPossition(this.header.Leafs.size + this.header.Leafs.offset);
+
+			this.SeekEntryAt(this.header.LeafFaces.offset);
+			size = this.EvalNumItems(this.header.LeafFaces.size, 2);
+			this.leafFaces = new ushort[size];
+			for (int i = 0; i < size; ++i)
+			{
+				this.leafFaces[i] = this.Stream.ReadUInt16();
+			}
+			this.AssertStreamPossition(this.header.LeafFaces.size + this.header.LeafFaces.offset);
+		}
+
+		protected override void ReadModels()
+		{
+			this.SeekEntryAt(this.header.Models.offset);
+			int size = this.EvalNumItems(this.header.Models.size, 12 * 4);
+			this.models = new SourceModel[size];
+			for (int i = 0; i < size; ++i)
+			{
+				this.ReadModel(ref this.models[i]);
+			}
+			this.AssertStreamPossition(this.header.Models.size + this.header.Models.offset);
+		}
+
+		protected virtual void ReadNode(ref SourceNode sourceNode)
+		{
+			sourceNode.planenum = this.Stream.ReadInt32();
+			sourceNode.front = this.Stream.ReadInt32();
+			sourceNode.back = this.Stream.ReadInt32();
+			this.ReadBBox(ref sourceNode.box);
+			sourceNode.face_id = this.Stream.ReadUInt16();
+			sourceNode.face_num = this.Stream.ReadUInt16();
+			sourceNode.area = this.Stream.ReadInt16();
+			sourceNode.paddding = this.Stream.ReadInt16();
+		}
+
+		protected override void ReadNodes()
+		{
+			this.SeekEntryAt(this.header.Nodes.offset);
+			var size = this.EvalNumItems(this.header.Nodes.size, 32);
+			this.nodes = new SourceNode[size];
+			for (int i = 0; i < size; ++i)
+			{
+				this.ReadNode(ref this.nodes[i]);
+			}
+			this.AssertStreamPossition(this.header.Nodes.size + this.header.Nodes.offset);
+		}
+
 		protected override void ReadPlanes()
 		{
 			this.SeekEntryAt(this.header.Planes.offset);
@@ -603,36 +561,53 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 			this.AssertStreamPossition(this.header.Surfedges.size + this.header.Surfedges.offset);
 		}
 
-		protected override void ReadModels()
+		protected override void ReadVisibilityList()
 		{
-			this.SeekEntryAt(this.header.Models.offset);
-			int size = this.EvalNumItems(this.header.Models.size, 12*4);
-			this.models = new SourceModel[size];
-			for (int i = 0; i < size; ++i)
+			this.SeekEntryAt(this.header.Visibility.offset);
+			var pos = this.Stream.Position;
+			int num_clusters = this.Stream.ReadInt32();
+			this.clusters = new SourceCluster[num_clusters];
+			for (int i = 0; i < num_clusters; ++i)
 			{
-				ReadModel(ref this.models[i]);
+				this.clusters[i].offset = this.Stream.ReadInt32();
+				this.clusters[i].phs = this.Stream.ReadInt32();
+				this.clusters[i].visiblity = new List<int>();
+				this.clusters[i].leaves = new List<int>();
 			}
-			this.AssertStreamPossition(this.header.Models.size + this.header.Models.offset);
+			for (int i = 0; i < num_clusters; ++i)
+			{
+				this.Stream.Position = pos + this.clusters[i].offset;
+				for (int c = 0; c < num_clusters;)
+				{
+					byte pvs_buffer = (byte)this.Stream.ReadByte();
+					if (pvs_buffer == 0)
+					{
+						c += 8 * (byte)this.Stream.ReadByte();
+					}
+					else
+					{
+						for (byte bit = 1; bit != 0; bit *= 2, c++)
+						{
+							if (0 != (pvs_buffer & bit))
+							{
+								if (c < 0)
+								{
+									throw new BspFormatException(string.Format("Cluster index is {0}", c));
+								}
+								this.clusters[i].visiblity.Add(c);
+							}
+						}
+					}
+				}
+			}
 		}
 
-		private void ReadModel(ref SourceModel sourceModel)
+		private void BuildAdditionalNodes()
 		{
-			float x, y, z;
-			x = Stream.ReadSingle();
-			y = Stream.ReadSingle();
-			z = Stream.ReadSingle();
-			sourceModel.mins = new Vector3(x,y,z);
-			x = Stream.ReadSingle();
-			y = Stream.ReadSingle();
-			z = Stream.ReadSingle();
-			sourceModel.maxs = new Vector3(x, y, z);
-			x = Stream.ReadSingle();
-			y = Stream.ReadSingle();
-			z = Stream.ReadSingle();
-			sourceModel.origin = new Vector3(x, y, z);
-			sourceModel.headnode = Stream.ReadInt32();
-			sourceModel.firstface = Stream.ReadInt32();
-			sourceModel.numfaces = Stream.ReadInt32();
+			for (int i = this.buildBsp ? 1 : 0; i < this.models.Length; ++i)
+			{
+				this.BuildModelAsNode(ref this.models[i]);
+			}
 		}
 
 		private void BuildFace(ref SourceFace face, VertexBufferSubmesh submesh, VertexBufferMesh streamMesh)
@@ -685,12 +660,15 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 						string.Format("Vertex index {0} is out of range [0..{1}]", edgesvertex1, this.vertices.Length - 1));
 				}
 				if (nextShouldBe >= 0 && nextShouldBe != edgesvertex0)
+				{
 					throw new BspFormatException(string.Format("Wrong edge order"));
+				}
 				nextShouldBe = edgesvertex1;
 				Vertex vertex;
 				this.BuildVertex(
 					this.vertices[(short)edgesvertex0],
-					plane.normal,//(face.side == 0) ? plane.normal : -plane.normal,
+					plane.normal,
+					//(face.side == 0) ? plane.normal : -plane.normal,
 					face,
 					ref this.texInfo[face.texinfo],
 					out vertex);
@@ -741,6 +719,34 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 				submesh.Add(indices[j]);
 				submesh.Add(indices[j + 1]);
 			}
+		}
+
+		private void BuildModelAsNode(ref SourceModel sourceModel)
+		{
+			var streamMesh2 = new VertexBufferMesh
+				{
+					IsNormalStreamAvailable = true,
+					IsUV0StreamAvailable = true,
+					IsUV1StreamAvailable = true,
+					IsColorStreamAvailable = true,
+					IsBinormalStreamAvailable = false,
+					IsTangentStreamAvailable = false,
+				};
+			var meshBuilder2 = new MeshBuilder(streamMesh2, this);
+			var beginModelFace = sourceModel.firstface;
+			var endModelFace = beginModelFace + sourceModel.numfaces;
+			for (int index = beginModelFace; index < endModelFace; ++index)
+			{
+				//if (!usedFaces[index])
+				{
+					int meshIndex;
+					VertexBufferSubmesh subMesh2 = meshBuilder2.EnsureSubMesh(
+						new BspSubmeshKey(0, new BspMaterialKey(0, 0)), out meshIndex);
+					this.BuildFace(ref this.faces[index], subMesh2, streamMesh2);
+					//Trace.WriteLine(string.Format("Face {0} is not references from leaves", index));
+				}
+			}
+			this.Scene.Geometries.Add(streamMesh2);
 		}
 
 		//private void BuildSubmeshes(int maxTextures)
@@ -811,6 +817,17 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 				res.UV0.X / ((tex.width != 0) ? tex.width : 256.0f), res.UV0.Y / ((tex.height != 0) ? tex.height : 256.0f), 0.0f);
 		}
 
+		private void CollectLeafsInCluster()
+		{
+			for (int i = 0; i < this.leaves.Length; ++i)
+			{
+				if (this.leaves[i].cluster >= 0)
+				{
+					this.clusters[this.leaves[i].cluster].leaves.Add(i);
+				}
+			}
+		}
+
 		private string GetMaterialFileName(int i)
 		{
 			var rootPath = this.GameRootPath;
@@ -824,6 +841,26 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 		{
 			sourceEdge.vertex0 = this.Stream.ReadUInt16();
 			sourceEdge.vertex1 = this.Stream.ReadUInt16();
+		}
+
+		private void ReadModel(ref SourceModel sourceModel)
+		{
+			float x, y, z;
+			x = this.Stream.ReadSingle();
+			y = this.Stream.ReadSingle();
+			z = this.Stream.ReadSingle();
+			sourceModel.mins = new Vector3(x, y, z);
+			x = this.Stream.ReadSingle();
+			y = this.Stream.ReadSingle();
+			z = this.Stream.ReadSingle();
+			sourceModel.maxs = new Vector3(x, y, z);
+			x = this.Stream.ReadSingle();
+			y = this.Stream.ReadSingle();
+			z = this.Stream.ReadSingle();
+			sourceModel.origin = new Vector3(x, y, z);
+			sourceModel.headnode = this.Stream.ReadInt32();
+			sourceModel.firstface = this.Stream.ReadInt32();
+			sourceModel.numfaces = this.Stream.ReadInt32();
 		}
 
 		private void ReadPlane(ref SourcePlane sourcePlane)
@@ -871,27 +908,6 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 
 			sourceTexInfo.flags = this.Stream.ReadInt32();
 			sourceTexInfo.texdata = this.Stream.ReadInt32();
-		}
-
-		#endregion
-
-		#region Implementation of IMaterialProvider
-
-		public IMaterial CreateMaterial(BspMaterialKey material)
-		{
-			var baseFileName = this.GetMaterialFileName(material.Material);
-			var imagePath = baseFileName;
-			var texture = new FileReferenceImage { Path = imagePath };
-			this.Scene.Images.Add(texture);
-			var effect = new SceneEffect
-			{
-				CullMode = CullMode.None,
-			//Diffuse = new ImageColorSource { Image = texture }
-			};
-			this.Scene.Effects.Add(effect);
-			var sceneMaterial = new SceneMaterial { Effect = effect };
-			this.Scene.Materials.Add(sceneMaterial);
-			return sceneMaterial;
 		}
 
 		#endregion

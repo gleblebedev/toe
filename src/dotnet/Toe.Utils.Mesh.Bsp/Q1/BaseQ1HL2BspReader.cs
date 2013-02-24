@@ -1,17 +1,19 @@
-using System.IO;
-
 namespace Toe.Utils.Mesh.Bsp.Q1
 {
 	public class BaseQ1HL2BspReader : BaseBspReader
 	{
-		
+		#region Constants and Fields
 
 		protected BspFileHeader header;
+
+		#endregion
+
+		#region Methods
 
 		protected override void ReadHeader()
 		{
 			this.header.version = this.Stream.ReadUInt32();
-			
+
 			this.header.entities.offset = this.Stream.ReadUInt32();
 			this.header.entities.size = this.Stream.ReadUInt32();
 
@@ -35,7 +37,7 @@ namespace Toe.Utils.Mesh.Bsp.Q1
 
 			this.header.faces.offset = this.Stream.ReadUInt32();
 			this.header.faces.size = this.Stream.ReadUInt32();
-	
+
 			this.header.lightmaps.offset = this.Stream.ReadUInt32();
 			this.header.lightmaps.size = this.Stream.ReadUInt32();
 
@@ -60,8 +62,8 @@ namespace Toe.Utils.Mesh.Bsp.Q1
 
 		protected override void ReadVertices()
 		{
-			
 		}
-	}
 
+		#endregion
+	}
 }

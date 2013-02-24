@@ -4,46 +4,64 @@ namespace Toe.Utils.Mesh.Bsp.Utils
 {
 	internal struct MeshBuilderMesh
 	{
+		#region Constants and Fields
+
 		public int Index;
 
 		public VertexBufferSubmesh Mesh;
+
+		#endregion
 	}
+
 	internal class MeshBuilder
 	{
-		private readonly VertexBufferMesh streamMesh;
+		#region Constants and Fields
+
+		private readonly Dictionary<BspSubmeshKey, MeshBuilderMesh> map = new Dictionary<BspSubmeshKey, MeshBuilderMesh>();
+
+		private readonly Dictionary<BspMaterialKey, IMaterial> mapMtl = new Dictionary<BspMaterialKey, IMaterial>();
 
 		private readonly IMaterialProvider materialProvider;
 
-		Dictionary<BspSubmeshKey, MeshBuilderMesh> map = new Dictionary<BspSubmeshKey, MeshBuilderMesh>();
+		private readonly VertexBufferMesh streamMesh;
 
-		private Dictionary<BspMaterialKey, IMaterial> mapMtl = new Dictionary<BspMaterialKey, IMaterial>();
+		#endregion
+
+		#region Constructors and Destructors
+
 		public MeshBuilder(VertexBufferMesh streamMesh, IMaterialProvider materialProvider)
 		{
 			this.streamMesh = streamMesh;
 			this.materialProvider = materialProvider;
 		}
 
+		#endregion
+
+		#region Public Methods and Operators
+
 		public VertexBufferSubmesh EnsureSubMesh(BspSubmeshKey bspSubmeshKey, out int meshIndex)
 		{
 			MeshBuilderMesh m;
-			if (map.TryGetValue(bspSubmeshKey, out m))
+			if (this.map.TryGetValue(bspSubmeshKey, out m))
 			{
 				meshIndex = m.Index;
 				return m.Mesh;
 			}
-			m.Index = streamMesh.Submeshes.Count;
+			m.Index = this.streamMesh.Submeshes.Count;
 			m.Mesh = (VertexBufferSubmesh)this.streamMesh.CreateSubmesh();
-			map[bspSubmeshKey] = m;
+			this.map[bspSubmeshKey] = m;
 			meshIndex = m.Index;
 
 			IMaterial mtl;
-			if (!mapMtl.TryGetValue(bspSubmeshKey.Material, out mtl))
+			if (!this.mapMtl.TryGetValue(bspSubmeshKey.Material, out mtl))
 			{
-				mtl = materialProvider.CreateMaterial(bspSubmeshKey.Material);
-				mapMtl.Add(bspSubmeshKey.Material,mtl);
+				mtl = this.materialProvider.CreateMaterial(bspSubmeshKey.Material);
+				this.mapMtl.Add(bspSubmeshKey.Material, mtl);
 			}
 			m.Mesh.Material = mtl;
 			return m.Mesh;
 		}
+
+		#endregion
 	}
 }

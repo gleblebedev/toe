@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -12,17 +10,33 @@ namespace Toe.Utils.Mesh.Bsp
 {
 	public abstract class BaseBspReader
 	{
+		#region Constants and Fields
+
 		private IScene scene;
+
+		private long startOfTheFile;
 
 		private Stream stream;
 
-		private long startOfTheFile;
+		#endregion
+
+		#region Public Properties
+
+		public virtual string GameRootPath { get; set; }
 
 		public IScene Scene
 		{
 			get
 			{
 				return this.scene;
+			}
+		}
+
+		public long StartOfTheFile
+		{
+			get
+			{
+				return this.startOfTheFile;
 			}
 		}
 
@@ -35,32 +49,13 @@ namespace Toe.Utils.Mesh.Bsp
 			set
 			{
 				this.stream = value;
-				this.startOfTheFile = stream.Position;
+				this.startOfTheFile = this.stream.Position;
 			}
 		}
 
-		public long StartOfTheFile
-		{
-			get
-			{
-				return this.startOfTheFile;
-			}
-		}
+		#endregion
 
-		public virtual string GameRootPath
-		{
-			get
-			{
-				return this.gameRootPath;
-			}
-			set
-			{
-				this.gameRootPath = value;
-			}
-		}
-
-		private string gameRootPath;
-
+		#region Public Methods and Operators
 
 		/// <summary>
 		/// Load generic scene from BSP file.
@@ -71,28 +66,44 @@ namespace Toe.Utils.Mesh.Bsp
 		{
 			this.scene = new Scene();
 
-			ReadHeader();
+			this.ReadHeader();
 			this.ReadModels();
-			ReadVertices();
-			ReadEdges();
-			ReadPlanes();
-			ReadTextures();
-			ReadEffects();
-			ReadLightmaps();
-			ReadFaces();
-			ReadNodes();
-			ReadVisibilityList();
-			ReadLeaves();
-			ReadEntities();
+			this.ReadVertices();
+			this.ReadEdges();
+			this.ReadPlanes();
+			this.ReadTextures();
+			this.ReadEffects();
+			this.ReadLightmaps();
+			this.ReadFaces();
+			this.ReadNodes();
+			this.ReadVisibilityList();
+			this.ReadLeaves();
+			this.ReadEntities();
 			this.BuildScene();
 
-			return scene;
+			return this.scene;
 		}
+
+		#endregion
+
+		#region Methods
+
+		protected void AssertStreamPossition(long position)
+		{
+			if (this.Stream.Position != position)
+			{
+				throw new BspFormatException(
+					string.Format("Unknow data format (file position {0}, expected {1})", this.Stream.Position, position));
+			}
+		}
+
 		protected virtual void BuildEntityNodes(string entitiesInfo)
 		{
 			if (string.IsNullOrEmpty(entitiesInfo))
+			{
 				return;
-			var tp = new BaseEntityTextParser(new StringReader(entitiesInfo), ConvertEntityProperty);
+			}
+			var tp = new BaseEntityTextParser(new StringReader(entitiesInfo), this.ConvertEntityProperty);
 			var enitities = tp.Skip(1).ToArray();
 
 			foreach (dynamic enitity in enitities)
@@ -100,20 +111,25 @@ namespace Toe.Utils.Mesh.Bsp
 				var origin = enitity.origin as Vector3?;
 				if (origin.HasValue)
 				{
-					var node = new Node() { Position = origin.Value };
-					scene.Nodes.Add(node);
+					var node = new Node { Position = origin.Value };
+					this.scene.Nodes.Add(node);
 					var model = enitity.model as string;
 					if (!string.IsNullOrEmpty(model))
 					{
 						if (model.StartsWith("*"))
 						{
 							int geomId = int.Parse(model.Substring(1), CultureInfo.InvariantCulture);
-							node.Mesh = Scene.Geometries[geomId];
+							node.Mesh = this.Scene.Geometries[geomId];
 						}
 					}
 				}
 			}
 		}
+
+		protected virtual void BuildScene()
+		{
+		}
+
 		//Dictionary<string,string> knownProps = new Dictionary<string, string>();
 		protected virtual object ConvertEntityProperty(string key, string val)
 		{
@@ -126,19 +142,19 @@ namespace Toe.Utils.Mesh.Bsp
 				case "lowerleft": //181 867 -108
 				case "upperright": //142 867 -44
 				case "upperleft": //181 867 -44
-					return ParseVec3EntityProperty(val);
+					return this.ParseVec3EntityProperty(val);
 
 				case "overlaycolor": //0 0 0
 				case "color": //120 133 143
 				case "fogcolor2": //194 205 218
 				case "fogcolor": //139 152 160
-					return ParseColorEntityProperty(val);
+					return this.ParseColorEntityProperty(val);
 
 				case "MaxRange": //1424 3288 848
-					return float.Parse(val,CultureInfo.InvariantCulture);
+					return float.Parse(val, CultureInfo.InvariantCulture);
 				case "mapversion": //2855
 					return int.Parse(val, CultureInfo.InvariantCulture);
-/*
+					/*
 				case "spawnflags": //0
 					return val;
 
@@ -707,18 +723,80 @@ namespace Toe.Utils.Mesh.Bsp
 			}
 		}
 
+		protected int EvalNumItems(long total, long structSize)
+		{
+			if (total % structSize != 0)
+			{
+				throw new BspFormatException(string.Format("BSP entry size {0} should be power of {1}", total, structSize));
+			}
+			return (int)(total / structSize);
+		}
+
+		protected virtual void ReadEdges()
+		{
+		}
+
+		protected virtual void ReadEffects()
+		{
+		}
+
+		protected virtual void ReadEntities()
+		{
+		}
+
+		protected virtual void ReadFaces()
+		{
+		}
+
+		protected abstract void ReadHeader();
+
+		protected virtual void ReadLeaves()
+		{
+		}
+
+		protected virtual void ReadLightmaps()
+		{
+		}
+
+		protected virtual void ReadModels()
+		{
+		}
+
+		protected virtual void ReadNodes()
+		{
+		}
+
+		protected virtual void ReadPlanes()
+		{
+		}
+
+		protected virtual void ReadTextures()
+		{
+		}
+
+		protected abstract void ReadVertices();
+
+		protected virtual void ReadVisibilityList()
+		{
+		}
+
+		protected void SeekEntryAt(long offset)
+		{
+			this.Stream.Position = this.startOfTheFile + offset;
+		}
+
 		private Color ParseColorEntityProperty(string val)
 		{
-			var v = val.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+			var v = val.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 			byte r = byte.Parse(v[0], CultureInfo.InvariantCulture);
 			byte g = byte.Parse(v[1], CultureInfo.InvariantCulture);
 			byte b = byte.Parse(v[2], CultureInfo.InvariantCulture);
-			return Color.FromArgb(255,r,g,b);
+			return Color.FromArgb(255, r, g, b);
 		}
 
 		private Vector3 ParseVec3EntityProperty(string val)
 		{
-			var v = val.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+			var v = val.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 			Vector3 res = new Vector3();
 			res.X = float.Parse(v[0], CultureInfo.InvariantCulture);
 			res.Y = float.Parse(v[1], CultureInfo.InvariantCulture);
@@ -726,76 +804,6 @@ namespace Toe.Utils.Mesh.Bsp
 			return res;
 		}
 
-		protected virtual void ReadEntities()
-		{
-		}
-
-		protected virtual void ReadPlanes()
-		{
-			
-		}
-
-		protected virtual void ReadEdges()
-		{
-			
-		}
-
-		protected virtual void ReadNodes()
-		{
-			
-		}
-		protected virtual void ReadLeaves()
-		{
-
-		}
-		protected virtual void ReadVisibilityList()
-		{
-
-		}
-		protected virtual void ReadTextures()
-		{
-
-		}
-		protected virtual void ReadEffects()
-		{
-
-		}
-		protected virtual void ReadLightmaps()
-		{
-			
-		}
-
-		protected virtual void ReadFaces()
-		{
-			
-		}
-		protected virtual void BuildScene()
-		{
-
-		}
-
-		protected void SeekEntryAt(long offset)
-		{
-			this.Stream.Position = startOfTheFile + offset;
-		}
-		protected void AssertStreamPossition(long position)
-		{
-			if (Stream.Position != position)
-				throw new BspFormatException(string.Format("Unknow data format (file position {0}, expected {1})", Stream.Position, position));
-		}
-		protected int EvalNumItems(long total, long structSize)
-		{
-			if (total % structSize != 0)
-				throw new BspFormatException(string.Format("BSP entry size {0} should be power of {1}", total, structSize));
-			return (int)(total / structSize);
-		}
-		protected abstract void ReadHeader();
-
-		protected abstract void ReadVertices();
-
-		protected virtual void ReadModels()
-		{
-			
-		}
+		#endregion
 	}
 }

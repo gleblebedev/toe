@@ -1,19 +1,21 @@
-﻿using System.IO;
+﻿using System;
 
 namespace Toe.Utils.Mesh.Bsp.Q2
 {
 	public class BspReader : BaseBspReader, IBspReader
 	{
-	
+		#region Methods
 
 		protected override void ReadHeader()
 		{
-			throw new System.NotImplementedException();
+			throw new NotImplementedException();
 		}
 
 		protected override void ReadVertices()
 		{
-			throw new System.NotImplementedException();
+			throw new NotImplementedException();
 		}
+
+		#endregion
 	}
 }

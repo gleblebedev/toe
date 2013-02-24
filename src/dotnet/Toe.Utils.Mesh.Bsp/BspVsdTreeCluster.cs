@@ -2,9 +2,16 @@ namespace Toe.Utils.Mesh.Bsp
 {
 	public struct BspVsdTreeCluster
 	{
-		public int VisibleClustersOffset;
+		#region Constants and Fields
+
 		public int VisibleClustersCount;
-		public int VisibleMeshesOffset;
+
+		public int VisibleClustersOffset;
+
 		public int VisibleMeshesCount;
+
+		public int VisibleMeshesOffset;
+
+		#endregion
 	}
 }

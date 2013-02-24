@@ -2,24 +2,28 @@ namespace Toe.Utils.Mesh.Dae
 {
 	internal class MeshInputMap
 	{
-		public Input Vertex;
+		#region Constants and Fields
+
+		public Input Binormal;
+
+		public Input Color;
+
+		public int Count;
 
 		public Input Normal;
+
+		public Input Position;
+
+		public int Stride;
+
+		public Input Tangent;
 
 		public Input TexCoord0;
 
 		public Input TexCoord1;
 
-		public Input Position;
+		public Input Vertex;
 
-		public Input Color;
-
-		public Input Tangent;
-
-		public Input Binormal;
-
-		public int Count;
-
-		public int Stride;
+		#endregion
 	}
 }

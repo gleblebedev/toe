@@ -8,33 +8,57 @@ namespace Toe.Utils.Mesh.Dae
 	/// </summary>
 	public class MeshSkinAndMaterials
 	{
-		public XElement SkinController;
+		#region Constants and Fields
+
 		public List<MaterialSet> Materials = new List<MaterialSet>();
+
+		public XElement SkinController;
+
+		#endregion
+
+		#region Public Methods and Operators
 
 		public IMaterial GetAnyMaterialFor(string value)
 		{
-			foreach (var materialSet in Materials)
+			foreach (var materialSet in this.Materials)
 			{
 				var m = materialSet.Get(value);
-				if (m != null) return m;
+				if (m != null)
+				{
+					return m;
+				}
 			}
 			return null;
 		}
+
+		#endregion
 	}
 
 	public class MaterialSet
 	{
-		Dictionary<string,IMaterial> map = new Dictionary<string, IMaterial>();
+		#region Constants and Fields
+
+		private readonly Dictionary<string, IMaterial> map = new Dictionary<string, IMaterial>();
+
+		#endregion
+
+		#region Public Methods and Operators
+
 		public void Add(string symbol, IMaterial material)
 		{
-			map[symbol] = material;
+			this.map[symbol] = material;
 		}
 
 		public IMaterial Get(string value)
 		{
 			IMaterial m;
-			if (map.TryGetValue(value, out m)) return m;
+			if (this.map.TryGetValue(value, out m))
+			{
+				return m;
+			}
 			return null;
 		}
+
+		#endregion
 	}
 }

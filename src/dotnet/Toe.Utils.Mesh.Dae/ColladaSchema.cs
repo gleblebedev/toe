@@ -16,15 +16,21 @@ namespace Toe.Utils.Mesh.Dae
 
 		public XName bindVertexInputName;
 
+		public XName blinnName;
+
 		public XName colladaName;
 
 		public string colladaSchema;
 
 		public XName colorName;
 
+		public XName constantName;
+
 		public XName controllerName;
 
 		public XName countName;
+
+		public XName diffuseName;
 
 		public XName effectName;
 
@@ -35,6 +41,8 @@ namespace Toe.Utils.Mesh.Dae
 		public XName idName;
 
 		public XName imageName;
+
+		public XName initFromName;
 
 		public XName inputName;
 
@@ -47,6 +55,8 @@ namespace Toe.Utils.Mesh.Dae
 		public XName instanceMaterialName;
 
 		public XName instanceVisualSceneName;
+
+		public XName lambertName;
 
 		public XName libraryAnimationsName;
 
@@ -66,13 +76,15 @@ namespace Toe.Utils.Mesh.Dae
 
 		public XName lightName;
 
-		public XName materialName;
-
 		public XName materialAttributeName;
+
+		public XName materialName;
 
 		public XName meshName;
 
 		public XName nameName;
+
+		public XName newparamName;
 
 		public XName nodeName;
 
@@ -82,11 +94,17 @@ namespace Toe.Utils.Mesh.Dae
 
 		public XName paramName;
 
+		public XName phongName;
+
 		public XName polygonsName;
 
 		public XName polylistName;
 
+		public XName profileCommonName;
+
 		public XName rotateName;
+
+		public XName sampler2DName;
 
 		public XName sceneName;
 
@@ -106,7 +124,19 @@ namespace Toe.Utils.Mesh.Dae
 
 		public XName strideName;
 
+		public XName surfaceName;
+
+		public XName symbolName;
+
+		public XName targetName;
+
 		public XName techniqueCommonName;
+
+		public XName techniqueName;
+
+		public XName textureAttributeName;
+
+		public XName textureName;
 
 		public XName trianglesName;
 
@@ -118,41 +148,11 @@ namespace Toe.Utils.Mesh.Dae
 
 		public XName verticesName;
 
+		public XName visualSceneName;
+
 		private static ColladaSchema schema14;
 
 		private static ColladaSchema schema15;
-
-		public XName profileCommonName;
-
-		public XName techniqueName;
-
-		public XName phongName;
-
-		public XName lambertName;
-
-		public XName blinnName;
-
-		public XName constantName;
-
-		public XName diffuseName;
-
-		public XName textureName;
-
-		public XName textureAttributeName;
-
-		public XName newparamName;
-
-		public XName sampler2DName;
-
-		public XName surfaceName;
-
-		public XName initFromName;
-
-		public XName visualSceneName;
-
-		public XName symbolName;
-
-		public XName targetName;
 
 		#endregion
 
@@ -167,7 +167,7 @@ namespace Toe.Utils.Mesh.Dae
 			this.geometryName = XName.Get("geometry", this.colladaSchema);
 			this.materialName = XName.Get("material", this.colladaSchema);
 			this.materialAttributeName = XName.Get("material", "");
-			
+
 			this.effectName = XName.Get("effect", this.colladaSchema);
 			this.meshName = XName.Get("mesh", this.colladaSchema);
 			this.sourceName = XName.Get("source", this.colladaSchema);
@@ -190,7 +190,7 @@ namespace Toe.Utils.Mesh.Dae
 			this.lambertName = XName.Get("lambert", this.colladaSchema);
 			this.blinnName = XName.Get("blinn", this.colladaSchema);
 			this.constantName = XName.Get("constant", this.colladaSchema);
-			diffuseName = XName.Get("diffuse", this.colladaSchema);
+			this.diffuseName = XName.Get("diffuse", this.colladaSchema);
 			this.instanceMaterialName = XName.Get("instance_material", this.colladaSchema);
 			this.bindVertexInputName = XName.Get("bind_vertex_input", this.colladaSchema);
 			this.bindMaterialName = XName.Get("bind_material", this.colladaSchema);
@@ -199,7 +199,7 @@ namespace Toe.Utils.Mesh.Dae
 			this.surfaceName = XName.Get("surface", this.colladaSchema);
 			this.initFromName = XName.Get("init_from", this.colladaSchema);
 			this.visualSceneName = XName.Get("visual_scene", this.colladaSchema);
-			
+
 			this.textureAttributeName = XName.Get("texture", "");
 			this.symbolName = XName.Get("symbol", "");
 			this.targetName = XName.Get("target", "");
