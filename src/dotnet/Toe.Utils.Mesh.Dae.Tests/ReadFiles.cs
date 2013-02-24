@@ -13,7 +13,7 @@ namespace Toe.Utils.Mesh.Dae.Tests
 			var r = new DaeReader();
 			using (var s = File.OpenRead("lemarchandsbox.DAE"))
 			{
-				var scene = r.Load(s);
+				var scene = r.Load(s, null);
 			}
 		}
 	}

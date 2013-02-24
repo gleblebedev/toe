@@ -68,6 +68,8 @@ namespace Toe.Utils.Mesh.Dae
 
 		public XName materialName;
 
+		public XName materialAttributeName;
+
 		public XName meshName;
 
 		public XName nameName;
@@ -146,6 +148,12 @@ namespace Toe.Utils.Mesh.Dae
 
 		public XName initFromName;
 
+		public XName visualSceneName;
+
+		public XName symbolName;
+
+		public XName targetName;
+
 		#endregion
 
 		#region Constructors and Destructors
@@ -158,6 +166,8 @@ namespace Toe.Utils.Mesh.Dae
 			this.assetName = XName.Get("asset", this.colladaSchema);
 			this.geometryName = XName.Get("geometry", this.colladaSchema);
 			this.materialName = XName.Get("material", this.colladaSchema);
+			this.materialAttributeName = XName.Get("material", "");
+			
 			this.effectName = XName.Get("effect", this.colladaSchema);
 			this.meshName = XName.Get("mesh", this.colladaSchema);
 			this.sourceName = XName.Get("source", this.colladaSchema);
@@ -188,9 +198,11 @@ namespace Toe.Utils.Mesh.Dae
 			this.sampler2DName = XName.Get("sampler2D", this.colladaSchema);
 			this.surfaceName = XName.Get("surface", this.colladaSchema);
 			this.initFromName = XName.Get("init_from", this.colladaSchema);
+			this.visualSceneName = XName.Get("visual_scene", this.colladaSchema);
 			
 			this.textureAttributeName = XName.Get("texture", "");
-
+			this.symbolName = XName.Get("symbol", "");
+			this.targetName = XName.Get("target", "");
 			this.vcountName = XName.Get("vcount", this.colladaSchema);
 			this.newparamName = XName.Get("newparam", this.colladaSchema);
 

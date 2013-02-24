@@ -17,8 +17,9 @@ namespace Toe.Utils.Mesh.Ase
 		/// Load mesh from stream.
 		/// </summary>
 		/// <param name="stream">Stream to read from.</param>
+		/// <param name="basePath"> </param>
 		/// <returns>Complete parsed mesh.</returns>
-		public IScene Load(Stream stream)
+		public IScene Load(Stream stream, string basePath)
 		{
 			using (var s = new StreamReader(stream))
 			{
@@ -115,7 +116,14 @@ namespace Toe.Utils.Mesh.Ase
 				}
 				if (0 == string.Compare(attr, "*MATERIAL_REF", StringComparison.InvariantCultureIgnoreCase))
 				{
-					parser.ConsumeInt();
+					var materialId = parser.ConsumeInt();
+					if (scene.Materials!= null && scene.Materials.Count > 0)
+					{
+						foreach (var submesh in node.Mesh.Submeshes)
+						{
+							submesh.Material = scene.Materials[materialId];
+						}
+					}
 					continue;
 				}
 				if (0 == string.Compare(attr, "*TM_ANIMATION", StringComparison.InvariantCultureIgnoreCase))
@@ -269,9 +277,9 @@ namespace Toe.Utils.Mesh.Ase
 			int i = 0;
 			foreach (var aseFace in faces)
 			{
-				Vertex a = BuildVertex(vertices, aseFace.C, normals, i, tfaces, cols, tvertices, (tfaces != null && tvertices != null) ? tvertices[tfaces[i].C] : Vector3.Zero);
+				Vertex c = BuildVertex(vertices, aseFace.C, normals, i, tfaces, cols, tvertices, (tfaces != null && tvertices != null) ? tvertices[tfaces[i].C] : Vector3.Zero);
 				Vertex b = BuildVertex(vertices, aseFace.B, normals, i, tfaces, cols, tvertices, (tfaces != null && tvertices != null) ? tvertices[tfaces[i].B] : Vector3.Zero);
-				Vertex c = BuildVertex(vertices, aseFace.A, normals, i, tfaces, cols, tvertices, (tfaces != null && tvertices != null) ? tvertices[tfaces[i].A] : Vector3.Zero);
+				Vertex a = BuildVertex(vertices, aseFace.A, normals, i, tfaces, cols, tvertices, (tfaces != null && tvertices != null) ? tvertices[tfaces[i].A] : Vector3.Zero);
 				BuildTangent(ref a, ref b, ref c);
 				submesh.Add(mesh.VertexBuffer.Add(a));
 				submesh.Add(mesh.VertexBuffer.Add(b));

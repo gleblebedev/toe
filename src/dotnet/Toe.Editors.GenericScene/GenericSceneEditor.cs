@@ -189,7 +189,7 @@ namespace Toe.Editors.GenericScene
 					var reader = format.CreateReader();
 					using (var s = File.OpenRead(filename))
 					{
-						scene = reader.Load(s);
+						scene = reader.Load(s, Path.GetDirectoryName(Path.GetFullPath(filename)));
 					}
 				}
 			}

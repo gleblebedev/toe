@@ -1,18 +1,19 @@
 using System.ComponentModel;
+using System.Drawing;
 
 namespace Toe.Utils.Mesh
 {
 	public enum CullMode
 	{
-		Front,
 		Back,
+		Front,
 		None,
 	}
 	public class SceneEffect:SceneItem, IEffect
 	{
 		protected static PropertyEventArgs CullModeEventArgs = Expr.PropertyEventArgs<SceneEffect>(x => x.CullMode);
 
-		private CullMode cullMode;
+		private CullMode cullMode = CullMode.Back;
 
 		public CullMode CullMode
 		{
@@ -39,6 +40,8 @@ namespace Toe.Utils.Mesh
 		{
 			get
 			{
+				if (this.diffuse == null)
+					this.diffuse = new SolidColorSource(){Color = Color.White};
 				return this.diffuse;
 			}
 			set
@@ -61,6 +64,8 @@ namespace Toe.Utils.Mesh
 		{
 			get
 			{
+				if (this.ambient == null)
+					this.ambient = new SolidColorSource() { Color = Color.Black };
 				return this.ambient;
 			}
 			set
@@ -82,6 +87,8 @@ namespace Toe.Utils.Mesh
 		{
 			get
 			{
+				if (this.emission == null)
+					this.emission = new SolidColorSource() { Color = Color.Black };
 				return this.emission;
 			}
 			set
@@ -104,6 +111,8 @@ namespace Toe.Utils.Mesh
 		{
 			get
 			{
+				if (this.specular == null)
+					this.specular = new SolidColorSource() { Color = Color.Black };
 				return this.specular;
 			}
 			set
@@ -126,6 +135,8 @@ namespace Toe.Utils.Mesh
 		{
 			get
 			{
+				if (this.reflective == null)
+					this.reflective = new SolidColorSource() { Color = Color.Black };
 				return this.reflective;
 			}
 			set
@@ -165,7 +176,7 @@ namespace Toe.Utils.Mesh
 
 		protected static PropertyEventArgs ShininessEventArgs = Expr.PropertyEventArgs<SceneEffect>(x => x.Shininess);
 
-		private float shininess;
+		private float shininess = 0;
 
 		public float Shininess
 		{

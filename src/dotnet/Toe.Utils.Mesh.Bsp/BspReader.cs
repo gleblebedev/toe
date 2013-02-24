@@ -16,8 +16,9 @@ namespace Toe.Utils.Mesh.Bsp
 		/// Load mesh from stream.
 		/// </summary>
 		/// <param name="stream">Stream to read from.</param>
+		/// <param name="basePath"> </param>
 		/// <returns>Complete parsed mesh.</returns>
-		public IScene Load(Stream stream)
+		public IScene Load(Stream stream, string basePath)
 		{
 			var pos = stream.Position;
 			var magic = stream.ReadUInt32();

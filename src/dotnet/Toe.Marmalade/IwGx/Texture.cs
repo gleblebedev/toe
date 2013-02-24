@@ -10,7 +10,7 @@ namespace Toe.Marmalade.IwGx
 
 		public static readonly uint TypeHash = Hash.Get("CIwTexture");
 
-		public Vector2 UVScale;
+		public Vector2 UVScale = new Vector2(1,1);
 
 		protected static PropertyEventArgs FlagsEventArgs = Expr.PropertyEventArgs<Texture>(x => x.Flags);
 

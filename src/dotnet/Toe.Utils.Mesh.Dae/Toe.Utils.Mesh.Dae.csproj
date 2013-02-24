@@ -61,6 +61,7 @@
     <Compile Include="DaeReader.cs" />
     <Compile Include="Input.cs" />
     <Compile Include="MeshInputMap.cs" />
+    <Compile Include="MeshSkinAndMaterials.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VertexSource.cs" />
     <Compile Include="XHelper.cs" />

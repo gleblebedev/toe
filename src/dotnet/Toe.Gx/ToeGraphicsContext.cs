@@ -16,6 +16,7 @@ using Toe.Utils.Marmalade.IwGx;
 using Toe.Utils.Mesh;
 
 using CullMode = Toe.Utils.Mesh.CullMode;
+using Image = Toe.Marmalade.IwGx.Image;
 
 namespace Toe.Gx
 {
@@ -755,6 +756,7 @@ namespace Toe.Gx
 		{
 			var dst = new Material(this.resourceManager);
 			dst.Name = src.Name;
+			dst.DepthWriteEnable = true;
 			if (src.Effect.Ambient != null)
 			{
 				dst.ColAmbient = src.Effect.Ambient.GetColor();
@@ -773,19 +775,29 @@ namespace Toe.Gx
 				default:
 					throw new ArgumentOutOfRangeException();
 			}
-			if (src.Effect.Diffuse != null)
+			var diffuse = src.Effect.Diffuse;
+			if (diffuse != null)
 			{
-				switch (src.Effect.Diffuse.Type)
+				switch (diffuse.Type)
 				{
 					case ColorSourceType.SolidColor:
 					case ColorSourceType.Function:
-						dst.ColDiffuse = src.Effect.Diffuse.GetColor();
+						dst.ColDiffuse = diffuse.GetColor();
 						break;
 					case ColorSourceType.Image:
-						var fileReference = src.Effect.Diffuse.GetImagePath();
-						if (File.Exists(fileReference))
+						var emb = ((ImageColorSource)diffuse).Image as EmbeddedImage;
+						if (emb != null)
 						{
-							dst.Texture0.FileReference = fileReference;
+							dst.Texture0.Resource = new Texture { Image = new Image((ushort)emb.Width, (ushort)emb.Height, emb.Pitch, ImageFormat.ABGR_8888, emb.GetRawData()) };
+						}
+						else
+						{
+							var fileReference = diffuse.GetImagePath();
+							if (!string.IsNullOrEmpty(fileReference))
+							{
+								if (File.Exists(fileReference))
+									dst.Texture0.FileReference = fileReference;
+							}
 						}
 						break;
 					default:

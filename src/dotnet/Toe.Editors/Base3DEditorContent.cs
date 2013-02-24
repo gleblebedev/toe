@@ -18,14 +18,14 @@ namespace Toe.Editors
 
 		private IMesh cube;
 
-		private Texture cubeTex;
+		//private Texture cubeTex;
 
 		public Base3DEditorContent(ToeGraphicsContext graphicsContext)
 		{
 			this.graphicsContext = graphicsContext;
 			var cubeBytes = Toe.Editors.Properties.Resources.xyzcube;
 			if (cubeBytes != null) {
-				IScene scene = (new AseReader()).Load(new MemoryStream(cubeBytes));
+				IScene scene = (new AseReader()).Load(new MemoryStream(cubeBytes), null);
 				foreach (var node in scene.Nodes)
 				{
 					if (node.Mesh != null)
@@ -33,8 +33,16 @@ namespace Toe.Editors
 						this.cube = node.Mesh;
 					}
 				}
-				this.cubeTex = new Toe.Marmalade.IwGx.Texture ();
-				cubeTex.Image = new Toe.Marmalade.IwGx.Image (Toe.Editors.Properties.Resources.xyzcube1);
+				//this.cubeTex = new Toe.Marmalade.IwGx.Texture ();
+				//cubeTex.Image = new Toe.Marmalade.IwGx.Image (Toe.Editors.Properties.Resources.xyzcube1);
+				this.cube.Submeshes[0].Material = new SceneMaterial()
+					{
+						Effect =
+							new SceneEffect()
+								{
+									Diffuse = new ImageColorSource() { Image = new EmbeddedImage(Toe.Editors.Properties.Resources.xyzcube1) { } }
+								}
+					};
 			}
 
 		}
@@ -48,15 +56,15 @@ namespace Toe.Editors
 		{
 			if (this.cube != null)
 			{
-				graphicsContext.SetMaterial(null);
+				//graphicsContext.SetMaterial(null);
 				graphicsContext.DisableLighting();
 
-				this.graphicsContext.SetTexture(0, this.cubeTex);
-				this.graphicsContext.SetTexture(1, null);
-				this.graphicsContext.SetTexture(2, null);
-				this.graphicsContext.SetTexture(3, null);
-				GL.Enable(EnableCap.CullFace);
-				GL.CullFace(CullFaceMode.Front);
+				//this.graphicsContext.SetTexture(0, this.cubeTex);
+				//this.graphicsContext.SetTexture(1, null);
+				//this.graphicsContext.SetTexture(2, null);
+				//this.graphicsContext.SetTexture(3, null);
+				//GL.Enable(EnableCap.CullFace);
+				//GL.CullFace(CullFaceMode.Front);
 				OpenTKHelper.Assert();
 
 				var result = new Matrix4();
@@ -89,7 +97,8 @@ namespace Toe.Editors
 				view.Invert();
 				graphicsContext.SetView(ref view);
 
-				GL.Viewport(glControl.Width - w, glControl.Height - w, w, w);
+				graphicsContext.SetViewport(glControl.Width - w, glControl.Height - w, w, w);
+				//GL.Viewport(glControl.Width - w, glControl.Height - w, w, w);
 
 				graphicsContext.Render(this.cube);
 				OpenTKHelper.Assert();
@@ -110,11 +119,11 @@ namespace Toe.Editors
 		{
 			if(disposing)
 			{
-				if (cubeTex != null)
-				{
-					cubeTex.Dispose();
-					cubeTex = null;
-				}
+				//if (cubeTex != null)
+				//{
+				//    cubeTex.Dispose();
+				//    cubeTex = null;
+				//}
 			}
 		}
 

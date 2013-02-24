@@ -110,17 +110,20 @@ namespace Toe.Resources
 							var item = this.file.Items[0];
 							this.nameReference = item.Name;
 							this.hashReference = item.NameHash;
+							this.resource = null;
 						}
 						else
 						{
 							this.nameReference = null;
 							this.hashReference = 0;
+							this.resource = null;
 						}
 					}
 					else
 					{
 						this.nameReference = null;
 						this.hashReference = 0;
+						this.resource = null;
 					}
 					this.UpdateConsumedResource();
 				}
@@ -139,6 +142,7 @@ namespace Toe.Resources
 				{
 					this.FileReference = null;
 					this.hashReference = value;
+					this.resource = null;
 					this.UpdateConsumedResource();
 				}
 			}
@@ -148,7 +152,7 @@ namespace Toe.Resources
 		{
 			get
 			{
-				return string.IsNullOrEmpty(this.fileReference) && this.hashReference == 0;
+				return resource == null && string.IsNullOrEmpty(this.fileReference) && this.hashReference == 0;
 			}
 		}
 
@@ -163,6 +167,7 @@ namespace Toe.Resources
 				if (this.nameReference != value)
 				{
 					this.nameReference = value;
+					this.resource = null;
 					if (string.IsNullOrEmpty(this.nameReference))
 					{
 						this.hashReference = 0;
@@ -176,10 +181,12 @@ namespace Toe.Resources
 			}
 		}
 
+		private object resource = null;
 		public object Resource
 		{
 			get
 			{
+				if (resource != null) return resource;
 				if (this.consumedFileResource != null)
 				{
 					return this.consumedFileResource.Resource;
@@ -189,6 +196,14 @@ namespace Toe.Resources
 					return null;
 				}
 				return this.consumedResource.Value;
+			}
+			set
+			{
+				this.fileReference = null;
+				this.hashReference = 0;
+				this.nameReference = null;
+				this.resource = value;
+				RaiseReferenceChanged();
 			}
 		}
 
@@ -218,6 +233,7 @@ namespace Toe.Resources
 			r.fileReference = this.fileReference;
 			r.nameReference = this.nameReference;
 			r.hashReference = this.hashReference;
+			r.resource = this.resource;
 			return r;
 		}
 

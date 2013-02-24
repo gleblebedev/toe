@@ -20,6 +20,31 @@ namespace Toe.Utils.Mesh.Dae
 
 		private static XName idName = XName.Get("id", string.Empty);
 
+		public static XElement ElementByUrl(this XElement root, string value)
+		{
+			if (root == null) return null;
+			if (string.IsNullOrEmpty(value)) return null;
+			if (!value.StartsWith("#"))
+				throw new DaeException("Url should start with #");
+			return root.ElementById(value.Substring(1));
+		}
+		public static string AttributeValue(this XElement root, XName name)
+		{
+			if (root == null) return null;
+			if (name == null) return null;
+			var a = root.Attribute(name);
+			if (a == null) return null;
+			return a.Value;
+		}
+		public static string ElementValue(this XElement root, XName name)
+		{
+			if (root == null) return null;
+			if (name == null) return null;
+			var a = root.Element(name);
+			if (a == null) return null;
+			return a.Value;
+		}
+
 		public static XElement ElementById(this XElement root, string value)
 		{
 

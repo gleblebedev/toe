@@ -393,13 +393,20 @@ namespace Toe.Marmalade.IwGx
 		public Image()
 		{
 		}
-
+		public Image(ushort w, ushort h, int p, ImageFormat format, byte[] data)
+		{
+			this.width = w;
+			this.height = h;
+			this.pitch = p;
+			this.format = format;
+			this.data = data;
+		}
 		public Image(Bitmap bitmap)
 		{
 			this.width = (ushort)bitmap.Width;
 			this.height = (ushort)bitmap.Height;
 			this.pitch = this.width * 4;
-			this.Format = ImageFormat.ABGR_8888;
+			this.format = ImageFormat.ABGR_8888;
 			BitmapData data = bitmap.LockBits(
 				new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
 			this.data = new byte[this.pitch * this.height];
