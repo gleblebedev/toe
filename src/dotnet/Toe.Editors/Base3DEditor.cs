@@ -701,6 +701,21 @@ namespace Toe.Editors
 					case VertexSourceType.TrianleStrip:
 						break;
 					case VertexSourceType.QuadList:
+						for (; ; )
+						{
+							if (!enumerator.MoveNext()) break;
+							var a = enumerator.Current;
+							if (!enumerator.MoveNext()) break;
+							var b = enumerator.Current;
+							if (!enumerator.MoveNext()) break;
+							var c = enumerator.Current;
+							if (!enumerator.MoveNext()) break;
+							var d = enumerator.Current;
+							graphicsContext.RenderDebugLine(vertices[a], vertices[b], wireColor);
+							graphicsContext.RenderDebugLine(vertices[b], vertices[c], wireColor);
+							graphicsContext.RenderDebugLine(vertices[c], vertices[d], wireColor);
+							graphicsContext.RenderDebugLine(vertices[d], vertices[a], wireColor);
+						}
 						break;
 					case VertexSourceType.QuadStrip:
 						break;

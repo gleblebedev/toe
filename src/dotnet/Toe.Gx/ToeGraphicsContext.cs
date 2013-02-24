@@ -289,6 +289,10 @@ namespace Toe.Gx
 			if (this.material == null)
 			{
 				GL.UseProgram(0);
+				GL.ActiveTexture(TextureUnit.Texture1);
+				GL.Disable(EnableCap.Texture2D);
+				GL.ActiveTexture(TextureUnit.Texture0);
+				GL.Disable(EnableCap.Texture2D);
 			}
 			this.ApplyMaterialCommonFixedPipeline();
 		}
@@ -956,6 +960,7 @@ namespace Toe.Gx
 
 			//GL.Enable(EnableCap.CullFace);
 			//GL.CullFace(CullFaceMode.Front);
+			GL.Enable(EnableCap.DepthTest);
 
 			GL.Begin(BeginMode.Lines);
 			for (int i = 0; i < this.vertexBufferCount; ++i)

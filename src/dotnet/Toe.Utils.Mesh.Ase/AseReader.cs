@@ -10,6 +10,7 @@ namespace Toe.Utils.Mesh.Ase
 {
 	public class AseReader : ISceneReader
 	{
+		private string basePath;
 
 		#region Implementation of IMeshReader
 
@@ -21,6 +22,7 @@ namespace Toe.Utils.Mesh.Ase
 		/// <returns>Complete parsed mesh.</returns>
 		public IScene Load(Stream stream, string basePath)
 		{
+			this.basePath = basePath?? Directory.GetCurrentDirectory();
 			using (var s = new StreamReader(stream))
 			{
 				var parser = new AseParser(s);
@@ -52,7 +54,7 @@ namespace Toe.Utils.Mesh.Ase
 				}
 				if (0 == string.Compare(meshSection, "*MATERIAL_LIST", StringComparison.InvariantCultureIgnoreCase))
 				{
-					this.SkipBlock(parser);
+					ParseMaterials(parser, s);
 					continue;
 				}
 				if (0 == string.Compare(meshSection, "*CAMERAOBJECT", StringComparison.InvariantCultureIgnoreCase))
@@ -67,6 +69,235 @@ namespace Toe.Utils.Mesh.Ase
 				}
 				parser.UnknownLexemError();
 			}
+		}
+
+		private void ParseMaterials(AseParser parser, Scene scene)
+		{
+			parser.Consume("{");
+			for (; ; )
+			{
+				var attr = parser.Consume();
+				if (attr == null || attr == "}") break;
+				if (0 == string.Compare(attr, "*MATERIAL_COUNT", StringComparison.InvariantCultureIgnoreCase))
+				{
+					parser.ConsumeInt();
+					continue;
+				}
+				if (0 == string.Compare(attr, "*MATERIAL", StringComparison.InvariantCultureIgnoreCase))
+				{
+					var id = parser.ConsumeInt();
+					while (scene.Materials.Count <= id)
+					{
+						scene.Materials.Add(null);
+					}
+					scene.Materials[id] = ParseMaterial(parser, scene);
+					continue;
+				}
+				parser.UnknownLexemError();
+			}
+		}
+
+		private IMaterial ParseMaterial(AseParser parser, Scene scene)
+		{
+			var sceneEffect = new SceneEffect();
+			var m = new SceneMaterial() { Effect = sceneEffect };
+			parser.Consume("{");
+			for (; ; )
+			{
+				var attr = parser.Consume();
+				if (attr == null || attr == "}") break;
+				if (0 == string.Compare(attr, "*MATERIAL_NAME", StringComparison.InvariantCultureIgnoreCase))
+				{
+					m.Id = m.Name = sceneEffect.Id = sceneEffect.Name = parser.Consume();
+					continue;
+				}
+				if (0 == string.Compare(attr, "*MATERIAL_CLASS", StringComparison.InvariantCultureIgnoreCase))
+				{
+					parser.Consume();
+					continue;
+				}
+				if (0 == string.Compare(attr, "*MATERIAL_AMBIENT", StringComparison.InvariantCultureIgnoreCase))
+				{
+					sceneEffect.Ambient = new SolidColorSource(){Color = ParseColor(parser)};
+					continue;
+				}
+				if (0 == string.Compare(attr, "*MATERIAL_DIFFUSE", StringComparison.InvariantCultureIgnoreCase))
+				{
+					sceneEffect.Diffuse = new SolidColorSource() { Color = ParseColor(parser) };
+					continue;
+				}
+				if (0 == string.Compare(attr, "*MATERIAL_SPECULAR", StringComparison.InvariantCultureIgnoreCase))
+				{
+					sceneEffect.Specular = new SolidColorSource() { Color = ParseColor(parser) };
+					continue;
+				}
+				if (0 == string.Compare(attr, "*MATERIAL_SHINE", StringComparison.InvariantCultureIgnoreCase))
+				{
+					sceneEffect.Shininess = parser.ConsumeFloat();
+					continue;
+				}
+				if (0 == string.Compare(attr, "*MATERIAL_SHINESTRENGTH", StringComparison.InvariantCultureIgnoreCase))
+				{
+					parser.ConsumeFloat();
+					continue;
+				}
+				if (0 == string.Compare(attr, "*MATERIAL_TRANSPARENCY", StringComparison.InvariantCultureIgnoreCase))
+				{
+					sceneEffect.Transparency = parser.ConsumeFloat();
+					continue;
+				}
+				if (0 == string.Compare(attr, "*MATERIAL_WIRESIZE", StringComparison.InvariantCultureIgnoreCase))
+				{
+					parser.ConsumeFloat();
+					continue;
+				}
+				if (0 == string.Compare(attr, "*MATERIAL_XP_FALLOFF", StringComparison.InvariantCultureIgnoreCase))
+				{
+					parser.ConsumeFloat();
+					continue;
+				}
+				if (0 == string.Compare(attr, "*MATERIAL_SELFILLUM", StringComparison.InvariantCultureIgnoreCase))
+				{
+					parser.ConsumeFloat();
+					continue;
+				}
+				if (0 == string.Compare(attr, "*MATERIAL_SHADING", StringComparison.InvariantCultureIgnoreCase))
+				{
+					parser.Consume();
+					continue;
+				}
+				if (0 == string.Compare(attr, "*MATERIAL_FALLOFF", StringComparison.InvariantCultureIgnoreCase))
+				{
+					parser.Consume();
+					continue;
+				}
+				if (0 == string.Compare(attr, "*MATERIAL_XP_TYPE", StringComparison.InvariantCultureIgnoreCase))
+				{
+					parser.Consume();
+					continue;
+				}
+				if (0 == string.Compare(attr, "*MAP_DIFFUSE", StringComparison.InvariantCultureIgnoreCase))
+				{
+					sceneEffect.Diffuse = ParseMap(parser, scene);
+					continue;
+				}
+				
+				parser.UnknownLexemError();
+			}
+			return m;
+		}
+
+		private IColorSource ParseMap(AseParser parser, Scene scene)
+		{
+			var image = new FileReferenceImage();
+			var texture = new ImageColorSource { Image = image };
+			parser.Consume("{");
+			for (; ; )
+			{
+				var attr = parser.Consume();
+				if (attr == null || attr == "}") break;
+				if (0 == string.Compare(attr, "*MAP_NAME", StringComparison.InvariantCultureIgnoreCase))
+				{
+					image.Id = image.Name = parser.Consume();
+					continue;
+				}
+				if (0 == string.Compare(attr, "*MAP_CLASS", StringComparison.InvariantCultureIgnoreCase))
+				{
+					parser.Consume();
+					continue;
+				}
+				if (0 == string.Compare(attr, "*MAP_SUBNO", StringComparison.InvariantCultureIgnoreCase))
+				{
+					parser.Consume();
+					continue;
+				}
+				if (0 == string.Compare(attr, "*MAP_AMOUNT", StringComparison.InvariantCultureIgnoreCase))
+				{
+					parser.ConsumeFloat();
+					continue;
+				}
+				if (0 == string.Compare(attr, "*BITMAP", StringComparison.InvariantCultureIgnoreCase))
+				{
+					image.Path = Path.Combine(basePath, parser.Consume());
+					continue;
+				}
+				if (0 == string.Compare(attr, "*MAP_TYPE", StringComparison.InvariantCultureIgnoreCase))
+				{
+					parser.Consume();
+					continue;
+				}
+				if (0 == string.Compare(attr, "*UVW_U_OFFSET", StringComparison.InvariantCultureIgnoreCase))
+				{
+					parser.ConsumeFloat();
+					continue;
+				}
+				if (0 == string.Compare(attr, "*UVW_V_OFFSET", StringComparison.InvariantCultureIgnoreCase))
+				{
+					parser.ConsumeFloat();
+					continue;
+				}
+				if (0 == string.Compare(attr, "*UVW_U_TILING", StringComparison.InvariantCultureIgnoreCase))
+				{
+					parser.ConsumeFloat();
+					continue;
+				}
+				if (0 == string.Compare(attr, "*UVW_V_TILING", StringComparison.InvariantCultureIgnoreCase))
+				{
+					parser.ConsumeFloat();
+					continue;
+				}
+				if (0 == string.Compare(attr, "*UVW_ANGLE", StringComparison.InvariantCultureIgnoreCase))
+				{
+					parser.ConsumeFloat();
+					continue;
+				}
+				if (0 == string.Compare(attr, "*UVW_BLUR", StringComparison.InvariantCultureIgnoreCase))
+				{
+					parser.ConsumeFloat();
+					continue;
+				}
+				if (0 == string.Compare(attr, "*UVW_BLUR_OFFSET", StringComparison.InvariantCultureIgnoreCase))
+				{
+					parser.ConsumeFloat();
+					continue;
+				}
+				if (0 == string.Compare(attr, "*UVW_NOUSE_AMT", StringComparison.InvariantCultureIgnoreCase))
+				{
+					parser.ConsumeFloat();
+					continue;
+				}
+				if (0 == string.Compare(attr, "*UVW_NOISE_SIZE", StringComparison.InvariantCultureIgnoreCase))
+				{
+					parser.ConsumeFloat();
+					continue;
+				}
+				if (0 == string.Compare(attr, "*UVW_NOISE_LEVEL", StringComparison.InvariantCultureIgnoreCase))
+				{
+					parser.ConsumeFloat();
+					continue;
+				}
+				if (0 == string.Compare(attr, "*UVW_NOISE_PHASE", StringComparison.InvariantCultureIgnoreCase))
+				{
+					parser.ConsumeFloat();
+					continue;
+				}
+				if (0 == string.Compare(attr, "*BITMAP_FILTER", StringComparison.InvariantCultureIgnoreCase))
+				{
+					parser.Consume();
+					continue;
+				}
+				parser.UnknownLexemError();
+			}
+			return texture;
+		}
+
+		private static Color ParseColor(AseParser parser)
+		{
+			var r = (int)(255.0f * parser.ConsumeFloat());
+			var g = (int)(255.0f * parser.ConsumeFloat());
+			var b = (int)(255.0f * parser.ConsumeFloat());
+			var fromArgb = Color.FromArgb(255, r, g, b);
+			return fromArgb;
 		}
 
 		private void ParsSubMesh(AseParser parser, Scene scene)
