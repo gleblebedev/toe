@@ -296,17 +296,6 @@ namespace Toe.Gx
 		{
 			if (this.material != null)
 			{
-				switch (this.material.ShadeMode)
-				{
-					case ShadeMode.FLAT:
-						GL.ShadeModel(ShadingModel.Flat);
-						break;
-					case ShadeMode.GOURAUD:
-						GL.ShadeModel(ShadingModel.Smooth);
-						break;
-					default:
-						throw new ArgumentOutOfRangeException();
-				}
 				switch (this.material.CullMode)
 				{
 					case Utils.Marmalade.IwGx.CullMode.FRONT:

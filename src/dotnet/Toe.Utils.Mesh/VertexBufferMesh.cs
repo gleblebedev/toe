@@ -28,17 +28,17 @@ namespace Toe.Utils.Mesh
 
 		private float boundingSphereR;
 
-		private bool isBinormalStreamAvailable = true;
+		private bool isBinormalStreamAvailable = false;
 
-		private bool isColorStreamAvailable = true;
+		private bool isColorStreamAvailable = false;
 
-		private bool isNormalStreamAvailable = true;
+		private bool isNormalStreamAvailable = false;
 
-		private bool isTangentStreamAvailable = true;
+		private bool isTangentStreamAvailable = false;
 
-		private bool isUV0StreamAvailable = true;
+		private bool isUV0StreamAvailable = false;
 
-		private bool isUV1StreamAvailable = true;
+		private bool isUV1StreamAvailable = false;
 
 		#endregion
 

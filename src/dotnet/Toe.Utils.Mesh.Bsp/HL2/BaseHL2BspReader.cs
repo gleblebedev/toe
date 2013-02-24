@@ -79,7 +79,15 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 
 			if (buildBsp)
 			{
-				var streamMesh = new VertexBufferMesh();
+				var streamMesh = new VertexBufferMesh()
+					{
+						IsNormalStreamAvailable = true,
+						IsUV0StreamAvailable = true,
+						IsUV1StreamAvailable = true,
+						IsColorStreamAvailable = true,
+						IsBinormalStreamAvailable = false,
+						IsTangentStreamAvailable = false,
+					};
 				this.Scene.Geometries.Add(streamMesh);
 				var meshBuilder = new MeshBuilder(streamMesh, this);
 				node.Mesh = streamMesh;
@@ -245,7 +253,15 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 
 		private void BuildModelAsNode(ref SourceModel sourceModel)
 		{
-			var streamMesh2 = new VertexBufferMesh();
+			var streamMesh2 = new VertexBufferMesh()
+			{
+				IsNormalStreamAvailable = true,
+				IsUV0StreamAvailable = true,
+				IsUV1StreamAvailable = true,
+				IsColorStreamAvailable = true,
+				IsBinormalStreamAvailable = false,
+				IsTangentStreamAvailable = false,
+			};
 			var meshBuilder2 = new MeshBuilder(streamMesh2, this);
 			var beginModelFace = sourceModel.firstface;
 			var endModelFace = beginModelFace + sourceModel.numfaces;

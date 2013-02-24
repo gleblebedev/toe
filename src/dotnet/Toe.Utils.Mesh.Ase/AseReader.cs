@@ -280,8 +280,9 @@ namespace Toe.Utils.Mesh.Ase
 			}
 			mesh.IsBinormalStreamAvailable = true;
 			mesh.IsTangentStreamAvailable = true;
-			if (cols == null) mesh.IsColorStreamAvailable = false;
-			if (normals == null) mesh.IsNormalStreamAvailable = false;
+			if (cols != null) mesh.IsColorStreamAvailable = true;
+			if (normals != null) mesh.IsNormalStreamAvailable = true;
+			if (tfaces != null) mesh.IsUV0StreamAvailable = true;
 		}
 
 		private void BuildTangent(ref Vertex p0, ref Vertex p1, ref Vertex p2)
