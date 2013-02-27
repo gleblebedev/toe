@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 using Autofac;
 
@@ -12,12 +14,20 @@ namespace Toe.Editors.GenericScene
 
 		private readonly IComponentContext context;
 
+		private readonly IFileFormatInfo[] supportedFormats;
+
 		#endregion
 
 		#region Constructors and Destructors
 
 		public GenericSceneResourceEditorFactory(IComponentContext context)
 		{
+			this.supportedFormats = new IFileFormatInfo[]
+				{
+					new FileFormatInfo{CanCreate = false,Extensions = new []{".ase"},Factory = this,Name = "ASCII file"},
+					new FileFormatInfo{CanCreate = false,Extensions = new []{".bsp"},Factory = this,Name = "Quake/HalfLife BSP file"},
+					new FileFormatInfo{CanCreate = false,Extensions = new []{".dae"},Factory = this,Name = "Collada DAE"},
+				};
 			this.context = context;
 		}
 
@@ -25,11 +35,20 @@ namespace Toe.Editors.GenericScene
 
 		#region Public Methods and Operators
 
+		/// <summary>
+		/// All supported file formats.
+		/// </summary>
+		public IList<IFileFormatInfo> SupportedFormats
+		{
+			get
+			{
+				return this.supportedFormats;
+			}
+		}
+
 		public IResourceEditor CreateEditor(string fileName)
 		{
-			if (fileName.EndsWith(".ase", StringComparison.InvariantCultureIgnoreCase)
-				|| fileName.EndsWith(".bsp", StringComparison.InvariantCultureIgnoreCase)
-			    || fileName.EndsWith(".dae", StringComparison.InvariantCultureIgnoreCase))
+			if (this.supportedFormats.SelectMany(supportedFormat => supportedFormat.Extensions).Any(extension => fileName.EndsWith(extension, StringComparison.InvariantCultureIgnoreCase)))
 			{
 				return this.context.Resolve<GenericSceneEditor>();
 			}

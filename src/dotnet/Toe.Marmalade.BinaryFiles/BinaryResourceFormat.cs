@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 using Autofac;
 using Autofac.Core;
@@ -28,6 +29,8 @@ namespace Toe.Marmalade.BinaryFiles
 
 		private byte rev = 1;
 
+		private static readonly string[] extensions = new string[] { ".group.bin" };
+
 		#endregion
 
 		#region Constructors and Destructors
@@ -44,14 +47,32 @@ namespace Toe.Marmalade.BinaryFiles
 
 		#region Public Methods and Operators
 
+		/// <summary>
+		/// Name of file format.
+		/// </summary>
+		public string Name
+		{
+			get
+			{
+				return "Marmalade SDK Binary Group";
+			}
+		}
+
+		/// <summary>
+		/// List of extensions with leading dot.
+		/// </summary>
+		public IList<string> Extensions
+		{
+			get
+			{
+				return extensions;
+			}
+		}
+
 		public bool CanRead(string filePath)
 		{
 			var f = filePath.ToLower();
-			if (f.EndsWith(".group.bin"))
-			{
-				return true;
-			}
-			return false;
+			return extensions.Any(f.EndsWith);
 		}
 
 		public bool CanWrite(string filePath)

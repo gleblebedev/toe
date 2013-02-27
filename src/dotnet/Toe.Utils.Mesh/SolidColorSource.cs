@@ -1,30 +1,19 @@
+using System;
 using System.Drawing;
 
 namespace Toe.Utils.Mesh
 {
 	public class SolidColorSource : ClassWithNotification, IColorSource
 	{
-		#region Implementation of IColorSource
-
-		public ColorSourceType Type
-		{
-			get
-			{
-				return ColorSourceType.SolidColor;
-			}
-		}
-
-		public bool IsColor
-		{
-			get
-			{
-				return true;
-			}
-		}
+		#region Constants and Fields
 
 		protected static PropertyEventArgs ColorEventArgs = Expr.PropertyEventArgs<SolidColorSource>(x => x.Color);
 
 		private Color color;
+
+		#endregion
+
+		#region Public Properties
 
 		public Color Color
 		{
@@ -43,9 +32,12 @@ namespace Toe.Utils.Mesh
 			}
 		}
 
-		public Color GetColor()
+		public bool IsColor
 		{
-			return color;
+			get
+			{
+				return true;
+			}
 		}
 
 		public bool IsImage
@@ -56,14 +48,31 @@ namespace Toe.Utils.Mesh
 			}
 		}
 
+		public ColorSourceType Type
+		{
+			get
+			{
+				return ColorSourceType.SolidColor;
+			}
+		}
+
+		#endregion
+
+		#region Public Methods and Operators
+
+		public Color GetColor()
+		{
+			return this.color;
+		}
+
 		public string GetImagePath()
 		{
-			throw new System.InvalidOperationException();
+			throw new InvalidOperationException();
 		}
 
 		public byte[] GetImageRawData()
 		{
-			return new byte[4] { color.R, color.G, color.B, color.A };
+			return new byte[4] { this.color.R, this.color.G, this.color.B, this.color.A };
 		}
 
 		#endregion

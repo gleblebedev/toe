@@ -5,8 +5,12 @@ namespace Toe.Utils.Mesh
 	/// </summary>
 	public interface ISceneFileFormat
 	{
-		ISceneReader CreateReader();
+		#region Public Methods and Operators
 
 		bool CanLoad(string filename);
+
+		ISceneReader CreateReader();
+
+		#endregion
 	}
 }

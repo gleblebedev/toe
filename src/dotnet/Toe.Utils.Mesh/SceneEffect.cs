@@ -1,4 +1,3 @@
-using System.ComponentModel;
 using System.Drawing;
 
 namespace Toe.Utils.Mesh
@@ -6,14 +5,80 @@ namespace Toe.Utils.Mesh
 	public enum CullMode
 	{
 		Back,
+
 		Front,
+
 		None,
 	}
-	public class SceneEffect:SceneItem, IEffect
+
+	public class SceneEffect : SceneItem, IEffect
 	{
+		#region Constants and Fields
+
+		protected static PropertyEventArgs AmbientEventArgs = Expr.PropertyEventArgs<SceneEffect>(x => x.Ambient);
+
 		protected static PropertyEventArgs CullModeEventArgs = Expr.PropertyEventArgs<SceneEffect>(x => x.CullMode);
 
+		protected static PropertyEventArgs DiffuseEventArgs = Expr.PropertyEventArgs<SceneEffect>(x => x.Diffuse);
+
+		protected static PropertyEventArgs EmissionEventArgs = Expr.PropertyEventArgs<SceneEffect>(x => x.Emission);
+
+		protected static PropertyEventArgs ReflectiveEventArgs = Expr.PropertyEventArgs<SceneEffect>(x => x.Reflective);
+
+		protected static PropertyEventArgs ReflectivityEventArgs = Expr.PropertyEventArgs<SceneEffect>(x => x.Reflectivity);
+
+		protected static PropertyEventArgs ShininessEventArgs = Expr.PropertyEventArgs<SceneEffect>(x => x.Shininess);
+
+		protected static PropertyEventArgs SpecularEventArgs = Expr.PropertyEventArgs<SceneEffect>(x => x.Specular);
+
+		protected static PropertyEventArgs TransparencyEventArgs = Expr.PropertyEventArgs<SceneEffect>(x => x.Transparency);
+
+		protected static PropertyEventArgs TransparentEventArgs = Expr.PropertyEventArgs<SceneEffect>(x => x.Transparent);
+
+		private IColorSource ambient;
+
 		private CullMode cullMode = CullMode.Back;
+
+		private IColorSource diffuse;
+
+		private IColorSource emission;
+
+		private IColorSource reflective;
+
+		private float reflectivity;
+
+		private float shininess;
+
+		private IColorSource specular;
+
+		private float transparency;
+
+		private IColorSource transparent;
+
+		#endregion
+
+		#region Public Properties
+
+		public IColorSource Ambient
+		{
+			get
+			{
+				if (this.ambient == null)
+				{
+					this.ambient = new SolidColorSource { Color = Color.Black };
+				}
+				return this.ambient;
+			}
+			set
+			{
+				if (this.ambient != value)
+				{
+					this.RaisePropertyChanging(AmbientEventArgs.Changing);
+					this.ambient = value;
+					this.RaisePropertyChanged(AmbientEventArgs.Changed);
+				}
+			}
+		}
 
 		public CullMode CullMode
 		{
@@ -32,16 +97,14 @@ namespace Toe.Utils.Mesh
 			}
 		}
 
-		protected static PropertyEventArgs DiffuseEventArgs = Expr.PropertyEventArgs<SceneEffect>(x => x.Diffuse);
-
-		private IColorSource diffuse;
-
 		public IColorSource Diffuse
 		{
 			get
 			{
 				if (this.diffuse == null)
-					this.diffuse = new SolidColorSource(){Color = Color.White};
+				{
+					this.diffuse = new SolidColorSource { Color = Color.White };
+				}
 				return this.diffuse;
 			}
 			set
@@ -55,40 +118,14 @@ namespace Toe.Utils.Mesh
 			}
 		}
 
-
-		protected static PropertyEventArgs AmbientEventArgs = Expr.PropertyEventArgs<SceneEffect>(x => x.Ambient);
-
-		private IColorSource ambient;
-
-		public IColorSource Ambient
-		{
-			get
-			{
-				if (this.ambient == null)
-					this.ambient = new SolidColorSource() { Color = Color.Black };
-				return this.ambient;
-			}
-			set
-			{
-				if (this.ambient != value)
-				{
-					this.RaisePropertyChanging(AmbientEventArgs.Changing);
-					this.ambient = value;
-					this.RaisePropertyChanged(AmbientEventArgs.Changed);
-				}
-			}
-		}
-
-		protected static PropertyEventArgs EmissionEventArgs = Expr.PropertyEventArgs<SceneEffect>(x => x.Emission);
-
-		private IColorSource emission;
-
 		public IColorSource Emission
 		{
 			get
 			{
 				if (this.emission == null)
-					this.emission = new SolidColorSource() { Color = Color.Black };
+				{
+					this.emission = new SolidColorSource { Color = Color.Black };
+				}
 				return this.emission;
 			}
 			set
@@ -102,41 +139,14 @@ namespace Toe.Utils.Mesh
 			}
 		}
 
-
-		protected static PropertyEventArgs SpecularEventArgs = Expr.PropertyEventArgs<SceneEffect>(x => x.Specular);
-
-		private IColorSource specular;
-
-		public IColorSource Specular
-		{
-			get
-			{
-				if (this.specular == null)
-					this.specular = new SolidColorSource() { Color = Color.Black };
-				return this.specular;
-			}
-			set
-			{
-				if (this.specular != value)
-				{
-					this.RaisePropertyChanging(SpecularEventArgs.Changing);
-					this.specular = value;
-					this.RaisePropertyChanged(SpecularEventArgs.Changed);
-				}
-			}
-		}
-
-
-		protected static PropertyEventArgs ReflectiveEventArgs = Expr.PropertyEventArgs<SceneEffect>(x => x.Reflective);
-
-		private IColorSource reflective;
-
 		public IColorSource Reflective
 		{
 			get
 			{
 				if (this.reflective == null)
-					this.reflective = new SolidColorSource() { Color = Color.Black };
+				{
+					this.reflective = new SolidColorSource { Color = Color.Black };
+				}
 				return this.reflective;
 			}
 			set
@@ -149,57 +159,6 @@ namespace Toe.Utils.Mesh
 				}
 			}
 		}
-
-
-		protected static PropertyEventArgs TransparentEventArgs = Expr.PropertyEventArgs<SceneEffect>(x => x.Transparent);
-
-		private IColorSource transparent;
-
-		public IColorSource Transparent
-		{
-			get
-			{
-				return this.transparent;
-			}
-			set
-			{
-				if (this.transparent != value)
-				{
-					this.RaisePropertyChanging(TransparentEventArgs.Changing);
-					this.transparent = value;
-					this.RaisePropertyChanged(TransparentEventArgs.Changed);
-				}
-			}
-		}
-
-
-
-		protected static PropertyEventArgs ShininessEventArgs = Expr.PropertyEventArgs<SceneEffect>(x => x.Shininess);
-
-		private float shininess = 0;
-
-		public float Shininess
-		{
-			get
-			{
-				return this.shininess;
-			}
-			set
-			{
-				if (this.shininess != value)
-				{
-					this.RaisePropertyChanging(ShininessEventArgs.Changing);
-					this.shininess = value;
-					this.RaisePropertyChanged(ShininessEventArgs.Changed);
-				}
-			}
-		}
-
-
-
-		protected static PropertyEventArgs ReflectivityEventArgs = Expr.PropertyEventArgs<SceneEffect>(x => x.Reflectivity);
-
-		private float reflectivity;
 
 		public float Reflectivity
 		{
@@ -218,10 +177,43 @@ namespace Toe.Utils.Mesh
 			}
 		}
 
+		public float Shininess
+		{
+			get
+			{
+				return this.shininess;
+			}
+			set
+			{
+				if (this.shininess != value)
+				{
+					this.RaisePropertyChanging(ShininessEventArgs.Changing);
+					this.shininess = value;
+					this.RaisePropertyChanged(ShininessEventArgs.Changed);
+				}
+			}
+		}
 
-		protected static PropertyEventArgs TransparencyEventArgs = Expr.PropertyEventArgs<SceneEffect>(x => x.Transparency);
-
-		private float transparency;
+		public IColorSource Specular
+		{
+			get
+			{
+				if (this.specular == null)
+				{
+					this.specular = new SolidColorSource { Color = Color.Black };
+				}
+				return this.specular;
+			}
+			set
+			{
+				if (this.specular != value)
+				{
+					this.RaisePropertyChanging(SpecularEventArgs.Changing);
+					this.specular = value;
+					this.RaisePropertyChanged(SpecularEventArgs.Changed);
+				}
+			}
+		}
 
 		public float Transparency
 		{
@@ -239,5 +231,24 @@ namespace Toe.Utils.Mesh
 				}
 			}
 		}
+
+		public IColorSource Transparent
+		{
+			get
+			{
+				return this.transparent;
+			}
+			set
+			{
+				if (this.transparent != value)
+				{
+					this.RaisePropertyChanging(TransparentEventArgs.Changing);
+					this.transparent = value;
+					this.RaisePropertyChanged(TransparentEventArgs.Changed);
+				}
+			}
+		}
+
+		#endregion
 	}
 }

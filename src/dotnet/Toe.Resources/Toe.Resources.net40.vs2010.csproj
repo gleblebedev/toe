@@ -54,6 +54,7 @@
   <ItemGroup>
     <Compile Include="EditorResourceErrorHandler.cs" />
     <Compile Include="IBasePathProvider.cs" />
+    <Compile Include="IFileFormatInfo.cs" />
     <Compile Include="IResourceErrorHandler.cs" />
     <Compile Include="IResourceFile.cs" />
     <Compile Include="IResourceFileItem.cs" />

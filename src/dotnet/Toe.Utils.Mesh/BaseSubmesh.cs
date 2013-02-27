@@ -9,8 +9,6 @@ namespace Toe.Utils.Mesh
 	{
 		#region Constants and Fields
 
-		private bool areBoundsValid;
-
 		protected Vector3 boundingBoxMax;
 
 		protected Vector3 boundingBoxMin;
@@ -18,6 +16,8 @@ namespace Toe.Utils.Mesh
 		protected Vector3 boundingSphereCenter;
 
 		protected float boundingSphereR;
+
+		private bool areBoundsValid;
 
 		private IMaterial material;
 
@@ -149,6 +149,8 @@ namespace Toe.Utils.Mesh
 
 		#region Methods
 
+		protected abstract void CalculateActualBounds();
+
 		protected void CalculateBounds()
 		{
 			if (this.areBoundsValid)
@@ -156,10 +158,8 @@ namespace Toe.Utils.Mesh
 				return;
 			}
 			this.areBoundsValid = true;
-			CalculateActualBounds();
+			this.CalculateActualBounds();
 		}
-
-		protected abstract void CalculateActualBounds();
 
 		#endregion
 	}

@@ -73,10 +73,11 @@ namespace Toe.Editor
 			cb.RegisterType<ResourceManager>().As<IResourceManager>().SingleInstance();
 			cb.RegisterType<ResourceFile>().As<IResourceFile>().InstancePerDependency();
 			cb.RegisterType<ResourceFileItem>().As<IResourceFileItem>().InstancePerDependency();
-			cb.RegisterType<ResourceEditorFactory>().As<IResourceEditorFactory>().SingleInstance();
 			cb.RegisterType<EditorResourceErrorHandler>().As<IResourceErrorHandler>().SingleInstance();
 			cb.RegisterType<ToeGraphicsContext>().As<ToeGraphicsContext>().SingleInstance();
 
+
+			cb.RegisterType<AddNewItemForm>().InstancePerDependency();
 			cb.RegisterType<MainEditorWindow>().SingleInstance();
 
 			using (container = cb.Build())

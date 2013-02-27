@@ -4,14 +4,24 @@ namespace Toe.Utils.Mesh
 {
 	public interface IColorSource
 	{
-		ColorSourceType Type { get; }
+		#region Public Properties
 
 		bool IsColor { get; }
-		Color GetColor();
 
 		bool IsImage { get; }
+
+		ColorSourceType Type { get; }
+
+		#endregion
+
+		#region Public Methods and Operators
+
+		Color GetColor();
+
 		string GetImagePath();
+
 		byte[] GetImageRawData();
 
+		#endregion
 	}
 }

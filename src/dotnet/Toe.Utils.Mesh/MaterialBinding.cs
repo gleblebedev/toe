@@ -1,44 +1,50 @@
-using System.ComponentModel;
-
 namespace Toe.Utils.Mesh
 {
 	public class MaterialBinding : ClassWithNotification, IMaterialBinding
 	{
+		#region Constants and Fields
+
+		private readonly string target;
+
 		private static PropertyEventArgs MaterialEventArgs = Expr.PropertyEventArgs<MaterialBinding>(x => x.Material);
+
+		private IMaterial material;
+
+		#endregion
+
+		#region Constructors and Destructors
 
 		public MaterialBinding(string target)
 		{
 			this.target = target;
 		}
 
-		private string target;
+		#endregion
 
-		private IMaterial material;
-
-		#region Implementation of IMaterialBinding
-
-		public string Target
-		{
-			get
-			{
-				return target;
-			}
-		}
+		#region Public Properties
 
 		public IMaterial Material
 		{
 			get
 			{
-				return material;
+				return this.material;
 			}
 			set
 			{
-				if (material != null)
+				if (this.material != null)
 				{
 					this.RaisePropertyChanging(MaterialEventArgs.Changing);
-					material = value;
+					this.material = value;
 					this.RaisePropertyChanged(MaterialEventArgs.Changed);
 				}
+			}
+		}
+
+		public string Target
+		{
+			get
+			{
+				return this.target;
 			}
 		}
 

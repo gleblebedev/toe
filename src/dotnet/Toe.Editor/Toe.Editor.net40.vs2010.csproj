@@ -63,6 +63,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AddNewItemForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AddNewItemForm.Designer.cs">
+      <DependentUpon>AddNewItemForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="AddNewItemFormOptions.cs" />
     <Compile Include="EditorEnvironment.cs" />
     <Compile Include="MainEditorWindow.cs">
       <SubType>Form</SubType>
@@ -78,6 +85,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="AddNewItemForm.resx">
+      <DependentUpon>AddNewItemForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MainEditorWindow.resx">
       <DependentUpon>MainEditorWindow.cs</DependentUpon>
     </EmbeddedResource>

@@ -2,7 +2,6 @@ using System.ComponentModel;
 
 namespace Toe.Utils.Mesh
 {
-	
 	/// <summary>
 	/// Generic material.
 	/// </summary>
@@ -10,14 +9,16 @@ namespace Toe.Utils.Mesh
 	{
 		#region Constants and Fields
 
-		protected static PropertyChangedEventArgs ParametersChangedEventArgs = new PropertyChangedEventArgs(Expr.Path<SceneItem>(a => a.Parameters));
-		protected static PropertyChangedEventArgs IdChangedEventArgs = new PropertyChangedEventArgs(Expr.Path<SceneItem>(a => a.Id));
-		protected static PropertyChangedEventArgs NameChangedEventArgs = new PropertyChangedEventArgs(Expr.Path<SceneItem>(a => a.Name));
+		protected static PropertyChangedEventArgs IdChangedEventArgs =
+			new PropertyChangedEventArgs(Expr.Path<SceneItem>(a => a.Id));
 
-		/// <summary>
-		/// Collection of source specific parameters.
-		/// </summary>
-		private IParameterCollection parameters;
+		protected static PropertyChangedEventArgs NameChangedEventArgs =
+			new PropertyChangedEventArgs(Expr.Path<SceneItem>(a => a.Name));
+
+		protected static PropertyChangedEventArgs ParametersChangedEventArgs =
+			new PropertyChangedEventArgs(Expr.Path<SceneItem>(a => a.Parameters));
+
+		protected static PropertyEventArgs RenderDataEventArgs = Expr.PropertyEventArgs<SceneItem>(x => x.RenderData);
 
 		/// <summary>
 		/// Identifier of the scene item.
@@ -29,9 +30,14 @@ namespace Toe.Utils.Mesh
 		/// </summary>
 		private string name;
 
-		#endregion
+		/// <summary>
+		/// Collection of source specific parameters.
+		/// </summary>
+		private IParameterCollection parameters;
 
-		
+		private object renderData;
+
+		#endregion
 
 		#region Public Properties
 
@@ -42,35 +48,14 @@ namespace Toe.Utils.Mesh
 		{
 			get
 			{
-				return id;
+				return this.id;
 			}
 			set
 			{
-				if (id != value)
+				if (this.id != value)
 				{
-					id = value;
+					this.id = value;
 					this.RaisePropertyChanged(IdChangedEventArgs);
-				}
-			}
-		}
-
-		protected static PropertyEventArgs RenderDataEventArgs = Expr.PropertyEventArgs<SceneItem>(x => x.RenderData);
-
-		private object renderData;
-
-		public object RenderData
-		{
-			get
-			{
-				return this.renderData;
-			}
-			set
-			{
-				if (this.renderData != value)
-				{
-					this.RaisePropertyChanging(RenderDataEventArgs.Changing);
-					this.renderData = value;
-					this.RaisePropertyChanged(RenderDataEventArgs.Changed);
 				}
 			}
 		}
@@ -82,13 +67,13 @@ namespace Toe.Utils.Mesh
 		{
 			get
 			{
-				return name;
+				return this.name;
 			}
 			set
 			{
-				if (name != value)
+				if (this.name != value)
 				{
-					name = value;
+					this.name = value;
 					this.RaisePropertyChanged(NameChangedEventArgs);
 				}
 			}
@@ -113,8 +98,23 @@ namespace Toe.Utils.Mesh
 			}
 		}
 
-		#endregion
+		public object RenderData
+		{
+			get
+			{
+				return this.renderData;
+			}
+			set
+			{
+				if (this.renderData != value)
+				{
+					this.RaisePropertyChanging(RenderDataEventArgs.Changing);
+					this.renderData = value;
+					this.RaisePropertyChanged(RenderDataEventArgs.Changed);
+				}
+			}
+		}
 
-	
+		#endregion
 	}
 }

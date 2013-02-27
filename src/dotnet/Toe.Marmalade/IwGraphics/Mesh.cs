@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -369,34 +370,6 @@ namespace Toe.Marmalade.IwGraphics
 			}
 		}
 
-		public void VisitNormals(Vector3VisitorCallback callback)
-		{
-			foreach (var surface in this.surfaces)
-			{
-				var gl = surface as ModelBlockGLPrimBase;
-				if (gl != null)
-				{
-					foreach (var i in gl.Indices)
-					{
-						var v = this.normals[i];
-						callback(ref v);
-					}
-				}
-				else
-				{
-					var prim = surface as ModelBlockPrimBase;
-					if (prim != null)
-					{
-						foreach (var i in prim.Indices)
-						{
-							var v = this.normals[i.Normal];
-							callback(ref v);
-						}
-					}
-				}
-			}
-		}
-
 		public void VisitTangents(Vector3VisitorCallback callback)
 		{
 			foreach (var surface in this.surfaces)
@@ -453,33 +426,79 @@ namespace Toe.Marmalade.IwGraphics
 			}
 		}
 
-		public void VisitVertices(Vector3VisitorCallback callback)
+		/// <summary>
+		/// Get vertex position by index.
+		/// </summary>
+		/// <param name="index">Vertex index.</param>
+		/// <param name="vector">Vertex position.</param>
+		public void GetVertexAt(int index, out Vector3 vector)
 		{
 			foreach (var surface in this.surfaces)
 			{
 				var gl = surface as ModelBlockGLPrimBase;
 				if (gl != null)
 				{
-					foreach (var i in gl.Indices)
+					if (index < gl.Indices.Count)
 					{
-						var v = this.vertices[i];
-						callback(ref v);
+						vector = this.vertices[gl.Indices[index]];
+						return;
 					}
+					index -= gl.Indices.Count;
 				}
 				else
 				{
 					var prim = surface as ModelBlockPrimBase;
 					if (prim != null)
 					{
-						foreach (var i in prim.Indices)
+						if (index < prim.Indices.Count)
 						{
-							var v = this.vertices[i.Vertex];
-							callback(ref v);
+							vector = this.vertices[prim.Indices[index].Vertex];
+							return;
 						}
+						index -= prim.Indices.Count;
 					}
 				}
 			}
+			throw new IndexOutOfRangeException();
 		}
+
+		/// <summary>
+		/// Get normal position by index.
+		/// </summary>
+		/// <param name="index">Vertex index.</param>
+		/// <param name="vector">Vertex normal.</param>
+		public void GetNormalAt(int index, out Vector3 vector)
+		{
+			foreach (var surface in this.surfaces)
+			{
+				var gl = surface as ModelBlockGLPrimBase;
+				if (gl != null)
+				{
+					if (index < gl.Indices.Count)
+					{
+						vector = this.normals[gl.Indices[index]];
+						return;
+					}
+					index -= gl.Indices.Count;
+				}
+				else
+				{
+					var prim = surface as ModelBlockPrimBase;
+					if (prim != null)
+					{
+						if (index < prim.Indices.Count)
+						{
+							vector = this.normals[prim.Indices[index].Normal];
+							return;
+						}
+						index -= prim.Indices.Count;
+					}
+				}
+			}
+			throw new IndexOutOfRangeException();
+		}
+
+		
 
 		#endregion
 	}

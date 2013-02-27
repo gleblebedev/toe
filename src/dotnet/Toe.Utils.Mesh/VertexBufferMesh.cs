@@ -28,18 +28,6 @@ namespace Toe.Utils.Mesh
 
 		private float boundingSphereR;
 
-		private bool isBinormalStreamAvailable = false;
-
-		private bool isColorStreamAvailable = false;
-
-		private bool isNormalStreamAvailable = false;
-
-		private bool isTangentStreamAvailable = false;
-
-		private bool isUV0StreamAvailable = false;
-
-		private bool isUV1StreamAvailable = false;
-
 		#endregion
 
 		#region Public Properties
@@ -88,77 +76,17 @@ namespace Toe.Utils.Mesh
 			}
 		}
 
-		public bool IsBinormalStreamAvailable
-		{
-			get
-			{
-				return this.isBinormalStreamAvailable;
-			}
-			set
-			{
-				this.isBinormalStreamAvailable = value;
-			}
-		}
+		public bool IsBinormalStreamAvailable { get; set; }
 
-		public bool IsColorStreamAvailable
-		{
-			get
-			{
-				return this.isColorStreamAvailable;
-			}
-			set
-			{
-				this.isColorStreamAvailable = value;
-			}
-		}
+		public bool IsColorStreamAvailable { get; set; }
 
-		public bool IsNormalStreamAvailable
-		{
-			get
-			{
-				return this.isNormalStreamAvailable;
-			}
-			set
-			{
-				this.isNormalStreamAvailable = value;
-			}
-		}
+		public bool IsNormalStreamAvailable { get; set; }
 
-		public bool IsTangentStreamAvailable
-		{
-			get
-			{
-				return this.isTangentStreamAvailable;
-			}
-			set
-			{
-				this.isTangentStreamAvailable = value;
-			}
-		}
+		public bool IsTangentStreamAvailable { get; set; }
 
-		public bool IsUV0StreamAvailable
-		{
-			get
-			{
-				return this.isUV0StreamAvailable;
-			}
-			set
-			{
-				this.isUV0StreamAvailable = value;
-			}
-		}
+		public bool IsUV0StreamAvailable { get; set; }
 
-		public bool IsUV1StreamAvailable
-		{
-			get
-			{
-				return this.isUV1StreamAvailable;
-			}
-			set
-			{
-				this.isUV1StreamAvailable = value;
-			}
-		}
+		public bool IsUV1StreamAvailable { get; set; }
 
 		public bool IsVertexStreamAvailable
 		{
@@ -270,13 +198,24 @@ namespace Toe.Utils.Mesh
 			}
 		}
 
-		public void VisitVertices(Vector3VisitorCallback callback)
+		/// <summary>
+		/// Get vertex position by index.
+		/// </summary>
+		/// <param name="index">Vertex index.</param>
+		/// <param name="vector">Vertex position.</param>
+		public void GetVertexAt(int index, out Vector3 vector)
 		{
-			foreach (var vertex in this.VertexBuffer)
-			{
-				var v = vertex.Position;
-				callback(ref v);
-			}
+			vector = this.VertexBuffer[index].Position;
+		}
+
+		/// <summary>
+		/// Get normal position by index.
+		/// </summary>
+		/// <param name="index">Vertex index.</param>
+		/// <param name="vector">Vertex normal.</param>
+		public void GetNormalAt(int index, out Vector3 vector)
+		{
+			vector = this.VertexBuffer[index].Normal;
 		}
 
 		#endregion
@@ -291,8 +230,8 @@ namespace Toe.Utils.Mesh
 			}
 			this.areBoundsValid = true;
 
-			boundingBoxMin = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
-			boundingBoxMax = new Vector3(float.MinValue, float.MinValue, float.MinValue);
+			this.boundingBoxMin = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
+			this.boundingBoxMax = new Vector3(float.MinValue, float.MinValue, float.MinValue);
 			for (int index = 0; index < this.VertexBuffer.Count; index++)
 			{
 				var position = this.VertexBuffer[index].Position;
@@ -321,8 +260,8 @@ namespace Toe.Utils.Mesh
 					this.boundingBoxMin.Z = position.Z;
 				}
 			}
-			boundingSphereCenter = (boundingBoxMax + boundingBoxMin) * 0.5f;
-			boundingSphereR = (boundingBoxMax - boundingBoxMin).Length * 0.5f;
+			this.boundingSphereCenter = (this.boundingBoxMax + this.boundingBoxMin) * 0.5f;
+			this.boundingSphereR = (this.boundingBoxMax - this.boundingBoxMin).Length * 0.5f;
 		}
 
 		#endregion

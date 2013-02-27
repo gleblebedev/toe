@@ -1,33 +1,18 @@
-using System.ComponentModel;
 using System.Drawing;
 
 namespace Toe.Utils.Mesh
 {
 	public class ImageColorSource : ClassWithNotification, IColorSource
 	{
-		#region Implementation of IColorSource
-
-		public ColorSourceType Type
-		{
-			get
-			{
-				return ColorSourceType.Image;
-			}
-		}
-
-		public bool IsColor
-		{
-			get
-			{
-				return false;
-			}
-		}
-
-		#endregion
+		#region Constants and Fields
 
 		private static PropertyEventArgs ImageEventArgs = Expr.PropertyEventArgs<ImageColorSource>(x => x.Image);
 
 		private IImage image;
+
+		#endregion
+
+		#region Public Properties
 
 		public IImage Image
 		{
@@ -46,9 +31,12 @@ namespace Toe.Utils.Mesh
 			}
 		}
 
-		public Color GetColor()
+		public bool IsColor
 		{
-			return Color.White;
+			get
+			{
+				return false;
+			}
 		}
 
 		public bool IsImage
@@ -57,6 +45,23 @@ namespace Toe.Utils.Mesh
 			{
 				return true;
 			}
+		}
+
+		public ColorSourceType Type
+		{
+			get
+			{
+				return ColorSourceType.Image;
+			}
+		}
+
+		#endregion
+
+		#region Public Methods and Operators
+
+		public Color GetColor()
+		{
+			return Color.White;
 		}
 
 		public string GetImagePath()
@@ -68,5 +73,7 @@ namespace Toe.Utils.Mesh
 		{
 			return this.image.GetRawData();
 		}
+
+		#endregion
 	}
 }

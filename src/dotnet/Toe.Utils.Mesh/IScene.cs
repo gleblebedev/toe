@@ -7,14 +7,21 @@ namespace Toe.Utils.Mesh
 	/// </summary>
 	public interface IScene : ISceneItem, INodeContainer
 	{
-		IList<IImage> Images { get; }
+		#region Public Properties
+
 		IList<IEffect> Effects { get; }
-		IList<IMaterial> Materials { get; }
+
 		IList<IMesh> Geometries { get; }
+
+		IList<IImage> Images { get; }
+
+		IList<IMaterial> Materials { get; }
 
 		/// <summary>
 		/// Visible surface determination provider.
 		/// </summary>
 		IVsdProvider VsdProvider { get; set; }
+
+		#endregion
 	}
 }

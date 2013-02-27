@@ -1,18 +1,11 @@
+using System;
 using System.Drawing;
 
 namespace Toe.Utils.Mesh
 {
 	public class FunctionColorSource : IColorSource
 	{
-		#region Implementation of IColorSource
-
-		public ColorSourceType Type
-		{
-			get
-			{
-				return ColorSourceType.Function;
-			}
-		}
+		#region Public Properties
 
 		public bool IsColor
 		{
@@ -20,11 +13,6 @@ namespace Toe.Utils.Mesh
 			{
 				return false;
 			}
-		}
-
-		public Color GetColor()
-		{
-			return Color.White;
 		}
 
 		public bool IsImage
@@ -35,15 +23,32 @@ namespace Toe.Utils.Mesh
 			}
 		}
 
+		public ColorSourceType Type
+		{
+			get
+			{
+				return ColorSourceType.Function;
+			}
+		}
+
+		#endregion
+
+		#region Public Methods and Operators
+
+		public Color GetColor()
+		{
+			return Color.White;
+		}
+
 		public string GetImagePath()
 		{
-			throw new System.InvalidOperationException();
+			throw new InvalidOperationException();
 		}
 
 		public byte[] GetImageRawData()
 		{
 			//TODO: render function into image
-			throw new System.NotImplementedException();
+			throw new NotImplementedException();
 		}
 
 		#endregion

@@ -1,15 +1,23 @@
+using System;
 using System.ComponentModel;
 
 namespace Toe.Utils.Mesh
 {
 	public class FileReferenceImage : SceneItem, IImage
 	{
-		protected static PropertyChangedEventArgs PathChangedEventArgs = new PropertyChangedEventArgs(Expr.Path<FileReferenceImage>(a => a.Path));
+		#region Constants and Fields
+
+		protected static PropertyChangedEventArgs PathChangedEventArgs =
+			new PropertyChangedEventArgs(Expr.Path<FileReferenceImage>(a => a.Path));
 
 		/// <summary>
 		/// File path.
 		/// </summary>
 		private string path;
+
+		#endregion
+
+		#region Public Properties
 
 		/// <summary>
 		/// File path.
@@ -18,31 +26,37 @@ namespace Toe.Utils.Mesh
 		{
 			get
 			{
-				return path;
+				return this.path;
 			}
 			set
 			{
-				if (path != value)
+				if (this.path != value)
 				{
-					path = value;
+					this.path = value;
 					this.RaisePropertyChanged(PathChangedEventArgs);
 				}
 			}
 		}
 
-		public override string ToString()
-		{
-			return path??"<no_file>";
-		}
+		#endregion
+
+		#region Public Methods and Operators
 
 		public string GetFilePath()
 		{
-			return Path;
+			return this.Path;
 		}
 
 		public byte[] GetRawData()
 		{
-			throw new System.NotImplementedException();
+			throw new NotImplementedException();
 		}
+
+		public override string ToString()
+		{
+			return this.path ?? "<no_file>";
+		}
+
+		#endregion
 	}
 }

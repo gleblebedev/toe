@@ -129,7 +129,6 @@ namespace Toe.Utils.Mesh
 			}
 		}
 
-
 		public int Parent
 		{
 			get

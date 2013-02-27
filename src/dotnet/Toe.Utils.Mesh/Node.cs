@@ -18,6 +18,8 @@ namespace Toe.Utils.Mesh
 
 		protected static PropertyEventArgs ScaleEventArgs = Expr.PropertyEventArgs<Node>(x => x.Scale);
 
+		private readonly INodeSkin nodeSkin = new NodeSkin();
+
 		private readonly IList<INode> nodes = new ObservableCollection<INode>();
 
 		private Vector3 position = Vector3.Zero;
@@ -25,8 +27,6 @@ namespace Toe.Utils.Mesh
 		private Quaternion rotation = Quaternion.Identity;
 
 		private Vector3 scale = new Vector3(1.0f, 1.0f, 1.0f);
-
-		private readonly INodeSkin nodeSkin = new NodeSkin();
 
 		#endregion
 
@@ -46,7 +46,7 @@ namespace Toe.Utils.Mesh
 		{
 			get
 			{
-				return nodeSkin;
+				return this.nodeSkin;
 			}
 		}
 

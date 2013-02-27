@@ -1,17 +1,20 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 using Autofac;
 
 using Toe.Resources;
-using Toe.Utils.Marmalade;
+using Toe.Utils;
 
 namespace Toe.Marmalade.TextFiles
 {
 	public class TextResourceFormat : IResourceFileFormat
 	{
 		#region Constants and Fields
+
+		private static readonly string[] extensions = new[] { ".mtl", ".group", ".geo", ".anim", ".skel", ".skin", ".itx" };
 
 		private readonly IComponentContext context;
 
@@ -29,40 +32,38 @@ namespace Toe.Marmalade.TextFiles
 
 		#endregion
 
+		#region Public Properties
+
+		/// <summary>
+		/// List of extensions with leading dot.
+		/// </summary>
+		public IList<string> Extensions
+		{
+			get
+			{
+				return extensions;
+			}
+		}
+
+		/// <summary>
+		/// Name of file format.
+		/// </summary>
+		public string Name
+		{
+			get
+			{
+				return "Marmalade SDK Text Resource";
+			}
+		}
+
+		#endregion
+
 		#region Public Methods and Operators
 
 		public bool CanRead(string filePath)
 		{
 			var f = filePath.ToLower();
-			if (f.EndsWith(".mtl"))
-			{
-				return true;
-			}
-			if (f.EndsWith(".group"))
-			{
-				return true;
-			}
-			if (f.EndsWith(".geo"))
-			{
-				return true;
-			}
-			if (f.EndsWith(".anim"))
-			{
-				return true;
-			}
-			if (f.EndsWith(".skel"))
-			{
-				return true;
-			}
-			if (f.EndsWith(".skin"))
-			{
-				return true;
-			}
-			if (f.EndsWith(".itx"))
-			{
-				return true;
-			}
-			return false;
+			return extensions.Any(f.EndsWith);
 		}
 
 		public bool CanWrite(string filePath)
@@ -86,7 +87,7 @@ namespace Toe.Marmalade.TextFiles
 						return items;
 					}
 					object serializer;
-					if (this.context.TryResolveKeyed(Toe.Utils.Hash.Get(lexem), typeof(ITextSerializer), out serializer))
+					if (this.context.TryResolveKeyed(Hash.Get(lexem), typeof(ITextSerializer), out serializer))
 					{
 						items.Add(((ITextSerializer)serializer).Parse(parser, defaultName));
 						continue;

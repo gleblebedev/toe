@@ -4,11 +4,11 @@ namespace Toe.Utils.Mesh
 	{
 		#region Constants and Fields
 
+		public int Binormal;
+
 		public int Color;
 
 		public int Normal;
-
-		public int Binormal;
 
 		public int Tangent;
 

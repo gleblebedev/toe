@@ -2,31 +2,42 @@ using System.Collections.Generic;
 
 namespace Toe.Utils.Mesh
 {
-	public class NodeSkin:INodeSkin
+	public class NodeSkin : INodeSkin
 	{
-		readonly Dictionary<string,IMaterialBinding> map = new Dictionary<string, IMaterialBinding>();
+		#region Constants and Fields
 
-		#region Implementation of INodeSkin
+		private readonly Dictionary<string, IMaterialBinding> map = new Dictionary<string, IMaterialBinding>();
+
+		#endregion
+
+		#region Public Indexers
 
 		public IMaterialBinding this[string taraget]
 		{
 			get
 			{
 				IMaterialBinding v;
-				if (map.TryGetValue(taraget, out v)) return v;
+				if (this.map.TryGetValue(taraget, out v))
+				{
+					return v;
+				}
 				v = new MaterialBinding(taraget);
-				map.Add(taraget,v);
+				this.map.Add(taraget, v);
 				return v;
 			}
 			set
 			{
-				map[taraget] = value;
+				this.map[taraget] = value;
 			}
 		}
 
+		#endregion
+
+		#region Public Methods and Operators
+
 		public void RemoveBinding(string target)
 		{
-			map.Remove(target);
+			this.map.Remove(target);
 		}
 
 		#endregion

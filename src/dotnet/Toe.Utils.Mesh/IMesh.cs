@@ -12,19 +12,28 @@ namespace Toe.Utils.Mesh
 	/// </summary>
 	public interface IMesh : ISceneItem, IVertexStreamSource
 	{
-		IList<ISubMesh> Submeshes { get; }
+		#region Public Properties
 
-		ISubMesh CreateSubmesh();
+		Vector3 BoundingBoxMax { get; }
+
+		Vector3 BoundingBoxMin { get; }
+
+		Vector3 BoundingSphereCenter { get; }
+
+		float BoundingSphereR { get; }
 
 		object RenderData { get; set; }
 
+		IList<ISubMesh> Submeshes { get; }
+
+		#endregion
+
+		#region Public Methods and Operators
+
+		ISubMesh CreateSubmesh();
+
 		void InvalidateBounds();
 
-		Vector3 BoundingBoxMin { get; }
-		Vector3 BoundingBoxMax { get; }
-		Vector3 BoundingSphereCenter { get; }
-		float BoundingSphereR { get; }
+		#endregion
 	}
-
-	
 }

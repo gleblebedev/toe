@@ -24,23 +24,19 @@ namespace Toe.Gx
 			if (mesh.IsVertexStreamAvailable)
 			{
 				this.v = new Vector3[mesh.Count];
-				int i = 0;
-				mesh.VisitVertices((ref Vector3 vv) =>
-					{
-						this.v[i] = vv;
-						++i;
-					});
+				for (int i = 0; i < mesh.Count; ++i)
+				{
+					mesh.GetVertexAt(i, out this.v[i]);
+				}
 			}
 			this.n = null;
 			if (mesh.IsNormalStreamAvailable)
 			{
 				this.n = new Vector3[mesh.Count];
-				int i = 0;
-				mesh.VisitNormals((ref Vector3 vv) =>
-					{
-						this.n[i] = vv;
-						++i;
-					});
+				for (int i = 0; i < mesh.Count; ++i)
+				{
+					mesh.GetNormalAt(i, out this.n[i]);
+				}
 			}
 			this.t = null;
 			if (mesh.IsTangentStreamAvailable)

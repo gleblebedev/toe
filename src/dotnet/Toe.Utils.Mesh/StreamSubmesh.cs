@@ -1,8 +1,5 @@
 using System.Collections.Generic;
 
-using OpenTK;
-using OpenTK.Graphics.OpenGL;
-
 #if WINDOWS_PHONE
 using Microsoft.Xna.Framework;
 #else
@@ -17,7 +14,7 @@ namespace Toe.Utils.Mesh
 	/// The implemenation is not efficient!
 	/// Please use it in content pipeline only! It is NOT recommended to use it in production.
 	/// </summary>
-	public class StreamSubmesh :BaseSubmesh, ISubMesh
+	public class StreamSubmesh : BaseSubmesh, ISubMesh
 	{
 		private readonly StreamMesh mesh;
 
@@ -25,7 +22,7 @@ namespace Toe.Utils.Mesh
 		{
 			this.mesh = mesh;
 		}
-	
+
 		private readonly List<StreamSubmeshIndexes> indices = new List<StreamSubmeshIndexes>();
 
 		public List<StreamSubmeshIndexes> Indices
@@ -62,8 +59,8 @@ namespace Toe.Utils.Mesh
 		/// <filterpriority>1</filterpriority>
 		public override IEnumerator<int> GetEnumerator()
 		{
-			int j=0;
-			foreach (var i in Indices)
+			int j = 0;
+			foreach (var i in this.Indices)
 			{
 				yield return j;
 				++j;
@@ -72,7 +69,7 @@ namespace Toe.Utils.Mesh
 
 		protected override void CalculateActualBounds()
 		{
-			foreach (var index in indices)
+			foreach (var index in this.indices)
 			{
 				var position = this.mesh.Vertices[index.Vertex];
 				if (this.boundingBoxMax.X < position.X)
@@ -100,15 +97,15 @@ namespace Toe.Utils.Mesh
 					this.boundingBoxMin.Z = position.Z;
 				}
 			}
-			boundingSphereCenter = (boundingBoxMax + boundingBoxMin) * 0.5f;
-			boundingSphereR = (boundingBoxMax - boundingBoxMin).Length * 0.5f;
+			this.boundingSphereCenter = (this.boundingBoxMax + this.boundingBoxMin) * 0.5f;
+			this.boundingSphereR = (this.boundingBoxMax - this.boundingBoxMin).Length * 0.5f;
 		}
 
 		public override int Count
 		{
 			get
 			{
-				return Indices.Count;
+				return this.Indices.Count;
 			}
 		}
 
@@ -152,8 +149,6 @@ namespace Toe.Utils.Mesh
 		//    GL.Vertex3(this.mesh.Vertices[indexes.Vertex]);
 		//}
 #endif
-
-		
 
 		#endregion
 	}

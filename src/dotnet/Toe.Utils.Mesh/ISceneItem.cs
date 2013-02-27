@@ -5,6 +5,8 @@ namespace Toe.Utils.Mesh
 	/// </summary>
 	public interface ISceneItem
 	{
+		#region Public Properties
+
 		/// <summary>
 		/// Identifier of the scene item.
 		/// </summary>
@@ -25,5 +27,6 @@ namespace Toe.Utils.Mesh
 		/// </summary>
 		object RenderData { get; set; }
 
+		#endregion
 	}
 }

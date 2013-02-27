@@ -1,4 +1,3 @@
-using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
@@ -7,19 +6,24 @@ namespace Toe.Utils.Mesh
 {
 	public class EmbeddedImage : SceneItem, IImage
 	{
-		private int width;
+		#region Constants and Fields
 
-		private int height;
+		private readonly byte[] data;
 
-		private int pitch;
+		private readonly int height;
 
-		private byte[] data;
+		private readonly int pitch;
+
+		private readonly int width;
+
+		#endregion
+
+		#region Constructors and Destructors
 
 		public EmbeddedImage()
 		{
-			
 		}
-		
+
 		public EmbeddedImage(Bitmap bitmap)
 		{
 			this.width = bitmap.Width;
@@ -38,14 +42,9 @@ namespace Toe.Utils.Mesh
 			bitmap.UnlockBits(data);
 		}
 
-		public int Width
-		{
-			get
-			{
-				return this.width;
-			}
-			
-		}
+		#endregion
+
+		#region Public Properties
 
 		public int Height
 		{
@@ -53,7 +52,6 @@ namespace Toe.Utils.Mesh
 			{
 				return this.height;
 			}
-			
 		}
 
 		public int Pitch
@@ -62,8 +60,19 @@ namespace Toe.Utils.Mesh
 			{
 				return this.pitch;
 			}
-			
 		}
+
+		public int Width
+		{
+			get
+			{
+				return this.width;
+			}
+		}
+
+		#endregion
+
+		#region Public Methods and Operators
 
 		public string GetFilePath()
 		{
@@ -72,7 +81,9 @@ namespace Toe.Utils.Mesh
 
 		public byte[] GetRawData()
 		{
-			return data;
+			return this.data;
 		}
+
+		#endregion
 	}
 }

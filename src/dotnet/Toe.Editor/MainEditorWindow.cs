@@ -4,12 +4,15 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
+using System.Text;
 using System.Windows.Forms;
 
 using Autofac;
 
 using Toe.Editors;
 using Toe.Editors.Interfaces;
+using Toe.Resources;
 
 namespace Toe.Editor
 {
@@ -173,6 +176,9 @@ namespace Toe.Editor
 		private void OnOpenMenuOption(object sender, EventArgs e)
 		{
 			var fd = new OpenFileDialog();
+
+			fd.Filter = this.BuildFilter();
+
 			var r = fd.ShowDialog();
 			if (r == DialogResult.OK)
 			{
@@ -180,6 +186,53 @@ namespace Toe.Editor
 				{
 					this.OpenFile(f);
 				}
+			}
+		}
+
+		private string BuildFilter()
+		{
+			var editorFactories = this.context.Resolve<IEnumerable<IResourceEditorFactory>>();
+			StringBuilder filterBuilder = new StringBuilder();
+
+			List<string> ex = (from format in editorFactories from f in format.SupportedFormats from ext in f.Extensions select ext).ToList();
+			if (ex.Count > 0)
+			{
+				BuildFilterOption(new FileFormatInfo() { Extensions = ex, Name = "All supported types" }, filterBuilder);
+				foreach (
+					var resourceFileFormat in editorFactories.SelectMany(resourceFileFormat => resourceFileFormat.SupportedFormats)
+					)
+				{
+					filterBuilder.Append("|");
+					BuildFilterOption(resourceFileFormat, filterBuilder);
+				}
+				filterBuilder.Append("|");
+			}
+			BuildFilterOption(new FileFormatInfo(){Extensions = new string[]{".*"}, Name = "All"}, filterBuilder);
+
+			var filter = filterBuilder.ToString();
+			return filter;
+		}
+
+		private static void BuildFilterOption(IFileFormatInfo format, StringBuilder allBuilder)
+		{
+			allBuilder.Append(format.Name);
+			allBuilder.Append(" (");
+			string separator = String.Empty;
+			foreach (var ex in format.Extensions)
+			{
+				allBuilder.Append(separator);
+				allBuilder.Append("*");
+				allBuilder.Append(ex);
+				separator = ", ";
+			}
+			allBuilder.Append(")|");
+			separator = String.Empty;
+			foreach (var ex in format.Extensions)
+			{
+				allBuilder.Append(separator);
+				allBuilder.Append("*");
+				allBuilder.Append(ex);
+				separator = ";";
 			}
 		}
 
@@ -263,5 +316,14 @@ namespace Toe.Editor
 		}
 
 		#endregion
+
+		private void OnNewMenuClick(object sender, EventArgs e)
+		{
+			var d = context.Resolve<AddNewItemForm>();
+			if (d.ShowDialog() == DialogResult.OK)
+			{
+				
+			}
+		}
 	}
 }

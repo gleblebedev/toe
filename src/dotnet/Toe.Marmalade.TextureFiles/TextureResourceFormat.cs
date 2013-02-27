@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 
 using Autofac;
 
@@ -22,6 +23,8 @@ namespace Toe.Marmalade.TextureFiles
 
 		private readonly IResourceManager resourceManager;
 
+		private static readonly string[] extensions = new string[] { ".bmp", ".png", ".jpg", ".tga" };
+
 		#endregion
 
 		#region Constructors and Destructors
@@ -36,18 +39,32 @@ namespace Toe.Marmalade.TextureFiles
 
 		#region Public Methods and Operators
 
+		/// <summary>
+		/// Name of file format.
+		/// </summary>
+		public string Name
+		{
+			get
+			{
+				return "Texture";
+			}
+		}
+
+		/// <summary>
+		/// List of extensions with leading dot.
+		/// </summary>
+		public IList<string> Extensions
+		{
+			get
+			{
+				return extensions;
+			}
+		}
+
 		public bool CanRead(string filePath)
 		{
 			var f = filePath.ToLower();
-			if (f.EndsWith(".bmp") || f.EndsWith(".png") || f.EndsWith(".jpg"))
-			{
-				return true;
-			}
-			if (f.EndsWith(".tga"))
-			{
-				return true;
-			}
-			return false;
+			return extensions.Any(f.EndsWith);
 		}
 
 		public bool CanWrite(string filePath)

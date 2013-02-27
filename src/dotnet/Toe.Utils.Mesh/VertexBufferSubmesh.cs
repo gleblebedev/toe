@@ -1,31 +1,50 @@
 using System.Collections.Generic;
 
-using OpenTK.Graphics.OpenGL;
-
 namespace Toe.Utils.Mesh
 {
-	public class VertexBufferSubmesh : BaseSubmesh,ISubMesh
+	public class VertexBufferSubmesh : BaseSubmesh, ISubMesh
 	{
-		readonly List<int> indices = new List<int>();
+		#region Constants and Fields
+
+		private readonly List<int> indices = new List<int>();
 
 		private readonly VertexBufferMesh mesh;
 
-		public VertexBufferSubmesh(VertexBufferMesh mesh):base()
+		#endregion
+
+		#region Constructors and Destructors
+
+		public VertexBufferSubmesh(VertexBufferMesh mesh)
 		{
 			this.mesh = mesh;
 			this.VertexSourceType = VertexSourceType.TrianleList;
 		}
 
+		#endregion
+
+		#region Public Properties
+
+		public override int Count
+		{
+			get
+			{
+				return this.indices.Count;
+			}
+		}
+
+		#endregion
+
+		#region Public Methods and Operators
+
 		public void Add(int i)
 		{
-			indices.Add(i);
+			this.indices.Add(i);
 		}
+
 		public void Add(ref Vertex v)
 		{
 			this.Add(this.mesh.VertexBuffer.Add(v));
 		}
-
-		#region Overrides of BaseSubmesh
 
 		/// <summary>
 		/// Returns an enumerator that iterates through the collection.
@@ -36,15 +55,19 @@ namespace Toe.Utils.Mesh
 		/// <filterpriority>1</filterpriority>
 		public override IEnumerator<int> GetEnumerator()
 		{
-			foreach (var i in indices)
+			foreach (var i in this.indices)
 			{
 				yield return i;
 			}
 		}
 
+		#endregion
+
+		#region Methods
+
 		protected override void CalculateActualBounds()
 		{
-			foreach (var index in indices)
+			foreach (var index in this.indices)
 			{
 				var position = this.mesh.VertexBuffer[index].Position;
 				if (this.boundingBoxMax.X < position.X)
@@ -72,18 +95,9 @@ namespace Toe.Utils.Mesh
 					this.boundingBoxMin.Z = position.Z;
 				}
 			}
-			boundingSphereCenter = (boundingBoxMax + boundingBoxMin) * 0.5f;
-			boundingSphereR = (boundingBoxMax - boundingBoxMin).Length * 0.5f;
+			this.boundingSphereCenter = (this.boundingBoxMax + this.boundingBoxMin) * 0.5f;
+			this.boundingSphereR = (this.boundingBoxMax - this.boundingBoxMin).Length * 0.5f;
 		}
-
-		public override int Count
-		{
-			get
-			{
-				return indices.Count;
-			}
-		}
-
 
 		#endregion
 	}

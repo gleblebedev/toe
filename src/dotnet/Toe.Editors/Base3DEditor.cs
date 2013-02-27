@@ -669,12 +669,15 @@ namespace Toe.Editors
 		{
 			var vb = mesh as IVertexStreamSource;
 			var vertices = new List<Vector3>(vb.Count);
+			Vector3 pos;
 			Vector3 buf;
-			vb.VisitVertices((ref Vector3 a) =>
-				{
-					graphicsContext.ModelToWorld(ref a, out buf);
-					vertices.Add(buf);  
-				});
+
+			for (int i = 0; i < mesh.Count; ++i)
+			{
+				mesh.GetVertexAt(i, out pos);
+				graphicsContext.ModelToWorld(ref pos, out buf);
+				vertices.Add(buf);  
+			}
 			Color wireColor = Color.White;
 
 			foreach (var submesh in mesh.Submeshes)

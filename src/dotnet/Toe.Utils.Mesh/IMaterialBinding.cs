@@ -2,7 +2,12 @@ namespace Toe.Utils.Mesh
 {
 	public interface IMaterialBinding
 	{
-		string Target { get; }
+		#region Public Properties
+
 		IMaterial Material { get; set; }
+
+		string Target { get; }
+
+		#endregion
 	}
 }

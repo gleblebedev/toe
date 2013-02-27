@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -341,16 +342,42 @@ namespace Toe.Utils.Mesh
 			}
 		}
 
-		public void VisitVertices(Vector3VisitorCallback callback)
+		/// <summary>
+		/// Get vertex position by index.
+		/// </summary>
+		/// <param name="index">Vertex index.</param>
+		/// <param name="vector">Vertex position.</param>
+		public void GetVertexAt(int index, out Vector3 vector)
 		{
 			foreach (StreamSubmesh submesh in this.submeshes)
 			{
-				foreach (var index in submesh.Indices)
+				if (index < submesh.Indices.Count)
 				{
-					var v = this.vertices[index.Vertex];
-					callback(ref v);
+					vector = this.vertices[submesh.Indices[index].Vertex];
+					return;
 				}
+				index -= submesh.Indices.Count;
 			}
+			throw new IndexOutOfRangeException();
+		}
+
+		/// <summary>
+		/// Get normal position by index.
+		/// </summary>
+		/// <param name="index">Vertex index.</param>
+		/// <param name="vector">Vertex normal.</param>
+		public void GetNormalAt(int index, out Vector3 vector)
+		{
+			foreach (StreamSubmesh submesh in this.submeshes)
+			{
+				if (index < submesh.Indices.Count)
+				{
+					vector = this.normals[submesh.Indices[index].Normal];
+					return;
+				}
+				index -= submesh.Indices.Count;
+			}
+			throw new IndexOutOfRangeException();
 		}
 
 		#endregion
@@ -364,19 +391,37 @@ namespace Toe.Utils.Mesh
 				return;
 			}
 			this.areBoundsValid = true;
-			boundingBoxMin = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
-			boundingBoxMax = new Vector3(float.MinValue, float.MinValue, float.MinValue);
-			foreach (var vector3 in Vertices)
+			this.boundingBoxMin = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
+			this.boundingBoxMax = new Vector3(float.MinValue, float.MinValue, float.MinValue);
+			foreach (var vector3 in this.Vertices)
 			{
-				if (boundingBoxMax.X < vector3.X) boundingBoxMax.X = vector3.X;
-				if (boundingBoxMax.Y < vector3.Y) boundingBoxMax.Y = vector3.Y;
-				if (boundingBoxMax.Z < vector3.Z) boundingBoxMax.Z = vector3.Z;
-				if (boundingBoxMin.X > vector3.X) boundingBoxMin.X = vector3.X;
-				if (boundingBoxMin.Y > vector3.Y) boundingBoxMin.Y = vector3.Y;
-				if (boundingBoxMin.Z > vector3.Z) boundingBoxMin.Z = vector3.Z;
+				if (this.boundingBoxMax.X < vector3.X)
+				{
+					this.boundingBoxMax.X = vector3.X;
+				}
+				if (this.boundingBoxMax.Y < vector3.Y)
+				{
+					this.boundingBoxMax.Y = vector3.Y;
+				}
+				if (this.boundingBoxMax.Z < vector3.Z)
+				{
+					this.boundingBoxMax.Z = vector3.Z;
+				}
+				if (this.boundingBoxMin.X > vector3.X)
+				{
+					this.boundingBoxMin.X = vector3.X;
+				}
+				if (this.boundingBoxMin.Y > vector3.Y)
+				{
+					this.boundingBoxMin.Y = vector3.Y;
+				}
+				if (this.boundingBoxMin.Z > vector3.Z)
+				{
+					this.boundingBoxMin.Z = vector3.Z;
+				}
 			}
-			boundingSphereCenter = (boundingBoxMax + boundingBoxMin) * 0.5f;
-			boundingSphereR = (boundingBoxMax - boundingBoxMin).Length * 0.5f;
+			this.boundingSphereCenter = (this.boundingBoxMax + this.boundingBoxMin) * 0.5f;
+			this.boundingSphereR = (this.boundingBoxMax - this.boundingBoxMin).Length * 0.5f;
 		}
 
 		#endregion
