@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 
 namespace Toe.Editors.Interfaces
 {
@@ -8,6 +9,11 @@ namespace Toe.Editors.Interfaces
 		/// Name of file format.
 		/// </summary>
 		string Name { get; }
+
+		/// <summary>
+		/// Default file name for a new file.
+		/// </summary>
+		string DefaultFileName { get; }
 
 		/// <summary>
 		/// List of extensions with leading dot.
@@ -23,5 +29,12 @@ namespace Toe.Editors.Interfaces
 		/// Factory.
 		/// </summary>
 		IResourceEditorFactory Factory { get; }
+
+		/// <summary>
+		/// Create new file.
+		/// </summary>
+		/// <param name="filePath">Output file name.</param>
+		/// <param name="output">Output stream.</param>
+		void Create(string filePath, Stream output);
 	}
 }

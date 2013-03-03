@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
 
 using Autofac;
 
@@ -24,10 +26,10 @@ namespace Toe.Editors.Marmalade
 		{
 			this.supportedFormats = new IFileFormatInfo[]
 				{
-					new FileFormatInfo
-						{ CanCreate = false, Extensions = new[] { ".mtl" }, Factory = this, Name = "Marmalade SDK Material" },
-					new FileFormatInfo
-						{ CanCreate = false, Extensions = new[] { ".geo" }, Factory = this, Name = "Marmalade SDK Geometry" },
+					new FileFormatInfo((a,b)=>CreateEmptyFile(a,b,"CIwMaterial"))
+						{ CanCreate = true, DefaultFileName = "material.mtl", Extensions = new[] { ".mtl" }, Factory = this, Name = "Marmalade SDK Material" },
+					new FileFormatInfo((a,b)=>CreateEmptyFile(a,b,"CIwModel"))
+						{ CanCreate = true, DefaultFileName = "geometry.geo",  Extensions = new[] { ".geo" }, Factory = this, Name = "Marmalade SDK Geometry" },
 					new FileFormatInfo
 						{ CanCreate = false, Extensions = new[] { ".skin" }, Factory = this, Name = "Marmalade SDK Skin" },
 					new FileFormatInfo
@@ -43,12 +45,19 @@ namespace Toe.Editors.Marmalade
 							Factory = this,
 							Name = "Marmalade SDK Texture"
 						},
-					new FileFormatInfo
-						{ CanCreate = false, Extensions = new[] { ".group" }, Factory = this, Name = "Marmalade SDK Group" },
+					new FileFormatInfo((a,b)=>CreateEmptyFile(a,b,"CIwResGroup"))
+						{ CanCreate = true,  DefaultFileName = "group.geo", Extensions = new[] { ".group" }, Factory = this, Name = "Marmalade SDK Group" },
 					new FileFormatInfo
 						{ CanCreate = false, Extensions = new[] { ".group.bin" }, Factory = this, Name = "Marmalade SDK Binary Group" },
 				};
 			this.context = context;
+		}
+
+		private void CreateEmptyFile(string fileName, Stream stream, string className)
+		{
+			var name = Path.GetFileNameWithoutExtension(fileName);
+			var buffer = Encoding.UTF8.GetBytes(string.Format("{0}\n{{\n\tname \"{1}\"\n}}\n", className, name));
+			stream.Write(buffer,0,buffer.Length);
 		}
 
 		#endregion
@@ -63,6 +72,17 @@ namespace Toe.Editors.Marmalade
 			get
 			{
 				return this.supportedFormats;
+			}
+		}
+
+		/// <summary>
+		/// Name of resource editor group.
+		/// </summary>
+		public string Name
+		{
+			get
+			{
+				return "Marmalade SDK";
 			}
 		}
 

@@ -322,7 +322,7 @@ namespace Toe.Editor
 			var d = context.Resolve<AddNewItemForm>();
 			if (d.ShowDialog() == DialogResult.OK)
 			{
-				
+				this.OpenFile(d.FilePath);
 			}
 		}
 	}

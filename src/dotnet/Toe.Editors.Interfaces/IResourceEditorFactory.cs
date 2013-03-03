@@ -12,6 +12,11 @@ namespace Toe.Editors.Interfaces
 		IList<IFileFormatInfo> SupportedFormats { get; }
 
 		/// <summary>
+		/// Name of resource editor group.
+		/// </summary>
+		string Name { get; }
+
+		/// <summary>
 		/// Create editor control for specific file.
 		/// </summary>
 		/// <param name="filename">File name.</param>

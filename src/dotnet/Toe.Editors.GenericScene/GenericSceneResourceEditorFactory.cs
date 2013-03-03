@@ -46,6 +46,17 @@ namespace Toe.Editors.GenericScene
 			}
 		}
 
+		/// <summary>
+		/// Name of resource editor group.
+		/// </summary>
+		public string Name
+		{
+			get
+			{
+				return "3D Scene";
+			}
+		}
+
 		public IResourceEditor CreateEditor(string fileName)
 		{
 			if (this.supportedFormats.SelectMany(supportedFormat => supportedFormat.Extensions).Any(extension => fileName.EndsWith(extension, StringComparison.InvariantCultureIgnoreCase)))
