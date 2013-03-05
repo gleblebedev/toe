@@ -79,6 +79,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "demos", "demos", "{FFD87712
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toe.Demo.Silverlight3D", "Toe.Demo.Silverlight3D\Toe.Demo.Silverlight3D.csproj", "{EFA3F486-748E-4E78-B6BC-D10389B7559F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toe.Demo.Wpf3D", "Toe.Demo.Wpf3D\Toe.Demo.Wpf3D.csproj", "{26F39D3A-10F5-4DE6-BA44-0DF494E7EEE6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -391,6 +393,18 @@ Global
 		{EFA3F486-748E-4E78-B6BC-D10389B7559F}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{EFA3F486-748E-4E78-B6BC-D10389B7559F}.Release|Win32.ActiveCfg = Release|Any CPU
 		{EFA3F486-748E-4E78-B6BC-D10389B7559F}.Release|x86.ActiveCfg = Release|Any CPU
+		{26F39D3A-10F5-4DE6-BA44-0DF494E7EEE6}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{26F39D3A-10F5-4DE6-BA44-0DF494E7EEE6}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{26F39D3A-10F5-4DE6-BA44-0DF494E7EEE6}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{26F39D3A-10F5-4DE6-BA44-0DF494E7EEE6}.Debug|Win32.ActiveCfg = Debug|x86
+		{26F39D3A-10F5-4DE6-BA44-0DF494E7EEE6}.Debug|x86.ActiveCfg = Debug|x86
+		{26F39D3A-10F5-4DE6-BA44-0DF494E7EEE6}.Debug|x86.Build.0 = Debug|x86
+		{26F39D3A-10F5-4DE6-BA44-0DF494E7EEE6}.Release|Any CPU.ActiveCfg = Release|x86
+		{26F39D3A-10F5-4DE6-BA44-0DF494E7EEE6}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{26F39D3A-10F5-4DE6-BA44-0DF494E7EEE6}.Release|Mixed Platforms.Build.0 = Release|x86
+		{26F39D3A-10F5-4DE6-BA44-0DF494E7EEE6}.Release|Win32.ActiveCfg = Release|x86
+		{26F39D3A-10F5-4DE6-BA44-0DF494E7EEE6}.Release|x86.ActiveCfg = Release|x86
+		{26F39D3A-10F5-4DE6-BA44-0DF494E7EEE6}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -424,5 +438,6 @@ Global
 		{5E32AE71-C5B6-4CB5-8733-C6FE793E7A65} = {DA6FC0C7-40E0-48C2-A123-2ADD5CA01429}
 		{914F2B38-37B6-483B-8EBD-768E6440498C} = {9A4BCB8E-C2E0-4F24-B8CE-6D6BEF09C3DE}
 		{EFA3F486-748E-4E78-B6BC-D10389B7559F} = {FFD87712-3DD0-4F54-A2E7-EB99D8DDA950}
+		{26F39D3A-10F5-4DE6-BA44-0DF494E7EEE6} = {FFD87712-3DD0-4F54-A2E7-EB99D8DDA950}
 	EndGlobalSection
 EndGlobal
