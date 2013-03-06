@@ -15,6 +15,7 @@ namespace Toe.Editors
 			builder.RegisterType<Base3DEditorContent>().SingleInstance();
 			builder.RegisterGeneric(typeof(DefaultEditorConfiguration<>)).As(typeof(IEditorOptions<>)).SingleInstance();
 			builder.RegisterType<DefaultEditorConfigStorage>().As<IEditorConfigStorage>().SingleInstance();
+			builder.RegisterType<ImportSceneDialog>().As<ImportSceneDialog>().SingleInstance();
 		}
 
 		#endregion

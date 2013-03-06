@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Collections.Generic;
 
 using Autofac;
 
@@ -15,6 +16,7 @@ using Toe.Gx;
 using Toe.Marmalade.IwGraphics;
 using Toe.Resources;
 using Toe.Utils.Marmalade.IwGraphics;
+using Toe.Utils.Mesh;
 
 namespace Toe.Editors.Marmalade
 {
@@ -187,12 +189,31 @@ namespace Toe.Editors.Marmalade
 		{
 			this.base3DEditor = this.context.Resolve<Base3DEditor>();
 			this.split.Panel2.Controls.Add(this.base3DEditor);
+			int row = 0;
 
-			this.tableLayoutPanel1.Controls.Add(new Label { Text = "Name" }, 0, 0);
+			this.tableLayoutPanel1.Controls.Add(new Label { Text = "Name" }, 0, row);
 			var editNameView = new EditNameView(this.history) { Dock = DockStyle.Fill };
-			this.tableLayoutPanel1.Controls.Add(editNameView, 1, 0);
+			this.tableLayoutPanel1.Controls.Add(editNameView, 1, row);
 			new DataContextBinding(editNameView, this.dataContext, false);
+
+			++row;
+
+			this.tableLayoutPanel1.Controls.Add(new Label { Text = "" }, 0, row);
+			var importButton = new Button() { Text = "Import" };
+			importButton.Click += OnImportButtonClick;
+			this.tableLayoutPanel1.Controls.Add(importButton, 1, row);
+
 			this.base3DEditor.RenderScene += this.OnRenderScene;
+		}
+
+		private void OnImportButtonClick(object sender, EventArgs e)
+		{
+			var dialog = context.Resolve<ImportSceneDialog>();
+			var scene = dialog.ImportScene();
+			if (scene != null)
+			{
+				
+			}
 		}
 
 		#endregion

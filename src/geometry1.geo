@@ -1,0 +1,4 @@
+CIwModel
+{
+	name "geometry1"
+}

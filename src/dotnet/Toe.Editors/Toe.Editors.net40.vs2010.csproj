@@ -66,6 +66,12 @@
     <Compile Include="EditorCameraOptions.cs" />
     <Compile Include="GameCameraController.cs" />
     <Compile Include="BaseEditorsAutofacModule.cs" />
+    <Compile Include="ImportSceneDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ImportSceneDialog.Designer.cs">
+      <DependentUpon>ImportSceneDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
