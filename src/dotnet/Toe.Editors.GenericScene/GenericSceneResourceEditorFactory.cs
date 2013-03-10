@@ -27,6 +27,7 @@ namespace Toe.Editors.GenericScene
 					new FileFormatInfo{CanCreate = false,Extensions = new []{".ase"},Factory = this,Name = "ASCII file"},
 					new FileFormatInfo{CanCreate = false,Extensions = new []{".bsp"},Factory = this,Name = "Quake/HalfLife BSP file"},
 					new FileFormatInfo{CanCreate = false,Extensions = new []{".dae"},Factory = this,Name = "Collada DAE"},
+					new FileFormatInfo{CanCreate = false,Extensions = new []{".svg"},Factory = this,Name = "Scalable Vector Graphics"},
 				};
 			this.context = context;
 		}

@@ -279,17 +279,6 @@ namespace Toe.Utils.Mesh
 			}
 		}
 
-		public void VisitColors(ColorVisitorCallback callback)
-		{
-			foreach (StreamSubmesh submesh in this.submeshes)
-			{
-				foreach (var index in submesh.Indices)
-				{
-					var v = this.colors[index.Color];
-					callback(ref v);
-				}
-			}
-		}
 
 		public void VisitNormals(Vector3VisitorCallback callback)
 		{
@@ -315,31 +304,43 @@ namespace Toe.Utils.Mesh
 			}
 		}
 
-		public void VisitUV(int stage, Vector3VisitorCallback callback)
+		/// <summary>
+		/// Get vertex color by index.
+		/// </summary>
+		/// <param name="index">Vertex index.</param>
+		/// <param name="color">Vertex color.</param>
+		public void GetColorAt(int index, out Color color)
 		{
-			var uvstream = this.uv[stage];
-			if (stage == 0)
+			foreach (StreamSubmesh submesh in this.submeshes)
 			{
-				foreach (StreamSubmesh submesh in this.submeshes)
+				if (index < submesh.Indices.Count)
 				{
-					foreach (var index in submesh.Indices)
-					{
-						var v = uvstream[index.UV0];
-						callback(ref v);
-					}
+					color = this.colors[submesh.Indices[index].Color];
+					return;
 				}
+				index -= submesh.Indices.Count;
 			}
-			else
+			throw new IndexOutOfRangeException();
+		}
+
+		/// <summary>
+		/// Get vertex texture coords by index.
+		/// </summary>
+		/// <param name="index">Vertex index.</param>
+		/// <param name="channel">Texture channel.</param>
+		/// <param name="uv">Vertex UV.</param>
+		public void GetUV3At(int index, int channel, out Vector3 uv)
+		{
+			foreach (StreamSubmesh submesh in this.submeshes)
 			{
-				foreach (StreamSubmesh submesh in this.submeshes)
+				if (index < submesh.Indices.Count)
 				{
-					foreach (var index in submesh.Indices)
-					{
-						var v = uvstream[index.UV1];
-						callback(ref v);
-					}
+					uv = this.uv[channel][submesh.Indices[index].GetUV(channel)];
+					return;
 				}
+				index -= submesh.Indices.Count;
 			}
+			throw new IndexOutOfRangeException();
 		}
 
 		/// <summary>

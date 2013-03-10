@@ -136,5 +136,20 @@ namespace Toe.Utils.Mesh
 		}
 
 		#endregion
+
+		public void GetUV(int channel, out Vector3 res)
+		{
+			switch (channel)
+			{
+				case 0:
+					res = UV0;
+					return;
+				case 1:
+					res = UV1;
+					return;
+				default:
+					throw new System.ArgumentOutOfRangeException();
+			}
+		}
 	}
 }

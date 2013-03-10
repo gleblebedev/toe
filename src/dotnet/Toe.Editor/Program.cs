@@ -21,6 +21,7 @@ using Toe.Resources;
 using Toe.Utils.Mesh.Ase;
 using Toe.Utils.Mesh.Bsp;
 using Toe.Utils.Mesh.Dae;
+using Toe.Utils.Mesh.Svg;
 
 using IContainer = Autofac.IContainer;
 using ResourceFileItem = Toe.Marmalade.TextFiles.ResourceFileItem;
@@ -43,16 +44,6 @@ namespace Toe.Editor
 		[STAThread]
 		private static void Main()
 		{
-			Matrix4 m = Matrix4.CreatePerspectiveFieldOfView((float)Math.PI/2.0f, 1, 10, 200);
-			Vector4 vv;
-			Vector3 v3;
-			var v = new Vector4(200, 200, -200,1);
-			Vector4.Transform(ref v, ref m, out vv);
-			v3 = new Vector3(vv.X / vv.W, vv.Y / vv.W, vv.Z / vv.W);
-			v = new Vector4(10, 10, -10,1);
-			Vector4.Transform(ref v, ref m, out vv);
-			v3 = new Vector3(vv.X / vv.W, vv.Y / vv.W, vv.Z / vv.W);
-
 			AppDomain.CurrentDomain.UnhandledException += OnException;
 			var cb = new ContainerBuilder();
 			cb.RegisterModule<BaseEditorsAutofacModule>();
@@ -61,6 +52,7 @@ namespace Toe.Editor
 			cb.RegisterModule<AseAutofacModule>();
 			cb.RegisterModule<DaeAutofacModule>();
 			cb.RegisterModule<BspAutofacModule>();
+			cb.RegisterModule<SvgAutofacModule>();
 			
 			cb.RegisterModule<MarmaladeAutofacModule>();
 			cb.RegisterModule<MarmaladeTextFilesAutofacModule>();

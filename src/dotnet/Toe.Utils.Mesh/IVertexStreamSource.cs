@@ -1,3 +1,5 @@
+using System.Drawing;
+
 using OpenTK;
 
 namespace Toe.Utils.Mesh
@@ -56,11 +58,22 @@ namespace Toe.Utils.Mesh
 
 		void VisitBinormals(Vector3VisitorCallback action);
 
-		void VisitColors(ColorVisitorCallback callback);
-
 		void VisitTangents(Vector3VisitorCallback action);
 
-		void VisitUV(int stage, Vector3VisitorCallback callback);
+		/// <summary>
+		/// Get vertex color by index.
+		/// </summary>
+		/// <param name="index">Vertex index.</param>
+		/// <param name="color">Vertex color.</param>
+		void GetColorAt(int index, out Color color);
+
+		/// <summary>
+		/// Get vertex texture coords by index.
+		/// </summary>
+		/// <param name="index">Vertex index.</param>
+		/// <param name="channel">Texture channel.</param>
+		/// <param name="uv">Vertex UV.</param>
+		void GetUV3At(int index, int channel, out Vector3 uv);
 
 		/// <summary>
 		/// Get vertex position by index.

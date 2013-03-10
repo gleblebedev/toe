@@ -64,40 +64,38 @@ namespace Toe.Gx
 			if (mesh.IsUV0StreamAvailable)
 			{
 				this.uv0 = new Vector3[mesh.Count];
-				int i = 0;
-				mesh.VisitUV(0, (ref Vector3 vv) =>
-					{
-						this.uv0[i] = vv;
-						++i;
-					});
+				for (int i = 0; i < mesh.Count; ++i)
+				{
+					mesh.GetUV3At(i,0, out this.uv0[i]);
+				}
 			}
 			this.uv1 = null;
 			if (mesh.IsUV1StreamAvailable)
 			{
 				this.uv1 = new Vector3[mesh.Count];
-				int i = 0;
-				mesh.VisitUV(0, (ref Vector3 vv) =>
-					{
-						this.uv1[i] = vv;
-						++i;
-					});
+				for (int i = 0; i < mesh.Count; ++i)
+				{
+					mesh.GetUV3At(i, 1, out this.uv1[i]);
+				}
 			}
 			this.c = null;
 			if (mesh.IsColorStreamAvailable)
 			{
-				this.c = new byte[mesh.Count * 4];
+				this.c = new byte[mesh.Count*4];
 				int i = 0;
-				mesh.VisitColors((ref Color vv) =>
-					{
-						this.c[i] = vv.R;
-						++i;
-						this.c[i] = vv.G;
-						++i;
-						this.c[i] = vv.B;
-						++i;
-						this.c[i] = vv.A;
-						++i;
-					});
+				for (int j = 0; j < mesh.Count; ++j)
+				{
+					Color col;
+					mesh.GetColorAt(j, out col);
+					this.c[i] = col.R;
+					++i;
+					this.c[i] = col.G;
+					++i;
+					this.c[i] = col.B;
+					++i;
+					this.c[i] = col.A;
+					++i;
+				}
 			}
 		}
 		public void Disable(ShaderTechniqueArgumentIndices p)

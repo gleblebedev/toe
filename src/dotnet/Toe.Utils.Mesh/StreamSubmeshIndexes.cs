@@ -19,5 +19,18 @@ namespace Toe.Utils.Mesh
 		public int Vertex;
 
 		#endregion
+
+		public int GetUV(int channel)
+		{
+			switch (channel)
+			{
+				case 0:
+					return UV0;
+				case 1:
+					return UV1;
+				default:
+					throw new System.ArgumentOutOfRangeException();
+			}
+		}
 	}
 }

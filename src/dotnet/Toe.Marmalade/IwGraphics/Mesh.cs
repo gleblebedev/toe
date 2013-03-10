@@ -342,34 +342,7 @@ namespace Toe.Marmalade.IwGraphics
 			}
 		}
 
-		public void VisitColors(ColorVisitorCallback callback)
-		{
-			foreach (var surface in this.surfaces)
-			{
-				var gl = surface as ModelBlockGLPrimBase;
-				if (gl != null)
-				{
-					foreach (var i in gl.Indices)
-					{
-						var v = this.colors[i];
-						callback(ref v);
-					}
-				}
-				else
-				{
-					var prim = surface as ModelBlockPrimBase;
-					if (prim != null)
-					{
-						foreach (var i in prim.Indices)
-						{
-							var v = this.colors[i.Color];
-							callback(ref v);
-						}
-					}
-				}
-			}
-		}
-
+	
 		public void VisitTangents(Vector3VisitorCallback callback)
 		{
 			foreach (var surface in this.surfaces)
@@ -398,32 +371,91 @@ namespace Toe.Marmalade.IwGraphics
 			}
 		}
 
-		public void VisitUV(int stage, Vector3VisitorCallback callback)
+		/// <summary>
+		/// Get vertex color by index.
+		/// </summary>
+		/// <param name="index">Vertex index.</param>
+		/// <param name="color">Vertex color.</param>
+		public void GetColorAt(int index, out Color color)
 		{
 			foreach (var surface in this.surfaces)
 			{
 				var gl = surface as ModelBlockGLPrimBase;
 				if (gl != null)
 				{
-					foreach (var i in gl.Indices)
+					if (index < gl.Indices.Count)
 					{
-						var v = new Vector3(this.uv0[i]);
-						callback(ref v);
+						color = this.colors[gl.Indices[index]];
+						return;
 					}
+					index -= gl.Indices.Count;
 				}
 				else
 				{
 					var prim = surface as ModelBlockPrimBase;
 					if (prim != null)
 					{
-						foreach (var i in prim.Indices)
+						if (index < prim.Indices.Count)
 						{
-							var v = new Vector3(this.uv0[i.UV0]);
-							callback(ref v);
+							color = this.colors[prim.Indices[index].Color];
+							return;
 						}
+						index -= prim.Indices.Count;
 					}
 				}
 			}
+			throw new IndexOutOfRangeException();
+		}
+
+		/// <summary>
+		/// Get vertex texture coords by index.
+		/// </summary>
+		/// <param name="index">Vertex index.</param>
+		/// <param name="channel">Texture channel.</param>
+		/// <param name="uv">Vertex UV.</param>
+		public void GetUV3At(int index, int channel, out Vector3 uv)
+		{
+			MeshStream<Vector2> meshStream = null;
+
+			switch (channel)
+			{
+				case 0:
+					meshStream = this.uv0;
+					break;
+				case 1:
+					meshStream = this.uv1;
+					break;
+
+			}
+			foreach (var surface in this.surfaces)
+			{
+				var gl = surface as ModelBlockGLPrimBase;
+				if (gl != null)
+				{
+					if (index < gl.Indices.Count)
+					{
+						var a = meshStream[gl.Indices[index]];
+						uv = new Vector3(a.X,a.Y,0);
+						return;
+					}
+					index -= gl.Indices.Count;
+				}
+				else
+				{
+					var prim = surface as ModelBlockPrimBase;
+					if (prim != null)
+					{
+						if (index < prim.Indices.Count)
+						{
+							var a = meshStream[prim.Indices[index].GetUV(channel)];
+							uv = new Vector3(a.X, a.Y, 0);
+							return;
+						}
+						index -= prim.Indices.Count;
+					}
+				}
+			}
+			throw new IndexOutOfRangeException();
 		}
 
 		/// <summary>

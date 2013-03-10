@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Drawing;
 
 using OpenTK;
 
@@ -151,23 +152,6 @@ namespace Toe.Utils.Mesh
 			}
 		}
 
-		public void VisitColors(ColorVisitorCallback callback)
-		{
-			foreach (var vertex in this.VertexBuffer)
-			{
-				var v = vertex.Color;
-				callback(ref v);
-			}
-		}
-
-		public void VisitNormals(Vector3VisitorCallback callback)
-		{
-			foreach (var vertex in this.VertexBuffer)
-			{
-				var v = vertex.Normal;
-				callback(ref v);
-			}
-		}
 
 		public void VisitTangents(Vector3VisitorCallback callback)
 		{
@@ -178,25 +162,28 @@ namespace Toe.Utils.Mesh
 			}
 		}
 
-		public void VisitUV(int stage, Vector3VisitorCallback callback)
+		/// <summary>
+		/// Get vertex color by index.
+		/// </summary>
+		/// <param name="index">Vertex index.</param>
+		/// <param name="color">Vertex color.</param>
+		public void GetColorAt(int index, out Color color)
 		{
-			if (stage == 0)
-			{
-				foreach (var vertex in this.VertexBuffer)
-				{
-					var v = vertex.UV0;
-					callback(ref v);
-				}
-			}
-			else
-			{
-				foreach (var vertex in this.VertexBuffer)
-				{
-					var v = vertex.UV1;
-					callback(ref v);
-				}
-			}
+			color = this.VertexBuffer[index].Color;
 		}
+
+		/// <summary>
+		/// Get vertex texture coords by index.
+		/// </summary>
+		/// <param name="index">Vertex index.</param>
+		/// <param name="channel">Texture channel.</param>
+		/// <param name="uv">Vertex UV.</param>
+		public void GetUV3At(int index, int channel, out Vector3 uv)
+		{
+			this.VertexBuffer[index].GetUV(channel, out uv);
+		}
+
+	
 
 		/// <summary>
 		/// Get vertex position by index.
