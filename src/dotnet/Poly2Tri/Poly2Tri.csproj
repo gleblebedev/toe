@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{41C92C10-7049-4106-A09F-069BB66AFEED}</ProjectGuid>
+    <ProjectGuid>{CB9E0414-BC87-4E61-8F3D-E699BB7B8EB5}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Toe.Utils.Mesh.Svg</RootNamespace>
-    <AssemblyName>Toe.Utils.Mesh.Svg</AssemblyName>
+    <RootNamespace>Poly2Tri</RootNamespace>
+    <AssemblyName>Poly2Tri</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -37,11 +37,8 @@
     <AssemblyOriginatorKeyFile>Toe.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Autofac">
-      <HintPath>..\packages\Autofac.3.0.1\lib\net40\Autofac.dll</HintPath>
-    </Reference>
-    <Reference Include="Autofac.Configuration">
-      <HintPath>..\packages\Autofac.3.0.1\lib\net40\Autofac.Configuration.dll</HintPath>
+    <Reference Include="OpenTK">
+      <HintPath>..\packages\OpenTK\OpenTK.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -52,28 +49,34 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="SvgAutofacModule.cs" />
-    <Compile Include="SvgReader.cs" />
-    <Compile Include="SvgSceneFileFormat.cs" />
+    <Compile Include="Delaunay\Sweep\DTSweep.cs" />
+    <Compile Include="Delaunay\Sweep\DTSweepBasin.cs" />
+    <Compile Include="Delaunay\Sweep\DTSweepContext.cs" />
+    <Compile Include="Delaunay\Sweep\DTSweepEdgeEvent.cs" />
+    <Compile Include="Delaunay\Sweep\DTSweepPointComparator.cs" />
+    <Compile Include="Delaunay\Sweep\PointOnEdgeException.cs" />
+    <Compile Include="Orientation.cs" />
+    <Compile Include="P2T.cs" />
+    <Compile Include="Polygon\Polygon.cs" />
+    <Compile Include="Polygon\PolygonPoint.cs" />
+    <Compile Include="Polygon\PolygonSet.cs" />
+    <Compile Include="TriangulationConstraint.cs" />
+    <Compile Include="Delaunay\DelaunayTriangle.cs" />
+    <Compile Include="Delaunay\Sweep\DTSweepConstraint.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Triangulatable.cs" />
+    <Compile Include="TriangulationAlgorithm.cs" />
+    <Compile Include="TriangulationContext.cs" />
+    <Compile Include="TriangulationDebugContext.cs" />
+    <Compile Include="TriangulationPoint.cs" />
+    <Compile Include="TriangulationUtil.cs" />
+    <Compile Include="Utility\ConstrainedPointSet.cs" />
+    <Compile Include="Utility\FixedArray3.cs" />
+    <Compile Include="Utility\FixedBitArray3.cs" />
+    <Compile Include="Utility\PointSet.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
     <None Include="Toe.snk" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Poly2Tri\Poly2Tri.csproj">
-      <Project>{CB9E0414-BC87-4E61-8F3D-E699BB7B8EB5}</Project>
-      <Name>Poly2Tri</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Toe.Utils.Mesh\Toe.Utils.Mesh.net40.vs2010.csproj">
-      <Project>{1AB2E074-5CE6-4CD6-A379-3D6A58116319}</Project>
-      <Name>Toe.Utils.Mesh.net40.vs2010</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Toe.Utils\Toe.Utils.csproj">
-      <Project>{7F30E400-0F58-4190-8AE9-111CE57F61E4}</Project>
-      <Name>Toe.Utils</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
