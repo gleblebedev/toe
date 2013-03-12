@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Text;
@@ -64,6 +65,7 @@ namespace Toe.Editors
 		private ToolStripDropDownButton renderNormalsButton;
 		private ToolStripMenuItem renderNormalsMenuItem;
 		private ToolStripMenuItem hideNormalsMenuItem;
+		private ToolStripButton btnScreenShot;
 
 		private Timer keysAnimationTimer;
 		#endregion
@@ -325,16 +327,17 @@ namespace Toe.Editors
 			this.zUpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.yUpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.lightingButton = new System.Windows.Forms.ToolStripButton();
+			this.renderWireButton = new System.Windows.Forms.ToolStripDropDownButton();
+			this.renderWireframeMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.hideWireframeMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.renderNormalsButton = new System.Windows.Forms.ToolStripDropDownButton();
+			this.renderNormalsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.hideNormalsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.glControl = new OpenTK.GLControl();
 			this.errPanel = new Toe.Editors.Interfaces.Panels.StackPanel();
 			this.errButton = new System.Windows.Forms.Button();
 			this.errMessage = new System.Windows.Forms.Label();
-			this.renderWireButton = new System.Windows.Forms.ToolStripDropDownButton();
-			this.renderNormalsButton = new System.Windows.Forms.ToolStripDropDownButton();
-			this.renderWireframeMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.hideWireframeMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.renderNormalsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.hideNormalsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.btnScreenShot = new System.Windows.Forms.ToolStripButton();
 			this.toolStrip1.SuspendLayout();
 			this.errPanel.SuspendLayout();
 			this.SuspendLayout();
@@ -345,7 +348,8 @@ namespace Toe.Editors
             this.coordinateSystemButton,
             this.lightingButton,
             this.renderWireButton,
-            this.renderNormalsButton});
+            this.renderNormalsButton,
+            this.btnScreenShot});
 			this.toolStrip1.Location = new System.Drawing.Point(0, 0);
 			this.toolStrip1.Name = "toolStrip1";
 			this.toolStrip1.Size = new System.Drawing.Size(550, 25);
@@ -368,14 +372,14 @@ namespace Toe.Editors
 			// 
 			this.zUpToolStripMenuItem.Image = global::Toe.Editors.Properties.Resources.zup;
 			this.zUpToolStripMenuItem.Name = "zUpToolStripMenuItem";
-			this.zUpToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.zUpToolStripMenuItem.Size = new System.Drawing.Size(101, 22);
 			this.zUpToolStripMenuItem.Text = "Z-Up";
 			// 
 			// yUpToolStripMenuItem
 			// 
 			this.yUpToolStripMenuItem.Image = global::Toe.Editors.Properties.Resources.yup;
 			this.yUpToolStripMenuItem.Name = "yUpToolStripMenuItem";
-			this.yUpToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.yUpToolStripMenuItem.Size = new System.Drawing.Size(101, 22);
 			this.yUpToolStripMenuItem.Text = "Y-Up";
 			// 
 			// lightingButton
@@ -385,6 +389,58 @@ namespace Toe.Editors
 			this.lightingButton.Name = "lightingButton";
 			this.lightingButton.Size = new System.Drawing.Size(23, 22);
 			this.lightingButton.Text = "lighingButton";
+			// 
+			// renderWireButton
+			// 
+			this.renderWireButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.renderWireButton.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.renderWireframeMenuItem,
+            this.hideWireframeMenuItem});
+			this.renderWireButton.Image = ((System.Drawing.Image)(resources.GetObject("renderWireButton.Image")));
+			this.renderWireButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.renderWireButton.Name = "renderWireButton";
+			this.renderWireButton.Size = new System.Drawing.Size(29, 22);
+			this.renderWireButton.Text = "toolStripDropDownButton1";
+			// 
+			// renderWireframeMenuItem
+			// 
+			this.renderWireframeMenuItem.Name = "renderWireframeMenuItem";
+			this.renderWireframeMenuItem.Size = new System.Drawing.Size(169, 22);
+			this.renderWireframeMenuItem.Text = "Render Wireframe";
+			this.renderWireframeMenuItem.Click += new System.EventHandler(this.SelectWireframeOn);
+			// 
+			// hideWireframeMenuItem
+			// 
+			this.hideWireframeMenuItem.Name = "hideWireframeMenuItem";
+			this.hideWireframeMenuItem.Size = new System.Drawing.Size(169, 22);
+			this.hideWireframeMenuItem.Text = "Hide Wireframe";
+			this.hideWireframeMenuItem.Click += new System.EventHandler(this.SelectWireframeOff);
+			// 
+			// renderNormalsButton
+			// 
+			this.renderNormalsButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.renderNormalsButton.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.renderNormalsMenuItem,
+            this.hideNormalsMenuItem});
+			this.renderNormalsButton.Image = ((System.Drawing.Image)(resources.GetObject("renderNormalsButton.Image")));
+			this.renderNormalsButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.renderNormalsButton.Name = "renderNormalsButton";
+			this.renderNormalsButton.Size = new System.Drawing.Size(29, 22);
+			this.renderNormalsButton.Text = "toolStripDropDownButton2";
+			// 
+			// renderNormalsMenuItem
+			// 
+			this.renderNormalsMenuItem.Name = "renderNormalsMenuItem";
+			this.renderNormalsMenuItem.Size = new System.Drawing.Size(157, 22);
+			this.renderNormalsMenuItem.Text = "Render normals";
+			this.renderNormalsMenuItem.Click += new System.EventHandler(this.SelectNormalsOn);
+			// 
+			// hideNormalsMenuItem
+			// 
+			this.hideNormalsMenuItem.Name = "hideNormalsMenuItem";
+			this.hideNormalsMenuItem.Size = new System.Drawing.Size(157, 22);
+			this.hideNormalsMenuItem.Text = "Hide normals";
+			this.hideNormalsMenuItem.Click += new System.EventHandler(this.SelectNormalsOff);
 			// 
 			// glControl
 			// 
@@ -426,57 +482,15 @@ namespace Toe.Editors
 			this.errMessage.TabIndex = 0;
 			this.errMessage.Text = "Render error";
 			// 
-			// renderWireButton
+			// btnScreenShot
 			// 
-			this.renderWireButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.renderWireButton.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.renderWireframeMenuItem,
-            this.hideWireframeMenuItem});
-			this.renderWireButton.Image = ((System.Drawing.Image)(resources.GetObject("renderWireButton.Image")));
-			this.renderWireButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.renderWireButton.Name = "renderWireButton";
-			this.renderWireButton.Size = new System.Drawing.Size(29, 22);
-			this.renderWireButton.Text = "toolStripDropDownButton1";
-			// 
-			// renderNormalsButton
-			// 
-			this.renderNormalsButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.renderNormalsButton.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.renderNormalsMenuItem,
-            this.hideNormalsMenuItem});
-			this.renderNormalsButton.Image = ((System.Drawing.Image)(resources.GetObject("renderNormalsButton.Image")));
-			this.renderNormalsButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.renderNormalsButton.Name = "renderNormalsButton";
-			this.renderNormalsButton.Size = new System.Drawing.Size(29, 22);
-			this.renderNormalsButton.Text = "toolStripDropDownButton2";
-			// 
-			// renderWireframeMenuItem
-			// 
-			this.renderWireframeMenuItem.Name = "renderWireframeMenuItem";
-			this.renderWireframeMenuItem.Size = new System.Drawing.Size(169, 22);
-			this.renderWireframeMenuItem.Text = "Render Wireframe";
-			this.renderWireframeMenuItem.Click += new System.EventHandler(this.SelectWireframeOn);
-			// 
-			// hideWireframeMenuItem
-			// 
-			this.hideWireframeMenuItem.Name = "hideWireframeMenuItem";
-			this.hideWireframeMenuItem.Size = new System.Drawing.Size(169, 22);
-			this.hideWireframeMenuItem.Text = "Hide Wireframe";
-			this.hideWireframeMenuItem.Click += new System.EventHandler(this.SelectWireframeOff);
-			// 
-			// renderNormalsMenuItem
-			// 
-			this.renderNormalsMenuItem.Name = "renderNormalsMenuItem";
-			this.renderNormalsMenuItem.Size = new System.Drawing.Size(157, 22);
-			this.renderNormalsMenuItem.Text = "Render normals";
-			this.renderNormalsMenuItem.Click += new System.EventHandler(this.SelectNormalsOn);
-			// 
-			// hideNormalsMenuItem
-			// 
-			this.hideNormalsMenuItem.Name = "hideNormalsMenuItem";
-			this.hideNormalsMenuItem.Size = new System.Drawing.Size(157, 22);
-			this.hideNormalsMenuItem.Text = "Hide normals";
-			this.hideNormalsMenuItem.Click += new System.EventHandler(this.SelectNormalsOff);
+			this.btnScreenShot.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.btnScreenShot.Image = ((System.Drawing.Image)(resources.GetObject("btnScreenShot.Image")));
+			this.btnScreenShot.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.btnScreenShot.Name = "btnScreenShot";
+			this.btnScreenShot.Size = new System.Drawing.Size(23, 22);
+			this.btnScreenShot.Text = "Take Screenshot";
+			this.btnScreenShot.Click += new System.EventHandler(this.TakeScreenshot);
 			// 
 			// Base3DEditor
 			// 
@@ -732,6 +746,33 @@ namespace Toe.Editors
 					default:
 						break;
 				}
+			}
+		}
+
+		private void TakeScreenshot(object sender, EventArgs e)
+		{
+			glControl.MakeCurrent();
+			Bitmap bmp = new Bitmap(this.ClientSize.Width, this.ClientSize.Height);
+			System.Drawing.Imaging.BitmapData data =
+				bmp.LockBits(this.ClientRectangle, System.Drawing.Imaging.ImageLockMode.WriteOnly, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+			GL.ReadPixels(0, 0, this.ClientSize.Width, this.ClientSize.Height, PixelFormat.Bgr, PixelType.UnsignedByte, data.Scan0);
+			bmp.UnlockBits(data);
+			bmp.RotateFlip(RotateFlipType.RotateNoneFlipY);
+
+			var tmpPath = Path.GetTempPath();
+			var dir = Path.Combine(tmpPath, "toe_screenshots");
+			if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
+			var t = DateTime.Now;
+			var file = Path.Combine(dir, string.Format("{0}_{1}_{2}_{3}_{4}_{5}.jpg",t.Year,t.Month,t.Day,t.Hour,t.Minute,t.Second));
+			bmp.Save(file);
+
+			try
+			{
+				Process.Start("explorer.exe", "/select," + file);
+			} 
+			catch(Exception ex)
+			{
+				Trace.WriteLine(ex);
 			}
 		}
 	}

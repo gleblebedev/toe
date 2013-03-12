@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Xml.Linq;
 
@@ -49,9 +50,18 @@ namespace Toe.Utils.Mesh.Svg
 			var d = path.Attribute(schema.dAttrName);
 			if (d == null)
 				return;
-			var items = d.Value.Split(new char[] { ' ' },StringSplitOptions.RemoveEmptyEntries);
 
-
+			using (var stringReader = new StringReader(d.Value))
+			{
+				var p = new PathParser(stringReader);
+				for (; ; )
+				{
+					var verb = p.Consume();
+					if (verb == null)
+						break;
+					Trace.WriteLine(verb);
+				}
+			}
 			//m 568.6259,522.8354 -27.832,-72.9004 10.3027,0 23.0957,61.377 23.1445,-61.377 10.2539,0 -27.7832,72.9004 L 568.6259,522.8354 Z
 		}
 

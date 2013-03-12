@@ -52,6 +52,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PathParser.cs" />
     <Compile Include="SvgAutofacModule.cs" />
     <Compile Include="SvgReader.cs" />
     <Compile Include="SvgSceneFileFormat.cs" />
@@ -69,6 +70,10 @@
     <ProjectReference Include="..\Toe.Utils.Mesh\Toe.Utils.Mesh.net40.vs2010.csproj">
       <Project>{1AB2E074-5CE6-4CD6-A379-3D6A58116319}</Project>
       <Name>Toe.Utils.Mesh.net40.vs2010</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Toe.Utils.TextParser\Toe.Utils.TextParser.csproj">
+      <Project>{91EF330C-981F-49F0-8BD6-5D8FA36B2871}</Project>
+      <Name>Toe.Utils.TextParser</Name>
     </ProjectReference>
     <ProjectReference Include="..\Toe.Utils\Toe.Utils.csproj">
       <Project>{7F30E400-0F58-4190-8AE9-111CE57F61E4}</Project>
