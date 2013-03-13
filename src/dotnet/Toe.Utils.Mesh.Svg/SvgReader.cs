@@ -41,24 +41,40 @@ namespace Toe.Utils.Mesh.Svg
 		{
 			foreach (var path in paths)
 			{
-				this.ParsePath(scene,path);
+				this.ParsePath(path);
 			}
 		}
 
-		private void ParsePath(Scene scene, XElement path)
+		private void ParsePath(XElement pathElement)
 		{
-			var d = path.Attribute(schema.dAttrName);
+			var path = new SvgPath();
+
+			var d = pathElement.Attribute(schema.dAttrName);
 			if (d == null)
 				return;
 
 			using (var stringReader = new StringReader(d.Value))
 			{
 				var p = new PathParser(stringReader);
+				SvgPathCommand previousCommand = SvgPathCommand.MoveTo;
+				bool absolute = true;
 				for (; ; )
 				{
 					var verb = p.Consume();
 					if (verb == null)
 						break;
+
+					switch (verb)
+					{
+						case "M":
+							previousCommand = SvgPathCommand.MoveTo;
+							absolute = true;
+							break;
+						case "m":
+							previousCommand = SvgPathCommand.MoveTo;
+							absolute = false;
+							break;
+					}
 					Trace.WriteLine(verb);
 				}
 			}

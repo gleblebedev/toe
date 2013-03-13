@@ -70,7 +70,7 @@ namespace Toe.Utils.Mesh.Svg
 				this.Lexem = sb.ToString();
 				return;
 			}
-			this.Lexem = new string(new []{ char.ToLower((char)this.nextChar)});
+			this.Lexem = ((char)this.nextChar).ToString();
 			this.ReadNextChar();
 			return;
 		}
