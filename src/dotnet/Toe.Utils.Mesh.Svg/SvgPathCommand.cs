@@ -4,9 +4,13 @@ namespace Toe.Utils.Mesh.Svg
 	{
 		MoveTo,
 		LineTo,
+		HorisontalLineTo,
+		VerticalLineTo,
 		CubicBezier,
+		SmoothCubicBezier,
 		QuadraticBezier,
-		Arc,
+		SmoothQuadraticBezier,
+		EllipticalArc,
 		ClosePath,
 	}
 }

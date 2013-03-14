@@ -1,6 +1,8 @@
 using System.IO;
 using System.Text;
 
+using OpenTK;
+
 using Toe.Utils.TextParser;
 
 namespace Toe.Utils.Mesh.Svg
@@ -70,9 +72,50 @@ namespace Toe.Utils.Mesh.Svg
 				this.Lexem = sb.ToString();
 				return;
 			}
-			this.Lexem = ((char)this.nextChar).ToString();
+
+			sb.Clear();
+			sb.Append((char)this.nextChar);
 			this.ReadNextChar();
-			return;
+			while (this.nextChar > 0 && char.IsLetter((char)this.nextChar))
+			{
+				sb.Append((char)this.nextChar);
+				this.ReadNextChar();
+			}
+			this.Lexem = sb.ToString();
+		}
+
+		public Vector2 ConsumeVector(SvgReaderOptions options)
+		{
+			var x = this.ConsumeFloat(options);
+			this.Skip(",");
+			var y = this.ConsumeFloat(options);
+			this.Skip(",");
+			return new Vector2(x, y);
+		}
+		public float ConsumeFloat(SvgReaderOptions options)
+		{
+			var v = base.ConsumeFloat();
+			if (Lexem != null)
+			{
+				var s = Lexem.ToLower();
+				if (s == "cm")
+				{
+					this.Consume();
+					v = options.CmToPixels(v);
+				}
+				else if (s == "mm")
+				{
+					this.Consume();
+					v = options.CmToPixels(v * 0.01f);
+				}
+				else if (s == "in")
+				{
+					this.Consume();
+					v = options.InchToPixels(v);
+				}
+			}
+			this.Skip(",");
+			return v;
 		}
 	}
 }

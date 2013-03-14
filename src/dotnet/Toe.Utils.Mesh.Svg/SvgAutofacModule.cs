@@ -11,6 +11,8 @@ namespace Toe.Utils.Mesh.Svg
 			base.Load(builder);
 
 			builder.RegisterType<SvgSceneFileFormat>().As<ISceneFileFormat>().InstancePerDependency();
+			builder.RegisterType<SvgReaderOptions>().SingleInstance();
+			builder.RegisterType<SvgReader>().As<SvgReader>().SingleInstance();
 		}
 
 		#endregion

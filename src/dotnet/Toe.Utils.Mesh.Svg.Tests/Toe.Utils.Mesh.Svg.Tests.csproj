@@ -2,18 +2,20 @@
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{41C92C10-7049-4106-A09F-069BB66AFEED}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{BE5E8FB6-8B7E-4AD3-9CAC-9CDA2F5608C9}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Toe.Utils.Mesh.Svg</RootNamespace>
-    <AssemblyName>Toe.Utils.Mesh.Svg</AssemblyName>
+    <RootNamespace>Toe.Utils.Mesh.Svg.Tests</RootNamespace>
+    <AssemblyName>Toe.Utils.Mesh.Svg.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -22,7 +24,8 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -30,20 +33,10 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
-  </PropertyGroup>
-  <PropertyGroup>
-    <AssemblyOriginatorKeyFile>Toe.snk</AssemblyOriginatorKeyFile>
-  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Autofac">
-      <HintPath>..\packages\Autofac.3.0.1\lib\net40\Autofac.dll</HintPath>
+    <Reference Include="nunit.framework">
+      <HintPath>..\packages\NUnit.2.6.2\lib\nunit.framework.dll</HintPath>
     </Reference>
-    <Reference Include="Autofac.Configuration">
-      <HintPath>..\packages\Autofac.3.0.1\lib\net40\Autofac.Configuration.dll</HintPath>
-    </Reference>
-    <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -53,37 +46,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PathParser.cs" />
-    <Compile Include="SvgAutofacModule.cs" />
-    <Compile Include="SvgPath.cs" />
-    <Compile Include="SvgPathCommand.cs" />
-    <Compile Include="SvgPathSegment.cs" />
-    <Compile Include="SvgReader.cs" />
-    <Compile Include="SvgReaderException.cs" />
-    <Compile Include="SvgReaderOptions.cs" />
-    <Compile Include="SvgSceneFileFormat.cs" />
+    <Compile Include="FolderTreeSearch.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReadFiles.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="Toe.snk" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Poly2Tri\Poly2Tri.csproj">
-      <Project>{CB9E0414-BC87-4E61-8F3D-E699BB7B8EB5}</Project>
-      <Name>Poly2Tri</Name>
+    <ProjectReference Include="..\Toe.Utils.Mesh.Svg\Toe.Utils.Mesh.Svg.csproj">
+      <Project>{41C92C10-7049-4106-A09F-069BB66AFEED}</Project>
+      <Name>Toe.Utils.Mesh.Svg</Name>
     </ProjectReference>
     <ProjectReference Include="..\Toe.Utils.Mesh\Toe.Utils.Mesh.net40.vs2010.csproj">
       <Project>{1AB2E074-5CE6-4CD6-A379-3D6A58116319}</Project>
       <Name>Toe.Utils.Mesh.net40.vs2010</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Toe.Utils.TextParser\Toe.Utils.TextParser.csproj">
-      <Project>{91EF330C-981F-49F0-8BD6-5D8FA36B2871}</Project>
-      <Name>Toe.Utils.TextParser</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Toe.Utils\Toe.Utils.csproj">
-      <Project>{7F30E400-0F58-4190-8AE9-111CE57F61E4}</Project>
-      <Name>Toe.Utils</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

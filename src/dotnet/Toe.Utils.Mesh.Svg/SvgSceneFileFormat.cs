@@ -2,10 +2,21 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
+using Autofac;
+
 namespace Toe.Utils.Mesh.Svg
 {
 	public class SvgSceneFileFormat : ISceneFileFormat
 	{
+		private readonly IComponentContext context;
+
+		public SvgSceneFileFormat(Autofac.IComponentContext context)
+		{
+			this.context = context;
+		}
+		public SvgSceneFileFormat()
+		{
+		}
 		#region Public Methods and Operators
 
 		/// <summary>
@@ -42,7 +53,9 @@ namespace Toe.Utils.Mesh.Svg
 
 		public ISceneReader CreateReader()
 		{
-			return new SvgReader();
+			if (context == null)
+				return new SvgReader(new SvgReaderOptions());
+			return context.Resolve<SvgReader>();
 		}
 
 		#endregion

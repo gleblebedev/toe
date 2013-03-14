@@ -8,11 +8,18 @@ namespace Toe.Utils.Mesh.Svg
 {
 	public class SvgReader : ISceneReader
 	{
+		private readonly SvgReaderOptions options;
+
 		private string basePath;
 
 		private SvgSchema schema;
 
 		private XElement svg;
+
+		public SvgReader(SvgReaderOptions options)
+		{
+			this.options = options;
+		}
 
 		#region Implementation of ISceneReader
 
@@ -60,7 +67,7 @@ namespace Toe.Utils.Mesh.Svg
 				bool absolute = true;
 				for (; ; )
 				{
-					var verb = p.Consume();
+					var verb = p.Lexem;
 					if (verb == null)
 						break;
 
@@ -69,11 +76,149 @@ namespace Toe.Utils.Mesh.Svg
 						case "M":
 							previousCommand = SvgPathCommand.MoveTo;
 							absolute = true;
+							p.Consume();
 							break;
 						case "m":
 							previousCommand = SvgPathCommand.MoveTo;
 							absolute = false;
+							p.Consume();
 							break;
+						case "Z":
+						case "z":
+							previousCommand = SvgPathCommand.ClosePath;
+							absolute = true;
+							p.Consume();
+							break;
+						case "L":
+							previousCommand = SvgPathCommand.LineTo;
+							absolute = true;
+							p.Consume();
+							break;
+						case "l":
+							previousCommand = SvgPathCommand.LineTo;
+							absolute = false;
+							p.Consume();
+							break;
+						case "H":
+							previousCommand = SvgPathCommand.HorisontalLineTo;
+							absolute = true;
+							p.Consume();
+							break;
+						case "h":
+							previousCommand = SvgPathCommand.HorisontalLineTo;
+							absolute = false;
+							p.Consume();
+							break;
+						case "V":
+							previousCommand = SvgPathCommand.VerticalLineTo;
+							absolute = true;
+							p.Consume();
+							break;
+						case "v":
+							previousCommand = SvgPathCommand.VerticalLineTo;
+							absolute = false;
+							p.Consume();
+							break;
+						case "C":
+							previousCommand = SvgPathCommand.CubicBezier;
+							absolute = true;
+							p.Consume();
+							break;
+						case "c":
+							previousCommand = SvgPathCommand.CubicBezier;
+							absolute = false;
+							p.Consume();
+							break;
+						case "S":
+							previousCommand = SvgPathCommand.SmoothCubicBezier;
+							absolute = true;
+							p.Consume();
+							break;
+						case "s":
+							previousCommand = SvgPathCommand.SmoothCubicBezier;
+							absolute = false;
+							p.Consume();
+							break;
+						case "Q":
+							previousCommand = SvgPathCommand.QuadraticBezier;
+							absolute = true;
+							p.Consume();
+							break;
+						case "q":
+							previousCommand = SvgPathCommand.QuadraticBezier;
+							absolute = false;
+							p.Consume();
+							break;
+						case "T":
+							previousCommand = SvgPathCommand.SmoothQuadraticBezier;
+							absolute = true;
+							p.Consume();
+							break;
+						case "t":
+							previousCommand = SvgPathCommand.SmoothQuadraticBezier;
+							absolute = false;
+							p.Consume();
+							break;
+						case "A":
+							previousCommand = SvgPathCommand.EllipticalArc;
+							absolute = true;
+							p.Consume();
+							break;
+						case "a":
+							previousCommand = SvgPathCommand.EllipticalArc;
+							absolute = false;
+							p.Consume();
+							break;
+						default:
+							if (!char.IsDigit(verb[0]) && verb[0] != '-')
+								throw new SvgReaderException(string.Format("Unknown command {0}", verb));
+							break;
+					}
+					switch (previousCommand)
+					{
+						case SvgPathCommand.MoveTo:
+							p.ConsumeVector(options);
+							break;
+						case SvgPathCommand.LineTo:
+							p.ConsumeVector(options);
+							break;
+						case SvgPathCommand.HorisontalLineTo:
+							p.ConsumeFloat(options);
+							break;
+						case SvgPathCommand.VerticalLineTo:
+							p.ConsumeFloat(options);
+							break;
+						case SvgPathCommand.CubicBezier:
+							p.ConsumeVector(options);
+							p.ConsumeVector(options);
+							p.ConsumeVector(options);
+							break;
+						case SvgPathCommand.QuadraticBezier:
+							p.ConsumeVector(options);
+							p.ConsumeVector(options);
+							break;
+						case SvgPathCommand.ClosePath:
+							break;
+						case SvgPathCommand.SmoothCubicBezier:
+							p.ConsumeVector(options);
+							p.ConsumeVector(options);
+							break;
+						case SvgPathCommand.SmoothQuadraticBezier:
+							p.ConsumeVector(options);
+							break;
+						case SvgPathCommand.EllipticalArc:
+							p.ConsumeVector(options);
+							p.Skip(",");
+							p.ConsumeFloat(options);
+							p.Skip(",");
+							var large_arc_flag = p.ConsumeInt();
+							p.Skip(",");
+							var sweep_flag = p.ConsumeInt();
+							p.Skip(",");
+							p.ConsumeVector(options);
+							break;
+						default:
+							throw new ArgumentOutOfRangeException();
 					}
 					Trace.WriteLine(verb);
 				}
