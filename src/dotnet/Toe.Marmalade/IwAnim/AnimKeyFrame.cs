@@ -1,5 +1,3 @@
-using Toe.Utils.Mesh;
-
 namespace Toe.Marmalade.IwAnim
 {
 	public class AnimKeyFrame
@@ -8,9 +6,13 @@ namespace Toe.Marmalade.IwAnim
 
 		private readonly ManagedList<AnimBone> bones;
 
-		AnimKeyFrame(ManagedList<AnimBone> b)
+		#endregion
+
+		#region Constructors and Destructors
+
+		private AnimKeyFrame(ManagedList<AnimBone> b)
 		{
-			bones = b;
+			this.bones = b;
 		}
 
 		#endregion

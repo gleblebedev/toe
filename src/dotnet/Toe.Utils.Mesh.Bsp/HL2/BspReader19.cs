@@ -18,9 +18,9 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 			face.lightmap = this.Stream.ReadInt32(); // offset into lightmap lump
 			face.area = this.Stream.ReadSingle(); // face area in units^2
 			face.LightmapTextureMinsInLuxels = new[] { this.Stream.ReadInt32(), this.Stream.ReadInt32() };
-				// texture lighting info
+			// texture lighting info
 			face.LightmapTextureSizeInLuxels = new[] { this.Stream.ReadInt32(), this.Stream.ReadInt32() };
-				// texture lighting info
+			// texture lighting info
 			face.origFace = this.Stream.ReadInt32(); // original face this was split from
 			face.numPrims = this.Stream.ReadUInt16(); // primitives
 			face.firstPrimID = this.Stream.ReadUInt16();

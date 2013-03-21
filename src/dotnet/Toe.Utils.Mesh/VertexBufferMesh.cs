@@ -138,6 +138,47 @@ namespace Toe.Utils.Mesh
 			return streamSubmesh;
 		}
 
+		/// <summary>
+		/// Get vertex color by index.
+		/// </summary>
+		/// <param name="index">Vertex index.</param>
+		/// <param name="color">Vertex color.</param>
+		public void GetColorAt(int index, out Color color)
+		{
+			color = this.VertexBuffer[index].Color;
+		}
+
+		/// <summary>
+		/// Get normal position by index.
+		/// </summary>
+		/// <param name="index">Vertex index.</param>
+		/// <param name="vector">Vertex normal.</param>
+		public void GetNormalAt(int index, out Vector3 vector)
+		{
+			vector = this.VertexBuffer[index].Normal;
+		}
+
+		/// <summary>
+		/// Get vertex texture coords by index.
+		/// </summary>
+		/// <param name="index">Vertex index.</param>
+		/// <param name="channel">Texture channel.</param>
+		/// <param name="uv">Vertex UV.</param>
+		public void GetUV3At(int index, int channel, out Vector3 uv)
+		{
+			this.VertexBuffer[index].GetUV(channel, out uv);
+		}
+
+		/// <summary>
+		/// Get vertex position by index.
+		/// </summary>
+		/// <param name="index">Vertex index.</param>
+		/// <param name="vector">Vertex position.</param>
+		public void GetVertexAt(int index, out Vector3 vector)
+		{
+			vector = this.VertexBuffer[index].Position;
+		}
+
 		public void InvalidateBounds()
 		{
 			this.areBoundsValid = false;
@@ -152,7 +193,6 @@ namespace Toe.Utils.Mesh
 			}
 		}
 
-
 		public void VisitTangents(Vector3VisitorCallback callback)
 		{
 			foreach (var vertex in this.VertexBuffer)
@@ -160,49 +200,6 @@ namespace Toe.Utils.Mesh
 				var v = vertex.Tangent;
 				callback(ref v);
 			}
-		}
-
-		/// <summary>
-		/// Get vertex color by index.
-		/// </summary>
-		/// <param name="index">Vertex index.</param>
-		/// <param name="color">Vertex color.</param>
-		public void GetColorAt(int index, out Color color)
-		{
-			color = this.VertexBuffer[index].Color;
-		}
-
-		/// <summary>
-		/// Get vertex texture coords by index.
-		/// </summary>
-		/// <param name="index">Vertex index.</param>
-		/// <param name="channel">Texture channel.</param>
-		/// <param name="uv">Vertex UV.</param>
-		public void GetUV3At(int index, int channel, out Vector3 uv)
-		{
-			this.VertexBuffer[index].GetUV(channel, out uv);
-		}
-
-	
-
-		/// <summary>
-		/// Get vertex position by index.
-		/// </summary>
-		/// <param name="index">Vertex index.</param>
-		/// <param name="vector">Vertex position.</param>
-		public void GetVertexAt(int index, out Vector3 vector)
-		{
-			vector = this.VertexBuffer[index].Position;
-		}
-
-		/// <summary>
-		/// Get normal position by index.
-		/// </summary>
-		/// <param name="index">Vertex index.</param>
-		/// <param name="vector">Vertex normal.</param>
-		public void GetNormalAt(int index, out Vector3 vector)
-		{
-			vector = this.VertexBuffer[index].Normal;
 		}
 
 		#endregion

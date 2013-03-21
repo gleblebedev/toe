@@ -19,13 +19,15 @@ namespace Toe
 			Application.SetCompatibleTextRenderingDefault(false);
 
 			var config = new ToeSceneConfiguration();
-			var webViewConfig = new ToeSystemConfiguration(){SystemName = "WebView"};
-			webViewConfig.Layers.Add(new ToeLayerConfiguration(){LayerName = "WebView", Popularity = ToeComponentLayerPopularity.VeryRare});
-			var luaConfig = new ToeSystemConfiguration() { SystemName = "LuaScript" };
-			luaConfig.Layers.Add(new ToeLayerConfiguration() { LayerName = "Script", Popularity = ToeComponentLayerPopularity.Average });
+			var webViewConfig = new ToeSystemConfiguration { SystemName = "WebView" };
+			webViewConfig.Layers.Add(
+				new ToeLayerConfiguration { LayerName = "WebView", Popularity = ToeComponentLayerPopularity.VeryRare });
+			var luaConfig = new ToeSystemConfiguration { SystemName = "LuaScript" };
+			luaConfig.Layers.Add(
+				new ToeLayerConfiguration { LayerName = "Script", Popularity = ToeComponentLayerPopularity.Average });
 			config.Systems.Add(webViewConfig);
 			config.Systems.Add(luaConfig);
-			
+
 			Application.Run(new MainWindow(config));
 		}
 

@@ -21,6 +21,8 @@ namespace Toe.Marmalade.BinaryFiles
 
 		private const byte minor = 6;
 
+		private static readonly string[] extensions = new[] { ".group.bin" };
+
 		private readonly IComponentContext context;
 
 		private readonly IResourceErrorHandler errorHandler;
@@ -28,8 +30,6 @@ namespace Toe.Marmalade.BinaryFiles
 		private readonly IResourceManager resourceManager;
 
 		private byte rev = 1;
-
-		private static readonly string[] extensions = new string[] { ".group.bin" };
 
 		#endregion
 
@@ -45,7 +45,18 @@ namespace Toe.Marmalade.BinaryFiles
 
 		#endregion
 
-		#region Public Methods and Operators
+		#region Public Properties
+
+		/// <summary>
+		/// List of extensions with leading dot.
+		/// </summary>
+		public IList<string> Extensions
+		{
+			get
+			{
+				return extensions;
+			}
+		}
 
 		/// <summary>
 		/// Name of file format.
@@ -58,16 +69,9 @@ namespace Toe.Marmalade.BinaryFiles
 			}
 		}
 
-		/// <summary>
-		/// List of extensions with leading dot.
-		/// </summary>
-		public IList<string> Extensions
-		{
-			get
-			{
-				return extensions;
-			}
-		}
+		#endregion
+
+		#region Public Methods and Operators
 
 		public bool CanRead(string filePath)
 		{

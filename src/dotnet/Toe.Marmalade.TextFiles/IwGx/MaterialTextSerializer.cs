@@ -3,7 +3,6 @@
 using Toe.Marmalade.IwGx;
 using Toe.Resources;
 using Toe.Utils.Marmalade.IwGx;
-using Toe.Utils.TextParser;
 
 namespace Toe.Marmalade.TextFiles.IwGx
 {

@@ -4,17 +4,21 @@ namespace Toe.Editors.Interfaces
 {
 	public interface IResourceEditorFactory
 	{
-		#region Public Methods and Operators
+		#region Public Properties
+
+		/// <summary>
+		/// Name of resource editor group.
+		/// </summary>
+		string Name { get; }
 
 		/// <summary>
 		/// All supported file formats.
 		/// </summary>
 		IList<IFileFormatInfo> SupportedFormats { get; }
 
-		/// <summary>
-		/// Name of resource editor group.
-		/// </summary>
-		string Name { get; }
+		#endregion
+
+		#region Public Methods and Operators
 
 		/// <summary>
 		/// Create editor control for specific file.

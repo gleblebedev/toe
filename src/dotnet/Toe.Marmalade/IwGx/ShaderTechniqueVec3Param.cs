@@ -22,6 +22,8 @@ namespace Toe.Marmalade.IwGx
 
 		#endregion
 
+		#region Public Properties
+
 		public Vector3[] Values
 		{
 			get
@@ -29,5 +31,7 @@ namespace Toe.Marmalade.IwGx
 				return this.values;
 			}
 		}
+
+		#endregion
 	}
 }

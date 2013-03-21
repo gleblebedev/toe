@@ -5,6 +5,5 @@ namespace Toe.Core
 	/// </summary>
 	public interface IToeSystem
 	{
-		
 	}
 }

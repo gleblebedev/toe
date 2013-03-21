@@ -10,7 +10,14 @@ namespace Toe.Editors
 {
 	public class DefaultEditorConfigStorage : IEditorConfigStorage
 	{
+		#region Constants and Fields
+
 		private string folder;
+
+		#endregion
+
+		#region Public Properties
+
 		public string Folder
 		{
 			get
@@ -18,15 +25,23 @@ namespace Toe.Editors
 				if (this.folder == null)
 				{
 					this.folder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-					if (!Directory.Exists(this.folder)) Directory.CreateDirectory(this.folder);
-					this.folder = Path.Combine(this.folder,"TinyOpenEngineEditor");
-					if (!Directory.Exists(this.folder)) Directory.CreateDirectory(this.folder);
+					if (!Directory.Exists(this.folder))
+					{
+						Directory.CreateDirectory(this.folder);
+					}
+					this.folder = Path.Combine(this.folder, "TinyOpenEngineEditor");
+					if (!Directory.Exists(this.folder))
+					{
+						Directory.CreateDirectory(this.folder);
+					}
 				}
 				return this.folder;
 			}
 		}
 
-		#region Implementation of IEditorConfigStorage
+		#endregion
+
+		#region Public Methods and Operators
 
 		public object Load(Type type)
 		{
@@ -43,15 +58,10 @@ namespace Toe.Editors
 					return s.Deserialize(w, type);
 				}
 			}
-			catch(Exception)
+			catch (Exception)
 			{
 				return null;
 			}
-		}
-
-		private string ConfigPath(Type options)
-		{
-			return Path.Combine(this.Folder,options.Name+".json");
 		}
 
 		public void Save(object options)
@@ -61,9 +71,18 @@ namespace Toe.Editors
 			var stringBuilder = new StringBuilder();
 			using (var w = new StringWriter(stringBuilder))
 			{
-				s.Serialize(w,options);
+				s.Serialize(w, options);
 			}
-			File.WriteAllText(path,stringBuilder.ToString(),Encoding.UTF8);
+			File.WriteAllText(path, stringBuilder.ToString(), Encoding.UTF8);
+		}
+
+		#endregion
+
+		#region Methods
+
+		private string ConfigPath(Type options)
+		{
+			return Path.Combine(this.Folder, options.Name + ".json");
 		}
 
 		#endregion

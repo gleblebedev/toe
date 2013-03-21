@@ -14,11 +14,11 @@ namespace Toe.Editors.Marmalade
 	{
 		#region Constants and Fields
 
+		private readonly IMesh box;
+
 		private readonly MaterialEditor editor;
 
 		private readonly ToeGraphicsContext graphicsContext;
-
-		private IMesh box;
 
 		#endregion
 
@@ -28,7 +28,8 @@ namespace Toe.Editors.Marmalade
 			MaterialEditor editor,
 			ToeGraphicsContext graphicsContext,
 			IComponentContext context,
-			IEditorOptions<Base3DEditorOptions> options, Base3DEditorContent content)
+			IEditorOptions<Base3DEditorOptions> options,
+			Base3DEditorContent content)
 			: base(context, options, content)
 		{
 			this.editor = editor;
@@ -37,14 +38,14 @@ namespace Toe.Editors.Marmalade
 			this.Camera.ZNear = 16.0f;
 			this.Camera.ZFar = 2048.0f;
 			base.RenderScene += this.RenderMaterialScene;
-			box = BoxBuilder.BuildSoftEdgedBox(250);
+			this.box = BoxBuilder.BuildSoftEdgedBox(250);
 		}
 
 		#endregion
 
-		#region Methods
-
 		//private LightArgs light = LightArgs.Default;
+
+		#region Methods
 
 		protected void RenderMaterialScene(object sender, EventArgs args)
 		{
@@ -72,9 +73,9 @@ namespace Toe.Editors.Marmalade
 			//{
 			//    GL.Disable(EnableCap.Lighting);
 			//}
-			graphicsContext.SetMaterial(this.editor.Material);
-			this.RenderMesh(box);
-			graphicsContext.SetMaterial(null);
+			this.graphicsContext.SetMaterial(this.editor.Material);
+			this.RenderMesh(this.box);
+			this.graphicsContext.SetMaterial(null);
 
 			//GL.PopAttrib();
 		}

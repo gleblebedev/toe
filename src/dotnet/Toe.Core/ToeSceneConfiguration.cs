@@ -4,20 +4,18 @@ namespace Toe.Core
 {
 	public class ToeSceneConfiguration
 	{
-		private int numServerEntities = 16384;
+		#region Constants and Fields
+
+		private readonly ObservableCollection<ToeSystemConfiguration> systems =
+			new ObservableCollection<ToeSystemConfiguration>();
+
 		private int numClientEntities = 16384;
 
-		public int NumServerEntities
-		{
-			get
-			{
-				return this.numServerEntities;
-			}
-			set
-			{
-				this.numServerEntities = value;
-			}
-		}
+		private int numServerEntities = 16384;
+
+		#endregion
+
+		#region Public Properties
 
 		public int NumClientEntities
 		{
@@ -31,6 +29,18 @@ namespace Toe.Core
 			}
 		}
 
+		public int NumServerEntities
+		{
+			get
+			{
+				return this.numServerEntities;
+			}
+			set
+			{
+				this.numServerEntities = value;
+			}
+		}
+
 		public ObservableCollection<ToeSystemConfiguration> Systems
 		{
 			get
@@ -39,6 +49,6 @@ namespace Toe.Core
 			}
 		}
 
-		private ObservableCollection<ToeSystemConfiguration> systems = new ObservableCollection<ToeSystemConfiguration>();
+		#endregion
 	}
 }

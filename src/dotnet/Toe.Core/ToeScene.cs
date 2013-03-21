@@ -7,45 +7,43 @@ namespace Toe.Core
 	/// </summary>
 	public class ToeScene
 	{
+		#region Constants and Fields
+
+		public ToeEntity[] entities;
 
 		private readonly ToeSceneConfiguration configuration;
 
 		private readonly ToeMessageRegistry messageRegistry;
 
+		private int firstClientAvailable;
+
+		private int firstServerAvailable;
+
+		private int lastClientAvailable;
+
+		private int lastServerAvailable;
+
+		#endregion
+
+		#region Constructors and Destructors
+
 		public ToeScene(ToeSceneConfiguration configuration, ToeMessageRegistry messageRegistry)
 		{
 			this.configuration = configuration;
 			this.messageRegistry = messageRegistry;
-			AllocateScene();
+			this.AllocateScene();
 		}
 
-		#region Constants and Fields
+		#endregion
 
-		public ToeEntity[] entities;
+		#region Public Properties
 
-		private int firstServerAvailable = 0;
-		private int lastServerAvailable = 0;
-
-		private int firstClientAvailable = 0;
-		private int lastClientAvailable = 0;
-
-		public int NumServerEntities
+		public ToeMessageRegistry MessageRegistry
 		{
 			get
 			{
-				return this.configuration.NumServerEntities;
+				return this.messageRegistry;
 			}
-			set
-			{
-				EnsureSceneIsNotAllocated();
-				this.configuration.NumServerEntities = value;
-			}
-		}
-
-		private void EnsureSceneIsNotAllocated()
-		{
-			if (entities != null)
-				throw new ApplicationException("Entities are already allocated");
 		}
 
 		public int NumClientEntities
@@ -56,56 +54,78 @@ namespace Toe.Core
 			}
 			set
 			{
-				EnsureSceneIsNotAllocated();
+				this.EnsureSceneIsNotAllocated();
 				this.configuration.NumClientEntities = value;
 			}
 		}
 
-		public ToeMessageRegistry MessageRegistry
+		public int NumServerEntities
 		{
 			get
 			{
-				return this.messageRegistry;
+				return this.configuration.NumServerEntities;
+			}
+			set
+			{
+				this.EnsureSceneIsNotAllocated();
+				this.configuration.NumServerEntities = value;
 			}
 		}
 
 		#endregion
 
-		public void DropScene()
-		{
-			if (entities == null)
-				return;
-
-			//TODO: drop scene
-
-			entities = null;
-		}
+		#region Public Methods and Operators
 
 		public void AllocateScene()
 		{
-			DropScene();
-			entities = new ToeEntity[1 + this.configuration.NumServerEntities + this.configuration.NumClientEntities];
-			entities[0].Id = ToeEntityId.Empty;
+			this.DropScene();
+			this.entities = new ToeEntity[1 + this.configuration.NumServerEntities + this.configuration.NumClientEntities];
+			this.entities[0].Id = ToeEntityId.Empty;
 			int i = 1;
 			for (; i <= this.configuration.NumServerEntities; i++)
 			{
-				InitServerEntity(ref entities[i],i);
+				this.InitServerEntity(ref this.entities[i], i);
 			}
-			for (; i <= entities.Length; i++)
+			for (; i <= this.entities.Length; i++)
 			{
-				InitClientEntity(ref entities[i],i);
+				this.InitClientEntity(ref this.entities[i], i);
+			}
+		}
+
+		public void DropScene()
+		{
+			if (this.entities == null)
+			{
+				return;
 			}
 
+			//TODO: drop scene
+
+			this.entities = null;
+		}
+
+		#endregion
+
+		#region Methods
+
+		private void EnsureSceneIsNotAllocated()
+		{
+			if (this.entities != null)
+			{
+				throw new ApplicationException("Entities are already allocated");
+			}
 		}
 
 		private void InitClientEntity(ref ToeEntity toeEntity, int index)
 		{
-			toeEntity.Id = new ToeEntityId(index,0);
+			toeEntity.Id = new ToeEntityId(index, 0);
 		}
 
 		private void InitServerEntity(ref ToeEntity toeEntity, int index)
 		{
 			toeEntity.Id = new ToeEntityId(index, 0);
 		}
+
+		#endregion
 	}
 }

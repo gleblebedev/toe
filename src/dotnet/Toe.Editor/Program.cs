@@ -6,8 +6,6 @@ using System.Windows.Forms;
 
 using Autofac;
 
-using OpenTK;
-
 using Toe.Editors;
 using Toe.Editors.GenericScene;
 using Toe.Editors.Interfaces;
@@ -53,7 +51,7 @@ namespace Toe.Editor
 			cb.RegisterModule<DaeAutofacModule>();
 			cb.RegisterModule<BspAutofacModule>();
 			cb.RegisterModule<SvgAutofacModule>();
-			
+
 			cb.RegisterModule<MarmaladeAutofacModule>();
 			cb.RegisterModule<MarmaladeTextFilesAutofacModule>();
 			cb.RegisterModule<MarmaladeBinaryFilesAutofacModule>();
@@ -67,7 +65,6 @@ namespace Toe.Editor
 			cb.RegisterType<ResourceFileItem>().As<IResourceFileItem>().InstancePerDependency();
 			cb.RegisterType<EditorResourceErrorHandler>().As<IResourceErrorHandler>().SingleInstance();
 			cb.RegisterType<ToeGraphicsContext>().As<ToeGraphicsContext>().SingleInstance();
-
 
 			cb.RegisterType<AddNewItemForm>().InstancePerDependency();
 			cb.RegisterType<MainEditorWindow>().SingleInstance();

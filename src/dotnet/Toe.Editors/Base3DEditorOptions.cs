@@ -9,13 +9,14 @@ namespace Toe.Editors
 		protected static PropertyChangedEventArgs LightingChanged = new PropertyChangedEventArgs("Lighting");
 
 		protected static PropertyChangedEventArgs NormalsChanged = new PropertyChangedEventArgs("Normals");
+
 		protected static PropertyChangedEventArgs WireframeChanged = new PropertyChangedEventArgs("Wireframe");
 
 		private bool lighting = true;
 
-		private bool normals = false;
+		private bool normals;
 
-		private bool wireframe = false;
+		private bool wireframe;
 
 		#endregion
 
@@ -42,21 +43,7 @@ namespace Toe.Editors
 				}
 			}
 		}
-		public bool Wireframe
-		{
-			get
-			{
-				return this.wireframe;
-			}
-			set
-			{
-				if (this.wireframe != value)
-				{
-					this.wireframe = value;
-					this.RaisePropertyChanged(WireframeChanged);
-				}
-			}
-		}
+
 		public bool Normals
 		{
 			get
@@ -69,6 +56,22 @@ namespace Toe.Editors
 				{
 					this.normals = value;
 					this.RaisePropertyChanged(NormalsChanged);
+				}
+			}
+		}
+
+		public bool Wireframe
+		{
+			get
+			{
+				return this.wireframe;
+			}
+			set
+			{
+				if (this.wireframe != value)
+				{
+					this.wireframe = value;
+					this.RaisePropertyChanged(WireframeChanged);
 				}
 			}
 		}

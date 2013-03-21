@@ -4,7 +4,25 @@ namespace Toe.Marmalade.IwGraphics.TangentSpace
 {
 	public struct TangentKey
 	{
-		private Vector3 position;
+		#region Constants and Fields
+
+		private readonly Vector3 position;
+
+		private readonly Vector2 uv0;
+
+		#endregion
+
+		#region Constructors and Destructors
+
+		public TangentKey(Vector3 p0, Vector2 pu0)
+		{
+			this.position = p0;
+			this.uv0 = pu0;
+		}
+
+		#endregion
+
+		#region Public Properties
 
 		public Vector3 Position
 		{
@@ -12,15 +30,6 @@ namespace Toe.Marmalade.IwGraphics.TangentSpace
 			{
 				return this.position;
 			}
-		
-		}
-
-		private Vector2 uv0;
-
-		public TangentKey(Vector3 p0, Vector2 pu0)
-		{
-			position = p0;
-			uv0 = pu0;
 		}
 
 		public Vector2 UV0
@@ -29,7 +38,20 @@ namespace Toe.Marmalade.IwGraphics.TangentSpace
 			{
 				return this.uv0;
 			}
-		
+		}
+
+		#endregion
+
+		#region Public Methods and Operators
+
+		public static bool operator ==(TangentKey left, TangentKey right)
+		{
+			return left.Equals(right);
+		}
+
+		public static bool operator !=(TangentKey left, TangentKey right)
+		{
+			return !left.Equals(right);
 		}
 
 		public bool Equals(TangentKey other)
@@ -72,14 +94,6 @@ namespace Toe.Marmalade.IwGraphics.TangentSpace
 			}
 		}
 
-		public static bool operator ==(TangentKey left, TangentKey right)
-		{
-			return left.Equals(right);
-		}
-
-		public static bool operator !=(TangentKey left, TangentKey right)
-		{
-			return !left.Equals(right);
-		}
+		#endregion
 	}
 }

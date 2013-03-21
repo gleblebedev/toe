@@ -1,13 +1,11 @@
 using System;
 using System.Drawing;
-using System.Globalization;
 using System.IO;
 using System.Text;
 
 using OpenTK;
 
 using Toe.Resources;
-using Toe.Utils.Marmalade;
 using Toe.Utils.TextParser;
 
 #if WINDOWS_PHONE
@@ -18,7 +16,7 @@ using Microsoft.Xna.Framework;
 
 namespace Toe.Marmalade.TextFiles
 {
-	public class TextParser: BaseTextParser
+	public class TextParser : BaseTextParser
 	{
 		#region Constants and Fields
 
@@ -70,9 +68,6 @@ namespace Toe.Marmalade.TextFiles
 
 		#region Public Methods and Operators
 
-
-
-
 		public string ConsumeBlock()
 		{
 			this.Consume("{");
@@ -113,8 +108,6 @@ namespace Toe.Marmalade.TextFiles
 			}
 		}
 
-		
-
 		public Color ConsumeColor()
 		{
 			int maxItems = 4;
@@ -153,7 +146,6 @@ namespace Toe.Marmalade.TextFiles
 			throw new NotImplementedException();
 		}
 
-
 		public Quaternion ConsumeQuaternion()
 		{
 			this.ConsumeVector(4);
@@ -191,8 +183,6 @@ namespace Toe.Marmalade.TextFiles
 			resourceReference.NameReference = l;
 		}
 
-		
-
 		public string ConsumeString()
 		{
 			var l = this.Lexem;
@@ -213,15 +203,10 @@ namespace Toe.Marmalade.TextFiles
 			return new Vector3(this.floatBuf[0], this.floatBuf[1], this.floatBuf[2]);
 		}
 
-	
 		#endregion
 
 		#region Methods
 
-		private static int ClampColor(float f)
-		{
-			return Math.Max(0, Math.Min(255, (int)(f * 255)));
-		}
 		protected override string GetSourceName()
 		{
 			var where = "input stream";
@@ -237,50 +222,6 @@ namespace Toe.Marmalade.TextFiles
 				}
 			}
 			return @where;
-		}
-		private int ConsumeVector(int maxItems)
-		{
-			this.Consume("{");
-			int index;
-			for (index = 0; index < this.floatBuf.Length; index++)
-			{
-				this.floatBuf[index] = 0;
-			}
-			for (index = 0; index < maxItems; ++index)
-			{
-				var l = this.Lexem;
-				if (l == "}")
-				{
-					this.Consume();
-					return index;
-				}
-				this.floatBuf[index] = this.ConsumeFloat();
-				if (this.Lexem == ",")
-				{
-					this.Consume();
-				}
-			}
-			this.Consume("}");
-			return index;
-		}
-
-		private void OnTerminalSymbol(string val)
-		{
-			this.Lexem = val;
-			this.ReadNextChar();
-		}
-
-		private void ReadId()
-		{
-			this.sb.Clear();
-			while (this.nextChar >= 0 && !char.IsWhiteSpace((char)this.nextChar) && this.nextChar != '{' && this.nextChar != '}'
-			       && this.nextChar != '(' && this.nextChar != ')' && this.nextChar != '=' && this.nextChar != ','
-			       && this.nextChar != ';')
-			{
-				this.sb.Append((char)this.nextChar);
-				this.ReadNextChar();
-			}
-			this.Lexem = this.sb.ToString();
 		}
 
 		protected override void ReadLexem()
@@ -380,6 +321,56 @@ namespace Toe.Marmalade.TextFiles
 					this.ReadId();
 					return;
 			}
+		}
+
+		private static int ClampColor(float f)
+		{
+			return Math.Max(0, Math.Min(255, (int)(f * 255)));
+		}
+
+		private int ConsumeVector(int maxItems)
+		{
+			this.Consume("{");
+			int index;
+			for (index = 0; index < this.floatBuf.Length; index++)
+			{
+				this.floatBuf[index] = 0;
+			}
+			for (index = 0; index < maxItems; ++index)
+			{
+				var l = this.Lexem;
+				if (l == "}")
+				{
+					this.Consume();
+					return index;
+				}
+				this.floatBuf[index] = this.ConsumeFloat();
+				if (this.Lexem == ",")
+				{
+					this.Consume();
+				}
+			}
+			this.Consume("}");
+			return index;
+		}
+
+		private void OnTerminalSymbol(string val)
+		{
+			this.Lexem = val;
+			this.ReadNextChar();
+		}
+
+		private void ReadId()
+		{
+			this.sb.Clear();
+			while (this.nextChar >= 0 && !char.IsWhiteSpace((char)this.nextChar) && this.nextChar != '{' && this.nextChar != '}'
+			       && this.nextChar != '(' && this.nextChar != ')' && this.nextChar != '=' && this.nextChar != ','
+			       && this.nextChar != ';')
+			{
+				this.sb.Append((char)this.nextChar);
+				this.ReadNextChar();
+			}
+			this.Lexem = this.sb.ToString();
 		}
 
 		private int ReadNextChar()

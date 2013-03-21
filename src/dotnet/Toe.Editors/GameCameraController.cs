@@ -1,3 +1,4 @@
+using System;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -26,6 +27,24 @@ namespace Toe.Editors
 		}
 
 		public void Detach(GLControl gl)
+		{
+		}
+
+		public void GotFocus()
+		{
+		}
+
+		public void KeyDown(KeyEventArgs keyEventArgs)
+		{
+			throw new NotImplementedException();
+		}
+
+		public void KeyUp(KeyEventArgs keyEventArgs)
+		{
+			throw new NotImplementedException();
+		}
+
+		public void LostFocus()
 		{
 		}
 
@@ -67,27 +86,6 @@ namespace Toe.Editors
 		{
 		}
 
-		public void KeyDown(KeyEventArgs keyEventArgs)
-		{
-			throw new System.NotImplementedException();
-		}
-
-		public void KeyUp(KeyEventArgs keyEventArgs)
-		{
-			throw new System.NotImplementedException();
-		}
-
-		public void LostFocus()
-		{
-			
-		}
-
-		public void GotFocus()
-		{
-			
-		}
-
 		#endregion
 	}
-
 }

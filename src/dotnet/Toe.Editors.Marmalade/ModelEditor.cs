@@ -2,7 +2,6 @@ using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
-using System.Collections.Generic;
 
 using Autofac;
 
@@ -15,8 +14,6 @@ using Toe.Editors.Marmalade.Views;
 using Toe.Gx;
 using Toe.Marmalade.IwGraphics;
 using Toe.Resources;
-using Toe.Utils.Marmalade.IwGraphics;
-using Toe.Utils.Mesh;
 
 namespace Toe.Editors.Marmalade
 {
@@ -26,11 +23,11 @@ namespace Toe.Editors.Marmalade
 
 		private readonly IComponentContext context;
 
-		private readonly ToeGraphicsContext graphicsContext;
-
 		private readonly DataContextContainer dataContext = new DataContextContainer();
 
 		private readonly IEditorEnvironment editorEnvironment;
+
+		private readonly ToeGraphicsContext graphicsContext;
 
 		private readonly ICommandHistory history;
 
@@ -67,7 +64,6 @@ namespace Toe.Editors.Marmalade
 			this.InitializeComponent();
 
 			this.InitializeEditor();
-			
 		}
 
 		#endregion
@@ -110,9 +106,9 @@ namespace Toe.Editors.Marmalade
 			var model = this.Model;
 			if (model != null)
 			{
-				graphicsContext.RenderModel(model);
+				this.graphicsContext.RenderModel(model);
 			}
-			graphicsContext.SetMaterial(null);
+			this.graphicsContext.SetMaterial(null);
 			GL.PopAttrib();
 		}
 
@@ -199,8 +195,8 @@ namespace Toe.Editors.Marmalade
 			++row;
 
 			this.tableLayoutPanel1.Controls.Add(new Label { Text = "" }, 0, row);
-			var importButton = new Button() { Text = "Import" };
-			importButton.Click += OnImportButtonClick;
+			var importButton = new Button { Text = "Import" };
+			importButton.Click += this.OnImportButtonClick;
 			this.tableLayoutPanel1.Controls.Add(importButton, 1, row);
 
 			this.base3DEditor.RenderScene += this.OnRenderScene;
@@ -208,11 +204,10 @@ namespace Toe.Editors.Marmalade
 
 		private void OnImportButtonClick(object sender, EventArgs e)
 		{
-			var dialog = context.Resolve<ImportSceneDialog>();
+			var dialog = this.context.Resolve<ImportSceneDialog>();
 			var scene = dialog.ImportScene();
 			if (scene != null)
 			{
-				
 			}
 		}
 

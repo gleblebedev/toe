@@ -12,29 +12,36 @@ namespace Toe.Gx
 {
 	public class DefaultShaders : IDisposable
 	{
-		Dictionary<DefaultFragmentShaderOptions, int> generatedFragmentShaders = new Dictionary<DefaultFragmentShaderOptions, int>();
-		Dictionary<DefaultVertexShaderOptions, int> generatedVertexShaders = new Dictionary<DefaultVertexShaderOptions, int>();
-		Dictionary<DefaultProgramOptions, ShaderTechniqueArgumentIndices> generatedProgramms = new Dictionary<DefaultProgramOptions, ShaderTechniqueArgumentIndices>();
+		#region Constants and Fields
 
-//        private string defaultFragmentShader = @"
-//void main (void)
-//{
-//	gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0);
-//}
-//";
+		private readonly Dictionary<DefaultFragmentShaderOptions, int> generatedFragmentShaders =
+			new Dictionary<DefaultFragmentShaderOptions, int>();
 
-//        string defaultVertexShader =
-//            @"attribute highp vec4    inVert;
-//		uniform highp mat4  inPMVMat;
-//		
-//		void main(void)
-//		{
-//	
-//		  gl_Position = inPMVMat * inVert;
-//		}";
+		private readonly Dictionary<DefaultProgramOptions, ShaderTechniqueArgumentIndices> generatedProgramms =
+			new Dictionary<DefaultProgramOptions, ShaderTechniqueArgumentIndices>();
 
+		private readonly Dictionary<DefaultVertexShaderOptions, int> generatedVertexShaders =
+			new Dictionary<DefaultVertexShaderOptions, int>();
 
-		private string defaultFragmentShader = @"#if defined(TEX0)
+		//        private string defaultFragmentShader = @"
+		//void main (void)
+		//{
+		//	gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0);
+		//}
+		//";
+
+		//        string defaultVertexShader =
+		//            @"attribute highp vec4    inVert;
+		//		uniform highp mat4  inPMVMat;
+		//		
+		//		void main(void)
+		//		{
+		//	
+		//		  gl_Position = inPMVMat * inVert;
+		//		}";
+
+		private string defaultFragmentShader =
+			@"#if defined(TEX0)
 	uniform sampler2D		inSampler0;
 #endif
 #if defined(TEX1)
@@ -215,7 +222,7 @@ void main (void)
 }
 ";
 
-		string defaultVertexShader =
+		private string defaultVertexShader =
 			@"attribute highp vec4    inVert;
 uniform highp mat4  inPMVMat;
 
@@ -412,37 +419,11 @@ void main(void)
 #elif defined(COL_STREAM)
     outCol = inCol;
 #endif
-}"
-			;
-
-		#region Implementation of IDisposable
-
-		/// <summary>
-		/// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-		/// </summary>
-		/// <filterpriority>2</filterpriority>
-		public void Dispose()
-		{
-			
-		}
+}";
 
 		#endregion
 
-		public ShaderTechniqueArgumentIndices GetProgram(DefaultProgramOptions po)
-		{
-			ShaderTechniqueArgumentIndices p;
-			if (!this.generatedProgramms.TryGetValue(po, out p))
-			{
-				p = new ShaderTechniqueArgumentIndices();
-				int f = this.GenFragmentShader(po.FragmentShaderOptions);
-				int v = this.GenVertexShader(po.VertexShaderOptions);
-				GenProgram(ref p, v, f);
-
-				this.generatedProgramms[po] = p;
-
-			}
-			return p;
-		}
+		#region Public Methods and Operators
 
 		public static void GenProgram(ref ShaderTechniqueArgumentIndices p, int v, int f)
 		{
@@ -568,19 +549,6 @@ void main(void)
 			OpenTKHelper.Assert();
 		}
 
-		private int GenFragmentShader(DefaultFragmentShaderOptions fso)
-		{
-			OpenTKHelper.Assert();
-			int p;
-			if (!this.generatedFragmentShaders.TryGetValue(fso, out p))
-			{
-				string fragmentShaderSource = this.GetFragmentShaderSource(ref fso);
-				p = GenShader(ShaderType.FragmentShader, fragmentShaderSource);
-				this.generatedFragmentShaders[fso] = p;
-			}
-			return p;
-		}
-
 		public static int GenShader(ShaderType fragmentShader, string fragmentShaderSource)
 		{
 			int p;
@@ -602,18 +570,57 @@ void main(void)
 				var m = r.Match(shaderInfoLog);
 				if (m.Success)
 				{
-					var a= int.Parse(m.Groups[1].Value);
+					var a = int.Parse(m.Groups[1].Value);
 					var b = int.Parse(m.Groups[2].Value);
 					var c = int.Parse(m.Groups[3].Value);
 
-					var lines = adaptSource.Split(new char[] { '\n' });
+					var lines = adaptSource.Split(new[] { '\n' });
 					Debug.WriteLine(lines[b]);
 					var from = c;
 					//Debug.WriteLine(adaptSource.Substring(from, Math.Min(100, adaptSource.Length - from)));
 				}
 
-
 				throw new ApplicationException(shaderInfoLog);
+			}
+			return p;
+		}
+
+		/// <summary>
+		/// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+		/// </summary>
+		/// <filterpriority>2</filterpriority>
+		public void Dispose()
+		{
+		}
+
+		public ShaderTechniqueArgumentIndices GetProgram(DefaultProgramOptions po)
+		{
+			ShaderTechniqueArgumentIndices p;
+			if (!this.generatedProgramms.TryGetValue(po, out p))
+			{
+				p = new ShaderTechniqueArgumentIndices();
+				int f = this.GenFragmentShader(po.FragmentShaderOptions);
+				int v = this.GenVertexShader(po.VertexShaderOptions);
+				GenProgram(ref p, v, f);
+
+				this.generatedProgramms[po] = p;
+			}
+			return p;
+		}
+
+		#endregion
+
+		#region Methods
+
+		private int GenFragmentShader(DefaultFragmentShaderOptions fso)
+		{
+			OpenTKHelper.Assert();
+			int p;
+			if (!this.generatedFragmentShaders.TryGetValue(fso, out p))
+			{
+				string fragmentShaderSource = this.GetFragmentShaderSource(ref fso);
+				p = GenShader(ShaderType.FragmentShader, fragmentShaderSource);
+				this.generatedFragmentShaders[fso] = p;
 			}
 			return p;
 		}
@@ -632,79 +639,137 @@ void main(void)
 			return p;
 		}
 
-		private string GetVertexShaderSource(ref DefaultVertexShaderOptions fso)
-		{
-			var sb = new StringBuilder();
-
-			if (fso.BITANGENT_STREAM)
-			sb.Append("#define BITANGENT_STREAM\n");
-			if (fso.FAST_FOG)
-				sb.Append("#define FAST_FOG\n");
-			if (fso.FOG)
-				sb.Append("#define FOG\n");
-			if (fso.LIGHT_AMBIENT)
-				sb.Append("#define LIGHT_AMBIENT\n");
-			if (fso.LIGHT_DIFFUSE)
-				sb.Append("#define LIGHT_DIFFUSE\n");
-			if (fso.LIGHT_SPECULAR)
-				sb.Append("#define LIGHT_SPECULAR\n");
-			if (fso.LIGHT_EMISSIVE)
-				sb.Append("#define LIGHT_EMISSIVE\n");
-			if (fso.NORM_STREAM)
-				sb.Append("#define NORM_STREAM\n");
-			if (fso.SKIN_MAJOR_BONE)
-				sb.Append("#define SKIN_MAJOR_BONE\n");
-			if (fso.SKINWEIGHT_STREAM)
-				sb.Append("#define SKINWEIGHT_STREAM\n");
-			if (fso.SKIN_NORMALS)
-				sb.Append("#define SKIN_NORMALS\n");
-			if (fso.TANGENT_STREAM)
-				sb.Append("#define TANGENT_STREAM\n");
-			if (fso.UV0_STREAM)
-				sb.Append("#define UV0_STREAM\n");
-			if (fso.UV1_STREAM)
-				sb.Append("#define UV1_STREAM\n");
-			if (fso.COL_STREAM)
-				sb.Append("#define COL_STREAM\n");
-			sb.Append(defaultVertexShader);
-			return sb.ToString();
-		}
-
 		private string GetFragmentShaderSource(ref DefaultFragmentShaderOptions fso)
 		{
 			var sb = new StringBuilder();
 
 			if (fso.COL_STREAM)
+			{
 				sb.Append("#define COL_STREAM\n");
+			}
 			if (fso.FAST_FOG)
+			{
 				sb.Append("#define FAST_FOG\n");
+			}
 			if (fso.FOG)
+			{
 				sb.Append("#define FOG\n");
+			}
 			if (fso.LIGHT_AMBIENT)
+			{
 				sb.Append("#define LIGHT_AMBIENT\n");
+			}
 			if (fso.LIGHT_DIFFUSE)
+			{
 				sb.Append("#define LIGHT_DIFFUSE\n");
+			}
 			if (fso.LIGHT_SPECULAR)
+			{
 				sb.Append("#define LIGHT_SPECULAR\n");
+			}
 			if (fso.LIGHT_EMISSIVE)
+			{
 				sb.Append("#define LIGHT_EMISSIVE\n");
+			}
 			if (fso.UV0_STREAM)
+			{
 				sb.Append("#define UV0_STREAM\n");
+			}
 			if (fso.UV1_STREAM)
+			{
 				sb.Append("#define UV1_STREAM\n");
+			}
 			if (fso.IW_GX_PLATFORM_TEGRA2)
+			{
 				sb.Append("#define IW_GX_PLATFORM_TEGRA2\n");
+			}
 			if (fso.TEX0)
+			{
 				sb.Append("#define TEX0\n");
+			}
 			if (fso.TEX1)
+			{
 				sb.Append("#define TEX1\n");
+			}
 			if (fso.ALPHA_TEST != 0)
-				sb.Append(string.Format("#define ALPHA_TEST {0}\n", (int)fso.ALPHA_TEST));
-			sb.Append(string.Format("#define ALPHA_BLEND {0}\n", (int)fso.ALPHA_BLEND));
-			sb.Append(string.Format("#define BLEND {0}\n", (int)fso.BLEND));
-			sb.Append(string.Format("#define EFFECT_PRESET {0}\n", (int)fso.EFFECT_PRESET));
-			sb.Append(defaultFragmentShader);
+			{
+				sb.Append(string.Format("#define ALPHA_TEST {0}\n", fso.ALPHA_TEST));
+			}
+			sb.Append(string.Format("#define ALPHA_BLEND {0}\n", fso.ALPHA_BLEND));
+			sb.Append(string.Format("#define BLEND {0}\n", fso.BLEND));
+			sb.Append(string.Format("#define EFFECT_PRESET {0}\n", fso.EFFECT_PRESET));
+			sb.Append(this.defaultFragmentShader);
 			return sb.ToString();
 		}
+
+		private string GetVertexShaderSource(ref DefaultVertexShaderOptions fso)
+		{
+			var sb = new StringBuilder();
+
+			if (fso.BITANGENT_STREAM)
+			{
+				sb.Append("#define BITANGENT_STREAM\n");
+			}
+			if (fso.FAST_FOG)
+			{
+				sb.Append("#define FAST_FOG\n");
+			}
+			if (fso.FOG)
+			{
+				sb.Append("#define FOG\n");
+			}
+			if (fso.LIGHT_AMBIENT)
+			{
+				sb.Append("#define LIGHT_AMBIENT\n");
+			}
+			if (fso.LIGHT_DIFFUSE)
+			{
+				sb.Append("#define LIGHT_DIFFUSE\n");
+			}
+			if (fso.LIGHT_SPECULAR)
+			{
+				sb.Append("#define LIGHT_SPECULAR\n");
+			}
+			if (fso.LIGHT_EMISSIVE)
+			{
+				sb.Append("#define LIGHT_EMISSIVE\n");
+			}
+			if (fso.NORM_STREAM)
+			{
+				sb.Append("#define NORM_STREAM\n");
+			}
+			if (fso.SKIN_MAJOR_BONE)
+			{
+				sb.Append("#define SKIN_MAJOR_BONE\n");
+			}
+			if (fso.SKINWEIGHT_STREAM)
+			{
+				sb.Append("#define SKINWEIGHT_STREAM\n");
+			}
+			if (fso.SKIN_NORMALS)
+			{
+				sb.Append("#define SKIN_NORMALS\n");
+			}
+			if (fso.TANGENT_STREAM)
+			{
+				sb.Append("#define TANGENT_STREAM\n");
+			}
+			if (fso.UV0_STREAM)
+			{
+				sb.Append("#define UV0_STREAM\n");
+			}
+			if (fso.UV1_STREAM)
+			{
+				sb.Append("#define UV1_STREAM\n");
+			}
+			if (fso.COL_STREAM)
+			{
+				sb.Append("#define COL_STREAM\n");
+			}
+			sb.Append(this.defaultVertexShader);
+			return sb.ToString();
+		}
+
+		#endregion
 	}
 }

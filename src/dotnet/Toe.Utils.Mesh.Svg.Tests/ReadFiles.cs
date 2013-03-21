@@ -8,6 +8,8 @@ namespace Toe.Utils.Mesh.Svg.Tests
 	[TestFixture]
 	public class StandartTests
 	{
+		#region Public Methods and Operators
+
 		[Test]
 		public void StandartTestsFolder()
 		{
@@ -23,5 +25,7 @@ namespace Toe.Utils.Mesh.Svg.Tests
 				}
 			}
 		}
+
+		#endregion
 	}
 }

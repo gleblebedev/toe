@@ -19,6 +19,14 @@ namespace Toe.Editors
 
 		void Detach(GLControl gl);
 
+		void GotFocus();
+
+		void KeyDown(KeyEventArgs keyEventArgs);
+
+		void KeyUp(KeyEventArgs keyEventArgs);
+
+		void LostFocus();
+
 		void MouseEnter();
 
 		void MouseLeave();
@@ -28,13 +36,5 @@ namespace Toe.Editors
 		void MouseWheel(float delta, Point location);
 
 		#endregion
-
-		void KeyDown(KeyEventArgs keyEventArgs);
-
-		void KeyUp(KeyEventArgs keyEventArgs);
-
-		void LostFocus();
-
-		void GotFocus();
 	}
 }

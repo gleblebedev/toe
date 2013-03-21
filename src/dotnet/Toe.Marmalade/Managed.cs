@@ -1,5 +1,4 @@
 using System;
-using System.ComponentModel;
 using System.Globalization;
 
 using Toe.Resources;
@@ -11,13 +10,21 @@ namespace Toe.Marmalade
 	{
 		#region Constants and Fields
 
+		protected static PropertyEventArgs BasePathEventArgs = Expr.PropertyEventArgs<Managed>(x => x.BasePath);
+
+		protected static PropertyEventArgs ContextDataEventArgs = Expr.PropertyEventArgs<Managed>(x => x.ContextData);
+
+		protected static PropertyEventArgs NameEventArgs = Expr.PropertyEventArgs<Managed>(x => x.Name);
+
+		protected static PropertyEventArgs NameHashEventArgs = Expr.PropertyEventArgs<Managed>(x => x.NameHash);
+
 		private string basePath;
+
+		private IContextData contextData;
 
 		private string name;
 
 		private uint nameHash;
-
-		private IContextData contextData;
 
 		#endregion
 
@@ -31,8 +38,6 @@ namespace Toe.Marmalade
 		#endregion
 
 		#region Public Properties
-
-		protected static PropertyEventArgs BasePathEventArgs = Expr.PropertyEventArgs<Managed>(x => x.BasePath);
 
 		public string BasePath
 		{
@@ -50,7 +55,9 @@ namespace Toe.Marmalade
 				}
 			}
 		}
-		protected static PropertyEventArgs ContextDataEventArgs = Expr.PropertyEventArgs<Managed>(x => x.ContextData);
+
+		public abstract uint ClassHashCode { get; }
+
 		public IContextData ContextData
 		{
 			get
@@ -68,10 +75,6 @@ namespace Toe.Marmalade
 			}
 		}
 
-		public abstract uint ClassHashCode { get; }
-
-		protected static PropertyEventArgs NameEventArgs = Expr.PropertyEventArgs<Managed>(x => x.Name);
-		protected static PropertyEventArgs NameHashEventArgs = Expr.PropertyEventArgs<Managed>(x => x.NameHash);
 		/// <summary>
 		/// Object name.
 		/// </summary>
@@ -146,10 +149,10 @@ namespace Toe.Marmalade
 		{
 			if (disposing)
 			{
-				if (contextData != null)
+				if (this.contextData != null)
 				{
-					contextData.Dispose();
-					contextData = null;
+					this.contextData.Dispose();
+					this.contextData = null;
 				}
 			}
 		}

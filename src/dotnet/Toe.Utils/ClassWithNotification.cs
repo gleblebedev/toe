@@ -6,8 +6,9 @@ namespace Toe.Utils
 	{
 		#region Public Events
 
-		public event PropertyChangingEventHandler PropertyChanging;
 		public event PropertyChangedEventHandler PropertyChanged;
+
+		public event PropertyChangingEventHandler PropertyChanging;
 
 		#endregion
 

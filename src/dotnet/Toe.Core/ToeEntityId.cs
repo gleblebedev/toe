@@ -2,12 +2,20 @@ namespace Toe.Core
 {
 	public struct ToeEntityId
 	{
+		#region Constants and Fields
+
+		public static readonly ToeEntityId Empty = new ToeEntityId(0);
+
 		private readonly uint id;
-		
+
+		#endregion
+
+		#region Constructors and Destructors
+
 		public ToeEntityId(int index, byte version = 0)
 			: this()
 		{
-			this.id = id | ((uint)version << 24);
+			this.id = this.id | ((uint)version << 24);
 		}
 
 		private ToeEntityId(uint id)
@@ -16,14 +24,18 @@ namespace Toe.Core
 			this.id = id;
 		}
 
+		#endregion
+
+		#region Public Properties
+
 		/// <summary>
 		/// Entity scene index.
 		/// </summary>
 		public int Index
-		{ 
+		{
 			get
 			{
-				return (int)(id & 0x00FFFFFF);
+				return (int)(this.id & 0x00FFFFFF);
 			}
 		}
 
@@ -34,7 +46,7 @@ namespace Toe.Core
 		{
 			get
 			{
-				return id;
+				return this.id;
 			}
 		}
 
@@ -45,15 +57,22 @@ namespace Toe.Core
 		{
 			get
 			{
-				return (byte)(id >> 24);
+				return (byte)(this.id >> 24);
 			}
 		}
 
-		public readonly static ToeEntityId Empty = new ToeEntityId(0);
+		#endregion
 
-		public ToeEntityId IncreaseVersion()
+		#region Public Methods and Operators
+
+		public static bool operator ==(ToeEntityId left, ToeEntityId right)
 		{
-			return new ToeEntityId(id + 0x01000000);
+			return left.Equals(right);
+		}
+
+		public static bool operator !=(ToeEntityId left, ToeEntityId right)
+		{
+			return !left.Equals(right);
 		}
 
 		public bool Equals(ToeEntityId other)
@@ -78,7 +97,7 @@ namespace Toe.Core
 			{
 				return false;
 			}
-			return Equals((ToeEntityId)obj);
+			return this.Equals((ToeEntityId)obj);
 		}
 
 		/// <summary>
@@ -93,14 +112,11 @@ namespace Toe.Core
 			return this.id.GetHashCode();
 		}
 
-		public static bool operator ==(ToeEntityId left, ToeEntityId right)
+		public ToeEntityId IncreaseVersion()
 		{
-			return left.Equals(right);
+			return new ToeEntityId(this.id + 0x01000000);
 		}
 
-		public static bool operator !=(ToeEntityId left, ToeEntityId right)
-		{
-			return !left.Equals(right);
-		}
+		#endregion
 	}
 }

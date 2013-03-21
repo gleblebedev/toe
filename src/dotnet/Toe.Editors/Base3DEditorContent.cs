@@ -2,29 +2,33 @@ using System;
 using System.IO;
 
 using OpenTK;
-using OpenTK.Graphics;
-using OpenTK.Graphics.OpenGL;
 
 using Toe.Gx;
-using Toe.Marmalade.IwGx;
 using Toe.Utils.Mesh;
 using Toe.Utils.Mesh.Ase;
 
 namespace Toe.Editors
 {
-	public class Base3DEditorContent:IDisposable
+	public class Base3DEditorContent : IDisposable
 	{
+		#region Constants and Fields
+
+		private readonly IMesh cube;
+
 		private readonly ToeGraphicsContext graphicsContext;
 
-		private IMesh cube;
+		#endregion
 
 		//private Texture cubeTex;
+
+		#region Constructors and Destructors
 
 		public Base3DEditorContent(ToeGraphicsContext graphicsContext)
 		{
 			this.graphicsContext = graphicsContext;
-			var cubeBytes = Toe.Editors.Properties.Resources.xyzcube;
-			if (cubeBytes != null) {
+			var cubeBytes = Properties.Resources.xyzcube;
+			if (cubeBytes != null)
+			{
 				IScene scene = (new AseReader()).Load(new MemoryStream(cubeBytes), null);
 				foreach (var node in scene.Nodes)
 				{
@@ -35,29 +39,38 @@ namespace Toe.Editors
 				}
 				//this.cubeTex = new Toe.Marmalade.IwGx.Texture ();
 				//cubeTex.Image = new Toe.Marmalade.IwGx.Image (Toe.Editors.Properties.Resources.xyzcube1);
-				this.cube.Submeshes[0].Material = new SceneMaterial()
+				this.cube.Submeshes[0].Material = new SceneMaterial
 					{
 						Effect =
-							new SceneEffect()
-								{
-									Diffuse = new ImageColorSource() { Image = new EmbeddedImage(Toe.Editors.Properties.Resources.xyzcube1) { } }
-								}
+							new SceneEffect
+								{ Diffuse = new ImageColorSource { Image = new EmbeddedImage(Properties.Resources.xyzcube1) { } } }
 					};
 			}
-
 		}
+
 		~Base3DEditorContent()
 		{
-			
 		}
 
-	
+		#endregion
+
+		#region Public Methods and Operators
+
+		/// <summary>
+		/// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+		/// </summary>
+		/// <filterpriority>2</filterpriority>
+		public void Dispose()
+		{
+			this.Dispose(true);
+		}
+
 		public void RenderXyzCube(GLControl glControl, EditorCamera camera)
 		{
 			if (this.cube != null)
 			{
 				//graphicsContext.SetMaterial(null);
-				graphicsContext.DisableLighting();
+				this.graphicsContext.DisableLighting();
 
 				//this.graphicsContext.SetTexture(0, this.cubeTex);
 				//this.graphicsContext.SetTexture(1, null);
@@ -88,36 +101,30 @@ namespace Toe.Editors
 				result.M43 = -(zFar + zNear) * invFN;
 				result.M44 = 1;
 
-				graphicsContext.SetProjection(ref result);
+				this.graphicsContext.SetProjection(ref result);
 
 				int w = Math.Min(Math.Min(180, glControl.Width / 2), glControl.Height / 2);
 
 				var pos = Vector3.Transform(new Vector3(0, 0, 200), camera.Rot);
 				Matrix4 view = Matrix4.Rotate(camera.Rot) * Matrix4.CreateTranslation(pos);
 				view.Invert();
-				graphicsContext.SetView(ref view);
+				this.graphicsContext.SetView(ref view);
 
-				graphicsContext.SetViewport(glControl.Width - w, glControl.Height - w, w, w);
+				this.graphicsContext.SetViewport(glControl.Width - w, glControl.Height - w, w, w);
 				//GL.Viewport(glControl.Width - w, glControl.Height - w, w, w);
 
-				graphicsContext.Render(this.cube);
+				this.graphicsContext.Render(this.cube);
 				OpenTKHelper.Assert();
 			}
 		}
-		#region Implementation of IDisposable
 
-		/// <summary>
-		/// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-		/// </summary>
-		/// <filterpriority>2</filterpriority>
-		public void Dispose()
-		{
-			this.Dispose(true);
-		}
+		#endregion
+
+		#region Methods
 
 		protected virtual void Dispose(bool disposing)
 		{
-			if(disposing)
+			if (disposing)
 			{
 				//if (cubeTex != null)
 				//{

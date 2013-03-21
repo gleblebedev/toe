@@ -12,7 +12,6 @@ using Autofac;
 
 using Toe.Editors;
 using Toe.Editors.Interfaces;
-using Toe.Resources;
 
 namespace Toe.Editor
 {
@@ -22,9 +21,9 @@ namespace Toe.Editor
 
 		private readonly IComponentContext context;
 
-		private readonly IEditorOptions<MainEditorWindowOptions> options;
-
 		private readonly IResourceEditor lastEditor;
+
+		private readonly IEditorOptions<MainEditorWindowOptions> options;
 
 		#endregion
 
@@ -42,23 +41,9 @@ namespace Toe.Editor
 				options.Options.RecentFiles = new ObservableCollection<string>();
 			}
 
-			options.Options.RecentFiles.CollectionChanged += ResetRecentFilesMenu;
-			ResetRecentFilesMenu(options.Options.RecentFiles, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
-
-		}
-
-		private void ResetRecentFilesMenu(object sender, NotifyCollectionChangedEventArgs e)
-		{
-			recentFilesMenu.DropDownItems.Clear();
-			foreach (var file in options.Options.RecentFiles)
-			{
-				recentFilesMenu.DropDownItems.Add(this.CreateRecentFileMenuItem(file));
-			}
-		}
-
-		private ToolStripMenuItem CreateRecentFileMenuItem(string file)
-		{
-			return new ToolStripMenuItem(Path.GetFileName(file), null, (s, a) => this.OpenFile(file));
+			options.Options.RecentFiles.CollectionChanged += this.ResetRecentFilesMenu;
+			this.ResetRecentFilesMenu(
+				options.Options.RecentFiles, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
 		}
 
 		#endregion
@@ -97,24 +82,6 @@ namespace Toe.Editor
 			this.fileTabs.SelectedTab = tabPage;
 		}
 
-		private void AddFileToRecentFiles(string filename)
-		{
-			var f = Path.GetFullPath(filename);
-			var i = this.options.Options.RecentFiles.IndexOf(f);
-			if (i == 0)
-				return;
-			if (i > 0)
-			{
-				this.options.Options.RecentFiles.Move(i,0);
-				this.options.Save();
-				return;
-			}
-			this.options.Options.RecentFiles.Insert(0,f);
-			while (this.options.Options.RecentFiles.Count > 10)
-				this.options.Options.RecentFiles.RemoveAt(10);
-			this.options.Save();
-		}
-
 		#endregion
 
 		#region Methods
@@ -129,6 +96,51 @@ namespace Toe.Editor
 			//OpenFile(@"C:\GitHub\toe\testcontent\FunkyVicGLES2.mtl");
 		}
 
+		private static void BuildFilterOption(IFileFormatInfo format, StringBuilder allBuilder)
+		{
+			allBuilder.Append(format.Name);
+			allBuilder.Append(" (");
+			string separator = String.Empty;
+			foreach (var ex in format.Extensions)
+			{
+				allBuilder.Append(separator);
+				allBuilder.Append("*");
+				allBuilder.Append(ex);
+				separator = ", ";
+			}
+			allBuilder.Append(")|");
+			separator = String.Empty;
+			foreach (var ex in format.Extensions)
+			{
+				allBuilder.Append(separator);
+				allBuilder.Append("*");
+				allBuilder.Append(ex);
+				separator = ";";
+			}
+		}
+
+		private void AddFileToRecentFiles(string filename)
+		{
+			var f = Path.GetFullPath(filename);
+			var i = this.options.Options.RecentFiles.IndexOf(f);
+			if (i == 0)
+			{
+				return;
+			}
+			if (i > 0)
+			{
+				this.options.Options.RecentFiles.Move(i, 0);
+				this.options.Save();
+				return;
+			}
+			this.options.Options.RecentFiles.Insert(0, f);
+			while (this.options.Options.RecentFiles.Count > 10)
+			{
+				this.options.Options.RecentFiles.RemoveAt(10);
+			}
+			this.options.Save();
+		}
+
 		private void BindEditor(IResourceEditor editor)
 		{
 			var notifyPropertyChanged = editor as INotifyPropertyChanged;
@@ -137,6 +149,30 @@ namespace Toe.Editor
 				notifyPropertyChanged.PropertyChanged += this.EditorPropertyChanged;
 			}
 			this.UpdateMenuButtons(editor);
+		}
+
+		private string BuildFilter()
+		{
+			var editorFactories = this.context.Resolve<IEnumerable<IResourceEditorFactory>>();
+			StringBuilder filterBuilder = new StringBuilder();
+
+			List<string> ex =
+				(from format in editorFactories from f in format.SupportedFormats from ext in f.Extensions select ext).ToList();
+			if (ex.Count > 0)
+			{
+				BuildFilterOption(new FileFormatInfo { Extensions = ex, Name = "All supported types" }, filterBuilder);
+				foreach (
+					var resourceFileFormat in editorFactories.SelectMany(resourceFileFormat => resourceFileFormat.SupportedFormats))
+				{
+					filterBuilder.Append("|");
+					BuildFilterOption(resourceFileFormat, filterBuilder);
+				}
+				filterBuilder.Append("|");
+			}
+			BuildFilterOption(new FileFormatInfo { Extensions = new[] { ".*" }, Name = "All" }, filterBuilder);
+
+			var filter = filterBuilder.ToString();
+			return filter;
 		}
 
 		private IResourceEditor CreateEditor(string filename)
@@ -150,6 +186,11 @@ namespace Toe.Editor
 				}
 			}
 			return new DefaultEditor(this.context.Resolve<IEditorEnvironment>());
+		}
+
+		private ToolStripMenuItem CreateRecentFileMenuItem(string file)
+		{
+			return new ToolStripMenuItem(Path.GetFileName(file), null, (s, a) => this.OpenFile(file));
 		}
 
 		private void EditorPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -173,6 +214,15 @@ namespace Toe.Editor
 			this.Close();
 		}
 
+		private void OnNewMenuClick(object sender, EventArgs e)
+		{
+			var d = this.context.Resolve<AddNewItemForm>();
+			if (d.ShowDialog() == DialogResult.OK)
+			{
+				this.OpenFile(d.FilePath);
+			}
+		}
+
 		private void OnOpenMenuOption(object sender, EventArgs e)
 		{
 			var fd = new OpenFileDialog();
@@ -186,53 +236,6 @@ namespace Toe.Editor
 				{
 					this.OpenFile(f);
 				}
-			}
-		}
-
-		private string BuildFilter()
-		{
-			var editorFactories = this.context.Resolve<IEnumerable<IResourceEditorFactory>>();
-			StringBuilder filterBuilder = new StringBuilder();
-
-			List<string> ex = (from format in editorFactories from f in format.SupportedFormats from ext in f.Extensions select ext).ToList();
-			if (ex.Count > 0)
-			{
-				BuildFilterOption(new FileFormatInfo() { Extensions = ex, Name = "All supported types" }, filterBuilder);
-				foreach (
-					var resourceFileFormat in editorFactories.SelectMany(resourceFileFormat => resourceFileFormat.SupportedFormats)
-					)
-				{
-					filterBuilder.Append("|");
-					BuildFilterOption(resourceFileFormat, filterBuilder);
-				}
-				filterBuilder.Append("|");
-			}
-			BuildFilterOption(new FileFormatInfo(){Extensions = new string[]{".*"}, Name = "All"}, filterBuilder);
-
-			var filter = filterBuilder.ToString();
-			return filter;
-		}
-
-		private static void BuildFilterOption(IFileFormatInfo format, StringBuilder allBuilder)
-		{
-			allBuilder.Append(format.Name);
-			allBuilder.Append(" (");
-			string separator = String.Empty;
-			foreach (var ex in format.Extensions)
-			{
-				allBuilder.Append(separator);
-				allBuilder.Append("*");
-				allBuilder.Append(ex);
-				separator = ", ";
-			}
-			allBuilder.Append(")|");
-			separator = String.Empty;
-			foreach (var ex in format.Extensions)
-			{
-				allBuilder.Append(separator);
-				allBuilder.Append("*");
-				allBuilder.Append(ex);
-				separator = ";";
 			}
 		}
 
@@ -280,6 +283,15 @@ namespace Toe.Editor
 			editor.Redo();
 		}
 
+		private void ResetRecentFilesMenu(object sender, NotifyCollectionChangedEventArgs e)
+		{
+			this.recentFilesMenu.DropDownItems.Clear();
+			foreach (var file in this.options.Options.RecentFiles)
+			{
+				this.recentFilesMenu.DropDownItems.Add(this.CreateRecentFileMenuItem(file));
+			}
+		}
+
 		private void UnbindEditor(IResourceEditor editor)
 		{
 			var notifyPropertyChanged = editor as INotifyPropertyChanged;
@@ -316,14 +328,5 @@ namespace Toe.Editor
 		}
 
 		#endregion
-
-		private void OnNewMenuClick(object sender, EventArgs e)
-		{
-			var d = context.Resolve<AddNewItemForm>();
-			if (d.ShowDialog() == DialogResult.OK)
-			{
-				this.OpenFile(d.FilePath);
-			}
-		}
 	}
 }

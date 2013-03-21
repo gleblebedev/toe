@@ -6,7 +6,27 @@ namespace Toe.Utils.Mesh.Bsp
 {
 	public class BspSceneFileFormat : ISceneFileFormat
 	{
-		#region Public Methods and Operators
+		#region Constants and Fields
+
+		/// <summary>
+		/// Scene file format extensions.
+		/// </summary>
+		private readonly string[] extensions = new[] { ".bsp" };
+
+		#endregion
+
+		#region Public Properties
+
+		/// <summary>
+		/// Scene file format extensions.
+		/// </summary>
+		public IEnumerable<string> Extensions
+		{
+			get
+			{
+				return this.extensions;
+			}
+		}
 
 		/// <summary>
 		/// Scene file format name.
@@ -19,28 +39,16 @@ namespace Toe.Utils.Mesh.Bsp
 			}
 		}
 
-		/// <summary>
-		/// Scene file format extensions.
-		/// </summary>
-		string[] extensions = new[] { ".bsp" };
+		#endregion
 
-		/// <summary>
-		/// Scene file format extensions.
-		/// </summary>
-		public IEnumerable<string> Extensions
-		{
-			get
-			{
-				return extensions;
-			}
-		}
+		#region Public Methods and Operators
 
 		public bool CanLoad(string filename)
 		{
-			return (from extension in extensions where filename.EndsWith(extension, StringComparison.InvariantCultureIgnoreCase) select extension).Any();
+			return (from extension in this.extensions
+			        where filename.EndsWith(extension, StringComparison.InvariantCultureIgnoreCase)
+			        select extension).Any();
 		}
-
-	
 
 		public ISceneReader CreateReader()
 		{

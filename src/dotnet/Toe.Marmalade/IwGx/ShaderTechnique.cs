@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 
 using OpenTK.Graphics.OpenGL;
 
@@ -22,13 +20,9 @@ namespace Toe.Marmalade.IwGx
 
 		private int fragmentShaderHandle;
 
-		private string fragmentShaderSource;
-
 		private int shaderProgramHandle;
 
 		private int vertexShaderHandle;
-
-		private string vertexShaderSource;
 
 		#endregion
 
@@ -51,38 +45,35 @@ namespace Toe.Marmalade.IwGx
 			}
 		}
 
-		public string FragmentShaderSource
-		{
-			get
-			{
-				return this.fragmentShaderSource;
-			}
-			set
-			{
-				this.fragmentShaderSource = value;
-			}
-		}
+		public string FragmentShaderSource { get; set; }
 
-		public string VertexShaderSource
-		{
-			get
-			{
-				return this.vertexShaderSource;
-			}
-			set
-			{
-				this.vertexShaderSource = value;
-			}
-		}
+		public string VertexShaderSource { get; set; }
 
 		#endregion
 
 		#region Public Methods and Operators
 
+		public static string AdaptSource(string src)
+		{
+			src = src.Replace(" highp ", " ");
+			src = src.Replace(" mediump ", " ");
+			src = src.Replace(" lowp ", " ");
+
+			// void performAlphaTest(lowp float val)
+			src = src.Replace("(lowp ", "( ");
+
+			src = src.Replace("\thighp ", " ");
+			src = src.Replace("\tmediump ", " ");
+			src = src.Replace("\tlowp ", " ");
+			return src;
+		}
+
 		public void AddParam(ShaderTechniqueParam shaderParam)
 		{
 			this.shaderParams.Add(shaderParam);
 		}
+
+		#endregion
 
 		//public void ApplyOpenGL()
 		//{
@@ -166,29 +157,12 @@ namespace Toe.Marmalade.IwGx
 		//    }
 		//}
 
-		#endregion
-
 		#region Methods
 
 		protected override void Dispose(bool disposing)
 		{
 			base.Dispose(disposing);
 			this.DisposeOpenGLHandlers();
-		}
-
-		public static string AdaptSource(string src)
-		{
-			src = src.Replace(" highp ", " ");
-			src = src.Replace(" mediump ", " ");
-			src = src.Replace(" lowp ", " ");
-
-			// void performAlphaTest(lowp float val)
-			src = src.Replace("(lowp ", "( ");
-
-			src = src.Replace("\thighp ", " ");
-			src = src.Replace("\tmediump ", " ");
-			src = src.Replace("\tlowp ", " ");
-			return src;
 		}
 
 		private void DisposeOpenGLHandlers()

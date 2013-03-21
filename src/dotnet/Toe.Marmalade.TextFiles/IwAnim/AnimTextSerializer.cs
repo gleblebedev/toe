@@ -1,8 +1,6 @@
 using Autofac;
 
 using Toe.Marmalade.IwAnim;
-using Toe.Utils.Marmalade;
-using Toe.Utils.Mesh;
 
 namespace Toe.Marmalade.TextFiles.IwAnim
 {
@@ -83,7 +81,7 @@ namespace Toe.Marmalade.TextFiles.IwAnim
 
 		private void ParseKeyFrame(TextParser parser, Anim mesh)
 		{
-			var frame = context.Resolve<AnimKeyFrame>();
+			var frame = this.context.Resolve<AnimKeyFrame>();
 			parser.Consume("CIwAnimKeyFrame");
 			parser.Consume("{");
 

@@ -7,6 +7,8 @@ namespace Toe.Utils.Mesh.Dae.Tests
 	[TestFixture]
 	public class ReadFiles
 	{
+		#region Public Methods and Operators
+
 		[Test]
 		public void LemarchandsBox()
 		{
@@ -16,5 +18,7 @@ namespace Toe.Utils.Mesh.Dae.Tests
 				var scene = r.Load(s, null);
 			}
 		}
+
+		#endregion
 	}
 }

@@ -1,8 +1,6 @@
 using Autofac;
 
 using Toe.Editors.Interfaces;
-using Toe.Editors.Interfaces.Bindings;
-using Toe.Editors.Interfaces.Views;
 
 namespace Toe.Editors.GenericScene
 {

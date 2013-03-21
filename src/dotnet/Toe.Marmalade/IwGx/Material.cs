@@ -1,6 +1,4 @@
-using System;
 using System.ComponentModel;
-using System.Data.SqlTypes;
 using System.Drawing;
 
 using OpenTK.Graphics.OpenGL;
@@ -32,7 +30,8 @@ namespace Toe.Marmalade.IwGx
 		public const uint CLAMP_UV_F = (1 << 8); // If set the texture coords are clamped when the texture object is set
 
 		public const uint CULL_FRONT_F = (1 << 4);
-		                  // if TWO_SIDED_F is NOT set; cull front-facing rather than back-facing polys
+
+		// if TWO_SIDED_F is NOT set; cull front-facing rather than back-facing polys
 
 		/// <summary>
 		/// Depth test mode member
@@ -73,6 +72,71 @@ namespace Toe.Marmalade.IwGx
 
 		public static readonly uint TypeHash = Hash.Get("CIwMaterial");
 
+		protected static PropertyEventArgs AlphaModeEventArgs = Expr.PropertyEventArgs<Material>(x => x.AlphaMode);
+
+		protected static PropertyEventArgs AlphaTestModeEventArgs = Expr.PropertyEventArgs<Material>(x => x.AlphaTestMode);
+
+		protected static PropertyEventArgs AlphaTestValueEventArgs = Expr.PropertyEventArgs<Material>(x => x.AlphaTestValue);
+
+		protected static PropertyEventArgs AtlasMaterialEventArgs = Expr.PropertyEventArgs<Material>(x => x.AtlasMaterial);
+
+		protected static PropertyEventArgs BlendModeEventArgs = Expr.PropertyEventArgs<Material>(x => x.BlendMode);
+
+		protected static PropertyEventArgs ClampUVEventArgs = Expr.PropertyEventArgs<Material>(x => x.ClampUV);
+
+		protected static PropertyEventArgs ColAmbientEventArgs = Expr.PropertyEventArgs<Material>(x => x.ColAmbient);
+
+		protected static PropertyEventArgs ColDiffuseEventArgs = Expr.PropertyEventArgs<Material>(x => x.ColDiffuse);
+
+		protected static PropertyEventArgs ColEmissiveEventArgs = Expr.PropertyEventArgs<Material>(x => x.ColEmissive);
+
+		protected static PropertyEventArgs ColSpecularEventArgs = Expr.PropertyEventArgs<Material>(x => x.ColSpecular);
+
+		protected static PropertyEventArgs CullModeEventArgs = Expr.PropertyEventArgs<Material>(x => x.CullMode);
+
+		protected static PropertyEventArgs DepthWriteEnableEventArgs =
+			Expr.PropertyEventArgs<Material>(x => x.DepthWriteEnable);
+
+		protected static PropertyEventArgs EffectPresetEventArgs = Expr.PropertyEventArgs<Material>(x => x.EffectPreset);
+
+		protected static PropertyEventArgs FilteringEventArgs = Expr.PropertyEventArgs<Material>(x => x.Filtering);
+
+		protected static PropertyEventArgs FormatHWEventArgs = Expr.PropertyEventArgs<Material>(x => x.FormatHW);
+
+		protected static PropertyEventArgs FormatSWEventArgs = Expr.PropertyEventArgs<Material>(x => x.FormatSW);
+
+		protected static PropertyEventArgs InvisibleEventArgs = Expr.PropertyEventArgs<Material>(x => x.Invisible);
+
+		protected static PropertyEventArgs KeepAfterUploadEventArgs = Expr.PropertyEventArgs<Material>(x => x.KeepAfterUpload);
+
+		protected static PropertyEventArgs MatAnimEventArgs = Expr.PropertyEventArgs<Material>(x => x.MatAnim);
+
+		protected static PropertyEventArgs MergeGeomEventArgs = Expr.PropertyEventArgs<Material>(x => x.MergeGeom);
+
+		protected static PropertyEventArgs ModulateModeEventArgs = Expr.PropertyEventArgs<Material>(x => x.ModulateMode);
+
+		protected static PropertyEventArgs NoFogEventArgs = Expr.PropertyEventArgs<Material>(x => x.NoFog);
+
+		protected static PropertyEventArgs ShadeModeEventArgs = Expr.PropertyEventArgs<Material>(x => x.ShadeMode);
+
+		protected static PropertyEventArgs ShaderTechniqueEventArgs = Expr.PropertyEventArgs<Material>(x => x.ShaderTechnique);
+
+		protected static PropertyEventArgs SpecularPowerEventArgs = Expr.PropertyEventArgs<Material>(x => x.SpecularPower);
+
+		protected static PropertyEventArgs Texture0EventArgs = Expr.PropertyEventArgs<Material>(x => x.Texture0);
+
+		protected static PropertyEventArgs Texture1EventArgs = Expr.PropertyEventArgs<Material>(x => x.Texture1);
+
+		protected static PropertyEventArgs Texture2EventArgs = Expr.PropertyEventArgs<Material>(x => x.Texture2);
+
+		protected static PropertyEventArgs Texture3EventArgs = Expr.PropertyEventArgs<Material>(x => x.Texture3);
+
+		protected static PropertyEventArgs VertexShaderEventArgs = Expr.PropertyEventArgs<Material>(x => x.VertexShader);
+
+		protected static PropertyEventArgs ZDepthOfsEventArgs = Expr.PropertyEventArgs<Material>(x => x.ZDepthOfs);
+
+		protected static PropertyEventArgs ZDepthOfsHWEventArgs = Expr.PropertyEventArgs<Material>(x => x.ZDepthOfsHW);
+
 		private readonly IResourceManager resourceManager;
 
 		private readonly ResourceReference shaderTechnique;
@@ -110,6 +174,8 @@ namespace Toe.Marmalade.IwGx
 		private bool depthWriteEnable = true;
 
 		private EffectPreset effectPreset = EffectPreset.DEFAULT;
+
+		private bool filtering;
 
 		private ImageFormat formatHw;
 
@@ -162,9 +228,6 @@ namespace Toe.Marmalade.IwGx
 
 		#region Public Properties
 
-		protected static PropertyEventArgs AlphaModeEventArgs = Expr.PropertyEventArgs<Material>(x => x.AlphaMode);
-
-
 		public AlphaMode AlphaMode
 		{
 			get
@@ -181,8 +244,6 @@ namespace Toe.Marmalade.IwGx
 				}
 			}
 		}
-
-		protected static PropertyEventArgs AlphaTestModeEventArgs = Expr.PropertyEventArgs<Material>(x => x.AlphaTestMode);
 
 		public AlphaTestMode AlphaTestMode
 		{
@@ -201,8 +262,6 @@ namespace Toe.Marmalade.IwGx
 			}
 		}
 
-		protected static PropertyEventArgs AlphaTestValueEventArgs = Expr.PropertyEventArgs<Material>(x => x.AlphaTestValue);
-
 		public byte AlphaTestValue
 		{
 			get
@@ -220,7 +279,22 @@ namespace Toe.Marmalade.IwGx
 			}
 		}
 
-		protected static PropertyEventArgs BlendModeEventArgs = Expr.PropertyEventArgs<Material>(x => x.BlendMode);
+		public bool AtlasMaterial
+		{
+			get
+			{
+				return this.atlasMaterial;
+			}
+			set
+			{
+				if (this.atlasMaterial != value)
+				{
+					this.RaisePropertyChanging(AtlasMaterialEventArgs.Changing);
+					this.atlasMaterial = value;
+					this.RaisePropertyChanged(AtlasMaterialEventArgs.Changed);
+				}
+			}
+		}
 
 		public BlendMode BlendMode
 		{
@@ -238,10 +312,6 @@ namespace Toe.Marmalade.IwGx
 				}
 			}
 		}
-		
-
-		protected static PropertyEventArgs ClampUVEventArgs = Expr.PropertyEventArgs<Material>(x => x.ClampUV);
-
 
 		public bool ClampUV
 		{
@@ -259,7 +329,6 @@ namespace Toe.Marmalade.IwGx
 				}
 			}
 		}
-	
 
 		public override uint ClassHashCode
 		{
@@ -268,8 +337,6 @@ namespace Toe.Marmalade.IwGx
 				return TypeHash;
 			}
 		}
-
-		protected static PropertyEventArgs ColAmbientEventArgs = Expr.PropertyEventArgs<Material>(x => x.ColAmbient);
 
 		public Color ColAmbient
 		{
@@ -288,9 +355,6 @@ namespace Toe.Marmalade.IwGx
 			}
 		}
 
-		protected static PropertyEventArgs ColDiffuseEventArgs = Expr.PropertyEventArgs<Material>(x => x.ColDiffuse);
-
-
 		public Color ColDiffuse
 		{
 			get
@@ -308,9 +372,6 @@ namespace Toe.Marmalade.IwGx
 			}
 		}
 
-		protected static PropertyEventArgs ColEmissiveEventArgs = Expr.PropertyEventArgs<Material>(x => x.ColEmissive);
-
-		
 		public Color ColEmissive
 		{
 			get
@@ -328,9 +389,6 @@ namespace Toe.Marmalade.IwGx
 			}
 		}
 
-		protected static PropertyEventArgs ColSpecularEventArgs = Expr.PropertyEventArgs<Material>(x => x.ColSpecular);
-
-	
 		public Color ColSpecular
 		{
 			get
@@ -347,9 +405,6 @@ namespace Toe.Marmalade.IwGx
 				}
 			}
 		}
-
-
-		protected static PropertyEventArgs CullModeEventArgs = Expr.PropertyEventArgs<Material>(x => x.CullMode);
 
 		/// <summary>
 		/// Backface culling is a property of the material. For example, CULL_FRONT is equivalent to glCullFace(GL_FRONT).
@@ -371,10 +426,6 @@ namespace Toe.Marmalade.IwGx
 			}
 		}
 
-		protected static PropertyEventArgs DepthWriteEnableEventArgs = Expr.PropertyEventArgs<Material>(x => x.DepthWriteEnable);
-
-
-
 		public bool DepthWriteEnable
 		{
 			get
@@ -391,8 +442,6 @@ namespace Toe.Marmalade.IwGx
 				}
 			}
 		}
-
-		protected static PropertyEventArgs EffectPresetEventArgs = Expr.PropertyEventArgs<Material>(x => x.EffectPreset);
 
 		public EffectPreset EffectPreset
 		{
@@ -411,10 +460,6 @@ namespace Toe.Marmalade.IwGx
 			}
 		}
 
-		protected static PropertyEventArgs FilteringEventArgs = Expr.PropertyEventArgs<Material>(x => x.Filtering);
-
-		private bool filtering;
-
 		public bool Filtering
 		{
 			get
@@ -431,7 +476,7 @@ namespace Toe.Marmalade.IwGx
 				}
 			}
 		}
-	
+
 		public uint Flags
 		{
 			set
@@ -483,9 +528,6 @@ namespace Toe.Marmalade.IwGx
 			}
 		}
 
-		protected static PropertyEventArgs FormatHWEventArgs = Expr.PropertyEventArgs<Material>(x => x.FormatHW);
-
-
 		public ImageFormat FormatHW
 		{
 			get
@@ -502,8 +544,6 @@ namespace Toe.Marmalade.IwGx
 				}
 			}
 		}
-
-		protected static PropertyEventArgs FormatSWEventArgs = Expr.PropertyEventArgs<Material>(x => x.FormatSW);
 
 		public ImageFormat FormatSW
 		{
@@ -522,8 +562,6 @@ namespace Toe.Marmalade.IwGx
 			}
 		}
 
-		protected static PropertyEventArgs InvisibleEventArgs = Expr.PropertyEventArgs<Material>(x => x.Invisible);
-
 		public bool Invisible
 		{
 			get
@@ -541,8 +579,6 @@ namespace Toe.Marmalade.IwGx
 			}
 		}
 
-		protected static PropertyEventArgs KeepAfterUploadEventArgs = Expr.PropertyEventArgs<Material>(x => x.KeepAfterUpload);
-
 		public bool KeepAfterUpload
 		{
 			get
@@ -559,8 +595,6 @@ namespace Toe.Marmalade.IwGx
 				}
 			}
 		}
-		protected static PropertyEventArgs MatAnimEventArgs = Expr.PropertyEventArgs<Material>(x => x.MatAnim);
-
 
 		public MatAnim MatAnim
 		{
@@ -579,10 +613,6 @@ namespace Toe.Marmalade.IwGx
 			}
 		}
 
-
-		protected static PropertyEventArgs MergeGeomEventArgs = Expr.PropertyEventArgs<Material>(x => x.MergeGeom);
-
-
 		public bool MergeGeom
 		{
 			get
@@ -599,8 +629,6 @@ namespace Toe.Marmalade.IwGx
 				}
 			}
 		}
-
-		protected static PropertyEventArgs ModulateModeEventArgs = Expr.PropertyEventArgs<Material>(x => x.ModulateMode);
 
 		public ModulateMode ModulateMode
 		{
@@ -619,9 +647,6 @@ namespace Toe.Marmalade.IwGx
 			}
 		}
 
-		protected static PropertyEventArgs NoFogEventArgs = Expr.PropertyEventArgs<Material>(x => x.NoFog);
-
-
 		public bool NoFog
 		{
 			get
@@ -638,8 +663,6 @@ namespace Toe.Marmalade.IwGx
 				}
 			}
 		}
-
-		protected static PropertyEventArgs ShadeModeEventArgs = Expr.PropertyEventArgs<Material>(x => x.ShadeMode);
 
 		public ShadeMode ShadeMode
 		{
@@ -674,8 +697,6 @@ namespace Toe.Marmalade.IwGx
 			}
 		}
 
-		protected static PropertyEventArgs SpecularPowerEventArgs = Expr.PropertyEventArgs<Material>(x => x.SpecularPower);
-
 		public byte SpecularPower
 		{
 			get
@@ -694,13 +715,6 @@ namespace Toe.Marmalade.IwGx
 				}
 			}
 		}
-	
-
-		protected static PropertyEventArgs Texture0EventArgs = Expr.PropertyEventArgs<Material>(x => x.Texture0);
-		protected static PropertyEventArgs Texture1EventArgs = Expr.PropertyEventArgs<Material>(x => x.Texture1);
-		protected static PropertyEventArgs Texture2EventArgs = Expr.PropertyEventArgs<Material>(x => x.Texture2);
-		protected static PropertyEventArgs Texture3EventArgs = Expr.PropertyEventArgs<Material>(x => x.Texture3);
-		protected static PropertyEventArgs ShaderTechniqueEventArgs = Expr.PropertyEventArgs<Material>(x => x.ShaderTechnique);
 
 		public ResourceReference Texture0
 		{
@@ -734,8 +748,6 @@ namespace Toe.Marmalade.IwGx
 			}
 		}
 
-		protected static PropertyEventArgs VertexShaderEventArgs = Expr.PropertyEventArgs<Material>(x => x.VertexShader);
-
 		public string VertexShader
 		{
 			get
@@ -753,8 +765,6 @@ namespace Toe.Marmalade.IwGx
 			}
 		}
 
-		protected static PropertyEventArgs ZDepthOfsEventArgs = Expr.PropertyEventArgs<Material>(x => x.ZDepthOfs);
-
 		public int ZDepthOfs
 		{
 			get
@@ -771,8 +781,6 @@ namespace Toe.Marmalade.IwGx
 				}
 			}
 		}
-
-		protected static PropertyEventArgs ZDepthOfsHWEventArgs = Expr.PropertyEventArgs<Material>(x => x.ZDepthOfsHW);
 
 		public int ZDepthOfsHW
 		{
@@ -792,31 +800,6 @@ namespace Toe.Marmalade.IwGx
 		}
 
 		#endregion
-
-		#region Properties
-
-		protected static PropertyEventArgs AtlasMaterialEventArgs = Expr.PropertyEventArgs<Material>(x => x.AtlasMaterial);
-
-		public bool AtlasMaterial
-		{
-			get
-			{
-				return this.atlasMaterial;
-			}
-			set
-			{
-				if (this.atlasMaterial != value)
-				{
-					this.RaisePropertyChanging(AtlasMaterialEventArgs.Changing);
-					this.atlasMaterial = value;
-					this.RaisePropertyChanged(AtlasMaterialEventArgs.Changed);
-				}
-			}
-		}
-
-		#endregion
-
-		#region Public Methods and Operators
 
 		//public void ApplyOpenGL()
 		//{
@@ -983,8 +966,6 @@ namespace Toe.Marmalade.IwGx
 		//        }
 		//    }
 		//}
-
-		#endregion
 
 		#region Methods
 

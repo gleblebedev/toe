@@ -4,9 +4,11 @@ namespace Toe.Gx
 {
 	public struct Frustum
 	{
-		private NormalizedPlane Front;
+		#region Constants and Fields
 
 		private NormalizedPlane Back;
+
+		private NormalizedPlane Front;
 
 		private NormalizedPlane Right;
 
@@ -18,6 +20,10 @@ namespace Toe.Gx
 
 		private Vector3 cameraPosition;
 
+		#endregion
+
+		#region Public Properties
+
 		public Vector3 CameraPosition
 		{
 			get
@@ -25,6 +31,10 @@ namespace Toe.Gx
 				return this.cameraPosition;
 			}
 		}
+
+		#endregion
+
+		#region Public Methods and Operators
 
 		public static void BuildFrustum(ref Matrix4 view, ref Matrix4 projection, out Frustum frustum)
 		{
@@ -58,6 +68,39 @@ namespace Toe.Gx
 			NormalizedPlane.BuildPlane(ref nearD, ref farA, ref nearA, out frustum.Right4);
 		}
 
+		public bool CheckSphere(Vector3 boundingSphereCenter, float boundingSphereR)
+		{
+			if (!this.Front.CheckSphere(ref boundingSphereCenter, ref boundingSphereR))
+			{
+				return false;
+			}
+			if (!this.Back.CheckSphere(ref boundingSphereCenter, ref boundingSphereR))
+			{
+				return false;
+			}
+			if (!this.Right.CheckSphere(ref boundingSphereCenter, ref boundingSphereR))
+			{
+				return false;
+			}
+			if (!this.Right2.CheckSphere(ref boundingSphereCenter, ref boundingSphereR))
+			{
+				return false;
+			}
+			if (!this.Right3.CheckSphere(ref boundingSphereCenter, ref boundingSphereR))
+			{
+				return false;
+			}
+			if (!this.Right4.CheckSphere(ref boundingSphereCenter, ref boundingSphereR))
+			{
+				return false;
+			}
+			return true;
+		}
+
+		#endregion
+
+		#region Methods
+
 		private static void PointFromProjectionToWorld(Vector4 vector3, ref Matrix4 m, out Vector3 a)
 		{
 			Vector4 tmp;
@@ -65,15 +108,6 @@ namespace Toe.Gx
 			a = new Vector3(tmp.X / tmp.W, tmp.Y / tmp.W, tmp.Z / tmp.W);
 		}
 
-		public bool CheckSphere(Vector3 boundingSphereCenter, float boundingSphereR)
-		{
-			if (!Front.CheckSphere(ref boundingSphereCenter, ref boundingSphereR)) return false;
-			if (!Back.CheckSphere(ref boundingSphereCenter, ref boundingSphereR)) return false;
-			if (!Right.CheckSphere(ref boundingSphereCenter, ref boundingSphereR)) return false;
-			if (!Right2.CheckSphere(ref boundingSphereCenter, ref boundingSphereR)) return false;
-			if (!Right3.CheckSphere(ref boundingSphereCenter, ref boundingSphereR)) return false;
-			if (!Right4.CheckSphere(ref boundingSphereCenter, ref boundingSphereR)) return false;
-			return true;
-		}
+		#endregion
 	}
 }

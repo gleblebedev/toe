@@ -5,10 +5,12 @@ namespace Toe.Editors.Interfaces
 {
 	public interface IFileFormatInfo
 	{
+		#region Public Properties
+
 		/// <summary>
-		/// Name of file format.
+		/// Is editor able to create new file.
 		/// </summary>
-		string Name { get; }
+		bool CanCreate { get; }
 
 		/// <summary>
 		/// Default file name for a new file.
@@ -21,14 +23,18 @@ namespace Toe.Editors.Interfaces
 		IList<string> Extensions { get; }
 
 		/// <summary>
-		/// Is editor able to create new file.
-		/// </summary>
-		bool CanCreate { get; }
-
-		/// <summary>
 		/// Factory.
 		/// </summary>
 		IResourceEditorFactory Factory { get; }
+
+		/// <summary>
+		/// Name of file format.
+		/// </summary>
+		string Name { get; }
+
+		#endregion
+
+		#region Public Methods and Operators
 
 		/// <summary>
 		/// Create new file.
@@ -36,5 +42,7 @@ namespace Toe.Editors.Interfaces
 		/// <param name="filePath">Output file name.</param>
 		/// <param name="output">Output stream.</param>
 		void Create(string filePath, Stream output);
+
+		#endregion
 	}
 }

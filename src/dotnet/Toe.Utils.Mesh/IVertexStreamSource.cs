@@ -56,16 +56,19 @@ namespace Toe.Utils.Mesh
 
 		#region Public Methods and Operators
 
-		void VisitBinormals(Vector3VisitorCallback action);
-
-		void VisitTangents(Vector3VisitorCallback action);
-
 		/// <summary>
 		/// Get vertex color by index.
 		/// </summary>
 		/// <param name="index">Vertex index.</param>
 		/// <param name="color">Vertex color.</param>
 		void GetColorAt(int index, out Color color);
+
+		/// <summary>
+		/// Get normal position by index.
+		/// </summary>
+		/// <param name="index">Vertex index.</param>
+		/// <param name="vector">Vertex normal.</param>
+		void GetNormalAt(int index, out Vector3 vector);
 
 		/// <summary>
 		/// Get vertex texture coords by index.
@@ -82,12 +85,9 @@ namespace Toe.Utils.Mesh
 		/// <param name="vector">Vertex position.</param>
 		void GetVertexAt(int index, out Vector3 vector);
 
-		/// <summary>
-		/// Get normal position by index.
-		/// </summary>
-		/// <param name="index">Vertex index.</param>
-		/// <param name="vector">Vertex normal.</param>
-		void GetNormalAt(int index, out Vector3 vector);
+		void VisitBinormals(Vector3VisitorCallback action);
+
+		void VisitTangents(Vector3VisitorCallback action);
 
 		#endregion
 	}

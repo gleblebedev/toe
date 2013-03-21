@@ -7,13 +7,17 @@ using Toe.Utils.TextParser;
 
 namespace Toe.Utils.Mesh.Svg
 {
-	public class PathParser:BaseTextParser
+	public class PathParser : BaseTextParser
 	{
+		#region Constants and Fields
+
 		private readonly TextReader reader;
+
+		private readonly StringBuilder sb = new StringBuilder();
 
 		private int nextChar;
 
-		private readonly StringBuilder sb = new StringBuilder();
+		#endregion
 
 		#region Constructors and Destructors
 
@@ -25,11 +29,28 @@ namespace Toe.Utils.Mesh.Svg
 
 		#endregion
 
-		protected int ReadNextChar()
+		#region Public Methods and Operators
+
+		public new float ConsumeFloat()
 		{
-			this.nextChar = this.reader.Read();
-			return this.nextChar;
+			var v = base.ConsumeFloat();
+			this.Skip(",");
+			return v;
 		}
+
+		public Vector2 ConsumeVector()
+		{
+			var x = this.ConsumeFloat();
+			this.Skip(",");
+			var y = this.ConsumeFloat();
+			this.Skip(",");
+			return new Vector2(x, y);
+		}
+
+		#endregion
+
+		#region Methods
+
 		protected override void ReadLexem()
 		{
 			while (this.nextChar >= 0 && char.IsWhiteSpace((char)this.nextChar))
@@ -51,71 +72,45 @@ namespace Toe.Utils.Mesh.Svg
 			}
 			if (char.IsDigit((char)this.nextChar) || this.nextChar == '-' || this.nextChar == '+')
 			{
-				sb.Clear();
-				sb.Append((char)this.nextChar);
+				this.sb.Clear();
+				this.sb.Append((char)this.nextChar);
 				this.ReadNextChar();
 				while (char.IsDigit((char)this.nextChar))
 				{
-					sb.Append((char)this.nextChar);
+					this.sb.Append((char)this.nextChar);
 					this.ReadNextChar();
 				}
 				if (this.nextChar == '.')
 				{
-					sb.Append((char)this.nextChar);
+					this.sb.Append((char)this.nextChar);
 					this.ReadNextChar();
 					while (char.IsDigit((char)this.nextChar))
 					{
-						sb.Append((char)this.nextChar);
+						this.sb.Append((char)this.nextChar);
 						this.ReadNextChar();
 					}
 				}
-				this.Lexem = sb.ToString();
+				this.Lexem = this.sb.ToString();
 				return;
 			}
 
-			sb.Clear();
-			sb.Append((char)this.nextChar);
+			this.sb.Clear();
+			this.sb.Append((char)this.nextChar);
 			this.ReadNextChar();
-			while (this.nextChar > 0 && char.IsLetter((char)this.nextChar))
-			{
-				sb.Append((char)this.nextChar);
-				this.ReadNextChar();
-			}
-			this.Lexem = sb.ToString();
+			//while (this.nextChar > 0 && char.IsLetter((char)this.nextChar))
+			//{
+			//    sb.Append((char)this.nextChar);
+			//    this.ReadNextChar();
+			//}
+			this.Lexem = this.sb.ToString();
 		}
 
-		public Vector2 ConsumeVector(SvgReaderOptions options)
+		protected int ReadNextChar()
 		{
-			var x = this.ConsumeFloat(options);
-			this.Skip(",");
-			var y = this.ConsumeFloat(options);
-			this.Skip(",");
-			return new Vector2(x, y);
+			this.nextChar = this.reader.Read();
+			return this.nextChar;
 		}
-		public float ConsumeFloat(SvgReaderOptions options)
-		{
-			var v = base.ConsumeFloat();
-			if (Lexem != null)
-			{
-				var s = Lexem.ToLower();
-				if (s == "cm")
-				{
-					this.Consume();
-					v = options.CmToPixels(v);
-				}
-				else if (s == "mm")
-				{
-					this.Consume();
-					v = options.CmToPixels(v * 0.01f);
-				}
-				else if (s == "in")
-				{
-					this.Consume();
-					v = options.InchToPixels(v);
-				}
-			}
-			this.Skip(",");
-			return v;
-		}
+
+		#endregion
 	}
 }

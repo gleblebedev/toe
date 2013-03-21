@@ -16,8 +16,6 @@ using Toe.Gx;
 using Toe.Marmalade.IwAnim;
 using Toe.Marmalade.IwGraphics;
 using Toe.Resources;
-using Toe.Utils.Marmalade.IwGraphics;
-using Toe.Utils.Mesh;
 
 namespace Toe.Editors.Marmalade
 {
@@ -31,9 +29,9 @@ namespace Toe.Editors.Marmalade
 
 		private readonly IEditorEnvironment editorEnvironment;
 
-		private readonly ICommandHistory history;
-
 		private readonly ToeGraphicsContext graphicsContext;
+
+		private readonly ICommandHistory history;
 
 		private readonly IResourceManager resourceManager;
 
@@ -135,7 +133,7 @@ namespace Toe.Editors.Marmalade
 				if (model != null)
 				{
 					GL.Enable(EnableCap.DepthTest);
-					graphicsContext.RenderModel(model);
+					this.graphicsContext.RenderModel(model);
 				}
 				if (skeleton != null)
 				{
@@ -165,7 +163,10 @@ namespace Toe.Editors.Marmalade
 			ComponentResourceManager resources = new ComponentResourceManager(typeof(SkinEditor));
 			this.split = new SplitContainer();
 			this.stackPanel1 = new StackPanel();
-			this.base3DEditor1 = new Base3DEditor(this.context, this.context.Resolve<IEditorOptions<Base3DEditorOptions>>(), this.context.Resolve<Base3DEditorContent>());
+			this.base3DEditor1 = new Base3DEditor(
+				this.context,
+				this.context.Resolve<IEditorOptions<Base3DEditorOptions>>(),
+				this.context.Resolve<Base3DEditorContent>());
 			var i = this.split as ISupportInitialize;
 			if (i != null)
 			{

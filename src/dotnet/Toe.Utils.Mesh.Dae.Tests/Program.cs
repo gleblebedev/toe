@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Toe.Utils.Mesh.Dae.Tests
+﻿namespace Toe.Utils.Mesh.Dae.Tests
 {
-	class Program
+	internal class Program
 	{
-		static void Main(string[] args)
+		#region Methods
+
+		private static void Main(string[] args)
 		{
 			(new ReadFiles()).LemarchandsBox();
 		}
+
+		#endregion
 	}
 }

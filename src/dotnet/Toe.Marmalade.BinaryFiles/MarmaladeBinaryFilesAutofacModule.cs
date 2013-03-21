@@ -7,7 +7,6 @@ using Toe.Marmalade.IwAnim;
 using Toe.Marmalade.IwGraphics;
 using Toe.Marmalade.IwGx;
 using Toe.Resources;
-using Toe.Utils.Marmalade.IwGraphics;
 
 namespace Toe.Marmalade.BinaryFiles
 {

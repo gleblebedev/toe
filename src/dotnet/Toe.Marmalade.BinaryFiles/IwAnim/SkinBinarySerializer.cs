@@ -3,7 +3,6 @@ using System;
 using Autofac;
 
 using Toe.Marmalade.IwAnim;
-using Toe.Resources;
 using Toe.Utils;
 using Toe.Utils.Mesh;
 

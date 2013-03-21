@@ -6,17 +6,7 @@ namespace Toe.Gx
 {
 	public struct LightArgs
 	{
-		public bool Enabled;
-		public Color Ambient;
-		public Color Diffuse;
-		public Color Specular;
-		public Vector3 Position;
-		public Vector3 Direction;
-		public float Exponent;
-		public float Cutoff;
-		public float ConstantAttenuation;
-		public float LinearAttenuation;
-		public float QuadraticAttenuation;
+		#region Constants and Fields
 
 		public static readonly LightArgs Default = new LightArgs
 			{
@@ -31,5 +21,29 @@ namespace Toe.Gx
 				Ambient = Color.FromArgb(255, 0, 0, 0),
 				Enabled = false
 			};
+
+		public Color Ambient;
+
+		public float ConstantAttenuation;
+
+		public float Cutoff;
+
+		public Color Diffuse;
+
+		public Vector3 Direction;
+
+		public bool Enabled;
+
+		public float Exponent;
+
+		public float LinearAttenuation;
+
+		public Vector3 Position;
+
+		public float QuadraticAttenuation;
+
+		public Color Specular;
+
+		#endregion
 	}
 }

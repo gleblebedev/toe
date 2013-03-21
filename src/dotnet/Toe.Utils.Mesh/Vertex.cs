@@ -142,13 +142,13 @@ namespace Toe.Utils.Mesh
 			switch (channel)
 			{
 				case 0:
-					res = UV0;
+					res = this.UV0;
 					return;
 				case 1:
-					res = UV1;
+					res = this.UV1;
 					return;
 				default:
-					throw new System.ArgumentOutOfRangeException();
+					throw new ArgumentOutOfRangeException();
 			}
 		}
 	}

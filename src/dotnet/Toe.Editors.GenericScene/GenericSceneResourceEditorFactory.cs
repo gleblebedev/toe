@@ -24,28 +24,19 @@ namespace Toe.Editors.GenericScene
 		{
 			this.supportedFormats = new IFileFormatInfo[]
 				{
-					new FileFormatInfo{CanCreate = false,Extensions = new []{".ase"},Factory = this,Name = "ASCII file"},
-					new FileFormatInfo{CanCreate = false,Extensions = new []{".bsp"},Factory = this,Name = "Quake/HalfLife BSP file"},
-					new FileFormatInfo{CanCreate = false,Extensions = new []{".dae"},Factory = this,Name = "Collada DAE"},
-					new FileFormatInfo{CanCreate = false,Extensions = new []{".svg"},Factory = this,Name = "Scalable Vector Graphics"},
+					new FileFormatInfo { CanCreate = false, Extensions = new[] { ".ase" }, Factory = this, Name = "ASCII file" },
+					new FileFormatInfo
+						{ CanCreate = false, Extensions = new[] { ".bsp" }, Factory = this, Name = "Quake/HalfLife BSP file" },
+					new FileFormatInfo { CanCreate = false, Extensions = new[] { ".dae" }, Factory = this, Name = "Collada DAE" },
+					new FileFormatInfo
+						{ CanCreate = false, Extensions = new[] { ".svg" }, Factory = this, Name = "Scalable Vector Graphics" },
 				};
 			this.context = context;
 		}
 
 		#endregion
 
-		#region Public Methods and Operators
-
-		/// <summary>
-		/// All supported file formats.
-		/// </summary>
-		public IList<IFileFormatInfo> SupportedFormats
-		{
-			get
-			{
-				return this.supportedFormats;
-			}
-		}
+		#region Public Properties
 
 		/// <summary>
 		/// Name of resource editor group.
@@ -58,9 +49,26 @@ namespace Toe.Editors.GenericScene
 			}
 		}
 
+		/// <summary>
+		/// All supported file formats.
+		/// </summary>
+		public IList<IFileFormatInfo> SupportedFormats
+		{
+			get
+			{
+				return this.supportedFormats;
+			}
+		}
+
+		#endregion
+
+		#region Public Methods and Operators
+
 		public IResourceEditor CreateEditor(string fileName)
 		{
-			if (this.supportedFormats.SelectMany(supportedFormat => supportedFormat.Extensions).Any(extension => fileName.EndsWith(extension, StringComparison.InvariantCultureIgnoreCase)))
+			if (
+				this.supportedFormats.SelectMany(supportedFormat => supportedFormat.Extensions).Any(
+					extension => fileName.EndsWith(extension, StringComparison.InvariantCultureIgnoreCase)))
 			{
 				return this.context.Resolve<GenericSceneEditor>();
 			}

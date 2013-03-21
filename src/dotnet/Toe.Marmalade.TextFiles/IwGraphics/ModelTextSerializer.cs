@@ -5,7 +5,6 @@ using Autofac;
 using OpenTK;
 
 using Toe.Marmalade.IwGraphics;
-using Toe.Utils.Marmalade;
 using Toe.Utils.Marmalade.IwGraphics;
 using Toe.Utils.Mesh;
 
@@ -94,7 +93,7 @@ namespace Toe.Marmalade.TextFiles.IwGraphics
 		{
 			parser.Consume("CMesh");
 			parser.Consume("{");
-			var mesh = context.Resolve<Mesh>();
+			var mesh = this.context.Resolve<Mesh>();
 			for (;;)
 			{
 				var attribute = parser.Lexem;
@@ -259,11 +258,17 @@ namespace Toe.Marmalade.TextFiles.IwGraphics
 					parser.Consume();
 					var setId = parser.ConsumeInt();
 					if (setId == 0)
+					{
 						uvs = mesh.UV0;
+					}
 					else if (setId == 1)
+					{
 						uvs = mesh.UV1;
+					}
 					else
+					{
 						parser.Error("Only 2 UV streams supported");
+					}
 					continue;
 				}
 				if (attribute == "numUVs")
@@ -425,7 +430,7 @@ namespace Toe.Marmalade.TextFiles.IwGraphics
 				if (attribute == "q")
 				{
 					parser.Consume();
-					ParseQuad(parser,tmp);
+					ParseQuad(parser, tmp);
 					submesh.Indices.Add(tmp[0]);
 					submesh.Indices.Add(tmp[2]);
 					submesh.Indices.Add(tmp[1]);
@@ -442,7 +447,7 @@ namespace Toe.Marmalade.TextFiles.IwGraphics
 		{
 			parser.Consume("CSurface");
 			parser.Consume("{");
-			var surface = context.Resolve<ModelBlockPrimBase>();
+			var surface = this.context.Resolve<ModelBlockPrimBase>();
 			surface.Mesh = mesh;
 			for (;;)
 			{

@@ -7,23 +7,34 @@ namespace Toe.Core
 {
 	public struct ToeMessageDescription
 	{
+		#region Constants and Fields
+
+		private readonly ToeMessageFieldDescription[] fields;
+
+		private readonly uint id;
+
+		private readonly string name;
+
+		#endregion
+
+		#region Constructors and Destructors
+
 		public ToeMessageDescription(string name, IEnumerable<ToeMessageFieldDescription> fields)
 		{
 			this.name = name;
 			this.id = Hash.Get(name);
 			this.fields = fields.ToArray();
 		}
-		private readonly string name;
 
-		private readonly uint id;
+		#endregion
 
-		private ToeMessageFieldDescription[] fields;
+		#region Public Properties
 
-		public string Name
+		public ToeMessageFieldDescription[] Fields
 		{
 			get
 			{
-				return this.name;
+				return this.fields;
 			}
 		}
 
@@ -35,22 +46,44 @@ namespace Toe.Core
 			}
 		}
 
-		public ToeMessageFieldDescription[] Fields
+		public string Name
 		{
 			get
 			{
-				return this.fields;
+				return this.name;
 			}
+		}
+
+		#endregion
+
+		#region Public Methods and Operators
+
+		public static bool operator ==(ToeMessageDescription left, ToeMessageDescription right)
+		{
+			return left.Equals(right);
+		}
+
+		public static bool operator !=(ToeMessageDescription left, ToeMessageDescription right)
+		{
+			return !left.Equals(right);
 		}
 
 		public bool Equals(ToeMessageDescription other)
 		{
 			if (other.id != this.id)
+			{
 				return false;
-			if (other.fields.Length != this.fields.Length) return false;
+			}
+			if (other.fields.Length != this.fields.Length)
+			{
+				return false;
+			}
 			for (int index = 0; index < this.fields.Length; index++)
 			{
-				if (this.fields[index] != other.fields[index]) return false;
+				if (this.fields[index] != other.fields[index])
+				{
+					return false;
+				}
 			}
 			return true;
 		}
@@ -72,7 +105,7 @@ namespace Toe.Core
 			{
 				return false;
 			}
-			return Equals((ToeMessageDescription)obj);
+			return this.Equals((ToeMessageDescription)obj);
 		}
 
 		/// <summary>
@@ -90,14 +123,6 @@ namespace Toe.Core
 			}
 		}
 
-		public static bool operator ==(ToeMessageDescription left, ToeMessageDescription right)
-		{
-			return left.Equals(right);
-		}
-
-		public static bool operator !=(ToeMessageDescription left, ToeMessageDescription right)
-		{
-			return !left.Equals(right);
-		}
+		#endregion
 	}
 }

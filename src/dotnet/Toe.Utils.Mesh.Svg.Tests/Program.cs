@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Toe.Utils.Mesh.Svg.Tests
+﻿namespace Toe.Utils.Mesh.Svg.Tests
 {
-	class Program
+	internal class Program
 	{
-		static void Main(string[] args)
+		#region Methods
+
+		private static void Main(string[] args)
 		{
 		}
+
+		#endregion
 	}
 }

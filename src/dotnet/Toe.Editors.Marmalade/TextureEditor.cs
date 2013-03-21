@@ -20,9 +20,9 @@ namespace Toe.Editors.Marmalade
 
 		private readonly IEditorEnvironment editorEnvironment;
 
-		private readonly IResourceManager resourceManager;
-
 		private readonly ToeGraphicsContext graphicsContext;
+
+		private readonly IResourceManager resourceManager;
 
 		#endregion
 
@@ -33,8 +33,9 @@ namespace Toe.Editors.Marmalade
 			IResourceManager resourceManager,
 			IComponentContext context,
 			ToeGraphicsContext graphicsContext,
-			IEditorOptions<Base3DEditorOptions> options, Base3DEditorContent content)
-			: base(context, options,content)
+			IEditorOptions<Base3DEditorOptions> options,
+			Base3DEditorContent content)
+			: base(context, options, content)
 		{
 			this.editorEnvironment = editorEnvironment;
 			this.resourceManager = resourceManager;
@@ -85,7 +86,7 @@ namespace Toe.Editors.Marmalade
 			var texture = this.Texture;
 			if (texture != null)
 			{
-				graphicsContext.SetTexture(0, texture);
+				this.graphicsContext.SetTexture(0, texture);
 				GL.Enable(EnableCap.Blend);
 				GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
 				GL.Enable(EnableCap.AlphaTest);

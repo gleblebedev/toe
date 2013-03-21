@@ -149,7 +149,7 @@ namespace Toe.Editors.Interfaces.Views
 			ResourceReference newR;
 			if (item == null)
 			{
-				newR = new ResourceReference(this.Type, resourceManager, this.Reference.Container);
+				newR = new ResourceReference(this.Type, this.resourceManager, this.Reference.Container);
 			}
 			else
 			{

@@ -4,8 +4,14 @@ namespace Toe.Utils.Mesh.Svg
 {
 	public class SvgPath
 	{
-		private List<SvgPathSegment> segments = new List<SvgPathSegment>(8);
-			
+		#region Constants and Fields
+
+		private readonly List<SvgPathSegment> segments = new List<SvgPathSegment>(8);
+
+		#endregion
+
+		#region Public Properties
+
 		public List<SvgPathSegment> Segments
 		{
 			get
@@ -13,5 +19,7 @@ namespace Toe.Utils.Mesh.Svg
 				return this.segments;
 			}
 		}
+
+		#endregion
 	}
 }

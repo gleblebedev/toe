@@ -9,26 +9,57 @@ namespace Toe.Core
 {
 	public class ToeSystemConfiguration : INotifyPropertyChanged
 	{
-		private string systemName;
+		#region Constants and Fields
+
 		protected uint systemId;
+
+		private readonly ObservableCollection<ToeLayerConfiguration> layers =
+			new ObservableCollection<ToeLayerConfiguration>();
+
+		private string systemName;
+
+		#endregion
+
+		#region Constructors and Destructors
 
 		public ToeSystemConfiguration()
 		{
 			this.layers.CollectionChanged += this.OnCollectionChanged;
 		}
 
-		private void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-		{
-			this.RaisePropertyChanged("Layers");
-		}
+		#endregion
 
-		private readonly ObservableCollection<ToeLayerConfiguration> layers = new ObservableCollection<ToeLayerConfiguration>();
+		#region Public Events
+
+		public event PropertyChangedEventHandler PropertyChanged;
+
+		#endregion
+
+		#region Public Properties
 
 		public IList<ToeLayerConfiguration> Layers
 		{
 			get
 			{
 				return this.layers;
+			}
+		}
+
+		public uint SystemID
+		{
+			get
+			{
+				return this.systemId;
+			}
+			set
+			{
+				if (this.systemId != value)
+				{
+					this.systemName = null;
+					this.systemId = value;
+					this.RaisePropertyChanged("SystemName");
+					this.RaisePropertyChanged("SystemId");
+				}
 			}
 		}
 
@@ -49,31 +80,23 @@ namespace Toe.Core
 				}
 			}
 		}
-		public uint SystemID
-		{
-			get
-			{
-				return this.systemId;
-			}
-			set
-			{
-				if (this.systemId != value)
-				{
-					this.systemName = null;
-					this.systemId = value;
-					this.RaisePropertyChanged("SystemName");
-					this.RaisePropertyChanged("SystemId");
-				}
-			}
-		}
+
+		#endregion
+
+		#region Methods
+
 		protected virtual void RaisePropertyChanged(string name)
 		{
 			if (this.PropertyChanged != null)
+			{
 				this.PropertyChanged(this, new PropertyChangedEventArgs(name));
+			}
 		}
-		#region Implementation of INotifyPropertyChanged
 
-		public event PropertyChangedEventHandler PropertyChanged;
+		private void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+		{
+			this.RaisePropertyChanged("Layers");
+		}
 
 		#endregion
 	}

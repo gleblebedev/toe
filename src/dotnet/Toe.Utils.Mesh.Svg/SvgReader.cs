@@ -2,12 +2,18 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
+using System.Xml;
 using System.Xml.Linq;
 
 namespace Toe.Utils.Mesh.Svg
 {
 	public class SvgReader : ISceneReader
 	{
+		#region Constants and Fields
+
+		private readonly ISceneReaderErrorHandler errorHandler;
+
 		private readonly SvgReaderOptions options;
 
 		private string basePath;
@@ -16,12 +22,24 @@ namespace Toe.Utils.Mesh.Svg
 
 		private XElement svg;
 
+		#endregion
+
+		#region Constructors and Destructors
+
 		public SvgReader(SvgReaderOptions options)
+			: this(options, null)
 		{
-			this.options = options;
 		}
 
-		#region Implementation of ISceneReader
+		public SvgReader(SvgReaderOptions options, ISceneReaderErrorHandler errorHandler)
+		{
+			this.options = options;
+			this.errorHandler = errorHandler ?? new SceneReaderErrorHandler();
+		}
+
+		#endregion
+
+		#region Public Methods and Operators
 
 		/// <summary>
 		/// Load mesh from stream.
@@ -31,17 +49,50 @@ namespace Toe.Utils.Mesh.Svg
 		/// <returns>Complete parsed mesh.</returns>
 		public IScene Load(Stream stream, string basePath)
 		{
-						this.basePath = basePath ?? Directory.GetCurrentDirectory();
+			this.basePath = basePath ?? Directory.GetCurrentDirectory();
 			var scene = new Scene();
 
-			var doc = XDocument.Load(stream);
+			XDocument doc;
+			var p = stream.Position;
+			try
+			{
+				doc = XDocument.Load(stream);
+			}
+			catch (XmlException ex)
+			{
+				stream.Position = p;
+				using (var s = new GZipStream(stream, CompressionMode.Decompress, true))
+				{
+					doc = XDocument.Load(s);
+				}
+			}
+
 			var r = doc.Root;
 			this.schema = new SvgSchema(r.Name.Namespace.NamespaceName);
 			this.svg = doc.Element(this.schema.svgName);
 
-			ParsePaths(scene, svg.Descendants(this.schema.pathName));
+			this.ParsePaths(scene, this.svg.Descendants(this.schema.pathName));
 
 			return scene;
+		}
+
+		#endregion
+
+		#region Methods
+
+		private void ParsePath(XElement pathElement)
+		{
+			var path = new SvgPath();
+
+			var d = pathElement.Attribute(this.schema.dAttrName);
+			if (d == null)
+			{
+				return;
+			}
+
+			var value = d.Value;
+			this.ReadPath(value);
+			//m 568.6259,522.8354 -27.832,-72.9004 10.3027,0 23.0957,61.377 23.1445,-61.377 10.2539,0 -27.7832,72.9004 L 568.6259,522.8354 Z
 		}
 
 		private void ParsePaths(Scene scene, IEnumerable<XElement> paths)
@@ -52,24 +103,21 @@ namespace Toe.Utils.Mesh.Svg
 			}
 		}
 
-		private void ParsePath(XElement pathElement)
+		private SvgPath ReadPath(string value)
 		{
-			var path = new SvgPath();
-
-			var d = pathElement.Attribute(schema.dAttrName);
-			if (d == null)
-				return;
-
-			using (var stringReader = new StringReader(d.Value))
+			SvgPath path = new SvgPath();
+			using (var stringReader = new StringReader(value))
 			{
 				var p = new PathParser(stringReader);
 				SvgPathCommand previousCommand = SvgPathCommand.MoveTo;
 				bool absolute = true;
-				for (; ; )
+				for (;;)
 				{
 					var verb = p.Lexem;
 					if (verb == null)
+					{
 						break;
+					}
 
 					switch (verb)
 					{
@@ -171,51 +219,54 @@ namespace Toe.Utils.Mesh.Svg
 							break;
 						default:
 							if (!char.IsDigit(verb[0]) && verb[0] != '-')
-								throw new SvgReaderException(string.Format("Unknown command {0}", verb));
+							{
+								this.errorHandler.Warning(string.Format("Unknown command {0}", verb));
+								return path;
+							}
 							break;
 					}
 					switch (previousCommand)
 					{
 						case SvgPathCommand.MoveTo:
-							p.ConsumeVector(options);
+							p.ConsumeVector();
 							break;
 						case SvgPathCommand.LineTo:
-							p.ConsumeVector(options);
+							p.ConsumeVector();
 							break;
 						case SvgPathCommand.HorisontalLineTo:
-							p.ConsumeFloat(options);
+							p.ConsumeFloat();
 							break;
 						case SvgPathCommand.VerticalLineTo:
-							p.ConsumeFloat(options);
+							p.ConsumeFloat();
 							break;
 						case SvgPathCommand.CubicBezier:
-							p.ConsumeVector(options);
-							p.ConsumeVector(options);
-							p.ConsumeVector(options);
+							p.ConsumeVector();
+							p.ConsumeVector();
+							p.ConsumeVector();
 							break;
 						case SvgPathCommand.QuadraticBezier:
-							p.ConsumeVector(options);
-							p.ConsumeVector(options);
+							p.ConsumeVector();
+							p.ConsumeVector();
 							break;
 						case SvgPathCommand.ClosePath:
 							break;
 						case SvgPathCommand.SmoothCubicBezier:
-							p.ConsumeVector(options);
-							p.ConsumeVector(options);
+							p.ConsumeVector();
+							p.ConsumeVector();
 							break;
 						case SvgPathCommand.SmoothQuadraticBezier:
-							p.ConsumeVector(options);
+							p.ConsumeVector();
 							break;
 						case SvgPathCommand.EllipticalArc:
-							p.ConsumeVector(options);
+							p.ConsumeVector();
 							p.Skip(",");
-							p.ConsumeFloat(options);
+							p.ConsumeFloat();
 							p.Skip(",");
 							var large_arc_flag = p.ConsumeInt();
 							p.Skip(",");
 							var sweep_flag = p.ConsumeInt();
 							p.Skip(",");
-							p.ConsumeVector(options);
+							p.ConsumeVector();
 							break;
 						default:
 							throw new ArgumentOutOfRangeException();
@@ -223,7 +274,7 @@ namespace Toe.Utils.Mesh.Svg
 					Trace.WriteLine(verb);
 				}
 			}
-			//m 568.6259,522.8354 -27.832,-72.9004 10.3027,0 23.0957,61.377 23.1445,-61.377 10.2539,0 -27.7832,72.9004 L 568.6259,522.8354 Z
+			return path;
 		}
 
 		#endregion
@@ -231,20 +282,28 @@ namespace Toe.Utils.Mesh.Svg
 
 	public class SvgSchema
 	{
-		private readonly string namespaceName;
-
-		public readonly XName svgName;
+		#region Constants and Fields
 
 		public readonly XName pathName;
 
+		public readonly XName svgName;
+
 		public XName dAttrName;
+
+		private readonly string namespaceName;
+
+		#endregion
+
+		#region Constructors and Destructors
 
 		public SvgSchema(string namespaceName)
 		{
 			this.namespaceName = namespaceName;
-			svgName = XName.Get("svg", this.namespaceName);
-			pathName = XName.Get("path", this.namespaceName);
-			dAttrName = XName.Get("d", "");
+			this.svgName = XName.Get("svg", this.namespaceName);
+			this.pathName = XName.Get("path", this.namespaceName);
+			this.dAttrName = XName.Get("d", "");
 		}
+
+		#endregion
 	}
 }

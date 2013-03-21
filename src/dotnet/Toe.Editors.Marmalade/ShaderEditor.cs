@@ -12,7 +12,6 @@ using Toe.Editors.Interfaces.Bindings;
 using Toe.Editors.Interfaces.Panels;
 using Toe.Editors.Marmalade.Views;
 using Toe.Marmalade.IwGx;
-using Toe.Utils.Marmalade.IwGx;
 
 namespace Toe.Editors.Marmalade
 {
@@ -20,13 +19,21 @@ namespace Toe.Editors.Marmalade
 	{
 		#region Constants and Fields
 
+		private readonly IComponentContext context;
+
 		private readonly DataContextContainer dataContext = new DataContextContainer();
 
 		private readonly IEditorEnvironment editorEnvironment;
 
 		private readonly ICommandHistory history;
 
-		private readonly IComponentContext context;
+		private Base3DEditor base3DEditor;
+
+		private SplitContainer split;
+
+		private StackPanel stackPanel1;
+
+		private TableLayoutPanel tableLayoutPanel1;
 
 		#endregion
 
@@ -72,13 +79,7 @@ namespace Toe.Editors.Marmalade
 
 		#endregion
 
-		private Base3DEditor base3DEditor;
-
-		private SplitContainer split;
-
-		private StackPanel stackPanel1;
-
-		private TableLayoutPanel tableLayoutPanel1;
+		#region Methods
 
 		protected void OnRenderScene(object sender, EventArgs args)
 		{
@@ -92,8 +93,6 @@ namespace Toe.Editors.Marmalade
 			//}
 			//GL.PopAttrib();
 		}
-
-		#region Methods
 
 		private void InitializeComponent()
 		{

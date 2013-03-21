@@ -74,6 +74,7 @@
     <Compile Include="IParameterCollection.cs" />
     <Compile Include="IScene.cs" />
     <Compile Include="ISceneItem.cs" />
+    <Compile Include="ISceneReaderErrorHandler.cs" />
     <Compile Include="ISubMesh.cs" />
     <Compile Include="IVertexIndexSource.cs" />
     <Compile Include="IVertexStreamSource.cs" />
@@ -88,6 +89,8 @@
     <Compile Include="Scene.cs" />
     <Compile Include="SceneEffect.cs" />
     <Compile Include="SceneItem.cs" />
+    <Compile Include="SceneReaderErrorHandler.cs" />
+    <Compile Include="SceneReaderException.cs" />
     <Compile Include="SolidColorSource.cs" />
     <Compile Include="StreamsMesh.cs" />
     <Compile Include="StreamSubmesh.cs" />

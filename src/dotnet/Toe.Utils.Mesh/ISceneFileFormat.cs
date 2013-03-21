@@ -7,17 +7,21 @@ namespace Toe.Utils.Mesh
 	/// </summary>
 	public interface ISceneFileFormat
 	{
-		#region Public Methods and Operators
+		#region Public Properties
+
+		/// <summary>
+		/// Scene file format extensions.
+		/// </summary>
+		IEnumerable<string> Extensions { get; }
 
 		/// <summary>
 		/// Scene file format name.
 		/// </summary>
 		string Name { get; }
 
-		/// <summary>
-		/// Scene file format extensions.
-		/// </summary>
-		IEnumerable<string> Extensions { get; }
+		#endregion
+
+		#region Public Methods and Operators
 
 		bool CanLoad(string filename);
 

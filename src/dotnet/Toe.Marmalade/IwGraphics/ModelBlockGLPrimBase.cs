@@ -1,6 +1,4 @@
-using System.Collections.Generic;
-
-using OpenTK;
+using System;
 
 using Toe.Marmalade.IwGraphics.TangentSpace;
 using Toe.Resources;
@@ -11,9 +9,24 @@ namespace Toe.Marmalade.IwGraphics
 {
 	public class ModelBlockGLPrimBase : Surface
 	{
+		#region Constants and Fields
+
 		public static new readonly uint TypeHash = Hash.Get("CIwModelBlockGLPrimBase");
 
 		private readonly MeshStream<int> indices = new MeshStream<int>();
+
+		#endregion
+
+		#region Constructors and Destructors
+
+		public ModelBlockGLPrimBase(IResourceManager resourceManager)
+			: base(resourceManager)
+		{
+		}
+
+		#endregion
+
+		#region Public Properties
 
 		public override uint ClassHashCode
 		{
@@ -30,14 +43,16 @@ namespace Toe.Marmalade.IwGraphics
 				return this.indices;
 			}
 		}
+
+		#endregion
+
+		#region Methods
+
 		internal override void CalculateTangents(TangentMixer t, TangentMixer b)
 		{
-			throw new System.NotImplementedException();
+			throw new NotImplementedException();
 		}
 
-		public ModelBlockGLPrimBase(IResourceManager resourceManager)
-			: base(resourceManager)
-		{
-		}
+		#endregion
 	}
 }

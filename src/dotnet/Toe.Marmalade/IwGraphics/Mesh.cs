@@ -314,63 +314,6 @@ namespace Toe.Marmalade.IwGraphics
 			this.binormals.AddRange(bb);
 		}
 
-		public void VisitBinormals(Vector3VisitorCallback callback)
-		{
-			foreach (var surface in this.surfaces)
-			{
-				var gl = surface as ModelBlockGLPrimBase;
-				if (gl != null)
-				{
-					foreach (var i in gl.Indices)
-					{
-						var v = this.binormals[i];
-						callback(ref v);
-					}
-				}
-				else
-				{
-					var prim = surface as ModelBlockPrimBase;
-					if (prim != null)
-					{
-						foreach (var i in prim.Indices)
-						{
-							var v = this.binormals[i.Binormal];
-							callback(ref v);
-						}
-					}
-				}
-			}
-		}
-
-	
-		public void VisitTangents(Vector3VisitorCallback callback)
-		{
-			foreach (var surface in this.surfaces)
-			{
-				var gl = surface as ModelBlockGLPrimBase;
-				if (gl != null)
-				{
-					foreach (var i in gl.Indices)
-					{
-						var v = this.tangents[i];
-						callback(ref v);
-					}
-				}
-				else
-				{
-					var prim = surface as ModelBlockPrimBase;
-					if (prim != null)
-					{
-						foreach (var i in prim.Indices)
-						{
-							var v = this.tangents[i.Tangent];
-							callback(ref v);
-						}
-					}
-				}
-			}
-		}
-
 		/// <summary>
 		/// Get vertex color by index.
 		/// </summary>
@@ -408,6 +351,42 @@ namespace Toe.Marmalade.IwGraphics
 		}
 
 		/// <summary>
+		/// Get normal position by index.
+		/// </summary>
+		/// <param name="index">Vertex index.</param>
+		/// <param name="vector">Vertex normal.</param>
+		public void GetNormalAt(int index, out Vector3 vector)
+		{
+			foreach (var surface in this.surfaces)
+			{
+				var gl = surface as ModelBlockGLPrimBase;
+				if (gl != null)
+				{
+					if (index < gl.Indices.Count)
+					{
+						vector = this.normals[gl.Indices[index]];
+						return;
+					}
+					index -= gl.Indices.Count;
+				}
+				else
+				{
+					var prim = surface as ModelBlockPrimBase;
+					if (prim != null)
+					{
+						if (index < prim.Indices.Count)
+						{
+							vector = this.normals[prim.Indices[index].Normal];
+							return;
+						}
+						index -= prim.Indices.Count;
+					}
+				}
+			}
+			throw new IndexOutOfRangeException();
+		}
+
+		/// <summary>
 		/// Get vertex texture coords by index.
 		/// </summary>
 		/// <param name="index">Vertex index.</param>
@@ -425,7 +404,6 @@ namespace Toe.Marmalade.IwGraphics
 				case 1:
 					meshStream = this.uv1;
 					break;
-
 			}
 			foreach (var surface in this.surfaces)
 			{
@@ -435,7 +413,7 @@ namespace Toe.Marmalade.IwGraphics
 					if (index < gl.Indices.Count)
 					{
 						var a = meshStream[gl.Indices[index]];
-						uv = new Vector3(a.X,a.Y,0);
+						uv = new Vector3(a.X, a.Y, 0);
 						return;
 					}
 					index -= gl.Indices.Count;
@@ -494,43 +472,61 @@ namespace Toe.Marmalade.IwGraphics
 			throw new IndexOutOfRangeException();
 		}
 
-		/// <summary>
-		/// Get normal position by index.
-		/// </summary>
-		/// <param name="index">Vertex index.</param>
-		/// <param name="vector">Vertex normal.</param>
-		public void GetNormalAt(int index, out Vector3 vector)
+		public void VisitBinormals(Vector3VisitorCallback callback)
 		{
 			foreach (var surface in this.surfaces)
 			{
 				var gl = surface as ModelBlockGLPrimBase;
 				if (gl != null)
 				{
-					if (index < gl.Indices.Count)
+					foreach (var i in gl.Indices)
 					{
-						vector = this.normals[gl.Indices[index]];
-						return;
+						var v = this.binormals[i];
+						callback(ref v);
 					}
-					index -= gl.Indices.Count;
 				}
 				else
 				{
 					var prim = surface as ModelBlockPrimBase;
 					if (prim != null)
 					{
-						if (index < prim.Indices.Count)
+						foreach (var i in prim.Indices)
 						{
-							vector = this.normals[prim.Indices[index].Normal];
-							return;
+							var v = this.binormals[i.Binormal];
+							callback(ref v);
 						}
-						index -= prim.Indices.Count;
 					}
 				}
 			}
-			throw new IndexOutOfRangeException();
 		}
 
-		
+		public void VisitTangents(Vector3VisitorCallback callback)
+		{
+			foreach (var surface in this.surfaces)
+			{
+				var gl = surface as ModelBlockGLPrimBase;
+				if (gl != null)
+				{
+					foreach (var i in gl.Indices)
+					{
+						var v = this.tangents[i];
+						callback(ref v);
+					}
+				}
+				else
+				{
+					var prim = surface as ModelBlockPrimBase;
+					if (prim != null)
+					{
+						foreach (var i in prim.Indices)
+						{
+							var v = this.tangents[i.Tangent];
+							callback(ref v);
+						}
+					}
+				}
+			}
+		}
 
 		#endregion
 	}

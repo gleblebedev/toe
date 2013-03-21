@@ -180,9 +180,11 @@ namespace Toe.Editors.Marmalade
 				++row;
 			}
 			{
-				this.stackPanel.Controls.Add(new StringView { Text = "Specify texture for stage 0 (diffuse map)", Dock = DockStyle.Fill }, 0, row);
+				this.stackPanel.Controls.Add(
+					new StringView { Text = "Specify texture for stage 0 (diffuse map)", Dock = DockStyle.Fill }, 0, row);
 				var valueCtrl = new EditResourceReferenceView(
-					this.editorEnvironment, this.resourceManager, this.history, this.context, true) { Margin = new Padding(4), Dock = DockStyle.Fill };
+					this.editorEnvironment, this.resourceManager, this.history, this.context, true)
+					{ Margin = new Padding(4), Dock = DockStyle.Fill };
 				this.stackPanel.Controls.Add(valueCtrl, 1, row);
 				new PropertyBinding<Material, ResourceReference>(valueCtrl, this.dataContext, mtl => mtl.Texture0, null);
 				++row;
@@ -191,7 +193,8 @@ namespace Toe.Editors.Marmalade
 			{
 				this.stackPanel.Controls.Add(new StringView { Text = "Specify texture for stage 1", Dock = DockStyle.Fill }, 0, row);
 				var valueCtrl = new EditResourceReferenceView(
-					this.editorEnvironment, this.resourceManager, this.history, this.context, true) { Margin = new Padding(4), Dock = DockStyle.Fill };
+					this.editorEnvironment, this.resourceManager, this.history, this.context, true)
+					{ Margin = new Padding(4), Dock = DockStyle.Fill };
 				this.stackPanel.Controls.Add(valueCtrl, 1, row);
 				++row;
 				new PropertyBinding<Material, ResourceReference>(valueCtrl, this.dataContext, mtl => mtl.Texture1, null);
@@ -200,7 +203,8 @@ namespace Toe.Editors.Marmalade
 			{
 				this.stackPanel.Controls.Add(new StringView { Text = "Specify texture for stage 2", Dock = DockStyle.Fill }, 0, row);
 				var valueCtrl = new EditResourceReferenceView(
-					this.editorEnvironment, this.resourceManager, this.history, this.context, true) { Margin = new Padding(4), Dock = DockStyle.Fill };
+					this.editorEnvironment, this.resourceManager, this.history, this.context, true)
+					{ Margin = new Padding(4), Dock = DockStyle.Fill };
 				this.stackPanel.Controls.Add(valueCtrl, 1, row);
 				++row;
 				new PropertyBinding<Material, ResourceReference>(valueCtrl, this.dataContext, mtl => mtl.Texture2, null);
@@ -209,14 +213,16 @@ namespace Toe.Editors.Marmalade
 			{
 				this.stackPanel.Controls.Add(new StringView { Text = "Specify texture for stage 3", Dock = DockStyle.Fill }, 0, row);
 				var valueCtrl = new EditResourceReferenceView(
-					this.editorEnvironment, this.resourceManager, this.history, this.context, true) { Margin = new Padding(4), Dock = DockStyle.Fill };
+					this.editorEnvironment, this.resourceManager, this.history, this.context, true)
+					{ Margin = new Padding(4), Dock = DockStyle.Fill };
 				this.stackPanel.Controls.Add(valueCtrl, 1, row);
 				++row;
 				new PropertyBinding<Material, ResourceReference>(valueCtrl, this.dataContext, mtl => mtl.Texture3, null);
 			}
 
 			{
-				this.stackPanel.Controls.Add(new StringView { Text = "Specify vertex shader to use", Dock = DockStyle.Fill }, 0, row);
+				this.stackPanel.Controls.Add(
+					new StringView { Text = "Specify vertex shader to use", Dock = DockStyle.Fill }, 0, row);
 				var valueCtrl = new EditStringView { Margin = new Padding(4), Dock = DockStyle.Fill };
 				this.stackPanel.Controls.Add(valueCtrl, 1, row);
 				++row;
@@ -297,8 +303,10 @@ namespace Toe.Editors.Marmalade
 			}
 
 			{
-				this.stackPanel.Controls.Add(new StringView { Text = "Modulation mode (of texel by vertex colour)", Dock = DockStyle.Fill }, 0, row);
-				var valueCtrl = new EditEnumView { Margin = new Padding(4), Dock = DockStyle.Fill, WellKnownValues = MaterialEnumsValues.ModulateModeValues };
+				this.stackPanel.Controls.Add(
+					new StringView { Text = "Modulation mode (of texel by vertex colour)", Dock = DockStyle.Fill }, 0, row);
+				var valueCtrl = new EditEnumView
+					{ Margin = new Padding(4), Dock = DockStyle.Fill, WellKnownValues = MaterialEnumsValues.ModulateModeValues };
 				this.stackPanel.Controls.Add(valueCtrl, 1, row);
 				++row;
 				new PropertyBinding<Material, ModulateMode>(
@@ -310,7 +318,8 @@ namespace Toe.Editors.Marmalade
 
 			{
 				this.stackPanel.Controls.Add(new StringView { Text = "Backface culling mode", Dock = DockStyle.Fill }, 0, row);
-				var valueCtrl = new EditEnumView { Margin = new Padding(4), Dock = DockStyle.Fill, WellKnownValues = MaterialEnumsValues.CullModeValues };
+				var valueCtrl = new EditEnumView
+					{ Margin = new Padding(4), Dock = DockStyle.Fill, WellKnownValues = MaterialEnumsValues.CullModeValues };
 				this.stackPanel.Controls.Add(valueCtrl, 1, row);
 				++row;
 				new PropertyBinding<Material, CullMode>(
@@ -322,7 +331,8 @@ namespace Toe.Editors.Marmalade
 
 			{
 				this.stackPanel.Controls.Add(new StringView { Text = "Transparency (alpha) mode", Dock = DockStyle.Fill }, 0, row);
-				var valueCtrl = new EditEnumView { Margin = new Padding(4), Dock = DockStyle.Fill, WellKnownValues = MaterialEnumsValues.AlphaModeValues };
+				var valueCtrl = new EditEnumView
+					{ Margin = new Padding(4), Dock = DockStyle.Fill, WellKnownValues = MaterialEnumsValues.AlphaModeValues };
 				this.stackPanel.Controls.Add(valueCtrl, 1, row);
 				++row;
 				new PropertyBinding<Material, AlphaMode>(
@@ -333,8 +343,10 @@ namespace Toe.Editors.Marmalade
 			}
 
 			{
-				this.stackPanel.Controls.Add(new StringView { Text = "Blend mode between texture stages 0 and 1", Dock = DockStyle.Fill }, 0, row);
-				var valueCtrl = new EditEnumView { Margin = new Padding(4), Dock = DockStyle.Fill, WellKnownValues = MaterialEnumsValues.BlendModeValues };
+				this.stackPanel.Controls.Add(
+					new StringView { Text = "Blend mode between texture stages 0 and 1", Dock = DockStyle.Fill }, 0, row);
+				var valueCtrl = new EditEnumView
+					{ Margin = new Padding(4), Dock = DockStyle.Fill, WellKnownValues = MaterialEnumsValues.BlendModeValues };
 				this.stackPanel.Controls.Add(valueCtrl, 1, row);
 				++row;
 				new PropertyBinding<Material, BlendMode>(
@@ -345,8 +357,10 @@ namespace Toe.Editors.Marmalade
 			}
 
 			{
-				this.stackPanel.Controls.Add(new StringView { Text = "Preset multi-texturing effect", Dock = DockStyle.Fill }, 0, row);
-				var valueCtrl = new EditEnumView { Margin = new Padding(4), WellKnownValues = MaterialEnumsValues.EffectPresetValues, Dock = DockStyle.Fill };
+				this.stackPanel.Controls.Add(
+					new StringView { Text = "Preset multi-texturing effect", Dock = DockStyle.Fill }, 0, row);
+				var valueCtrl = new EditEnumView
+					{ Margin = new Padding(4), WellKnownValues = MaterialEnumsValues.EffectPresetValues, Dock = DockStyle.Fill };
 				this.stackPanel.Controls.Add(valueCtrl, 1, row);
 				++row;
 				new PropertyBinding<Material, EffectPreset>(
@@ -357,8 +371,10 @@ namespace Toe.Editors.Marmalade
 			}
 
 			{
-				this.stackPanel.Controls.Add(new StringView { Text = "Specify the alpha test function", Dock = DockStyle.Fill }, 0, row);
-				var valueCtrl = new EditEnumView { Margin = new Padding(4), WellKnownValues = MaterialEnumsValues.AlphaTestModeValues, Dock = DockStyle.Fill };
+				this.stackPanel.Controls.Add(
+					new StringView { Text = "Specify the alpha test function", Dock = DockStyle.Fill }, 0, row);
+				var valueCtrl = new EditEnumView
+					{ Margin = new Padding(4), WellKnownValues = MaterialEnumsValues.AlphaTestModeValues, Dock = DockStyle.Fill };
 				this.stackPanel.Controls.Add(valueCtrl, 1, row);
 				++row;
 				new PropertyBinding<Material, AlphaTestMode>(
@@ -369,7 +385,8 @@ namespace Toe.Editors.Marmalade
 			}
 
 			{
-				this.stackPanel.Controls.Add(new StringView { Text = "Specify the alpha test reference value", Dock = DockStyle.Fill }, 0, row);
+				this.stackPanel.Controls.Add(
+					new StringView { Text = "Specify the alpha test reference value", Dock = DockStyle.Fill }, 0, row);
 				var valueCtrl = new EditByteView { Margin = new Padding(4), Dock = DockStyle.Fill };
 				this.stackPanel.Controls.Add(valueCtrl, 1, row);
 				++row;
@@ -381,7 +398,8 @@ namespace Toe.Editors.Marmalade
 			}
 
 			{
-				this.stackPanel.Controls.Add(new StringView { Text = "Depth offset to apply when using SW rasterisation", Dock = DockStyle.Fill }, 0, row);
+				this.stackPanel.Controls.Add(
+					new StringView { Text = "Depth offset to apply when using SW rasterisation", Dock = DockStyle.Fill }, 0, row);
 				var valueCtrl = new EditIntView { Margin = new Padding(4), Dock = DockStyle.Fill };
 				this.stackPanel.Controls.Add(valueCtrl, 1, row);
 				++row;
@@ -393,7 +411,8 @@ namespace Toe.Editors.Marmalade
 			}
 
 			{
-				this.stackPanel.Controls.Add(new StringView { Text = "Depth offset to apply when using HW rasterisation", Dock = DockStyle.Fill }, 0, row);
+				this.stackPanel.Controls.Add(
+					new StringView { Text = "Depth offset to apply when using HW rasterisation", Dock = DockStyle.Fill }, 0, row);
 				var valueCtrl = new EditIntView { Margin = new Padding(4), Dock = DockStyle.Fill };
 				this.stackPanel.Controls.Add(valueCtrl, 1, row);
 				++row;
@@ -405,7 +424,8 @@ namespace Toe.Editors.Marmalade
 			}
 
 			{
-				this.stackPanel.Controls.Add(new StringView { Text = "Checked only if the material should not be rendered", Dock = DockStyle.Fill }, 0, row);
+				this.stackPanel.Controls.Add(
+					new StringView { Text = "Checked only if the material should not be rendered", Dock = DockStyle.Fill }, 0, row);
 				var valueCtrl = new EditBoolView { Margin = new Padding(4), Dock = DockStyle.Fill };
 				this.stackPanel.Controls.Add(valueCtrl, 1, row);
 				++row;
@@ -418,7 +438,10 @@ namespace Toe.Editors.Marmalade
 
 			{
 				this.stackPanel.Controls.Add(
-					new StringView { Text = "Checked only if the material's textures should use bilinear filtering", Dock = DockStyle.Fill }, 0, row);
+					new StringView
+						{ Text = "Checked only if the material's textures should use bilinear filtering", Dock = DockStyle.Fill },
+					0,
+					row);
 				var valueCtrl = new EditBoolView { Margin = new Padding(4), Dock = DockStyle.Fill };
 				this.stackPanel.Controls.Add(valueCtrl, 1, row);
 				++row;
@@ -431,7 +454,9 @@ namespace Toe.Editors.Marmalade
 
 			{
 				this.stackPanel.Controls.Add(
-					new StringView { Text = " Enable writing to depth buffer. Only affects HW rasterisation", Dock = DockStyle.Fill }, 0, row);
+					new StringView { Text = " Enable writing to depth buffer. Only affects HW rasterisation", Dock = DockStyle.Fill },
+					0,
+					row);
 				var valueCtrl = new EditBoolView { Margin = new Padding(4), Dock = DockStyle.Fill };
 				this.stackPanel.Controls.Add(valueCtrl, 1, row);
 				++row;
@@ -443,7 +468,8 @@ namespace Toe.Editors.Marmalade
 			}
 
 			{
-				this.stackPanel.Controls.Add(new StringView { Text = "Enable geometry merging for this material", Dock = DockStyle.Fill }, 0, row);
+				this.stackPanel.Controls.Add(
+					new StringView { Text = "Enable geometry merging for this material", Dock = DockStyle.Fill }, 0, row);
 				var valueCtrl = new EditBoolView { Margin = new Padding(4), Dock = DockStyle.Fill };
 				this.stackPanel.Controls.Add(valueCtrl, 1, row);
 				++row;
@@ -467,8 +493,15 @@ namespace Toe.Editors.Marmalade
 
 			{
 				this.stackPanel.Controls.Add(
-					new StringView { Text = "Specify a format to convert the image to, before uploading for SW rasterisation", Dock = DockStyle.Fill }, 0, row);
-				var valueCtrl = new EditEnumView { Margin = new Padding(4), WellKnownValues = MaterialEnumsValues.ImageFormatValues, Dock = DockStyle.Fill };
+					new StringView
+						{
+							Text = "Specify a format to convert the image to, before uploading for SW rasterisation",
+							Dock = DockStyle.Fill
+						},
+					0,
+					row);
+				var valueCtrl = new EditEnumView
+					{ Margin = new Padding(4), WellKnownValues = MaterialEnumsValues.ImageFormatValues, Dock = DockStyle.Fill };
 				this.stackPanel.Controls.Add(valueCtrl, 1, row);
 				++row;
 				new PropertyBinding<Material, ImageFormat>(
@@ -480,8 +513,15 @@ namespace Toe.Editors.Marmalade
 
 			{
 				this.stackPanel.Controls.Add(
-					new StringView { Text = "Specify a format to convert the image to, before uploading for HW rasterisation", Dock = DockStyle.Fill }, 0, row);
-				var valueCtrl = new EditEnumView { Margin = new Padding(4), WellKnownValues = MaterialEnumsValues.ImageFormatValues, Dock = DockStyle.Fill };
+					new StringView
+						{
+							Text = "Specify a format to convert the image to, before uploading for HW rasterisation",
+							Dock = DockStyle.Fill
+						},
+					0,
+					row);
+				var valueCtrl = new EditEnumView
+					{ Margin = new Padding(4), WellKnownValues = MaterialEnumsValues.ImageFormatValues, Dock = DockStyle.Fill };
 				this.stackPanel.Controls.Add(valueCtrl, 1, row);
 				++row;
 				new PropertyBinding<Material, ImageFormat>(
@@ -492,7 +532,8 @@ namespace Toe.Editors.Marmalade
 			}
 
 			{
-				this.stackPanel.Controls.Add(new StringView { Text = "Keep the contents of the texture after upload", Dock = DockStyle.Fill }, 0, row);
+				this.stackPanel.Controls.Add(
+					new StringView { Text = "Keep the contents of the texture after upload", Dock = DockStyle.Fill }, 0, row);
 				var valueCtrl = new EditBoolView { Margin = new Padding(4), Dock = DockStyle.Fill };
 				this.stackPanel.Controls.Add(valueCtrl, 1, row);
 				++row;
@@ -504,7 +545,8 @@ namespace Toe.Editors.Marmalade
 			}
 
 			{
-				this.stackPanel.Controls.Add(new StringView { Text = "If true the texture UV coordinates are clamped", Dock = DockStyle.Fill }, 0, row);
+				this.stackPanel.Controls.Add(
+					new StringView { Text = "If true the texture UV coordinates are clamped", Dock = DockStyle.Fill }, 0, row);
 				var valueCtrl = new EditBoolView { Margin = new Padding(4), Dock = DockStyle.Fill };
 				this.stackPanel.Controls.Add(valueCtrl, 1, row);
 				++row;
@@ -516,7 +558,8 @@ namespace Toe.Editors.Marmalade
 			}
 
 			{
-				this.stackPanel.Controls.Add(new StringView { Text = "Disable fogging for this material", Dock = DockStyle.Fill }, 0, row);
+				this.stackPanel.Controls.Add(
+					new StringView { Text = "Disable fogging for this material", Dock = DockStyle.Fill }, 0, row);
 				var valueCtrl = new EditBoolView { Margin = new Padding(4), Dock = DockStyle.Fill };
 				this.stackPanel.Controls.Add(valueCtrl, 1, row);
 				++row;
@@ -528,9 +571,11 @@ namespace Toe.Editors.Marmalade
 			}
 
 			{
-				this.stackPanel.Controls.Add(new StringView { Text = "Attach the specified shader to this material", Dock = DockStyle.Fill }, 0, row);
+				this.stackPanel.Controls.Add(
+					new StringView { Text = "Attach the specified shader to this material", Dock = DockStyle.Fill }, 0, row);
 				var valueCtrl = new EditResourceReferenceView(
-					this.editorEnvironment, this.resourceManager, this.history, this.context, true) { Margin = new Padding(4), Dock = DockStyle.Fill };
+					this.editorEnvironment, this.resourceManager, this.history, this.context, true)
+					{ Margin = new Padding(4), Dock = DockStyle.Fill };
 				this.stackPanel.Controls.Add(valueCtrl, 1, row);
 				++row;
 				new PropertyBinding<Material, ResourceReference>(valueCtrl, this.dataContext, mtl => mtl.ShaderTechnique, null);

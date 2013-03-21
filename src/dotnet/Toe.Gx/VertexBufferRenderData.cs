@@ -9,15 +9,28 @@ using Toe.Utils.Mesh;
 
 namespace Toe.Gx
 {
-	public class VertexBufferRenderData:IContextData
+	public class VertexBufferRenderData : IContextData
 	{
-		private Vector3[] v;
-		private Vector3[] n;
-		private Vector3[] t;
-		private Vector3[] b;
-		private byte[] c;
-		private Vector3[] uv0;
-		private Vector3[] uv1;
+		#region Constants and Fields
+
+		private readonly Vector3[] b;
+
+		private readonly byte[] c;
+
+		private readonly Vector3[] n;
+
+		private readonly Vector3[] t;
+
+		private readonly Vector3[] uv0;
+
+		private readonly Vector3[] uv1;
+
+		private readonly Vector3[] v;
+
+		#endregion
+
+		#region Constructors and Destructors
+
 		public VertexBufferRenderData(IVertexStreamSource mesh)
 		{
 			this.v = null;
@@ -43,22 +56,24 @@ namespace Toe.Gx
 			{
 				this.t = new Vector3[mesh.Count];
 				int i = 0;
-				mesh.VisitTangents((ref Vector3 vv) =>
-				{
-					this.t[i] = vv;
-					++i;
-				});
+				mesh.VisitTangents(
+					(ref Vector3 vv) =>
+						{
+							this.t[i] = vv;
+							++i;
+						});
 			}
 			this.b = null;
 			if (mesh.IsTangentStreamAvailable)
 			{
 				this.b = new Vector3[mesh.Count];
 				int i = 0;
-				mesh.VisitBinormals((ref Vector3 vv) =>
-				{
-					this.b[i] = vv;
-					++i;
-				});
+				mesh.VisitBinormals(
+					(ref Vector3 vv) =>
+						{
+							this.b[i] = vv;
+							++i;
+						});
 			}
 			this.uv0 = null;
 			if (mesh.IsUV0StreamAvailable)
@@ -66,7 +81,7 @@ namespace Toe.Gx
 				this.uv0 = new Vector3[mesh.Count];
 				for (int i = 0; i < mesh.Count; ++i)
 				{
-					mesh.GetUV3At(i,0, out this.uv0[i]);
+					mesh.GetUV3At(i, 0, out this.uv0[i]);
 				}
 			}
 			this.uv1 = null;
@@ -81,7 +96,7 @@ namespace Toe.Gx
 			this.c = null;
 			if (mesh.IsColorStreamAvailable)
 			{
-				this.c = new byte[mesh.Count*4];
+				this.c = new byte[mesh.Count * 4];
 				int i = 0;
 				for (int j = 0; j < mesh.Count; ++j)
 				{
@@ -98,9 +113,13 @@ namespace Toe.Gx
 				}
 			}
 		}
+
+		#endregion
+
+		#region Public Methods and Operators
+
 		public void Disable(ShaderTechniqueArgumentIndices p)
 		{
-			
 			if (p.inVert >= 0)
 			{
 				GL.DisableVertexAttribArray(p.inVert);
@@ -130,6 +149,15 @@ namespace Toe.Gx
 				GL.DisableVertexAttribArray(p.inUV1);
 			}
 		}
+
+		/// <summary>
+		/// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+		/// </summary>
+		/// <filterpriority>2</filterpriority>
+		public void Dispose()
+		{
+		}
+
 		public void Enable(ShaderTechniqueArgumentIndices p)
 		{
 			if (p.inVert >= 0 && this.v != null)
@@ -167,17 +195,6 @@ namespace Toe.Gx
 				GL.EnableVertexAttribArray(p.inUV1);
 				GL.VertexAttribPointer(p.inUV1, 3, VertexAttribPointerType.Float, true, 4 * 3, this.uv1);
 			}
-		}
-
-		#region Implementation of IDisposable
-
-		/// <summary>
-		/// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-		/// </summary>
-		/// <filterpriority>2</filterpriority>
-		public void Dispose()
-		{
-			
 		}
 
 		#endregion

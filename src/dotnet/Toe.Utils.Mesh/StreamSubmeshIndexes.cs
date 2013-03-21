@@ -1,3 +1,5 @@
+using System;
+
 namespace Toe.Utils.Mesh
 {
 	public struct StreamSubmeshIndexes
@@ -20,17 +22,21 @@ namespace Toe.Utils.Mesh
 
 		#endregion
 
+		#region Public Methods and Operators
+
 		public int GetUV(int channel)
 		{
 			switch (channel)
 			{
 				case 0:
-					return UV0;
+					return this.UV0;
 				case 1:
-					return UV1;
+					return this.UV1;
 				default:
-					throw new System.ArgumentOutOfRangeException();
+					throw new ArgumentOutOfRangeException();
 			}
 		}
+
+		#endregion
 	}
 }

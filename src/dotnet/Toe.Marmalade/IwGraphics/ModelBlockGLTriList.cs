@@ -5,7 +5,23 @@ namespace Toe.Marmalade.IwGraphics
 {
 	public class ModelBlockGLTriList : ModelBlockGLPrimBase
 	{
+		#region Constants and Fields
+
 		public static new readonly uint TypeHash = Hash.Get("CIwModelBlockGLTriList");
+
+		#endregion
+
+		#region Constructors and Destructors
+
+		public ModelBlockGLTriList(IResourceManager resourceManager)
+			: base(resourceManager)
+		{
+		}
+
+		#endregion
+
+		#region Public Properties
+
 		public override uint ClassHashCode
 		{
 			get
@@ -13,9 +29,7 @@ namespace Toe.Marmalade.IwGraphics
 				return TypeHash;
 			}
 		}
-		public ModelBlockGLTriList(IResourceManager resourceManager)
-			: base(resourceManager)
-		{
-		}
+
+		#endregion
 	}
 }

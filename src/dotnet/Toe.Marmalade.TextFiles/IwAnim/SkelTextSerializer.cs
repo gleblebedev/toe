@@ -1,19 +1,25 @@
 using Autofac;
 
 using Toe.Marmalade.IwAnim;
-using Toe.Utils.Marmalade;
-using Toe.Utils.Mesh;
 
 namespace Toe.Marmalade.TextFiles.IwAnim
 {
 	public class SkelTextSerializer : ITextSerializer
 	{
+		#region Constants and Fields
+
 		private readonly IComponentContext context;
+
+		#endregion
+
+		#region Constructors and Destructors
 
 		public SkelTextSerializer(IComponentContext context)
 		{
 			this.context = context;
 		}
+
+		#endregion
 
 		#region Public Properties
 
@@ -31,7 +37,7 @@ namespace Toe.Marmalade.TextFiles.IwAnim
 
 		public Managed Parse(TextParser parser, string defaultName)
 		{
-			var skel = context.Resolve<AnimSkel>();
+			var skel = this.context.Resolve<AnimSkel>();
 			skel.Name = defaultName;
 			parser.Consume("CIwAnimSkel");
 			parser.Consume("{");

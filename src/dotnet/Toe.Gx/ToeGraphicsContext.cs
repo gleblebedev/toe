@@ -15,7 +15,7 @@ using Toe.Utils;
 using Toe.Utils.Marmalade.IwGx;
 using Toe.Utils.Mesh;
 
-using CullMode = Toe.Utils.Mesh.CullMode;
+using CullMode = Toe.Utils.Marmalade.IwGx.CullMode;
 using Image = Toe.Marmalade.IwGx.Image;
 
 namespace Toe.Gx
@@ -145,7 +145,6 @@ namespace Toe.Gx
 				{
 					this.vsdProvider = value;
 					this.UpdateFrustum();
-					
 				}
 			}
 		}
@@ -213,9 +212,9 @@ namespace Toe.Gx
 			}
 
 			IEnumerable<ISubMesh> submeshes;
-			if (vsdProvider != null && vsdProvider.Level == mesh)
+			if (this.vsdProvider != null && this.vsdProvider.Level == mesh)
 			{
-				submeshes = vsdProvider.GetVisibleSubMeshes();
+				submeshes = this.vsdProvider.GetVisibleSubMeshes();
 			}
 			else
 			{
@@ -295,34 +294,6 @@ namespace Toe.Gx
 				GL.Disable(EnableCap.Texture2D);
 			}
 			this.ApplyMaterialCommonFixedPipeline();
-		}
-
-		private void ApplyMaterialCommonFixedPipeline()
-		{
-			if (this.material != null)
-			{
-				switch (this.material.CullMode)
-				{
-					case Utils.Marmalade.IwGx.CullMode.FRONT:
-						GL.Enable(EnableCap.CullFace);
-						GL.CullFace(CullFaceMode.Front);
-						break;
-					case Utils.Marmalade.IwGx.CullMode.BACK:
-						GL.Enable(EnableCap.CullFace);
-						GL.CullFace(CullFaceMode.Back);
-						break;
-					case Utils.Marmalade.IwGx.CullMode.NONE:
-						GL.Disable(EnableCap.CullFace);
-						break;
-					default:
-						throw new ArgumentOutOfRangeException();
-				}
-			}
-			else
-			{
-				GL.Disable(EnableCap.CullFace);
-				GL.ShadeModel(ShadingModel.Smooth);
-			}
 		}
 
 		public void SetModel(ref Matrix4 model)
@@ -485,6 +456,34 @@ namespace Toe.Gx
 			{
 				GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
 				GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
+			}
+		}
+
+		private void ApplyMaterialCommonFixedPipeline()
+		{
+			if (this.material != null)
+			{
+				switch (this.material.CullMode)
+				{
+					case CullMode.FRONT:
+						GL.Enable(EnableCap.CullFace);
+						GL.CullFace(CullFaceMode.Front);
+						break;
+					case CullMode.BACK:
+						GL.Enable(EnableCap.CullFace);
+						GL.CullFace(CullFaceMode.Back);
+						break;
+					case CullMode.NONE:
+						GL.Disable(EnableCap.CullFace);
+						break;
+					default:
+						throw new ArgumentOutOfRangeException();
+				}
+			}
+			else
+			{
+				GL.Disable(EnableCap.CullFace);
+				GL.ShadeModel(ShadingModel.Smooth);
 			}
 		}
 
@@ -767,14 +766,14 @@ namespace Toe.Gx
 			}
 			switch (src.Effect.CullMode)
 			{
-				case CullMode.Front:
-					dst.CullMode = Utils.Marmalade.IwGx.CullMode.FRONT;
+				case Utils.Mesh.CullMode.Front:
+					dst.CullMode = CullMode.FRONT;
 					break;
-				case CullMode.Back:
-					dst.CullMode = Utils.Marmalade.IwGx.CullMode.BACK;
+				case Utils.Mesh.CullMode.Back:
+					dst.CullMode = CullMode.BACK;
 					break;
-				case CullMode.None:
-					dst.CullMode = Utils.Marmalade.IwGx.CullMode.NONE;
+				case Utils.Mesh.CullMode.None:
+					dst.CullMode = CullMode.NONE;
 					break;
 				default:
 					throw new ArgumentOutOfRangeException();
@@ -792,7 +791,8 @@ namespace Toe.Gx
 						var emb = ((ImageColorSource)diffuse).Image as EmbeddedImage;
 						if (emb != null)
 						{
-							dst.Texture0.Resource = new Texture { Image = new Image((ushort)emb.Width, (ushort)emb.Height, emb.Pitch, ImageFormat.ABGR_8888, emb.GetRawData()) };
+							dst.Texture0.Resource = new Texture
+								{ Image = new Image((ushort)emb.Width, (ushort)emb.Height, emb.Pitch, ImageFormat.ABGR_8888, emb.GetRawData()) };
 						}
 						else
 						{
@@ -800,7 +800,9 @@ namespace Toe.Gx
 							if (!string.IsNullOrEmpty(fileReference))
 							{
 								if (File.Exists(fileReference))
+								{
 									dst.Texture0.FileReference = fileReference;
+								}
 							}
 						}
 						break;

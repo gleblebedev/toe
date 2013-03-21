@@ -4,9 +4,13 @@ namespace Toe.Core
 {
 	public class ToeException : Exception
 	{
-		public ToeException(string message):base(message)
+		#region Constructors and Destructors
+
+		public ToeException(string message)
+			: base(message)
 		{
-			
 		}
+
+		#endregion
 	}
 }

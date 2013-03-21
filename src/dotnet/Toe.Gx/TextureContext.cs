@@ -8,41 +8,33 @@ using Toe.Marmalade.IwGx;
 
 namespace Toe.Gx
 {
-	public class TextureContext: IContextData, IDisposable
+	public class TextureContext : IContextData, IDisposable
 	{
-		
-		~TextureContext()
-		{
-			this.Dispose(false);
-		}
+		#region Constants and Fields
+
 		private readonly Texture texture;
 
 		private IGraphicsContext context;
 
 		private uint textureId;
 
+		#endregion
+
+		#region Constructors and Destructors
+
 		public TextureContext(Texture texture)
 		{
 			this.texture = texture;
 		}
 
-		#region Implementation of IDisposable
-
-		/// <summary>
-		/// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-		/// </summary>
-		/// <filterpriority>2</filterpriority>
-		public void Dispose()
+		~TextureContext()
 		{
-			this.Dispose(true);
-		}
-
-		private void Dispose(bool disposing)
-		{
-			
+			this.Dispose(false);
 		}
 
 		#endregion
+
+		#region Public Methods and Operators
 
 		public void ApplyToChannel(int stage)
 		{
@@ -63,49 +55,33 @@ namespace Toe.Gx
 			OpenTKHelper.Assert();
 		}
 
-		private void GenTexture()
+		/// <summary>
+		/// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+		/// </summary>
+		/// <filterpriority>2</filterpriority>
+		public void Dispose()
 		{
-			this.context = GraphicsContext.CurrentContext;
-
-			GL.GenTextures(1, out this.textureId);
-			OpenTKHelper.Assert();
-			GL.PushAttrib(AttribMask.TextureBit);
-			try
-			{
-				GL.BindTexture(TextureTarget.Texture2D, this.textureId);
-				OpenTKHelper.Assert();
-				UploadImage(this.texture.Image);
-
-				GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
-				GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
-				OpenTKHelper.Assert();
-				GL.Finish();
-				OpenTKHelper.Assert();
-			}
-			finally
-			{
-				GL.PopAttrib();
-			}
+			this.Dispose(true);
 		}
 
 		public void UploadImage(Image image)
 		{
-			OpenTK.Graphics.OpenGL.PixelFormat pixelFormat;
+			PixelFormat pixelFormat;
 			PixelInternalFormat pixelInternalFormat = PixelInternalFormat.Rgba;
 			switch (image.Format)
 			{
 				case ImageFormat.RGB_888:
-					pixelFormat = OpenTK.Graphics.OpenGL.PixelFormat.Bgr;
+					pixelFormat = PixelFormat.Bgr;
 					break;
 				case ImageFormat.BGR_888:
-					pixelFormat = OpenTK.Graphics.OpenGL.PixelFormat.Rgb;
+					pixelFormat = PixelFormat.Rgb;
 					break;
 				case ImageFormat.ABGR_8888:
-					pixelFormat = OpenTK.Graphics.OpenGL.PixelFormat.Rgba;
+					pixelFormat = PixelFormat.Rgba;
 					break;
 				default:
 					{
-						UploadImage(image.ConvertToAbgr8888());
+						this.UploadImage(image.ConvertToAbgr8888());
 						return;
 					}
 			}
@@ -121,5 +97,40 @@ namespace Toe.Gx
 				image.data);
 			OpenTKHelper.Assert();
 		}
+
+		#endregion
+
+		#region Methods
+
+		private void Dispose(bool disposing)
+		{
+		}
+
+		private void GenTexture()
+		{
+			this.context = GraphicsContext.CurrentContext;
+
+			GL.GenTextures(1, out this.textureId);
+			OpenTKHelper.Assert();
+			GL.PushAttrib(AttribMask.TextureBit);
+			try
+			{
+				GL.BindTexture(TextureTarget.Texture2D, this.textureId);
+				OpenTKHelper.Assert();
+				this.UploadImage(this.texture.Image);
+
+				GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
+				GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+				OpenTKHelper.Assert();
+				GL.Finish();
+				OpenTKHelper.Assert();
+			}
+			finally
+			{
+				GL.PopAttrib();
+			}
+		}
+
+		#endregion
 	}
 }

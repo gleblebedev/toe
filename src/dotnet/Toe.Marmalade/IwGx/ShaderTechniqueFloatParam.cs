@@ -1,5 +1,3 @@
-using OpenTK.Graphics.OpenGL;
-
 using Toe.Utils.Marmalade.IwGx;
 
 namespace Toe.Marmalade.IwGx
@@ -22,6 +20,8 @@ namespace Toe.Marmalade.IwGx
 
 		#endregion
 
+		#region Public Properties
+
 		public float[] Values
 		{
 			get
@@ -29,5 +29,7 @@ namespace Toe.Marmalade.IwGx
 				return this.values;
 			}
 		}
+
+		#endregion
 	}
 }

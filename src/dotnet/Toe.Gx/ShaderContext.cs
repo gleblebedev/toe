@@ -7,19 +7,27 @@ namespace Toe.Gx
 {
 	public class ShaderContext : IContextData
 	{
+		#region Constants and Fields
+
+		private readonly int fs;
+
+		private readonly ShaderTechniqueArgumentIndices indices;
+
 		private readonly ShaderTechnique shaderTechnique;
 
-		private int vs;
+		private readonly int vs;
 
-		private int fs;
+		#endregion
+
+		#region Constructors and Destructors
 
 		public ShaderContext(ShaderTechnique shaderTechnique)
 		{
 			this.shaderTechnique = shaderTechnique;
-			vs = DefaultShaders.GenShader(ShaderType.VertexShader, shaderTechnique.VertexShaderSource);
-			fs = DefaultShaders.GenShader(ShaderType.FragmentShader, shaderTechnique.FragmentShaderSource);
-			indices = new ShaderTechniqueArgumentIndices();
-			DefaultShaders.GenProgram(ref indices, vs, fs);
+			this.vs = DefaultShaders.GenShader(ShaderType.VertexShader, shaderTechnique.VertexShaderSource);
+			this.fs = DefaultShaders.GenShader(ShaderType.FragmentShader, shaderTechnique.FragmentShaderSource);
+			this.indices = new ShaderTechniqueArgumentIndices();
+			DefaultShaders.GenProgram(ref this.indices, this.vs, this.fs);
 		}
 
 		~ShaderContext()
@@ -27,7 +35,9 @@ namespace Toe.Gx
 			this.Dispose(false);
 		}
 
-		private ShaderTechniqueArgumentIndices indices;
+		#endregion
+
+		#region Public Properties
 
 		public ShaderTechniqueArgumentIndices Indices
 		{
@@ -37,12 +47,9 @@ namespace Toe.Gx
 			}
 		}
 
-		private void Dispose(bool managed)
-		{
-			
-		}
+		#endregion
 
-		#region Implementation of IDisposable
+		#region Public Methods and Operators
 
 		/// <summary>
 		/// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
@@ -51,6 +58,14 @@ namespace Toe.Gx
 		public void Dispose()
 		{
 			this.Dispose(true);
+		}
+
+		#endregion
+
+		#region Methods
+
+		private void Dispose(bool managed)
+		{
 		}
 
 		#endregion

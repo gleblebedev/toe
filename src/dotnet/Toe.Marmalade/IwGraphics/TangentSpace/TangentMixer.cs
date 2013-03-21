@@ -6,17 +6,15 @@ namespace Toe.Marmalade.IwGraphics.TangentSpace
 {
 	public class TangentMixer
 	{
-		private Dictionary<TangentKey, TangentMix> mix = new Dictionary<TangentKey, TangentMix>();
+		#region Constants and Fields
 
-		private int count = 0;
+		private readonly Dictionary<TangentKey, TangentMix> mix = new Dictionary<TangentKey, TangentMix>();
 
-		public Dictionary<TangentKey, TangentMix> Mix
-		{
-			get
-			{
-				return this.mix;
-			}
-		}
+		private int count;
+
+		#endregion
+
+		#region Public Properties
 
 		public int Count
 		{
@@ -26,17 +24,29 @@ namespace Toe.Marmalade.IwGraphics.TangentSpace
 			}
 		}
 
+		public Dictionary<TangentKey, TangentMix> Mix
+		{
+			get
+			{
+				return this.mix;
+			}
+		}
+
+		#endregion
+
+		#region Public Methods and Operators
+
 		public int Add(TangentKey key0, ref Vector3 normal, Vector3 tangent)
 		{
 			TangentMix tmix;
-			if (!mix.TryGetValue(key0, out tmix))
+			if (!this.mix.TryGetValue(key0, out tmix))
 			{
 				tmix = new TangentMix();
-				mix.Add(key0, tmix);
+				this.mix.Add(key0, tmix);
 			}
 
-			var i = tmix.IndexOf( ref normal, ref tangent);
-			if (i<0)
+			var i = tmix.IndexOf(ref normal, ref tangent);
+			if (i < 0)
 			{
 				i = this.Count;
 				this.count = this.Count + 1;
@@ -44,5 +54,7 @@ namespace Toe.Marmalade.IwGraphics.TangentSpace
 			}
 			return i;
 		}
+
+		#endregion
 	}
 }

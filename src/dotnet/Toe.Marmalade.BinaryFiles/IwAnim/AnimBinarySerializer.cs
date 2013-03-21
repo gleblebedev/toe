@@ -3,7 +3,6 @@
 using Autofac;
 
 using Toe.Marmalade.IwAnim;
-using Toe.Resources;
 using Toe.Utils;
 
 namespace Toe.Marmalade.BinaryFiles.IwAnim
@@ -44,7 +43,7 @@ namespace Toe.Marmalade.BinaryFiles.IwAnim
 				var frameId = parser.ConsumeUInt32();
 				if (frameId == Hash.Get("CIwAnimKeyFrame"))
 				{
-					var frame = context.Resolve<AnimKeyFrame>();
+					var frame = this.context.Resolve<AnimKeyFrame>();
 					parser.Expect((uint)0x0);
 					frame.Time = parser.ConsumeFloat();
 					var type = parser.ConsumeByte();

@@ -4,45 +4,26 @@ using Toe.Utils;
 
 namespace Toe.Core
 {
-	public class ToeLayerConfiguration: INotifyPropertyChanged
+	public class ToeLayerConfiguration : INotifyPropertyChanged
 	{
-		private string layerName;
+		#region Constants and Fields
+
 		protected uint LayerId;
+
+		private string layerName;
 
 		private ToeComponentLayerPopularity popularity = ToeComponentLayerPopularity.Average;
 
-		public ToeComponentLayerPopularity Popularity
-		{
-			get
-			{
-				return this.popularity;
-			}
-			set
-			{
-				if (this.popularity != value)
-				{
-					this.popularity = value;
-					this.RaisePropertyChanged("Popularity");
-				}
-			}
-		}
-		public string LayerName
-		{
-			get
-			{
-				return this.layerName;
-			}
-			set
-			{
-				if (this.layerName != value)
-				{
-					this.layerName = value;
-					this.LayerId = Hash.Get(value);
-					this.RaisePropertyChanged("LayerName");
-					this.RaisePropertyChanged("LayerId");
-				}
-			}
-		}
+		#endregion
+
+		#region Public Events
+
+		public event PropertyChangedEventHandler PropertyChanged;
+
+		#endregion
+
+		#region Public Properties
+
 		public uint LayerID
 		{
 			get
@@ -60,14 +41,52 @@ namespace Toe.Core
 				}
 			}
 		}
+
+		public string LayerName
+		{
+			get
+			{
+				return this.layerName;
+			}
+			set
+			{
+				if (this.layerName != value)
+				{
+					this.layerName = value;
+					this.LayerId = Hash.Get(value);
+					this.RaisePropertyChanged("LayerName");
+					this.RaisePropertyChanged("LayerId");
+				}
+			}
+		}
+
+		public ToeComponentLayerPopularity Popularity
+		{
+			get
+			{
+				return this.popularity;
+			}
+			set
+			{
+				if (this.popularity != value)
+				{
+					this.popularity = value;
+					this.RaisePropertyChanged("Popularity");
+				}
+			}
+		}
+
+		#endregion
+
+		#region Methods
+
 		protected virtual void RaisePropertyChanged(string name)
 		{
 			if (this.PropertyChanged != null)
+			{
 				this.PropertyChanged(this, new PropertyChangedEventArgs(name));
+			}
 		}
-		#region Implementation of INotifyPropertyChanged
-
-		public event PropertyChangedEventHandler PropertyChanged;
 
 		#endregion
 	}

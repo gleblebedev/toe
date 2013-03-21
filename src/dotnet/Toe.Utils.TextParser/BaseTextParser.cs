@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Globalization;
-using System.IO;
 
 namespace Toe.Utils.TextParser
 {
@@ -62,33 +61,19 @@ namespace Toe.Utils.TextParser
 			this.isLexemReady = false;
 			return l;
 		}
-		public void Error(string message)
-		{
-			throw new TextParserException(message);
-		}
-
-		public void UnknownLexemError()
-		{
-			var @where = this.GetSourceName();
-			throw new TextParserException(
-				string.Format(CultureInfo.InvariantCulture, "Unknown element \"{0}\" in {1}", this.Lexem, where));
-		}
-
-		protected virtual string GetSourceName()
-		{
-			return "input stream";
-		}
 
 		public string Consume(string text)
 		{
 			return this.Consume(text, StringComparison.InvariantCulture);
 		}
+
 		public string Consume(string text, StringComparison stringComparison)
 		{
 			string lexem = this.Lexem;
 			if (0 != string.Compare(lexem, text, stringComparison))
 			{
-				throw new TextParserException(string.Format(CultureInfo.InvariantCulture, "Expected \"{0}\", but there was \"{1}\"", text, lexem));
+				throw new TextParserException(
+					string.Format(CultureInfo.InvariantCulture, "Expected \"{0}\", but there was \"{1}\"", text, lexem));
 			}
 			this.Consume();
 			return lexem;
@@ -186,6 +171,11 @@ namespace Toe.Utils.TextParser
 			return f;
 		}
 
+		public void Error(string message)
+		{
+			throw new TextParserException(message);
+		}
+
 		public void Skip(string s)
 		{
 			if (this.Lexem == s)
@@ -194,9 +184,21 @@ namespace Toe.Utils.TextParser
 			}
 		}
 
+		public void UnknownLexemError()
+		{
+			var @where = this.GetSourceName();
+			throw new TextParserException(
+				string.Format(CultureInfo.InvariantCulture, "Unknown element \"{0}\" in {1}", this.Lexem, where));
+		}
+
 		#endregion
 
 		#region Methods
+
+		protected virtual string GetSourceName()
+		{
+			return "input stream";
+		}
 
 		/// <summary>
 		/// Main parser method.

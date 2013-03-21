@@ -38,9 +38,9 @@ namespace Toe
 			this.Controls.Add(this.gl);
 		}
 
-		public MainWindow(ToeSceneConfiguration config):this()
+		public MainWindow(ToeSceneConfiguration config)
+			: this()
 		{
-			
 		}
 
 		#endregion

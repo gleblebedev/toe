@@ -262,48 +262,6 @@ namespace Toe.Utils.Mesh
 			return this.UV[setId];
 		}
 
-		public void InvalidateBounds()
-		{
-			this.areBoundsValid = false;
-		}
-
-		public void VisitBinormals(Vector3VisitorCallback callback)
-		{
-			foreach (StreamSubmesh submesh in this.submeshes)
-			{
-				foreach (var index in submesh.Indices)
-				{
-					var v = this.binormals[index.Binormal];
-					callback(ref v);
-				}
-			}
-		}
-
-
-		public void VisitNormals(Vector3VisitorCallback callback)
-		{
-			foreach (StreamSubmesh submesh in this.submeshes)
-			{
-				foreach (var index in submesh.Indices)
-				{
-					var v = this.normals[index.Vertex];
-					callback(ref v);
-				}
-			}
-		}
-
-		public void VisitTangents(Vector3VisitorCallback callback)
-		{
-			foreach (StreamSubmesh submesh in this.submeshes)
-			{
-				foreach (var index in submesh.Indices)
-				{
-					var v = this.tangents[index.Tangent];
-					callback(ref v);
-				}
-			}
-		}
-
 		/// <summary>
 		/// Get vertex color by index.
 		/// </summary>
@@ -316,6 +274,25 @@ namespace Toe.Utils.Mesh
 				if (index < submesh.Indices.Count)
 				{
 					color = this.colors[submesh.Indices[index].Color];
+					return;
+				}
+				index -= submesh.Indices.Count;
+			}
+			throw new IndexOutOfRangeException();
+		}
+
+		/// <summary>
+		/// Get normal position by index.
+		/// </summary>
+		/// <param name="index">Vertex index.</param>
+		/// <param name="vector">Vertex normal.</param>
+		public void GetNormalAt(int index, out Vector3 vector)
+		{
+			foreach (StreamSubmesh submesh in this.submeshes)
+			{
+				if (index < submesh.Indices.Count)
+				{
+					vector = this.normals[submesh.Indices[index].Normal];
 					return;
 				}
 				index -= submesh.Indices.Count;
@@ -362,23 +339,45 @@ namespace Toe.Utils.Mesh
 			throw new IndexOutOfRangeException();
 		}
 
-		/// <summary>
-		/// Get normal position by index.
-		/// </summary>
-		/// <param name="index">Vertex index.</param>
-		/// <param name="vector">Vertex normal.</param>
-		public void GetNormalAt(int index, out Vector3 vector)
+		public void InvalidateBounds()
+		{
+			this.areBoundsValid = false;
+		}
+
+		public void VisitBinormals(Vector3VisitorCallback callback)
 		{
 			foreach (StreamSubmesh submesh in this.submeshes)
 			{
-				if (index < submesh.Indices.Count)
+				foreach (var index in submesh.Indices)
 				{
-					vector = this.normals[submesh.Indices[index].Normal];
-					return;
+					var v = this.binormals[index.Binormal];
+					callback(ref v);
 				}
-				index -= submesh.Indices.Count;
 			}
-			throw new IndexOutOfRangeException();
+		}
+
+		public void VisitNormals(Vector3VisitorCallback callback)
+		{
+			foreach (StreamSubmesh submesh in this.submeshes)
+			{
+				foreach (var index in submesh.Indices)
+				{
+					var v = this.normals[index.Vertex];
+					callback(ref v);
+				}
+			}
+		}
+
+		public void VisitTangents(Vector3VisitorCallback callback)
+		{
+			foreach (StreamSubmesh submesh in this.submeshes)
+			{
+				foreach (var index in submesh.Indices)
+				{
+					var v = this.tangents[index.Tangent];
+					callback(ref v);
+				}
+			}
 		}
 
 		#endregion

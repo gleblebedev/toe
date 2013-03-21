@@ -1,8 +1,5 @@
-using System;
-
 using OpenTK;
 
-using Toe.Resources;
 using Toe.Utils;
 
 namespace Toe.Marmalade.IwAnim
@@ -15,9 +12,13 @@ namespace Toe.Marmalade.IwAnim
 
 		private readonly ManagedList<AnimBone> bones;
 
-		public AnimSkel( ManagedList<AnimBone> b)
+		#endregion
+
+		#region Constructors and Destructors
+
+		public AnimSkel(ManagedList<AnimBone> b)
 		{
-			bones = b;
+			this.bones = b;
 		}
 
 		#endregion
@@ -54,8 +55,6 @@ namespace Toe.Marmalade.IwAnim
 			return this.bones.EnsureItem(boneName);
 		}
 
-		#endregion
-
 		public void UpdateAbsoluteValues()
 		{
 			for (int index = 0; index < this.bones.Count; index++)
@@ -63,6 +62,10 @@ namespace Toe.Marmalade.IwAnim
 				this.UpdateBoneAbsoluteValues(index);
 			}
 		}
+
+		#endregion
+
+		#region Methods
 
 		private void UpdateBoneAbsoluteValues(int index)
 		{
@@ -90,5 +93,7 @@ namespace Toe.Marmalade.IwAnim
 				meshBone.AbsoluteRot = rot;
 			}
 		}
+
+		#endregion
 	}
 }

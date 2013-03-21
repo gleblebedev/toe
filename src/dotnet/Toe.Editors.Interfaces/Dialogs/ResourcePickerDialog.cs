@@ -87,7 +87,6 @@ namespace Toe.Editors.Interfaces.Dialogs
 						{
 							if (i.Type == this.type)
 							{
-
 								var r = this.resourceManager.ConsumeResource(i.Type, i.NameHash);
 								this.list.Items.Add(r);
 								this.list.SelectedItem = r;

@@ -4,6 +4,5 @@ namespace Toe.Marmalade
 {
 	public interface IContextData : IDisposable
 	{
-
 	}
 }

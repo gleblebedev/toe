@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
-using System.Text;
 using System.Windows.Forms;
 
 using Autofac;
@@ -15,14 +15,10 @@ using OpenTK.Graphics.OpenGL;
 
 using Toe.Editors.Interfaces;
 using Toe.Editors.Interfaces.Panels;
-using Toe.Editors.Properties;
 using Toe.Gx;
-using Toe.Marmalade.IwGx;
-using Toe.Resources;
 using Toe.Utils.Mesh;
-using Toe.Utils.Mesh.Ase;
 
-using Resources=Toe.Editors.Properties.Resources;
+using PixelFormat = System.Drawing.Imaging.PixelFormat;
 
 namespace Toe.Editors
 {
@@ -32,9 +28,13 @@ namespace Toe.Editors
 
 		protected readonly IEditorOptions<Base3DEditorOptions> options;
 
+		private readonly EditorCamera camera;
+
 		private readonly Base3DEditorContent content;
 
-		private readonly EditorCamera camera;
+		private readonly ToeGraphicsContext graphicsContext;
+
+		private ToolStripButton btnScreenShot;
 
 		private ICameraController cameraController;
 
@@ -48,9 +48,25 @@ namespace Toe.Editors
 
 		private GLControl glControl;
 
+		private ToolStripMenuItem hideNormalsMenuItem;
+
+		private ToolStripMenuItem hideWireframeMenuItem;
+
+		private Timer keysAnimationTimer;
+
+		private LightArgs light = LightArgs.Default;
+
 		private ToolStripButton lightingButton;
 
 		private bool loaded;
+
+		private ToolStripDropDownButton renderNormalsButton;
+
+		private ToolStripMenuItem renderNormalsMenuItem;
+
+		private ToolStripDropDownButton renderWireButton;
+
+		private ToolStripMenuItem renderWireframeMenuItem;
 
 		private ToolStrip toolStrip1;
 
@@ -58,29 +74,20 @@ namespace Toe.Editors
 
 		private ToolStripMenuItem zUpToolStripMenuItem;
 
-		private ToeGraphicsContext graphicsContext;
-		private ToolStripDropDownButton renderWireButton;
-		private ToolStripMenuItem renderWireframeMenuItem;
-		private ToolStripMenuItem hideWireframeMenuItem;
-		private ToolStripDropDownButton renderNormalsButton;
-		private ToolStripMenuItem renderNormalsMenuItem;
-		private ToolStripMenuItem hideNormalsMenuItem;
-		private ToolStripButton btnScreenShot;
-
-		private Timer keysAnimationTimer;
 		#endregion
 
 		//private GLControl glControl;
 
 		#region Constructors and Destructors
 
-		public Base3DEditor(IComponentContext context, IEditorOptions<Base3DEditorOptions> options,Base3DEditorContent content)
+		public Base3DEditor(
+			IComponentContext context, IEditorOptions<Base3DEditorOptions> options, Base3DEditorContent content)
 		{
 			this.options = options;
 			this.content = content;
-			graphicsContext = context.Resolve<ToeGraphicsContext>();
+			this.graphicsContext = context.Resolve<ToeGraphicsContext>();
 			this.camera = new EditorCamera(context.Resolve<IEditorOptions<EditorCameraOptions>>());
-			this.camera.PropertyChanged += OnCameraPropertyChanged;
+			this.camera.PropertyChanged += this.OnCameraPropertyChanged;
 			this.InitializeComponent();
 			this.Dock = DockStyle.Fill;
 			//this.glControl = new GLControl(GraphicsMode.Default, 1, 0, GraphicsContextFlags.Default);
@@ -103,11 +110,6 @@ namespace Toe.Editors
 			this.zUpToolStripMenuItem.Click += this.SelectZUp;
 			this.UpdateCoordinateSystemIcon();
 			this.UpdateLighingIcon();
-		}
-
-		private void OnCameraPropertyChanged(object sender, PropertyChangedEventArgs e)
-		{
-			RefreshScene();
 		}
 
 		#endregion
@@ -162,7 +164,18 @@ namespace Toe.Editors
 			this.glControl.Invalidate();
 		}
 
-		
+		public void RenderMesh(IMesh mesh)
+		{
+			this.graphicsContext.Render(mesh);
+			if (this.options.Options.Wireframe)
+			{
+				this.RenderMeshWireframe(mesh);
+			}
+			if (this.options.Options.Normals)
+			{
+				this.RenderMeshNormals(mesh);
+			}
+		}
 
 		#endregion
 
@@ -170,26 +183,22 @@ namespace Toe.Editors
 
 		protected void OnControlKeyDown(object sender, KeyEventArgs e)
 		{
-			if (this.cameraController != null) this.cameraController.KeyDown(e);
-	
-		}
-		protected void OnControlKeyUp(object sender, KeyEventArgs e)
-		{
-			if (this.cameraController != null) this.cameraController.KeyUp(e);
-	
-		}
-		private void OnSceneLostFocus(object sender, EventArgs e)
-		{
-			if (this.cameraController != null) this.cameraController.LostFocus();
+			if (this.cameraController != null)
+			{
+				this.cameraController.KeyDown(e);
+			}
 		}
 
-		private void OnSceneGotFocus(object sender, EventArgs e)
+		protected void OnControlKeyUp(object sender, KeyEventArgs e)
 		{
-			if (this.cameraController != null) this.cameraController.GotFocus();
+			if (this.cameraController != null)
+			{
+				this.cameraController.KeyUp(e);
+			}
 		}
+
 		protected void RenderBox(float size)
 		{
-			
 			Vector3[] p = new[]
 				{
 					new Vector3(-size, -size, size), new Vector3(size, -size, size), new Vector3(-size, size, size),
@@ -219,7 +228,42 @@ namespace Toe.Editors
 			OpenTKHelper.Assert();
 		}
 
-		private LightArgs light = LightArgs.Default;
+		protected void SelectNormalsOff(object sender, EventArgs e)
+		{
+			if (this.options.Options.Normals)
+			{
+				this.options.Options.Normals = false;
+				//TODO: update icon
+			}
+		}
+
+		protected void SelectNormalsOn(object sender, EventArgs e)
+		{
+			if (this.options.Options.Normals != true)
+			{
+				this.options.Options.Normals = true;
+				//TODO: update icon
+			}
+		}
+
+		protected void SelectWireframeOff(object sender, EventArgs e)
+		{
+			if (this.options.Options.Wireframe)
+			{
+				this.options.Options.Wireframe = false;
+				//TODO: update icon
+			}
+		}
+
+		protected void SelectWireframeOn(object sender, EventArgs e)
+		{
+			if (this.options.Options.Wireframe != true)
+			{
+				this.options.Options.Wireframe = true;
+				//TODO: update icon
+			}
+		}
+
 		private void DrawBoxQuad(Vector3[] p, Vector3[] n, Vector2[] uv, int[] ints)
 		{
 			for (int i = 0; i < 4; ++i)
@@ -235,7 +279,7 @@ namespace Toe.Editors
 		{
 			this.loaded = true;
 			this.glControl.MakeCurrent();
-			this.SetupViewport(graphicsContext);
+			this.SetupViewport(this.graphicsContext);
 		}
 
 		private void GLControlPaint(object sender, PaintEventArgs e)
@@ -253,21 +297,21 @@ namespace Toe.Editors
 					return;
 				}
 
-				this.SetupViewport(graphicsContext);
+				this.SetupViewport(this.graphicsContext);
 
 				GL.Enable(EnableCap.DepthTest);
-				this.Camera.SetProjection(graphicsContext);
+				this.Camera.SetProjection(this.graphicsContext);
 
 				if (this.options.Options.Lighting)
 				{
-					light.Enabled = true;
-					light.Position = this.Camera.Pos;
-					graphicsContext.SetLight0(ref light);
-					graphicsContext.EnableLighting();
+					this.light.Enabled = true;
+					this.light.Position = this.Camera.Pos;
+					this.graphicsContext.SetLight0(ref this.light);
+					this.graphicsContext.EnableLighting();
 				}
 				else
 				{
-					graphicsContext.DisableLighting();
+					this.graphicsContext.DisableLighting();
 				}
 
 				if (this.RenderScene != null)
@@ -276,8 +320,8 @@ namespace Toe.Editors
 				}
 
 				GL.UseProgram(0);
-				graphicsContext.SetMaterial(null);
-				graphicsContext.DisableLighting();
+				this.graphicsContext.SetMaterial(null);
+				this.graphicsContext.DisableLighting();
 				GL.Disable(EnableCap.DepthTest);
 				GL.Begin(BeginMode.Lines);
 				GL.Color3(1.0f, 0, 0);
@@ -293,10 +337,10 @@ namespace Toe.Editors
 				GL.End();
 				OpenTKHelper.Assert();
 
-				content.RenderXyzCube(glControl,Camera);
+				this.content.RenderXyzCube(this.glControl, this.Camera);
 
-				graphicsContext.Flush();
-				
+				this.graphicsContext.Flush();
+
 				this.glControl.SwapBuffers();
 			}
 			catch (Exception ex)
@@ -307,8 +351,6 @@ namespace Toe.Editors
 			}
 		}
 
-	
-
 		private void GLControlResize(object sender, EventArgs e)
 		{
 			if (!this.loaded)
@@ -316,139 +358,136 @@ namespace Toe.Editors
 				return;
 			}
 			this.glControl.MakeCurrent();
-			this.SetupViewport(graphicsContext);
+			this.SetupViewport(this.graphicsContext);
 		}
 
 		private void InitializeComponent()
 		{
-			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Base3DEditor));
-			this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-			this.coordinateSystemButton = new System.Windows.Forms.ToolStripDropDownButton();
-			this.zUpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.yUpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.lightingButton = new System.Windows.Forms.ToolStripButton();
-			this.renderWireButton = new System.Windows.Forms.ToolStripDropDownButton();
-			this.renderWireframeMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.hideWireframeMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.renderNormalsButton = new System.Windows.Forms.ToolStripDropDownButton();
-			this.renderNormalsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.hideNormalsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.glControl = new OpenTK.GLControl();
-			this.errPanel = new Toe.Editors.Interfaces.Panels.StackPanel();
-			this.errButton = new System.Windows.Forms.Button();
-			this.errMessage = new System.Windows.Forms.Label();
-			this.btnScreenShot = new System.Windows.Forms.ToolStripButton();
+			ComponentResourceManager resources = new ComponentResourceManager(typeof(Base3DEditor));
+			this.toolStrip1 = new ToolStrip();
+			this.coordinateSystemButton = new ToolStripDropDownButton();
+			this.zUpToolStripMenuItem = new ToolStripMenuItem();
+			this.yUpToolStripMenuItem = new ToolStripMenuItem();
+			this.lightingButton = new ToolStripButton();
+			this.renderWireButton = new ToolStripDropDownButton();
+			this.renderWireframeMenuItem = new ToolStripMenuItem();
+			this.hideWireframeMenuItem = new ToolStripMenuItem();
+			this.renderNormalsButton = new ToolStripDropDownButton();
+			this.renderNormalsMenuItem = new ToolStripMenuItem();
+			this.hideNormalsMenuItem = new ToolStripMenuItem();
+			this.glControl = new GLControl();
+			this.errPanel = new StackPanel();
+			this.errButton = new Button();
+			this.errMessage = new Label();
+			this.btnScreenShot = new ToolStripButton();
 			this.toolStrip1.SuspendLayout();
 			this.errPanel.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// toolStrip1
 			// 
-			this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.coordinateSystemButton,
-            this.lightingButton,
-            this.renderWireButton,
-            this.renderNormalsButton,
-            this.btnScreenShot});
-			this.toolStrip1.Location = new System.Drawing.Point(0, 0);
+			this.toolStrip1.Items.AddRange(
+				new ToolStripItem[]
+					{
+						this.coordinateSystemButton, this.lightingButton, this.renderWireButton, this.renderNormalsButton,
+						this.btnScreenShot
+					});
+			this.toolStrip1.Location = new Point(0, 0);
 			this.toolStrip1.Name = "toolStrip1";
-			this.toolStrip1.Size = new System.Drawing.Size(550, 25);
+			this.toolStrip1.Size = new Size(550, 25);
 			this.toolStrip1.TabIndex = 0;
 			this.toolStrip1.Text = "toolStrip1";
 			// 
 			// coordinateSystemButton
 			// 
-			this.coordinateSystemButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.coordinateSystemButton.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.zUpToolStripMenuItem,
-            this.yUpToolStripMenuItem});
-			this.coordinateSystemButton.Image = global::Toe.Editors.Properties.Resources.zup;
-			this.coordinateSystemButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.coordinateSystemButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
+			this.coordinateSystemButton.DropDownItems.AddRange(
+				new ToolStripItem[] { this.zUpToolStripMenuItem, this.yUpToolStripMenuItem });
+			this.coordinateSystemButton.Image = Properties.Resources.zup;
+			this.coordinateSystemButton.ImageTransparentColor = Color.Magenta;
 			this.coordinateSystemButton.Name = "coordinateSystemButton";
-			this.coordinateSystemButton.Size = new System.Drawing.Size(29, 22);
+			this.coordinateSystemButton.Size = new Size(29, 22);
 			this.coordinateSystemButton.Text = "toolStripDropDownButton1";
 			// 
 			// zUpToolStripMenuItem
 			// 
-			this.zUpToolStripMenuItem.Image = global::Toe.Editors.Properties.Resources.zup;
+			this.zUpToolStripMenuItem.Image = Properties.Resources.zup;
 			this.zUpToolStripMenuItem.Name = "zUpToolStripMenuItem";
-			this.zUpToolStripMenuItem.Size = new System.Drawing.Size(101, 22);
+			this.zUpToolStripMenuItem.Size = new Size(101, 22);
 			this.zUpToolStripMenuItem.Text = "Z-Up";
 			// 
 			// yUpToolStripMenuItem
 			// 
-			this.yUpToolStripMenuItem.Image = global::Toe.Editors.Properties.Resources.yup;
+			this.yUpToolStripMenuItem.Image = Properties.Resources.yup;
 			this.yUpToolStripMenuItem.Name = "yUpToolStripMenuItem";
-			this.yUpToolStripMenuItem.Size = new System.Drawing.Size(101, 22);
+			this.yUpToolStripMenuItem.Size = new Size(101, 22);
 			this.yUpToolStripMenuItem.Text = "Y-Up";
 			// 
 			// lightingButton
 			// 
-			this.lightingButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.lightingButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.lightingButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
+			this.lightingButton.ImageTransparentColor = Color.Magenta;
 			this.lightingButton.Name = "lightingButton";
-			this.lightingButton.Size = new System.Drawing.Size(23, 22);
+			this.lightingButton.Size = new Size(23, 22);
 			this.lightingButton.Text = "lighingButton";
 			// 
 			// renderWireButton
 			// 
-			this.renderWireButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.renderWireButton.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.renderWireframeMenuItem,
-            this.hideWireframeMenuItem});
-			this.renderWireButton.Image = ((System.Drawing.Image)(resources.GetObject("renderWireButton.Image")));
-			this.renderWireButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.renderWireButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
+			this.renderWireButton.DropDownItems.AddRange(
+				new ToolStripItem[] { this.renderWireframeMenuItem, this.hideWireframeMenuItem });
+			this.renderWireButton.Image = ((Image)(resources.GetObject("renderWireButton.Image")));
+			this.renderWireButton.ImageTransparentColor = Color.Magenta;
 			this.renderWireButton.Name = "renderWireButton";
-			this.renderWireButton.Size = new System.Drawing.Size(29, 22);
+			this.renderWireButton.Size = new Size(29, 22);
 			this.renderWireButton.Text = "toolStripDropDownButton1";
 			// 
 			// renderWireframeMenuItem
 			// 
 			this.renderWireframeMenuItem.Name = "renderWireframeMenuItem";
-			this.renderWireframeMenuItem.Size = new System.Drawing.Size(169, 22);
+			this.renderWireframeMenuItem.Size = new Size(169, 22);
 			this.renderWireframeMenuItem.Text = "Render Wireframe";
-			this.renderWireframeMenuItem.Click += new System.EventHandler(this.SelectWireframeOn);
+			this.renderWireframeMenuItem.Click += this.SelectWireframeOn;
 			// 
 			// hideWireframeMenuItem
 			// 
 			this.hideWireframeMenuItem.Name = "hideWireframeMenuItem";
-			this.hideWireframeMenuItem.Size = new System.Drawing.Size(169, 22);
+			this.hideWireframeMenuItem.Size = new Size(169, 22);
 			this.hideWireframeMenuItem.Text = "Hide Wireframe";
-			this.hideWireframeMenuItem.Click += new System.EventHandler(this.SelectWireframeOff);
+			this.hideWireframeMenuItem.Click += this.SelectWireframeOff;
 			// 
 			// renderNormalsButton
 			// 
-			this.renderNormalsButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.renderNormalsButton.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.renderNormalsMenuItem,
-            this.hideNormalsMenuItem});
-			this.renderNormalsButton.Image = ((System.Drawing.Image)(resources.GetObject("renderNormalsButton.Image")));
-			this.renderNormalsButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.renderNormalsButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
+			this.renderNormalsButton.DropDownItems.AddRange(
+				new ToolStripItem[] { this.renderNormalsMenuItem, this.hideNormalsMenuItem });
+			this.renderNormalsButton.Image = ((Image)(resources.GetObject("renderNormalsButton.Image")));
+			this.renderNormalsButton.ImageTransparentColor = Color.Magenta;
 			this.renderNormalsButton.Name = "renderNormalsButton";
-			this.renderNormalsButton.Size = new System.Drawing.Size(29, 22);
+			this.renderNormalsButton.Size = new Size(29, 22);
 			this.renderNormalsButton.Text = "toolStripDropDownButton2";
 			// 
 			// renderNormalsMenuItem
 			// 
 			this.renderNormalsMenuItem.Name = "renderNormalsMenuItem";
-			this.renderNormalsMenuItem.Size = new System.Drawing.Size(157, 22);
+			this.renderNormalsMenuItem.Size = new Size(157, 22);
 			this.renderNormalsMenuItem.Text = "Render normals";
-			this.renderNormalsMenuItem.Click += new System.EventHandler(this.SelectNormalsOn);
+			this.renderNormalsMenuItem.Click += this.SelectNormalsOn;
 			// 
 			// hideNormalsMenuItem
 			// 
 			this.hideNormalsMenuItem.Name = "hideNormalsMenuItem";
-			this.hideNormalsMenuItem.Size = new System.Drawing.Size(157, 22);
+			this.hideNormalsMenuItem.Size = new Size(157, 22);
 			this.hideNormalsMenuItem.Text = "Hide normals";
-			this.hideNormalsMenuItem.Click += new System.EventHandler(this.SelectNormalsOff);
+			this.hideNormalsMenuItem.Click += this.SelectNormalsOff;
 			// 
 			// glControl
 			// 
-			this.glControl.BackColor = System.Drawing.Color.Black;
-			this.glControl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.glControl.Location = new System.Drawing.Point(0, 25);
+			this.glControl.BackColor = Color.Black;
+			this.glControl.Dock = DockStyle.Fill;
+			this.glControl.Location = new Point(0, 25);
 			this.glControl.Name = "glControl";
-			this.glControl.Size = new System.Drawing.Size(550, 425);
+			this.glControl.Size = new Size(550, 425);
 			this.glControl.TabIndex = 1;
 			this.glControl.VSync = false;
 			// 
@@ -457,18 +496,18 @@ namespace Toe.Editors
 			this.errPanel.AutoScroll = true;
 			this.errPanel.Controls.Add(this.errButton);
 			this.errPanel.Controls.Add(this.errMessage);
-			this.errPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.errPanel.Location = new System.Drawing.Point(0, 25);
+			this.errPanel.Dock = DockStyle.Fill;
+			this.errPanel.Location = new Point(0, 25);
 			this.errPanel.Name = "errPanel";
-			this.errPanel.Size = new System.Drawing.Size(550, 425);
+			this.errPanel.Size = new Size(550, 425);
 			this.errPanel.TabIndex = 2;
 			this.errPanel.Visible = false;
 			// 
 			// errButton
 			// 
-			this.errButton.Location = new System.Drawing.Point(3, 3);
+			this.errButton.Location = new Point(3, 3);
 			this.errButton.Name = "errButton";
-			this.errButton.Size = new System.Drawing.Size(550, 23);
+			this.errButton.Size = new Size(550, 23);
 			this.errButton.TabIndex = 1;
 			this.errButton.Text = "Retry";
 			this.errButton.UseVisualStyleBackColor = true;
@@ -476,21 +515,21 @@ namespace Toe.Editors
 			// errMessage
 			// 
 			this.errMessage.AutoSize = true;
-			this.errMessage.Location = new System.Drawing.Point(3, 29);
+			this.errMessage.Location = new Point(3, 29);
 			this.errMessage.Name = "errMessage";
-			this.errMessage.Size = new System.Drawing.Size(550, 13);
+			this.errMessage.Size = new Size(550, 13);
 			this.errMessage.TabIndex = 0;
 			this.errMessage.Text = "Render error";
 			// 
 			// btnScreenShot
 			// 
-			this.btnScreenShot.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.btnScreenShot.Image = ((System.Drawing.Image)(resources.GetObject("btnScreenShot.Image")));
-			this.btnScreenShot.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.btnScreenShot.DisplayStyle = ToolStripItemDisplayStyle.Image;
+			this.btnScreenShot.Image = ((Image)(resources.GetObject("btnScreenShot.Image")));
+			this.btnScreenShot.ImageTransparentColor = Color.Magenta;
 			this.btnScreenShot.Name = "btnScreenShot";
-			this.btnScreenShot.Size = new System.Drawing.Size(23, 22);
+			this.btnScreenShot.Size = new Size(23, 22);
 			this.btnScreenShot.Text = "Take Screenshot";
-			this.btnScreenShot.Click += new System.EventHandler(this.TakeScreenshot);
+			this.btnScreenShot.Click += this.TakeScreenshot;
 			// 
 			// Base3DEditor
 			// 
@@ -498,14 +537,34 @@ namespace Toe.Editors
 			this.Controls.Add(this.glControl);
 			this.Controls.Add(this.toolStrip1);
 			this.Name = "Base3DEditor";
-			this.Size = new System.Drawing.Size(550, 450);
+			this.Size = new Size(550, 450);
 			this.toolStrip1.ResumeLayout(false);
 			this.toolStrip1.PerformLayout();
 			this.errPanel.ResumeLayout(false);
 			this.errPanel.PerformLayout();
 			this.ResumeLayout(false);
 			this.PerformLayout();
+		}
 
+		private void OnCameraPropertyChanged(object sender, PropertyChangedEventArgs e)
+		{
+			this.RefreshScene();
+		}
+
+		private void OnSceneGotFocus(object sender, EventArgs e)
+		{
+			if (this.cameraController != null)
+			{
+				this.cameraController.GotFocus();
+			}
+		}
+
+		private void OnSceneLostFocus(object sender, EventArgs e)
+		{
+			if (this.cameraController != null)
+			{
+				this.cameraController.LostFocus();
+			}
 		}
 
 		private void OnSceneMouseEnter(object sender, EventArgs e)
@@ -542,38 +601,117 @@ namespace Toe.Editors
 			}
 		}
 
-		protected void SelectWireframeOn(object sender, EventArgs e)
+		private void RenderMeshNormals(IMesh mesh)
 		{
-			if (this.options.Options.Wireframe != true)
+			var streamMesh = mesh as StreamMesh;
+			if (streamMesh != null)
 			{
-				this.options.Options.Wireframe = true;
-				//TODO: update icon
+				return;
+			}
+			var vbMesh = mesh as VertexBufferMesh;
+			var normalColor = Color.White;
+			if (vbMesh != null)
+			{
+				foreach (var vertex in vbMesh.VertexBuffer)
+				{
+					var p = vertex.Position;
+					var n = p + vertex.Normal * 10.0f;
+					Vector3 a, b;
+					this.graphicsContext.ModelToWorld(ref p, out a);
+					this.graphicsContext.ModelToWorld(ref n, out b);
+					this.graphicsContext.RenderDebugLine(a, b, normalColor);
+				}
 			}
 		}
-		protected void SelectWireframeOff(object sender, EventArgs e)
+
+		private void RenderMeshWireframe(IMesh mesh)
 		{
-			if (this.options.Options.Wireframe != false)
+			var vb = mesh as IVertexStreamSource;
+			var vertices = new List<Vector3>(vb.Count);
+			Vector3 pos;
+			Vector3 buf;
+
+			for (int i = 0; i < mesh.Count; ++i)
 			{
-				this.options.Options.Wireframe = false;
-				//TODO: update icon
+				mesh.GetVertexAt(i, out pos);
+				this.graphicsContext.ModelToWorld(ref pos, out buf);
+				vertices.Add(buf);
+			}
+			Color wireColor = Color.White;
+
+			foreach (var submesh in mesh.Submeshes)
+			{
+				var vi = submesh as IVertexIndexSource;
+				var enumerator = vi.GetEnumerator();
+				switch (vi.VertexSourceType)
+				{
+					case VertexSourceType.TrianleList:
+						for (;;)
+						{
+							if (!enumerator.MoveNext())
+							{
+								break;
+							}
+							var a = enumerator.Current;
+							if (!enumerator.MoveNext())
+							{
+								break;
+							}
+							var b = enumerator.Current;
+							if (!enumerator.MoveNext())
+							{
+								break;
+							}
+							var c = enumerator.Current;
+							this.graphicsContext.RenderDebugLine(vertices[a], vertices[b], wireColor);
+							this.graphicsContext.RenderDebugLine(vertices[b], vertices[c], wireColor);
+							this.graphicsContext.RenderDebugLine(vertices[c], vertices[a], wireColor);
+						}
+
+						break;
+					case VertexSourceType.TrianleStrip:
+						break;
+					case VertexSourceType.QuadList:
+						for (;;)
+						{
+							if (!enumerator.MoveNext())
+							{
+								break;
+							}
+							var a = enumerator.Current;
+							if (!enumerator.MoveNext())
+							{
+								break;
+							}
+							var b = enumerator.Current;
+							if (!enumerator.MoveNext())
+							{
+								break;
+							}
+							var c = enumerator.Current;
+							if (!enumerator.MoveNext())
+							{
+								break;
+							}
+							var d = enumerator.Current;
+							this.graphicsContext.RenderDebugLine(vertices[a], vertices[b], wireColor);
+							this.graphicsContext.RenderDebugLine(vertices[b], vertices[c], wireColor);
+							this.graphicsContext.RenderDebugLine(vertices[c], vertices[d], wireColor);
+							this.graphicsContext.RenderDebugLine(vertices[d], vertices[a], wireColor);
+						}
+						break;
+					case VertexSourceType.QuadStrip:
+						break;
+					case VertexSourceType.LineLine:
+						break;
+					case VertexSourceType.LineStrip:
+						break;
+					default:
+						break;
+				}
 			}
 		}
-		protected void SelectNormalsOn(object sender, EventArgs e)
-		{
-			if (this.options.Options.Normals != true)
-			{
-				this.options.Options.Normals = true;
-				//TODO: update icon
-			}
-		}
-		protected void SelectNormalsOff(object sender, EventArgs e)
-		{
-			if (this.options.Options.Normals != false)
-			{
-				this.options.Options.Normals = false;
-				//TODO: update icon
-			}
-		}
+
 		private void SelectYUp(object sender, EventArgs e)
 		{
 			if (this.Camera.CoordinateSystem != CoordinateSystem.YUp)
@@ -605,9 +743,46 @@ namespace Toe.Editors
 			int w = Math.Max(1, this.glControl.Width);
 			int h = Math.Max(1, this.glControl.Height);
 			// Use all of the glControl painting area
-			graphicsContext.SetViewport(0, 0, w, h);
+			this.graphicsContext.SetViewport(0, 0, w, h);
 
 			this.Camera.AspectRatio = w / (float)h;
+		}
+
+		private void TakeScreenshot(object sender, EventArgs e)
+		{
+			this.glControl.MakeCurrent();
+			Bitmap bmp = new Bitmap(this.ClientSize.Width, this.ClientSize.Height);
+			BitmapData data = bmp.LockBits(this.ClientRectangle, ImageLockMode.WriteOnly, PixelFormat.Format24bppRgb);
+			GL.ReadPixels(
+				0,
+				0,
+				this.ClientSize.Width,
+				this.ClientSize.Height,
+				OpenTK.Graphics.OpenGL.PixelFormat.Bgr,
+				PixelType.UnsignedByte,
+				data.Scan0);
+			bmp.UnlockBits(data);
+			bmp.RotateFlip(RotateFlipType.RotateNoneFlipY);
+
+			var tmpPath = Path.GetTempPath();
+			var dir = Path.Combine(tmpPath, "toe_screenshots");
+			if (!Directory.Exists(dir))
+			{
+				Directory.CreateDirectory(dir);
+			}
+			var t = DateTime.Now;
+			var file = Path.Combine(
+				dir, string.Format("{0}_{1}_{2}_{3}_{4}_{5}.jpg", t.Year, t.Month, t.Day, t.Hour, t.Minute, t.Second));
+			bmp.Save(file);
+
+			try
+			{
+				Process.Start("explorer.exe", "/select," + file);
+			}
+			catch (Exception ex)
+			{
+				Trace.WriteLine(ex);
+			}
 		}
 
 		private void ToggleLightingClick(object sender, EventArgs e)
@@ -622,10 +797,10 @@ namespace Toe.Editors
 			switch (this.Camera.CoordinateSystem)
 			{
 				case CoordinateSystem.ZUp:
-					this.coordinateSystemButton.Image = Toe.Editors.Properties.Resources.zup;
+					this.coordinateSystemButton.Image = Properties.Resources.zup;
 					break;
 				case CoordinateSystem.YUp:
-					this.coordinateSystemButton.Image = Toe.Editors.Properties.Resources.yup;
+					this.coordinateSystemButton.Image = Properties.Resources.yup;
 					break;
 				default:
 					throw new ArgumentOutOfRangeException();
@@ -636,11 +811,11 @@ namespace Toe.Editors
 		{
 			if (this.options.Options.Lighting)
 			{
-				this.lightingButton.Image = Toe.Editors.Properties.Resources.light_on;
+				this.lightingButton.Image = Properties.Resources.light_on;
 			}
 			else
 			{
-				this.lightingButton.Image = Toe.Editors.Properties.Resources.light_off;
+				this.lightingButton.Image = Properties.Resources.light_off;
 			}
 		}
 
@@ -651,129 +826,5 @@ namespace Toe.Editors
 		}
 
 		#endregion
-
-		public void RenderMesh(IMesh mesh)
-		{
-			graphicsContext.Render(mesh);
-			if (options.Options.Wireframe) RenderMeshWireframe(mesh);
-			if (options.Options.Normals) RenderMeshNormals(mesh);
-		}
-
-		private void RenderMeshNormals(IMesh mesh)
-		{
-			var streamMesh = mesh as StreamMesh;
-			if (streamMesh!=null)
-			{
-				return;
-			}
-			var vbMesh = mesh as VertexBufferMesh;
-			var normalColor = Color.White;
-			if (vbMesh != null)
-			{
-				foreach (var vertex in vbMesh.VertexBuffer)
-				{
-					var p = vertex.Position;
-					var n = p+vertex.Normal*10.0f;
-					Vector3 a, b;
-					graphicsContext.ModelToWorld(ref p, out a);
-					graphicsContext.ModelToWorld(ref n, out b);
-					graphicsContext.RenderDebugLine(a, b, normalColor);
-				}
-			}
-		}
-
-		private void RenderMeshWireframe(IMesh mesh)
-		{
-			var vb = mesh as IVertexStreamSource;
-			var vertices = new List<Vector3>(vb.Count);
-			Vector3 pos;
-			Vector3 buf;
-
-			for (int i = 0; i < mesh.Count; ++i)
-			{
-				mesh.GetVertexAt(i, out pos);
-				graphicsContext.ModelToWorld(ref pos, out buf);
-				vertices.Add(buf);  
-			}
-			Color wireColor = Color.White;
-
-			foreach (var submesh in mesh.Submeshes)
-			{
-				var vi = submesh as IVertexIndexSource;
-				var enumerator = vi.GetEnumerator();
-				switch (vi.VertexSourceType)
-				{
-					case VertexSourceType.TrianleList:
-						for (; ; )
-						{
-							if (!enumerator.MoveNext()) break;
-							var a = enumerator.Current;
-							if (!enumerator.MoveNext()) break;
-							var b = enumerator.Current;
-							if (!enumerator.MoveNext()) break;
-							var c = enumerator.Current;
-							graphicsContext.RenderDebugLine(vertices[a], vertices[b], wireColor);
-							graphicsContext.RenderDebugLine(vertices[b], vertices[c], wireColor);
-							graphicsContext.RenderDebugLine(vertices[c], vertices[a], wireColor);
-						}
-
-						break;
-					case VertexSourceType.TrianleStrip:
-						break;
-					case VertexSourceType.QuadList:
-						for (; ; )
-						{
-							if (!enumerator.MoveNext()) break;
-							var a = enumerator.Current;
-							if (!enumerator.MoveNext()) break;
-							var b = enumerator.Current;
-							if (!enumerator.MoveNext()) break;
-							var c = enumerator.Current;
-							if (!enumerator.MoveNext()) break;
-							var d = enumerator.Current;
-							graphicsContext.RenderDebugLine(vertices[a], vertices[b], wireColor);
-							graphicsContext.RenderDebugLine(vertices[b], vertices[c], wireColor);
-							graphicsContext.RenderDebugLine(vertices[c], vertices[d], wireColor);
-							graphicsContext.RenderDebugLine(vertices[d], vertices[a], wireColor);
-						}
-						break;
-					case VertexSourceType.QuadStrip:
-						break;
-					case VertexSourceType.LineLine:
-						break;
-					case VertexSourceType.LineStrip:
-						break;
-					default:
-						break;
-				}
-			}
-		}
-
-		private void TakeScreenshot(object sender, EventArgs e)
-		{
-			glControl.MakeCurrent();
-			Bitmap bmp = new Bitmap(this.ClientSize.Width, this.ClientSize.Height);
-			System.Drawing.Imaging.BitmapData data =
-				bmp.LockBits(this.ClientRectangle, System.Drawing.Imaging.ImageLockMode.WriteOnly, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
-			GL.ReadPixels(0, 0, this.ClientSize.Width, this.ClientSize.Height, PixelFormat.Bgr, PixelType.UnsignedByte, data.Scan0);
-			bmp.UnlockBits(data);
-			bmp.RotateFlip(RotateFlipType.RotateNoneFlipY);
-
-			var tmpPath = Path.GetTempPath();
-			var dir = Path.Combine(tmpPath, "toe_screenshots");
-			if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
-			var t = DateTime.Now;
-			var file = Path.Combine(dir, string.Format("{0}_{1}_{2}_{3}_{4}_{5}.jpg",t.Year,t.Month,t.Day,t.Hour,t.Minute,t.Second));
-			bmp.Save(file);
-
-			try
-			{
-				Process.Start("explorer.exe", "/select," + file);
-			} 
-			catch(Exception ex)
-			{
-				Trace.WriteLine(ex);
-			}
-		}
 	}
 }

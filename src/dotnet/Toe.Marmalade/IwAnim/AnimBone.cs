@@ -1,31 +1,86 @@
 using OpenTK;
 
-using Toe.Resources;
 using Toe.Utils;
 
 namespace Toe.Marmalade.IwAnim
 {
-	public class AnimBone:Managed
+	public class AnimBone : Managed
 	{
-		private int parent = -1;
+		#region Constants and Fields
 
 		public static readonly uint TypeHash = Hash.Get("CIwAnimBone");
 
-		private Vector3 bindingPos;
+		protected static PropertyEventArgs FlagsEventArgs = Expr.PropertyEventArgs<AnimBone>(x => x.Flags);
 
-		private Quaternion bindingRot;
-
-		private int skelId;
+		protected static PropertyEventArgs ParentEventArgs = Expr.PropertyEventArgs<AnimBone>(x => x.Parent);
 
 		private Vector3? actualPos;
 
 		private Quaternion? actualRot;
 
+		private Vector3 bindingPos;
+
+		private Quaternion bindingRot;
+
 		private ushort flags;
 
-		private Vector3 absolutePos;
+		private int parent = -1;
 
-		private Quaternion absoluteRot;
+		#endregion
+
+		#region Public Properties
+
+		public Vector3 AbsolutePos { get; set; }
+
+		public Quaternion AbsoluteRot { get; set; }
+
+		public Vector3 ActualPos
+		{
+			get
+			{
+				return this.actualPos.HasValue ? this.actualPos.Value : this.bindingPos;
+			}
+			set
+			{
+				this.actualPos = value;
+			}
+		}
+
+		public Quaternion ActualRot
+		{
+			get
+			{
+				return this.actualRot.HasValue ? this.actualRot.Value : this.bindingRot;
+			}
+			set
+			{
+				this.actualRot = value;
+			}
+		}
+
+		public Vector3 BindingPos
+		{
+			get
+			{
+				return this.bindingPos;
+			}
+			set
+			{
+				this.bindingPos = value;
+			}
+		}
+
+		public Quaternion BindingRot
+		{
+			get
+			{
+				return this.bindingRot;
+			}
+			set
+			{
+				this.bindingRot = value;
+			}
+		}
 
 		public override uint ClassHashCode
 		{
@@ -34,87 +89,6 @@ namespace Toe.Marmalade.IwAnim
 				return TypeHash;
 			}
 		}
-
-		public int SkelId
-		{
-			get
-			{
-				return skelId;
-			}
-			set
-			{
-				skelId = value;
-			}
-		}
-
-		public Vector3 BindingPos
-		{
-			get
-			{
-				return bindingPos;
-			}
-			set
-			{
-				bindingPos = value;
-			}
-		}
-
-		public Quaternion BindingRot
-		{
-			get
-			{
-				return bindingRot;
-			}
-			set
-			{
-				bindingRot = value;
-			}
-		}
-
-		protected static PropertyEventArgs ParentEventArgs = Expr.PropertyEventArgs<AnimBone>(x => x.Parent);
-
-		public int Parent
-		{
-			get
-			{
-				return this.parent;
-			}
-			set
-			{
-				if (this.parent != value)
-				{
-					this.RaisePropertyChanging(ParentEventArgs.Changing);
-					this.parent = value;
-					this.RaisePropertyChanged(ParentEventArgs.Changed);
-				}
-			}
-		}
-
-		public Vector3 ActualPos
-		{
-			get
-			{
-				return actualPos.HasValue?actualPos.Value:bindingPos;
-			}
-			set
-			{
-				actualPos = value;
-			}
-		}
-
-		public Quaternion ActualRot
-		{
-			get
-			{
-				return actualRot.HasValue ? actualRot.Value : bindingRot;
-			}
-			set
-			{
-				actualRot = value;
-			}
-		}
-
-		protected static PropertyEventArgs FlagsEventArgs = Expr.PropertyEventArgs<AnimBone>(x => x.Flags);
 
 		public ushort Flags
 		{
@@ -133,28 +107,25 @@ namespace Toe.Marmalade.IwAnim
 			}
 		}
 
-		public Vector3 AbsolutePos
+		public int Parent
 		{
 			get
 			{
-				return absolutePos;
+				return this.parent;
 			}
 			set
 			{
-				absolutePos = value;
+				if (this.parent != value)
+				{
+					this.RaisePropertyChanging(ParentEventArgs.Changing);
+					this.parent = value;
+					this.RaisePropertyChanged(ParentEventArgs.Changed);
+				}
 			}
 		}
 
-		public Quaternion AbsoluteRot
-		{
-			get
-			{
-				return absoluteRot;
-			}
-			set
-			{
-				absoluteRot = value;
-			}
-		}
+		public int SkelId { get; set; }
+
+		#endregion
 	}
 }

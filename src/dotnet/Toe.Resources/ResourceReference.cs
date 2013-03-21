@@ -29,6 +29,8 @@ namespace Toe.Resources
 
 		private string nameReference;
 
+		private object resource;
+
 		#endregion
 
 		#region Constructors and Destructors
@@ -56,6 +58,14 @@ namespace Toe.Resources
 		#endregion
 
 		#region Public Properties
+
+		public IBasePathProvider Container
+		{
+			get
+			{
+				return this.container;
+			}
+		}
 
 		public string FilePath
 		{
@@ -152,7 +162,7 @@ namespace Toe.Resources
 		{
 			get
 			{
-				return resource == null && string.IsNullOrEmpty(this.fileReference) && this.hashReference == 0;
+				return this.resource == null && string.IsNullOrEmpty(this.fileReference) && this.hashReference == 0;
 			}
 		}
 
@@ -181,12 +191,14 @@ namespace Toe.Resources
 			}
 		}
 
-		private object resource = null;
 		public object Resource
 		{
 			get
 			{
-				if (resource != null) return resource;
+				if (this.resource != null)
+				{
+					return this.resource;
+				}
 				if (this.consumedFileResource != null)
 				{
 					return this.consumedFileResource.Resource;
@@ -203,7 +215,7 @@ namespace Toe.Resources
 				this.hashReference = 0;
 				this.nameReference = null;
 				this.resource = value;
-				RaiseReferenceChanged();
+				this.RaiseReferenceChanged();
 			}
 		}
 
@@ -212,14 +224,6 @@ namespace Toe.Resources
 			get
 			{
 				return this.type;
-			}
-		}
-
-		public IBasePathProvider Container
-		{
-			get
-			{
-				return this.container;
 			}
 		}
 

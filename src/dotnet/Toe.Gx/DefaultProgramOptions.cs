@@ -1,12 +1,16 @@
-using Toe.Marmalade.IwGx;
-
 namespace Toe.Gx
 {
 	public class DefaultProgramOptions
 	{
-		private readonly DefaultVertexShaderOptions vs;
+		#region Constants and Fields
 
 		private readonly DefaultFragmentShaderOptions fs;
+
+		private readonly DefaultVertexShaderOptions vs;
+
+		#endregion
+
+		#region Constructors and Destructors
 
 		public DefaultProgramOptions(DefaultVertexShaderOptions vs, DefaultFragmentShaderOptions fs)
 		{
@@ -14,14 +18,39 @@ namespace Toe.Gx
 			this.fs = fs;
 		}
 
-		public DefaultVertexShaderOptions VertexShaderOptions { get
+		#endregion
+
+		#region Public Properties
+
+		public DefaultFragmentShaderOptions FragmentShaderOptions
 		{
-			return this.vs;
-		} }
-		public DefaultFragmentShaderOptions FragmentShaderOptions { get
+			get
+			{
+				return this.fs;
+			}
+		}
+
+		public DefaultVertexShaderOptions VertexShaderOptions
 		{
-			return this.fs;
-		} }
+			get
+			{
+				return this.vs;
+			}
+		}
+
+		#endregion
+
+		#region Public Methods and Operators
+
+		public static bool operator ==(DefaultProgramOptions left, DefaultProgramOptions right)
+		{
+			return Equals(left, right);
+		}
+
+		public static bool operator !=(DefaultProgramOptions left, DefaultProgramOptions right)
+		{
+			return !Equals(left, right);
+		}
 
 		public bool Equals(DefaultProgramOptions other)
 		{
@@ -75,14 +104,6 @@ namespace Toe.Gx
 			}
 		}
 
-		public static bool operator ==(DefaultProgramOptions left, DefaultProgramOptions right)
-		{
-			return Equals(left, right);
-		}
-
-		public static bool operator !=(DefaultProgramOptions left, DefaultProgramOptions right)
-		{
-			return !Equals(left, right);
-		}
+		#endregion
 	}
 }

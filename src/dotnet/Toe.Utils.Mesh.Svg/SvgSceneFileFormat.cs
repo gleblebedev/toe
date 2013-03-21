@@ -8,32 +8,31 @@ namespace Toe.Utils.Mesh.Svg
 {
 	public class SvgSceneFileFormat : ISceneFileFormat
 	{
+		#region Constants and Fields
+
 		private readonly IComponentContext context;
-
-		public SvgSceneFileFormat(Autofac.IComponentContext context)
-		{
-			this.context = context;
-		}
-		public SvgSceneFileFormat()
-		{
-		}
-		#region Public Methods and Operators
-
-		/// <summary>
-		/// Scene file format name.
-		/// </summary>
-		public string Name
-		{
-			get
-			{
-				return "Scalable Vector Graphics";
-			}
-		}
 
 		/// <summary>
 		/// Scene file format extensions.
 		/// </summary>
-		string[] extensions = new[] { ".svg" };
+		private readonly string[] extensions = new[] { ".svg" };
+
+		#endregion
+
+		#region Constructors and Destructors
+
+		public SvgSceneFileFormat(IComponentContext context)
+		{
+			this.context = context;
+		}
+
+		public SvgSceneFileFormat()
+		{
+		}
+
+		#endregion
+
+		#region Public Properties
 
 		/// <summary>
 		/// Scene file format extensions.
@@ -46,16 +45,35 @@ namespace Toe.Utils.Mesh.Svg
 			}
 		}
 
+		/// <summary>
+		/// Scene file format name.
+		/// </summary>
+		public string Name
+		{
+			get
+			{
+				return "Scalable Vector Graphics";
+			}
+		}
+
+		#endregion
+
+		#region Public Methods and Operators
+
 		public bool CanLoad(string filename)
 		{
-			return (from extension in this.extensions where filename.EndsWith(extension, StringComparison.InvariantCultureIgnoreCase) select extension).Any();
+			return (from extension in this.extensions
+			        where filename.EndsWith(extension, StringComparison.InvariantCultureIgnoreCase)
+			        select extension).Any();
 		}
 
 		public ISceneReader CreateReader()
 		{
-			if (context == null)
+			if (this.context == null)
+			{
 				return new SvgReader(new SvgReaderOptions());
-			return context.Resolve<SvgReader>();
+			}
+			return this.context.Resolve<SvgReader>();
 		}
 
 		#endregion

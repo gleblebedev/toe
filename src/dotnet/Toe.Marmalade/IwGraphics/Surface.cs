@@ -1,7 +1,6 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-
-using OpenTK;
 
 using Toe.Marmalade.IwGraphics.TangentSpace;
 using Toe.Resources;
@@ -12,28 +11,24 @@ namespace Toe.Marmalade.IwGraphics
 {
 	public class Surface : Managed, IVertexIndexSource
 	{
+		#region Constants and Fields
+
 		public static readonly uint TypeHash = Hash.Get("CSurface");
 
-		private ResourceReference material;
+		private readonly ResourceReference material;
+
+		#endregion
+
+		#region Constructors and Destructors
 
 		public Surface(IResourceManager resourceManager)
 		{
-			this.material = new ResourceReference(Toe.Marmalade.IwGx.Material.TypeHash, resourceManager, this);
+			this.material = new ResourceReference(IwGx.Material.TypeHash, resourceManager, this);
 		}
 
-		private Mesh mesh;
+		#endregion
 
-		public Mesh Mesh
-		{
-			get
-			{
-				return this.mesh;
-			}
-			set
-			{
-				this.mesh = value;
-			}
-		}
+		#region Public Properties
 
 		public override uint ClassHashCode
 		{
@@ -43,16 +38,35 @@ namespace Toe.Marmalade.IwGraphics
 			}
 		}
 
+		public virtual int Count
+		{
+			get
+			{
+				throw new NotImplementedException();
+			}
+		}
+
 		public ResourceReference Material
 		{
 			get
 			{
-				return material;
+				return this.material;
 			}
-		
 		}
 
-		#region Implementation of IEnumerable
+		public Mesh Mesh { get; set; }
+
+		public virtual VertexSourceType VertexSourceType
+		{
+			get
+			{
+				return VertexSourceType.TrianleList;
+			}
+		}
+
+		#endregion
+
+		#region Public Methods and Operators
 
 		/// <summary>
 		/// Returns an enumerator that iterates through the collection.
@@ -63,8 +77,12 @@ namespace Toe.Marmalade.IwGraphics
 		/// <filterpriority>1</filterpriority>
 		public virtual IEnumerator<int> GetEnumerator()
 		{
-			throw new System.NotImplementedException();
+			throw new NotImplementedException();
 		}
+
+		#endregion
+
+		#region Explicit Interface Methods
 
 		/// <summary>
 		/// Returns an enumerator that iterates through a collection.
@@ -80,29 +98,13 @@ namespace Toe.Marmalade.IwGraphics
 
 		#endregion
 
-		#region Implementation of IVertexSource
-
-		public virtual int Count
-		{
-			get
-			{
-				throw new System.NotImplementedException();
-			}
-		}
-
-		public virtual VertexSourceType VertexSourceType
-		{
-			get
-			{
-				return VertexSourceType.TrianleList;
-			}
-		}
-
-		#endregion
+		#region Methods
 
 		internal virtual void CalculateTangents(TangentMixer t, TangentMixer b)
 		{
 			//throw new System.NotImplementedException();
 		}
+
+		#endregion
 	}
 }

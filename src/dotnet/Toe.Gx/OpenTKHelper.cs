@@ -15,7 +15,9 @@ namespace Toe.Gx
 			if (ec != 0)
 			{
 				if (Debugger.IsAttached)
+				{
 					Debugger.Break();
+				}
 				throw new ApplicationException(ec.ToString());
 			}
 		}

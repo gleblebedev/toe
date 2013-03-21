@@ -4,8 +4,6 @@ using OpenTK;
 
 using Toe.Marmalade.IwGx;
 using Toe.Resources;
-using Toe.Utils.Marmalade;
-using Toe.Utils.Marmalade.IwGx;
 
 namespace Toe.Marmalade.TextFiles.IwGx
 {
@@ -14,10 +12,6 @@ namespace Toe.Marmalade.TextFiles.IwGx
 		#region Constants and Fields
 
 		private readonly IResourceManager resourceManager;
-
-		private string fragment;
-
-		private string vertex;
 
 		#endregion
 
@@ -40,29 +34,9 @@ namespace Toe.Marmalade.TextFiles.IwGx
 			}
 		}
 
-		public string Fragment
-		{
-			get
-			{
-				return this.fragment;
-			}
-			set
-			{
-				this.fragment = value;
-			}
-		}
+		public string Fragment { get; set; }
 
-		public string Vertex
-		{
-			get
-			{
-				return this.vertex;
-			}
-			set
-			{
-				this.vertex = value;
-			}
-		}
+		public string Vertex { get; set; }
 
 		#endregion
 
@@ -131,18 +105,7 @@ namespace Toe.Marmalade.TextFiles.IwGx
 			}
 			shader.AddParam(new ShaderTechniqueFloatParam(paramName, a));
 		}
-		private void ParseVec3Param(TextParser parser, ShaderTechnique shader, string paramName, int numArgs)
-		{
-			var a = new Vector3[numArgs];
-			for (int i = 0; i < a.Length; ++i)
-			{
-				var x =parser.ConsumeFloat(); 
-				var y =parser.ConsumeFloat(); 
-				var z =parser.ConsumeFloat(); 
-				a[i] = new Vector3(x,y,z);
-			}
-			shader.AddParam(new ShaderTechniqueVec3Param(paramName, a));
-		}
+
 		private void ParseFragmentShader(TextParser parser, ShaderTechnique shader)
 		{
 			parser.Consume();
@@ -167,6 +130,19 @@ namespace Toe.Marmalade.TextFiles.IwGx
 					parser.Error(string.Format(CultureInfo.InvariantCulture, "Unknown param type {0}", typeName));
 					break;
 			}
+		}
+
+		private void ParseVec3Param(TextParser parser, ShaderTechnique shader, string paramName, int numArgs)
+		{
+			var a = new Vector3[numArgs];
+			for (int i = 0; i < a.Length; ++i)
+			{
+				var x = parser.ConsumeFloat();
+				var y = parser.ConsumeFloat();
+				var z = parser.ConsumeFloat();
+				a[i] = new Vector3(x, y, z);
+			}
+			shader.AddParam(new ShaderTechniqueVec3Param(paramName, a));
 		}
 
 		private void ParseVertexShader(TextParser parser, ShaderTechnique shader)

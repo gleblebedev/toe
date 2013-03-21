@@ -8,7 +8,6 @@ using Toe.Editors.Interfaces;
 using Toe.Editors.Interfaces.Bindings;
 using Toe.Marmalade.IwAnim;
 using Toe.Resources;
-using Toe.Utils.Mesh;
 
 namespace Toe.Editors.Marmalade
 {
@@ -30,8 +29,9 @@ namespace Toe.Editors.Marmalade
 			IEditorEnvironment editorEnvironment,
 			IResourceManager resourceManager,
 			IComponentContext context,
-			IEditorOptions<Base3DEditorOptions> options, Base3DEditorContent content)
-			: base(context, options,content)
+			IEditorOptions<Base3DEditorOptions> options,
+			Base3DEditorContent content)
+			: base(context, options, content)
 		{
 			this.editorEnvironment = editorEnvironment;
 			this.resourceManager = resourceManager;

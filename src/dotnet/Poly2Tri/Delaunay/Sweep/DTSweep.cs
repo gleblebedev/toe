@@ -849,7 +849,7 @@ namespace Poly2Tri.Delaunay.Sweep
 				if (ot.EdgeIsConstrained[oi] || ot.EdgeIsDelaunay[oi])
 				{
 					t.EdgeIsConstrained[i] = ot.EdgeIsConstrained[oi];
-						// XXX: have no good way of setting this property when creating new triangles so lets set it here
+					// XXX: have no good way of setting this property when creating new triangles so lets set it here
 					continue;
 				}
 

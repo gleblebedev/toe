@@ -31,10 +31,6 @@ namespace Toe.Utils.Marmalade.IwGx
 
 		#endregion
 
-		#region Public Methods and Operators
-
 		//public abstract void ApplyOpenGL(int shaderProgramHandle);
-
-		#endregion
 	}
 }

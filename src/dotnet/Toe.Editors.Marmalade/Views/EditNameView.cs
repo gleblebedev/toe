@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Windows.Forms;
 
 using Toe.Editors.Interfaces;
@@ -28,11 +27,6 @@ namespace Toe.Editors.Marmalade.Views
 			this.dataContext.DataContextChanged += this.UpdateTextBox;
 			this.dataContext.PropertyChanged += this.UpdateTextBoxIfNameChanged;
 			this.ViewControl.TextChanged += this.UpdateDataContext;
-		}
-
-		private void UpdateTextBoxIfNameChanged(object sender, PropertyChangedEventArgs e)
-		{
-			this.UpdateTextBoxText();
 		}
 
 		#endregion
@@ -90,6 +84,11 @@ namespace Toe.Editors.Marmalade.Views
 			this.UpdateTextBoxText();
 		}
 
+		private void UpdateTextBoxIfNameChanged(object sender, PropertyChangedEventArgs e)
+		{
+			this.UpdateTextBoxText();
+		}
+
 		private void UpdateTextBoxText()
 		{
 			Managed managed = this.Managed;
@@ -123,8 +122,6 @@ namespace Toe.Editors.Marmalade.Views
 
 			private readonly Managed managed;
 
-			private string newName;
-
 			private readonly string oldName;
 
 			private readonly uint oldNameHash;
@@ -136,10 +133,14 @@ namespace Toe.Editors.Marmalade.Views
 			public SetNameCommand(Managed managed, string newName)
 			{
 				this.managed = managed;
-				this.newName = newName;
+				this.NewName = newName;
 				this.oldName = managed.Name;
 				this.oldNameHash = managed.NameHash;
 			}
+
+			#endregion
+
+			#region Public Properties
 
 			public Managed Managed
 			{
@@ -149,17 +150,7 @@ namespace Toe.Editors.Marmalade.Views
 				}
 			}
 
-			public string NewName
-			{
-				get
-				{
-					return this.newName;
-				}
-				set
-				{
-					this.newName = value;
-				}
-			}
+			public string NewName { get; set; }
 
 			public string OldName
 			{

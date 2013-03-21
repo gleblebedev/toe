@@ -3,10 +3,6 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 
-using OpenTK.Graphics.OpenGL;
-
-using PixelFormat = System.Drawing.Imaging.PixelFormat;
-
 namespace Toe.Marmalade.IwGx
 {
 	public class Image
@@ -393,6 +389,7 @@ namespace Toe.Marmalade.IwGx
 		public Image()
 		{
 		}
+
 		public Image(ushort w, ushort h, int p, ImageFormat format, byte[] data)
 		{
 			this.width = w;
@@ -401,6 +398,7 @@ namespace Toe.Marmalade.IwGx
 			this.format = format;
 			this.data = data;
 		}
+
 		public Image(Bitmap bitmap)
 		{
 			this.width = (ushort)bitmap.Width;
@@ -444,27 +442,6 @@ namespace Toe.Marmalade.IwGx
 		#endregion
 
 		#region Public Methods and Operators
-
-		public void FlipVerticaly()
-		{
-			if (this.data == null)
-			{
-				return;
-			}
-			byte[] row = new byte[this.pitch];
-			for (int i = 0; i < this.height / 2; ++i)
-			{
-				Array.Copy(this.data, i * this.pitch, row, 0, this.pitch);
-				Array.Copy(this.data, (this.height - 1 - i) * this.pitch, this.data, i * this.pitch, this.pitch);
-				Array.Copy(row, 0, this.data, (this.height - 1 - i) * this.pitch, this.pitch);
-			}
-		}
-
-	
-
-		#endregion
-
-		#region Methods
 
 		public Image ConvertToAbgr8888()
 		{
@@ -594,6 +571,25 @@ namespace Toe.Marmalade.IwGx
 			}
 			return image;
 		}
+
+		public void FlipVerticaly()
+		{
+			if (this.data == null)
+			{
+				return;
+			}
+			byte[] row = new byte[this.pitch];
+			for (int i = 0; i < this.height / 2; ++i)
+			{
+				Array.Copy(this.data, i * this.pitch, row, 0, this.pitch);
+				Array.Copy(this.data, (this.height - 1 - i) * this.pitch, this.data, i * this.pitch, this.pitch);
+				Array.Copy(row, 0, this.data, (this.height - 1 - i) * this.pitch, this.pitch);
+			}
+		}
+
+		#endregion
+
+		#region Methods
 
 		private void Palette4Rgb888ToAbgr8888(Image image)
 		{

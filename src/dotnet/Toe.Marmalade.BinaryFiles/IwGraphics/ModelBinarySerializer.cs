@@ -6,7 +6,6 @@ using Autofac;
 using OpenTK;
 
 using Toe.Marmalade.IwGraphics;
-using Toe.Resources;
 using Toe.Utils;
 
 namespace Toe.Marmalade.BinaryFiles.IwGraphics

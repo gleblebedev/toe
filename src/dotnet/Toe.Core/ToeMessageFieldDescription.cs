@@ -4,15 +4,21 @@ namespace Toe.Core
 {
 	public struct ToeMessageFieldDescription
 	{
-		private readonly string name;
-
-		private readonly string type;
+		#region Constants and Fields
 
 		private readonly int count;
 
 		private readonly uint id;
 
+		private readonly string name;
+
+		private readonly string type;
+
 		private readonly uint typeid;
+
+		#endregion
+
+		#region Constructors and Destructors
 
 		public ToeMessageFieldDescription(string name, string type, int count)
 		{
@@ -21,6 +27,26 @@ namespace Toe.Core
 			this.count = count;
 			this.id = Hash.Get(name);
 			this.typeid = Hash.Get(type);
+		}
+
+		#endregion
+
+		#region Public Properties
+
+		public int Count
+		{
+			get
+			{
+				return this.count;
+			}
+		}
+
+		public uint Id
+		{
+			get
+			{
+				return this.id;
+			}
 		}
 
 		public string Name
@@ -39,28 +65,26 @@ namespace Toe.Core
 			}
 		}
 
-		public int Count
-		{
-			get
-			{
-				return this.count;
-			}
-		}
-
-		public uint Id
-		{
-			get
-			{
-				return this.id;
-			}
-		}
-
 		public uint Typeid
 		{
 			get
 			{
 				return this.typeid;
 			}
+		}
+
+		#endregion
+
+		#region Public Methods and Operators
+
+		public static bool operator ==(ToeMessageFieldDescription left, ToeMessageFieldDescription right)
+		{
+			return left.Equals(right);
+		}
+
+		public static bool operator !=(ToeMessageFieldDescription left, ToeMessageFieldDescription right)
+		{
+			return !left.Equals(right);
 		}
 
 		public bool Equals(ToeMessageFieldDescription other)
@@ -85,7 +109,7 @@ namespace Toe.Core
 			{
 				return false;
 			}
-			return Equals((ToeMessageFieldDescription)obj);
+			return this.Equals((ToeMessageFieldDescription)obj);
 		}
 
 		/// <summary>
@@ -106,14 +130,6 @@ namespace Toe.Core
 			}
 		}
 
-		public static bool operator ==(ToeMessageFieldDescription left, ToeMessageFieldDescription right)
-		{
-			return left.Equals(right);
-		}
-
-		public static bool operator !=(ToeMessageFieldDescription left, ToeMessageFieldDescription right)
-		{
-			return !left.Equals(right);
-		}
+		#endregion
 	}
 }

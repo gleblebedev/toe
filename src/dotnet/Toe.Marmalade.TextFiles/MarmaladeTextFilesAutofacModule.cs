@@ -9,10 +9,7 @@ using Toe.Marmalade.TextFiles.IwGraphics;
 using Toe.Marmalade.TextFiles.IwGx;
 using Toe.Marmalade.TextFiles.IwResManager;
 using Toe.Resources;
-using Toe.Utils.Marmalade;
-using Toe.Utils.Marmalade.IwGraphics;
-using Toe.Utils.Marmalade.IwGx;
-using Toe.Utils.Marmalade.IwResManager;
+using Toe.Utils;
 
 namespace Toe.Marmalade.TextFiles
 {
@@ -28,7 +25,7 @@ namespace Toe.Marmalade.TextFiles
 			builder.RegisterType<AnimTextSerializer>().Keyed<ITextSerializer>(Anim.TypeHash).SingleInstance();
 			builder.RegisterType<SkelTextSerializer>().Keyed<ITextSerializer>(AnimSkel.TypeHash).SingleInstance();
 			builder.RegisterType<ModelTextSerializer>().Keyed<ITextSerializer>(Model.TypeHash).Keyed<ITextSerializer>(
-				Toe.Utils.Hash.Get("CMesh")).SingleInstance();
+				Hash.Get("CMesh")).SingleInstance();
 			builder.RegisterType<ShaderTextSerializer>().Keyed<ITextSerializer>(ShaderTechnique.TypeHash).SingleInstance();
 			builder.RegisterType<GroupTextSerializer>().Keyed<ITextSerializer>(ResGroup.TypeHash).SingleInstance();
 

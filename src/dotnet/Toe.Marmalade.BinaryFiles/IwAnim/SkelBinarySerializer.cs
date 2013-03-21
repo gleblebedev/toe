@@ -1,7 +1,6 @@
 using Autofac;
 
 using Toe.Marmalade.IwAnim;
-using Toe.Resources;
 using Toe.Utils;
 
 namespace Toe.Marmalade.BinaryFiles.IwAnim

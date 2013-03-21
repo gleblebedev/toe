@@ -19,11 +19,11 @@ namespace Toe.Marmalade.TextureFiles
 	{
 		#region Constants and Fields
 
+		private static readonly string[] extensions = new[] { ".bmp", ".png", ".jpg", ".tga" };
+
 		private readonly IComponentContext context;
 
 		private readonly IResourceManager resourceManager;
-
-		private static readonly string[] extensions = new string[] { ".bmp", ".png", ".jpg", ".tga" };
 
 		#endregion
 
@@ -37,7 +37,18 @@ namespace Toe.Marmalade.TextureFiles
 
 		#endregion
 
-		#region Public Methods and Operators
+		#region Public Properties
+
+		/// <summary>
+		/// List of extensions with leading dot.
+		/// </summary>
+		public IList<string> Extensions
+		{
+			get
+			{
+				return extensions;
+			}
+		}
 
 		/// <summary>
 		/// Name of file format.
@@ -50,16 +61,9 @@ namespace Toe.Marmalade.TextureFiles
 			}
 		}
 
-		/// <summary>
-		/// List of extensions with leading dot.
-		/// </summary>
-		public IList<string> Extensions
-		{
-			get
-			{
-				return extensions;
-			}
-		}
+		#endregion
+
+		#region Public Methods and Operators
 
 		public bool CanRead(string filePath)
 		{

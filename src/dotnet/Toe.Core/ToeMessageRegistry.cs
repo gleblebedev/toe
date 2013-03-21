@@ -4,19 +4,30 @@ namespace Toe.Core
 {
 	public class ToeMessageRegistry
 	{
-		readonly Dictionary<uint, int> map = new Dictionary<uint, int>();
+		#region Constants and Fields
 
-		List<ToeMessageDescription> messages = new List<ToeMessageDescription>(1024);
+		private readonly Dictionary<uint, int> map = new Dictionary<uint, int>();
+
+		private readonly List<ToeMessageDescription> messages = new List<ToeMessageDescription>(1024);
+
+		#endregion
+
+		#region Public Methods and Operators
 
 		public void Register(ref ToeMessageDescription message)
 		{
-			if (!map.ContainsKey(message.Id))
+			if (!this.map.ContainsKey(message.Id))
 			{
-				map.Add(message.Id,messages.Count);
-				messages.Add(message);
+				this.map.Add(message.Id, this.messages.Count);
+				this.messages.Add(message);
 				return;
 			}
-			if (messages[map[message.Id]] != message) throw new ToeException(string.Format("Different version of message {0} registered already", message.Name));
+			if (this.messages[this.map[message.Id]] != message)
+			{
+				throw new ToeException(string.Format("Different version of message {0} registered already", message.Name));
+			}
 		}
+
+		#endregion
 	}
 }

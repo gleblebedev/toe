@@ -1,7 +1,6 @@
 using Toe.Marmalade.IwGraphics;
 using Toe.Resources;
 using Toe.Utils;
-using Toe.Utils.Marmalade.IwGraphics;
 using Toe.Utils.Mesh;
 
 namespace Toe.Marmalade.IwAnim
@@ -28,7 +27,7 @@ namespace Toe.Marmalade.IwAnim
 
 		public AnimSkin(IResourceManager resourceManager, ManagedList<AnimBone> b)
 		{
-			bones = b;
+			this.bones = b;
 			this.resourceManager = resourceManager;
 			this.skeleton = new ResourceReference(AnimSkel.TypeHash, resourceManager, this);
 			this.skeletonModel = new ResourceReference(Model.TypeHash, resourceManager, this);

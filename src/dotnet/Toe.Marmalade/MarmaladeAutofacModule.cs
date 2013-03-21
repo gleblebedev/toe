@@ -5,8 +5,6 @@ using Toe.Marmalade.IwGraphics;
 using Toe.Marmalade.IwGx;
 using Toe.Marmalade.IwResManager;
 using Toe.Resources;
-using Toe.Utils.Marmalade.IwGraphics;
-using Toe.Utils.Marmalade.IwGx;
 
 namespace Toe.Marmalade
 {
@@ -22,7 +20,7 @@ namespace Toe.Marmalade
 			builder.RegisterType<AnimSkel>().As<AnimSkel>();
 			builder.RegisterType<AnimBone>().As<AnimBone>();
 			builder.RegisterType<AnimKeyFrame>().As<AnimKeyFrame>();
-			
+
 			builder.RegisterType<Anim>().As<Anim>();
 			builder.RegisterType<Texture>().As<Texture>();
 			builder.RegisterType<ResGroup>().As<ResGroup>();

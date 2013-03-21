@@ -1,9 +1,6 @@
 using System;
-using System.Data.SqlTypes;
-using System.Diagnostics;
 
 using OpenTK;
-using OpenTK.Graphics.OpenGL;
 
 using Toe.Editors.Interfaces;
 using Toe.Gx;
@@ -14,6 +11,15 @@ namespace Toe.Editors
 	public class EditorCamera : ClassWithNotification
 	{
 		#region Constants and Fields
+
+		protected static PropertyEventArgs AspectRatioEventArgs = Expr.PropertyEventArgs<EditorCamera>(x => x.AspectRatio);
+
+		protected static PropertyEventArgs CoordinateSystemEventArgs =
+			Expr.PropertyEventArgs<EditorCamera>(x => x.CoordinateSystem);
+
+		protected static PropertyEventArgs PosEventArgs = Expr.PropertyEventArgs<EditorCamera>(x => x.Pos);
+
+		protected static PropertyEventArgs RotEventArgs = Expr.PropertyEventArgs<EditorCamera>(x => x.Rot);
 
 		private readonly IEditorOptions<EditorCameraOptions> cameraOptions;
 
@@ -29,7 +35,7 @@ namespace Toe.Editors
 
 		private Quaternion rot = Quaternion.Identity;
 
-		private float zFar = 4*2048.0f;
+		private float zFar = 4 * 2048.0f;
 
 		private float zNear = 16.0f;
 
@@ -47,8 +53,6 @@ namespace Toe.Editors
 
 		#region Public Properties
 
-		protected static PropertyEventArgs AspectRatioEventArgs = Expr.PropertyEventArgs<EditorCamera>(x => x.AspectRatio);
-
 		public float AspectRatio
 		{
 			get
@@ -65,10 +69,6 @@ namespace Toe.Editors
 				}
 			}
 		}
-
-		protected static PropertyEventArgs CoordinateSystemEventArgs = Expr.PropertyEventArgs<EditorCamera>(x => x.CoordinateSystem);
-
-		
 
 		public CoordinateSystem CoordinateSystem
 		{
@@ -89,7 +89,6 @@ namespace Toe.Editors
 				}
 			}
 		}
-		
 
 		public Vector3 Forward
 		{
@@ -110,8 +109,6 @@ namespace Toe.Editors
 				this.ortho = value;
 			}
 		}
-
-		protected static PropertyEventArgs PosEventArgs = Expr.PropertyEventArgs<EditorCamera>(x => x.Pos);
 
 		public Vector3 Pos
 		{
@@ -137,8 +134,6 @@ namespace Toe.Editors
 				return Vector3.Transform(new Vector3(1, 0, 0), this.rot);
 			}
 		}
-
-		protected static PropertyEventArgs RotEventArgs = Expr.PropertyEventArgs<EditorCamera>(x => x.Rot);
 
 		public Quaternion Rot
 		{

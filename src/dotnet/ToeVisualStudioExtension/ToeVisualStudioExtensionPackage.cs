@@ -12,7 +12,6 @@ using EnvDTE80;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 
-using Toe.Editor;
 using Toe.Editors;
 using Toe.Editors.GenericScene;
 using Toe.Editors.Interfaces;
@@ -61,25 +60,18 @@ namespace TinyOpenEngine.ToeVisualStudioExtension
 		TemplateDir = "Templates", NameResourceID = 105, DefaultName = "Skin")]
 	[ProvideEditorExtension(typeof(EditorFactory), ".skel", 50, ProjectGuid = "{A2FE74E1-B743-11d0-AE1A-00A0C90FFFC3}",
 		TemplateDir = "Templates", NameResourceID = 105, DefaultName = "Skeleton")]
-
 	[ProvideEditorExtension(typeof(EditorFactory), ".mtl", 50, ProjectGuid = "{A2FE74E1-B743-11d0-AE1A-00A0C90FFFC3}",
 		TemplateDir = "Templates", NameResourceID = 105, DefaultName = "Material")]
-
 	[ProvideEditorExtension(typeof(EditorFactory), ".tga", 50, ProjectGuid = "{A2FE74E1-B743-11d0-AE1A-00A0C90FFFC3}",
 		TemplateDir = "Templates", NameResourceID = 105, DefaultName = "Texture")]
-
 	[ProvideEditorExtension(typeof(EditorFactory), ".bmp", 50, ProjectGuid = "{A2FE74E1-B743-11d0-AE1A-00A0C90FFFC3}",
 		TemplateDir = "Templates", NameResourceID = 105, DefaultName = "Texture")]
-
 	[ProvideEditorExtension(typeof(EditorFactory), ".jpg", 50, ProjectGuid = "{A2FE74E1-B743-11d0-AE1A-00A0C90FFFC3}",
 		TemplateDir = "Templates", NameResourceID = 105, DefaultName = "Texture")]
-
 	[ProvideEditorExtension(typeof(EditorFactory), ".png", 50, ProjectGuid = "{A2FE74E1-B743-11d0-AE1A-00A0C90FFFC3}",
 		TemplateDir = "Templates", NameResourceID = 105, DefaultName = "Texture")]
-
 	[ProvideEditorExtension(typeof(EditorFactory), ".bsp", 50, ProjectGuid = "{A2FE74E1-B743-11d0-AE1A-00A0C90FFFC3}",
-	TemplateDir = "Templates", NameResourceID = 105, DefaultName = "BSP")]
-
+		TemplateDir = "Templates", NameResourceID = 105, DefaultName = "BSP")]
 	[ProvideEditorExtension(typeof(EditorFactory), ".bin", 1000, ProjectGuid = "{A2FE74E1-B743-11d0-AE1A-00A0C90FFFC3}",
 		NameResourceID = 105, DefaultName = "GroupBinary")]
 	[ProvideKeyBindingTable(GuidList.guidToeVisualStudioExtensionEditorFactoryString, 102)]

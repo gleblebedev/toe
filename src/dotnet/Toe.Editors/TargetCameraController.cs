@@ -12,19 +12,19 @@ namespace Toe.Editors
 
 		private readonly Timer animationTimer;
 
+		private bool cameraBackward;
+
 		private bool cameraForward;
+
+		private bool cameraStrifeLeft;
+
+		private bool cameraStrifeRight;
 
 		private Vector3 cameraVelocity;
 
 		private Point? lastKnownMousePosition;
 
 		private float targetDistance = 1024;
-
-		private bool cameraBackward;
-
-		private bool cameraStrifeLeft;
-
-		private bool cameraStrifeRight;
 
 		#endregion
 
@@ -64,6 +64,10 @@ namespace Toe.Editors
 		}
 
 		public void Detach(GLControl gl)
+		{
+		}
+
+		public void GotFocus()
 		{
 		}
 
@@ -109,13 +113,8 @@ namespace Toe.Editors
 
 		public void LostFocus()
 		{
-			cameraForward = false;
+			this.cameraForward = false;
 			this.EnableAnimationIfNecessery();
-		}
-
-		public void GotFocus()
-		{
-			
 		}
 
 		public void MouseEnter()

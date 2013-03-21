@@ -8,19 +8,17 @@ namespace Toe.Core
 	{
 		#region Constants and Fields
 
-		public ToeEntityId Id;
-
-		#region Tree
-
 		/// <summary>
-		/// Parent node.
+		/// Mask of available components.
 		/// </summary>
-		public uint Parent;
+		public uint ComponentMask;
 
 		/// <summary>
 		/// Child child node.
 		/// </summary>
 		public uint FirstChild;
+
+		public ToeEntityId Id;
 
 		/// <summary>
 		/// Last child node.
@@ -28,21 +26,19 @@ namespace Toe.Core
 		public uint LastChild;
 
 		/// <summary>
-		/// Previous sibling.
+		/// Next enitity in list of available/used/trashed.
 		/// </summary>
-		public uint PreviousSibling;
+		public uint Next;
 
 		/// <summary>
 		/// Next sibling.
 		/// </summary>
 		public uint NextSibling;
 
-		#endregion
-
 		/// <summary>
-		/// Next enitity in list of available/used/trashed.
+		/// Parent node.
 		/// </summary>
-		public uint Next;
+		public uint Parent;
 
 		/// <summary>
 		/// Previous enitity in list of available/used/trashed.
@@ -50,9 +46,9 @@ namespace Toe.Core
 		public uint Previous;
 
 		/// <summary>
-		/// Mask of available components.
+		/// Previous sibling.
 		/// </summary>
-		public uint ComponentMask;
+		public uint PreviousSibling;
 
 		#endregion
 	}
