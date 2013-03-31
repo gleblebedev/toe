@@ -1,0 +1,7 @@
+_ReSharper.*
+Debug
+Emscripten
+ipch
+*.suo
+*.opensdf
+*.user
