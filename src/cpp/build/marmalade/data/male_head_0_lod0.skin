@@ -1,0 +1,1081 @@
+CIwAnimSkin
+{
+name "male_head_0_lod0"
+skeleton "male_skel_lod0"
+model "male_head_0_lod0"
+CIwAnimSkinSet
+{
+useBones { Head Neck RightClavicle Spine2 }
+numVerts 3
+vertWeights {0,0.02365481,0.2,0.02964672,0.7466985}
+vertWeights {1,0.05447101,0.2,0.002090952,0.7434381}
+vertWeights {17,0.2827971,0.5934523,3.6884E-05,0.1237137}
+}
+CIwAnimSkinSet
+{
+useBones { RightClavicle Spine2 }
+numVerts 5
+vertWeights {2,0.9,0.1}
+vertWeights {4,0.6447378,0.3552622}
+vertWeights {5,0.4162757,0.5837243}
+vertWeights {7,0.06205085,0.9379492}
+vertWeights {10,0.1,0.9}
+}
+CIwAnimSkinSet
+{
+useBones { Head LeftClavicle RightClavicle Spine2 }
+numVerts 2
+vertWeights {3,0.000247171,0.000925717,0.3595041,0.639323}
+vertWeights {419,0.0002504,0.3595025,0.000925709,0.6393214}
+}
+CIwAnimSkinSet
+{
+useBones { LeftClavicle RightClavicle Spine2 }
+numVerts 6
+vertWeights {6,0.003526751,0.223775,0.7726982}
+vertWeights {11,0.07086191,0.07086182,0.8582762}
+vertWeights {12,0.03783763,0.03783755,0.9243248}
+vertWeights {421,0.223775,0.003526736,0.7726982}
+vertWeights {427,0.07086191,0.07086182,0.8582762}
+vertWeights {428,0.03783763,0.03783755,0.9243248}
+}
+CIwAnimSkinSet
+{
+useBones { Head Neck Spine2 }
+numVerts 4
+vertWeights {8,0.08630687,0.2,0.7136931}
+vertWeights {45,0.2490656,0.6717188,0.07921561}
+vertWeights {424,0.08630687,0.2,0.7136931}
+vertWeights {461,0.2490656,0.6717188,0.07921561}
+}
+CIwAnimSkinSet
+{
+useBones { Head Spine2 }
+numVerts 10
+vertWeights {9,0.000893899,0.9991061}
+vertWeights {16,0.65,0.35}
+vertWeights {27,0.2499999,0.7500001}
+vertWeights {28,0.2499999,0.7500001}
+vertWeights {123,0.65,0.35}
+vertWeights {426,0.000893899,0.9991061}
+vertWeights {434,0.65,0.35}
+vertWeights {443,0.2499999,0.7500001}
+vertWeights {444,0.2499999,0.7500001}
+vertWeights {538,0.65,0.35}
+}
+CIwAnimSkinSet
+{
+useBones { Spine2 }
+numVerts 2
+vertWeights {13,1}
+vertWeights {429,1}
+}
+CIwAnimSkinSet
+{
+useBones { Spine1 Spine2 }
+numVerts 2
+vertWeights {14,0.000189174,0.9998108}
+vertWeights {430,0.000189174,0.9998108}
+}
+CIwAnimSkinSet
+{
+useBones { Head }
+numVerts 351
+vertWeights {15,1}
+vertWeights {18,1}
+vertWeights {19,1}
+vertWeights {20,1}
+vertWeights {21,1}
+vertWeights {22,1}
+vertWeights {29,1}
+vertWeights {30,1}
+vertWeights {31,1}
+vertWeights {32,1}
+vertWeights {33,1}
+vertWeights {34,1}
+vertWeights {35,1}
+vertWeights {36,1}
+vertWeights {37,1}
+vertWeights {38,1}
+vertWeights {39,1}
+vertWeights {40,1}
+vertWeights {41,1}
+vertWeights {42,1}
+vertWeights {43,1}
+vertWeights {44,1}
+vertWeights {46,1}
+vertWeights {47,1}
+vertWeights {48,1}
+vertWeights {49,1}
+vertWeights {50,1}
+vertWeights {51,1}
+vertWeights {52,1}
+vertWeights {53,1}
+vertWeights {54,1}
+vertWeights {55,1}
+vertWeights {56,1}
+vertWeights {57,1}
+vertWeights {58,1}
+vertWeights {59,1}
+vertWeights {60,1}
+vertWeights {61,1}
+vertWeights {62,1}
+vertWeights {63,1}
+vertWeights {64,1}
+vertWeights {65,1}
+vertWeights {66,1}
+vertWeights {67,1}
+vertWeights {68,1}
+vertWeights {69,1}
+vertWeights {70,1}
+vertWeights {71,1}
+vertWeights {72,1}
+vertWeights {73,1}
+vertWeights {74,1}
+vertWeights {75,1}
+vertWeights {76,1}
+vertWeights {77,1}
+vertWeights {78,1}
+vertWeights {79,1}
+vertWeights {80,1}
+vertWeights {81,1}
+vertWeights {82,1}
+vertWeights {83,1}
+vertWeights {84,1}
+vertWeights {85,1}
+vertWeights {86,1}
+vertWeights {87,1}
+vertWeights {88,1}
+vertWeights {89,1}
+vertWeights {90,1}
+vertWeights {91,1}
+vertWeights {92,1}
+vertWeights {93,1}
+vertWeights {94,1}
+vertWeights {95,1}
+vertWeights {96,1}
+vertWeights {97,1}
+vertWeights {98,1}
+vertWeights {99,1}
+vertWeights {100,1}
+vertWeights {101,1}
+vertWeights {102,1}
+vertWeights {103,1}
+vertWeights {113,1}
+vertWeights {114,1}
+vertWeights {115,1}
+vertWeights {116,1}
+vertWeights {122,1}
+vertWeights {124,1}
+vertWeights {140,1}
+vertWeights {152,1}
+vertWeights {153,1}
+vertWeights {154,1}
+vertWeights {155,1}
+vertWeights {156,1}
+vertWeights {157,1}
+vertWeights {158,1}
+vertWeights {159,1}
+vertWeights {160,1}
+vertWeights {161,1}
+vertWeights {166,1}
+vertWeights {167,1}
+vertWeights {168,1}
+vertWeights {169,1}
+vertWeights {170,1}
+vertWeights {171,1}
+vertWeights {176,1}
+vertWeights {178,1}
+vertWeights {179,1}
+vertWeights {180,1}
+vertWeights {190,1}
+vertWeights {191,1}
+vertWeights {192,1}
+vertWeights {193,1}
+vertWeights {195,1}
+vertWeights {196,1}
+vertWeights {199,1}
+vertWeights {201,1}
+vertWeights {207,1}
+vertWeights {215,1}
+vertWeights {216,1}
+vertWeights {217,1}
+vertWeights {221,1}
+vertWeights {222,1}
+vertWeights {223,1}
+vertWeights {224,1}
+vertWeights {225,1}
+vertWeights {226,1}
+vertWeights {227,1}
+vertWeights {228,1}
+vertWeights {229,1}
+vertWeights {245,1}
+vertWeights {246,1}
+vertWeights {249,1}
+vertWeights {250,1}
+vertWeights {251,1}
+vertWeights {262,1}
+vertWeights {263,1}
+vertWeights {264,1}
+vertWeights {265,1}
+vertWeights {271,1}
+vertWeights {272,1}
+vertWeights {278,1}
+vertWeights {282,1}
+vertWeights {285,1}
+vertWeights {287,1}
+vertWeights {288,1}
+vertWeights {289,1}
+vertWeights {290,1}
+vertWeights {304,1}
+vertWeights {306,1}
+vertWeights {310,1}
+vertWeights {311,1}
+vertWeights {312,1}
+vertWeights {313,1}
+vertWeights {314,1}
+vertWeights {360,1}
+vertWeights {361,1}
+vertWeights {362,1}
+vertWeights {363,1}
+vertWeights {364,1}
+vertWeights {365,1}
+vertWeights {370,1}
+vertWeights {383,1}
+vertWeights {384,1}
+vertWeights {385,1}
+vertWeights {386,1}
+vertWeights {387,1}
+vertWeights {388,1}
+vertWeights {389,1}
+vertWeights {390,1}
+vertWeights {391,1}
+vertWeights {392,1}
+vertWeights {393,1}
+vertWeights {394,1}
+vertWeights {396,1}
+vertWeights {398,1}
+vertWeights {409,1}
+vertWeights {410,1}
+vertWeights {411,1}
+vertWeights {413,1}
+vertWeights {414,1}
+vertWeights {415,1}
+vertWeights {431,1}
+vertWeights {432,1}
+vertWeights {435,1}
+vertWeights {436,1}
+vertWeights {437,1}
+vertWeights {438,1}
+vertWeights {445,1}
+vertWeights {446,1}
+vertWeights {447,1}
+vertWeights {448,1}
+vertWeights {449,1}
+vertWeights {450,1}
+vertWeights {451,1}
+vertWeights {452,1}
+vertWeights {453,1}
+vertWeights {454,1}
+vertWeights {455,1}
+vertWeights {456,1}
+vertWeights {457,1}
+vertWeights {458,1}
+vertWeights {459,1}
+vertWeights {460,1}
+vertWeights {462,1}
+vertWeights {463,1}
+vertWeights {464,1}
+vertWeights {465,1}
+vertWeights {466,1}
+vertWeights {467,1}
+vertWeights {468,1}
+vertWeights {469,1}
+vertWeights {470,1}
+vertWeights {471,1}
+vertWeights {472,1}
+vertWeights {473,1}
+vertWeights {474,1}
+vertWeights {475,1}
+vertWeights {476,1}
+vertWeights {477,1}
+vertWeights {478,1}
+vertWeights {479,1}
+vertWeights {480,1}
+vertWeights {481,1}
+vertWeights {482,1}
+vertWeights {483,1}
+vertWeights {484,1}
+vertWeights {485,1}
+vertWeights {486,1}
+vertWeights {487,1}
+vertWeights {488,1}
+vertWeights {489,1}
+vertWeights {490,1}
+vertWeights {491,1}
+vertWeights {492,1}
+vertWeights {493,1}
+vertWeights {494,1}
+vertWeights {495,1}
+vertWeights {496,1}
+vertWeights {497,1}
+vertWeights {498,1}
+vertWeights {499,1}
+vertWeights {500,1}
+vertWeights {501,1}
+vertWeights {502,1}
+vertWeights {503,1}
+vertWeights {504,1}
+vertWeights {505,1}
+vertWeights {506,1}
+vertWeights {507,1}
+vertWeights {508,1}
+vertWeights {509,1}
+vertWeights {510,1}
+vertWeights {511,1}
+vertWeights {512,1}
+vertWeights {513,1}
+vertWeights {514,1}
+vertWeights {515,1}
+vertWeights {516,1}
+vertWeights {517,1}
+vertWeights {518,1}
+vertWeights {519,1}
+vertWeights {529,1}
+vertWeights {530,1}
+vertWeights {531,1}
+vertWeights {532,1}
+vertWeights {539,1}
+vertWeights {540,1}
+vertWeights {559,1}
+vertWeights {568,1}
+vertWeights {569,1}
+vertWeights {570,1}
+vertWeights {571,1}
+vertWeights {572,1}
+vertWeights {573,1}
+vertWeights {574,1}
+vertWeights {575,1}
+vertWeights {576,1}
+vertWeights {577,1}
+vertWeights {582,1}
+vertWeights {583,1}
+vertWeights {584,1}
+vertWeights {585,1}
+vertWeights {590,1}
+vertWeights {591,1}
+vertWeights {593,1}
+vertWeights {594,1}
+vertWeights {604,1}
+vertWeights {605,1}
+vertWeights {607,1}
+vertWeights {608,1}
+vertWeights {611,1}
+vertWeights {613,1}
+vertWeights {615,1}
+vertWeights {624,1}
+vertWeights {625,1}
+vertWeights {626,1}
+vertWeights {630,1}
+vertWeights {631,1}
+vertWeights {632,1}
+vertWeights {633,1}
+vertWeights {634,1}
+vertWeights {645,1}
+vertWeights {648,1}
+vertWeights {649,1}
+vertWeights {650,1}
+vertWeights {651,1}
+vertWeights {660,1}
+vertWeights {661,1}
+vertWeights {662,1}
+vertWeights {668,1}
+vertWeights {669,1}
+vertWeights {674,1}
+vertWeights {678,1}
+vertWeights {682,1}
+vertWeights {683,1}
+vertWeights {684,1}
+vertWeights {685,1}
+vertWeights {686,1}
+vertWeights {697,1}
+vertWeights {699,1}
+vertWeights {704,1}
+vertWeights {705,1}
+vertWeights {706,1}
+vertWeights {707,1}
+vertWeights {708,1}
+vertWeights {754,1}
+vertWeights {755,1}
+vertWeights {756,1}
+vertWeights {757,1}
+vertWeights {761,1}
+vertWeights {775,1}
+vertWeights {776,1}
+vertWeights {777,1}
+vertWeights {778,1}
+vertWeights {779,1}
+vertWeights {780,1}
+vertWeights {781,1}
+vertWeights {782,1}
+vertWeights {783,1}
+vertWeights {784,1}
+vertWeights {785,1}
+vertWeights {786,1}
+vertWeights {788,1}
+vertWeights {790,1}
+vertWeights {801,1}
+vertWeights {802,1}
+vertWeights {803,1}
+vertWeights {804,1}
+vertWeights {805,1}
+vertWeights {806,1}
+vertWeights {807,1}
+vertWeights {808,1}
+}
+CIwAnimSkinSet
+{
+useBones { Mouth }
+numVerts 98
+vertWeights {23,1}
+vertWeights {24,1}
+vertWeights {25,1}
+vertWeights {26,1}
+vertWeights {104,1}
+vertWeights {107,1}
+vertWeights {108,1}
+vertWeights {110,1}
+vertWeights {111,1}
+vertWeights {117,1}
+vertWeights {118,1}
+vertWeights {119,1}
+vertWeights {162,1}
+vertWeights {164,1}
+vertWeights {165,1}
+vertWeights {252,1}
+vertWeights {256,1}
+vertWeights {257,1}
+vertWeights {300,1}
+vertWeights {307,1}
+vertWeights {308,1}
+vertWeights {356,1}
+vertWeights {357,1}
+vertWeights {358,1}
+vertWeights {359,1}
+vertWeights {367,1}
+vertWeights {371,1}
+vertWeights {372,1}
+vertWeights {373,1}
+vertWeights {374,1}
+vertWeights {375,1}
+vertWeights {376,1}
+vertWeights {377,1}
+vertWeights {378,1}
+vertWeights {379,1}
+vertWeights {380,1}
+vertWeights {381,1}
+vertWeights {382,1}
+vertWeights {395,1}
+vertWeights {399,1}
+vertWeights {400,1}
+vertWeights {401,1}
+vertWeights {402,1}
+vertWeights {403,1}
+vertWeights {404,1}
+vertWeights {405,1}
+vertWeights {406,1}
+vertWeights {407,1}
+vertWeights {408,1}
+vertWeights {439,1}
+vertWeights {440,1}
+vertWeights {441,1}
+vertWeights {442,1}
+vertWeights {520,1}
+vertWeights {521,1}
+vertWeights {524,1}
+vertWeights {526,1}
+vertWeights {527,1}
+vertWeights {533,1}
+vertWeights {534,1}
+vertWeights {535,1}
+vertWeights {578,1}
+vertWeights {579,1}
+vertWeights {580,1}
+vertWeights {652,1}
+vertWeights {656,1}
+vertWeights {657,1}
+vertWeights {694,1}
+vertWeights {701,1}
+vertWeights {702,1}
+vertWeights {750,1}
+vertWeights {751,1}
+vertWeights {752,1}
+vertWeights {753,1}
+vertWeights {759,1}
+vertWeights {763,1}
+vertWeights {764,1}
+vertWeights {765,1}
+vertWeights {766,1}
+vertWeights {767,1}
+vertWeights {768,1}
+vertWeights {769,1}
+vertWeights {770,1}
+vertWeights {771,1}
+vertWeights {772,1}
+vertWeights {773,1}
+vertWeights {774,1}
+vertWeights {787,1}
+vertWeights {791,1}
+vertWeights {792,1}
+vertWeights {793,1}
+vertWeights {794,1}
+vertWeights {795,1}
+vertWeights {796,1}
+vertWeights {797,1}
+vertWeights {798,1}
+vertWeights {799,1}
+vertWeights {800,1}
+}
+CIwAnimSkinSet
+{
+useBones { Chin Mouth }
+numVerts 20
+vertWeights {105,0.25,0.75}
+vertWeights {106,0.25,0.75}
+vertWeights {109,0.25,0.75}
+vertWeights {120,0.4,0.6}
+vertWeights {121,0.4,0.6}
+vertWeights {172,0.25,0.75}
+vertWeights {173,0.4,0.6}
+vertWeights {174,0.58,0.42}
+vertWeights {175,0.25,0.75}
+vertWeights {248,0.58,0.42}
+vertWeights {275,0.4,0.6}
+vertWeights {522,0.25,0.75}
+vertWeights {523,0.25,0.75}
+vertWeights {525,0.25,0.75}
+vertWeights {536,0.4,0.6}
+vertWeights {537,0.4,0.6}
+vertWeights {586,0.25,0.75}
+vertWeights {587,0.25,0.75}
+vertWeights {588,0.58,0.42}
+vertWeights {589,0.4,0.6}
+}
+CIwAnimSkinSet
+{
+useBones { Head Mouth }
+numVerts 14
+vertWeights {112,0.88,0.12}
+vertWeights {163,0.2,0.8}
+vertWeights {181,0.88,0.12}
+vertWeights {182,0.94,0.06}
+vertWeights {183,0.85,0.15}
+vertWeights {197,0.51,0.49}
+vertWeights {266,0.88,0.12}
+vertWeights {528,0.88,0.12}
+vertWeights {581,0.2,0.8}
+vertWeights {595,0.88,0.12}
+vertWeights {596,0.94,0.06}
+vertWeights {597,0.85,0.15}
+vertWeights {610,0.51,0.49}
+vertWeights {663,0.88,0.12}
+}
+CIwAnimSkinSet
+{
+useBones { Head RightEyelid }
+numVerts 10
+vertWeights {125,0.26,0.74}
+vertWeights {126,0.05,0.95}
+vertWeights {127,0.05,0.95}
+vertWeights {128,0.26,0.74}
+vertWeights {130,0.1,0.9}
+vertWeights {131,0.1,0.9}
+vertWeights {139,0.78,0.22}
+vertWeights {144,0.78,0.22}
+vertWeights {151,0.78,0.22}
+vertWeights {274,0.78,0.22}
+}
+CIwAnimSkinSet
+{
+useBones { RightEyelid }
+numVerts 2
+vertWeights {129,1}
+vertWeights {132,1}
+}
+CIwAnimSkinSet
+{
+useBones { Head RightLowerEyelid }
+numVerts 24
+vertWeights {133,0.63,0.37}
+vertWeights {134,0.8,0.2}
+vertWeights {135,0.8,0.2}
+vertWeights {136,0.8,0.2}
+vertWeights {137,0.63,0.37}
+vertWeights {138,0.63,0.37}
+vertWeights {141,0.8,0.2}
+vertWeights {142,0.8,0.2}
+vertWeights {143,0.8,0.2}
+vertWeights {145,0.63,0.37}
+vertWeights {146,0.63,0.37}
+vertWeights {147,0.63,0.37}
+vertWeights {148,0.63,0.37}
+vertWeights {149,0.63,0.37}
+vertWeights {150,0.63,0.37}
+vertWeights {267,0.73,0.27}
+vertWeights {268,0.8,0.2}
+vertWeights {269,0.8,0.2}
+vertWeights {270,0.63,0.37}
+vertWeights {281,0.63,0.37}
+vertWeights {283,0.63,0.37}
+vertWeights {284,0.9,0.1}
+vertWeights {286,0.9,0.1}
+vertWeights {291,0.63,0.37}
+}
+CIwAnimSkinSet
+{
+useBones { Head RightEyebrow1 }
+numVerts 6
+vertWeights {177,0.55,0.45}
+vertWeights {208,0.55,0.45}
+vertWeights {209,0.9,0.1}
+vertWeights {210,0.9,0.1}
+vertWeights {279,0.9,0.1}
+vertWeights {280,0.9,0.1}
+}
+CIwAnimSkinSet
+{
+useBones { Head RightUpperLip }
+numVerts 5
+vertWeights {184,0.4499999,0.5500001}
+vertWeights {185,0.55,0.45}
+vertWeights {212,0.6,0.4}
+vertWeights {260,0.8,0.2}
+vertWeights {303,0.4499999,0.5500001}
+}
+CIwAnimSkinSet
+{
+useBones { Head RightLipCorner RightUpperLip }
+numVerts 3
+vertWeights {186,0.3755555,0.4800001,0.1444444}
+vertWeights {187,0.3394444,0.5300001,0.1305555}
+vertWeights {305,0.3394444,0.5300001,0.1305555}
+}
+CIwAnimSkinSet
+{
+useBones { Head RightCheek }
+numVerts 8
+vertWeights {188,0.85,0.15}
+vertWeights {189,0.8,0.2}
+vertWeights {194,0.34,0.66}
+vertWeights {218,0.1899999,0.8100001}
+vertWeights {219,0.75,0.25}
+vertWeights {220,0.75,0.25}
+vertWeights {243,0.85,0.15}
+vertWeights {247,0.4499999,0.5500001}
+}
+CIwAnimSkinSet
+{
+useBones { Head RightLipCorner }
+numVerts 6
+vertWeights {198,0.4999999,0.5000001}
+vertWeights {232,0.1499999,0.8500001}
+vertWeights {253,0.4999999,0.5000001}
+vertWeights {254,0.6,0.4}
+vertWeights {255,0.75,0.25}
+vertWeights {292,0.1499999,0.8500001}
+}
+CIwAnimSkinSet
+{
+useBones { Head RightEyebrow2 }
+numVerts 8
+vertWeights {200,0.3,0.7}
+vertWeights {204,0.9,0.1}
+vertWeights {205,0.3,0.7}
+vertWeights {244,0.95,0.05}
+vertWeights {261,0.3,0.7}
+vertWeights {273,0.95,0.05}
+vertWeights {276,0.95,0.05}
+vertWeights {277,0.9,0.1}
+}
+CIwAnimSkinSet
+{
+useBones { BridgeOfNose Head }
+numVerts 2
+vertWeights {202,0.28,0.72}
+vertWeights {203,0.58,0.42}
+}
+CIwAnimSkinSet
+{
+useBones { Head RightEyebrow1 RightEyebrow2 }
+numVerts 2
+vertWeights {206,0.272,0.528,0.2}
+vertWeights {214,0.272,0.528,0.2}
+}
+CIwAnimSkinSet
+{
+useBones { Head LeftUpperLip RightUpperLip }
+numVerts 5
+vertWeights {211,0.4533058,0.2722129,0.2744813}
+vertWeights {258,0.4483264,0.2764127,0.2752609}
+vertWeights {259,0.8853193,0.06162959,0.0530511}
+vertWeights {302,0.4533058,0.2722129,0.2744813}
+vertWeights {696,0.4533058,0.2722129,0.2744813}
+}
+CIwAnimSkinSet
+{
+useBones { BridgeOfNose Head RightEyebrow2 }
+numVerts 1
+vertWeights {213,0.22,0.234,0.5459999}
+}
+CIwAnimSkinSet
+{
+useBones { Mouth RightLipCorner }
+numVerts 3
+vertWeights {230,0.9,0.1}
+vertWeights {369,0.7,0.3}
+vertWeights {397,0.7,0.3}
+}
+CIwAnimSkinSet
+{
+useBones { Head Mouth RightLipCorner RightLowerLip }
+numVerts 5
+vertWeights {231,0.08783223,0.5589949,0.2031728,0.15}
+vertWeights {241,0.06964403,0.4363462,0.3440097,0.15}
+vertWeights {242,0.08783223,0.5589949,0.2031728,0.15}
+vertWeights {293,0.06194876,0.4056545,0.3823968,0.15}
+vertWeights {309,0.06194876,0.4056545,0.3823968,0.15}
+}
+CIwAnimSkinSet
+{
+useBones { Head Mouth RightLowerLip }
+numVerts 5
+vertWeights {233,0.02425066,0.4379554,0.537794}
+vertWeights {236,0.02425066,0.4379554,0.537794}
+vertWeights {240,0.02425066,0.4379554,0.537794}
+vertWeights {295,0.02425066,0.4379554,0.537794}
+vertWeights {301,0.02425066,0.4379554,0.537794}
+}
+CIwAnimSkinSet
+{
+useBones { LeftLowerLip RightLowerLip }
+numVerts 7
+vertWeights {234,0.5000001,0.4999999}
+vertWeights {235,0.5,0.5}
+vertWeights {239,0.5000001,0.4999999}
+vertWeights {296,0.5,0.5}
+vertWeights {297,0.5,0.5}
+vertWeights {298,0.5,0.5}
+vertWeights {692,0.5,0.5}
+}
+CIwAnimSkinSet
+{
+useBones { Chin Mouth RightLowerLip }
+numVerts 1
+vertWeights {237,0.15,0.8075,0.0425}
+}
+CIwAnimSkinSet
+{
+useBones { Chin LeftLowerLip Mouth RightLowerLip }
+numVerts 1
+vertWeights {238,0.15,0.0425,0.765,0.0425}
+}
+CIwAnimSkinSet
+{
+useBones { Head Mouth RightLipCorner }
+numVerts 3
+vertWeights {294,0.1759999,0.02399998,0.8000001}
+vertWeights {368,0.1759999,0.02399998,0.8000001}
+vertWeights {412,0.1759999,0.02399998,0.8000001}
+}
+CIwAnimSkinSet
+{
+useBones { LeftLowerLip Mouth RightLowerLip }
+numVerts 4
+vertWeights {299,0.1,0.8,0.1}
+vertWeights {366,0.1,0.8,0.1}
+vertWeights {695,0.1,0.8,0.1}
+vertWeights {758,0.1,0.8,0.1}
+}
+CIwAnimSkinSet
+{
+useBones { RightEye }
+numVerts 41
+vertWeights {315,1}
+vertWeights {316,1}
+vertWeights {317,1}
+vertWeights {318,1}
+vertWeights {319,1}
+vertWeights {320,1}
+vertWeights {321,1}
+vertWeights {322,1}
+vertWeights {323,1}
+vertWeights {324,1}
+vertWeights {325,1}
+vertWeights {326,1}
+vertWeights {327,1}
+vertWeights {328,1}
+vertWeights {329,1}
+vertWeights {330,1}
+vertWeights {331,1}
+vertWeights {332,1}
+vertWeights {333,1}
+vertWeights {334,1}
+vertWeights {335,1}
+vertWeights {336,1}
+vertWeights {337,1}
+vertWeights {338,1}
+vertWeights {339,1}
+vertWeights {340,1}
+vertWeights {341,1}
+vertWeights {342,1}
+vertWeights {343,1}
+vertWeights {344,1}
+vertWeights {345,1}
+vertWeights {346,1}
+vertWeights {347,1}
+vertWeights {348,1}
+vertWeights {349,1}
+vertWeights {350,1}
+vertWeights {351,1}
+vertWeights {352,1}
+vertWeights {353,1}
+vertWeights {354,1}
+vertWeights {355,1}
+}
+CIwAnimSkinSet
+{
+useBones { Head LeftClavicle Neck Spine2 }
+numVerts 3
+vertWeights {416,0.02365481,0.02964672,0.2,0.7466985}
+vertWeights {418,0.05447101,0.002090952,0.2,0.7434381}
+vertWeights {433,0.2827971,3.6884E-05,0.5934523,0.1237137}
+}
+CIwAnimSkinSet
+{
+useBones { LeftClavicle Spine2 }
+numVerts 5
+vertWeights {417,0.9,0.1}
+vertWeights {420,0.6447378,0.3552622}
+vertWeights {422,0.4162757,0.5837243}
+vertWeights {423,0.06205085,0.9379492}
+vertWeights {425,0.1,0.9}
+}
+CIwAnimSkinSet
+{
+useBones { Head LeftEyelid }
+numVerts 10
+vertWeights {541,0.26,0.74}
+vertWeights {542,0.26,0.74}
+vertWeights {543,0.05,0.95}
+vertWeights {544,0.05,0.95}
+vertWeights {547,0.1,0.9}
+vertWeights {548,0.1,0.9}
+vertWeights {555,0.78,0.22}
+vertWeights {560,0.78,0.22}
+vertWeights {567,0.78,0.22}
+vertWeights {670,0.78,0.22}
+}
+CIwAnimSkinSet
+{
+useBones { LeftEyelid }
+numVerts 2
+vertWeights {545,1}
+vertWeights {546,1}
+}
+CIwAnimSkinSet
+{
+useBones { Head LeftLowerEyelid }
+numVerts 24
+vertWeights {549,0.63,0.37}
+vertWeights {550,0.63,0.37}
+vertWeights {551,0.8,0.2}
+vertWeights {552,0.8,0.2}
+vertWeights {553,0.8,0.2}
+vertWeights {554,0.63,0.37}
+vertWeights {556,0.8,0.2}
+vertWeights {557,0.8,0.2}
+vertWeights {558,0.8,0.2}
+vertWeights {561,0.63,0.37}
+vertWeights {562,0.63,0.37}
+vertWeights {563,0.63,0.37}
+vertWeights {564,0.63,0.37}
+vertWeights {565,0.63,0.37}
+vertWeights {566,0.63,0.37}
+vertWeights {664,0.73,0.27}
+vertWeights {665,0.63,0.37}
+vertWeights {666,0.8,0.2}
+vertWeights {667,0.8,0.2}
+vertWeights {677,0.63,0.37}
+vertWeights {679,0.63,0.37}
+vertWeights {680,0.9,0.1}
+vertWeights {681,0.9,0.1}
+vertWeights {687,0.63,0.37}
+}
+CIwAnimSkinSet
+{
+useBones { Head LeftEyebrow1 }
+numVerts 6
+vertWeights {592,0.55,0.45}
+vertWeights {618,0.9,0.1}
+vertWeights {619,0.9,0.1}
+vertWeights {620,0.55,0.45}
+vertWeights {675,0.9,0.1}
+vertWeights {676,0.9,0.1}
+}
+CIwAnimSkinSet
+{
+useBones { Head LeftUpperLip }
+numVerts 5
+vertWeights {598,0.4499999,0.5500001}
+vertWeights {601,0.55,0.45}
+vertWeights {621,0.6,0.4}
+vertWeights {658,0.8,0.2}
+vertWeights {698,0.4499999,0.5500001}
+}
+CIwAnimSkinSet
+{
+useBones { Head LeftLipCorner LeftUpperLip }
+numVerts 3
+vertWeights {599,0.3394444,0.5300001,0.1305555}
+vertWeights {600,0.3755555,0.4800001,0.1444444}
+vertWeights {700,0.3394444,0.5300001,0.1305555}
+}
+CIwAnimSkinSet
+{
+useBones { Head LeftCheek }
+numVerts 8
+vertWeights {602,0.8,0.2}
+vertWeights {603,0.85,0.15}
+vertWeights {606,0.34,0.66}
+vertWeights {627,0.1899999,0.8100001}
+vertWeights {628,0.75,0.25}
+vertWeights {629,0.75,0.25}
+vertWeights {644,0.85,0.15}
+vertWeights {647,0.4499999,0.5500001}
+}
+CIwAnimSkinSet
+{
+useBones { Head LeftLipCorner }
+numVerts 6
+vertWeights {609,0.4999999,0.5000001}
+vertWeights {636,0.1499999,0.8500001}
+vertWeights {653,0.4999999,0.5000001}
+vertWeights {654,0.6,0.4}
+vertWeights {655,0.75,0.25}
+vertWeights {688,0.1499999,0.8500001}
+}
+CIwAnimSkinSet
+{
+useBones { Head LeftEyebrow2 }
+numVerts 8
+vertWeights {612,0.3,0.7}
+vertWeights {614,0.9,0.1}
+vertWeights {617,0.3,0.7}
+vertWeights {646,0.95,0.05}
+vertWeights {659,0.3,0.7}
+vertWeights {671,0.95,0.05}
+vertWeights {672,0.95,0.05}
+vertWeights {673,0.9,0.1}
+}
+CIwAnimSkinSet
+{
+useBones { Head LeftEyebrow1 LeftEyebrow2 }
+numVerts 2
+vertWeights {616,0.272,0.528,0.2}
+vertWeights {623,0.272,0.528,0.2}
+}
+CIwAnimSkinSet
+{
+useBones { BridgeOfNose Head LeftEyebrow2 }
+numVerts 1
+vertWeights {622,0.22,0.234,0.5459999}
+}
+CIwAnimSkinSet
+{
+useBones { LeftLipCorner Mouth }
+numVerts 3
+vertWeights {635,0.1,0.9}
+vertWeights {762,0.3,0.7}
+vertWeights {789,0.3,0.7}
+}
+CIwAnimSkinSet
+{
+useBones { Head LeftLipCorner LeftLowerLip Mouth }
+numVerts 5
+vertWeights {637,0.08783223,0.2031728,0.15,0.5589949}
+vertWeights {642,0.08783223,0.2031728,0.15,0.5589949}
+vertWeights {643,0.06964403,0.3440097,0.15,0.4363462}
+vertWeights {690,0.06194876,0.3823968,0.15,0.4056545}
+vertWeights {703,0.06194876,0.3823968,0.15,0.4056545}
+}
+CIwAnimSkinSet
+{
+useBones { Head LeftLowerLip Mouth }
+numVerts 5
+vertWeights {638,0.02425066,0.537794,0.4379554}
+vertWeights {639,0.02425066,0.537794,0.4379554}
+vertWeights {641,0.02425066,0.537794,0.4379554}
+vertWeights {691,0.02425066,0.537794,0.4379554}
+vertWeights {693,0.02425066,0.537794,0.4379554}
+}
+CIwAnimSkinSet
+{
+useBones { Chin LeftLowerLip Mouth }
+numVerts 1
+vertWeights {640,0.15,0.0425,0.8075}
+}
+CIwAnimSkinSet
+{
+useBones { Head LeftLipCorner Mouth }
+numVerts 3
+vertWeights {689,0.1759999,0.8000001,0.02399998}
+vertWeights {760,0.1759999,0.8000001,0.02399998}
+vertWeights {809,0.1759999,0.8000001,0.02399998}
+}
+CIwAnimSkinSet
+{
+useBones { LeftEye }
+numVerts 41
+vertWeights {709,1}
+vertWeights {710,1}
+vertWeights {711,1}
+vertWeights {712,1}
+vertWeights {713,1}
+vertWeights {714,1}
+vertWeights {715,1}
+vertWeights {716,1}
+vertWeights {717,1}
+vertWeights {718,1}
+vertWeights {719,1}
+vertWeights {720,1}
+vertWeights {721,1}
+vertWeights {722,1}
+vertWeights {723,1}
+vertWeights {724,1}
+vertWeights {725,1}
+vertWeights {726,1}
+vertWeights {727,1}
+vertWeights {728,1}
+vertWeights {729,1}
+vertWeights {730,1}
+vertWeights {731,1}
+vertWeights {732,1}
+vertWeights {733,1}
+vertWeights {734,1}
+vertWeights {735,1}
+vertWeights {736,1}
+vertWeights {737,1}
+vertWeights {738,1}
+vertWeights {739,1}
+vertWeights {740,1}
+vertWeights {741,1}
+vertWeights {742,1}
+vertWeights {743,1}
+vertWeights {744,1}
+vertWeights {745,1}
+vertWeights {746,1}
+vertWeights {747,1}
+vertWeights {748,1}
+vertWeights {749,1}
+}
+}

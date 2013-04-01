@@ -1,9 +1,0 @@
-CIwMaterial
-{
-name "male_torse_jacket0_skin_0_lod0"
-colEmissive {0,0,0}
-texture0 "./textures/male_torse_jacket0_skin_0_lod0.tga"
-shadeMode GOURAUD
-modulateMode RGB
-blendMode MODULATE
-}

@@ -2,7 +2,7 @@
 
 namespace Toe.WebViewSystem
 {
-	public class System : IToeSystem
+	public class System : ISystem
 	{
 	}
 }

@@ -1,51 +1,46 @@
-using System.Collections.Generic;
-using System.Linq;
-
 using Toe.Utils;
 
 namespace Toe.Core
 {
-	/// <summary>
-	/// Message description.
-	/// </summary>
-	public struct ToeMessageDescription
+	public struct FieldDescription
 	{
 		#region Constants and Fields
 
-		private readonly FieldDescription[] fields;
+		//private readonly int count;
 
 		private readonly uint id;
 
 		private readonly string name;
 
+		private readonly string type;
+
+		private readonly uint typeid;
+
 		#endregion
 
 		#region Constructors and Destructors
 
-		public ToeMessageDescription(string name, IEnumerable<FieldDescription> fields)
+		public FieldDescription(string name, string type)
 		{
 			this.name = name;
+			this.type = type;
 			this.id = Hash.Get(name);
-			this.fields = fields.ToArray();
+			this.typeid = Hash.Get(type);
 		}
-
 		#endregion
 
 		#region Public Properties
 
-		/// <summary>
-		/// List of field descriptions.
-		/// </summary>
-		public IList<FieldDescription> Fields
-		{
-			get
-			{
-				return this.fields;
-			}
-		}
+		//public int Count
+		//{
+		//    get
+		//    {
+		//        return this.count;
+		//    }
+		//}
 
 		/// <summary>
-		/// Message ID (Name hash).
+		/// Message field id (Name hash).
 		/// </summary>
 		public uint Id
 		{
@@ -56,7 +51,7 @@ namespace Toe.Core
 		}
 
 		/// <summary>
-		/// Name of the message.
+		/// Message field name.
 		/// </summary>
 		public string Name
 		{
@@ -66,38 +61,45 @@ namespace Toe.Core
 			}
 		}
 
+		/// <summary>
+		/// File type.
+		/// </summary>
+		public string Type
+		{
+			get
+			{
+				return this.type;
+			}
+		}
+
+		/// <summary>
+		/// File type ID (Type hash).
+		/// </summary>
+		public uint Typeid
+		{
+			get
+			{
+				return this.typeid;
+			}
+		}
+
 		#endregion
 
 		#region Public Methods and Operators
 
-		public static bool operator ==(ToeMessageDescription left, ToeMessageDescription right)
+		public static bool operator ==(FieldDescription left, FieldDescription right)
 		{
 			return left.Equals(right);
 		}
 
-		public static bool operator !=(ToeMessageDescription left, ToeMessageDescription right)
+		public static bool operator !=(FieldDescription left, FieldDescription right)
 		{
 			return !left.Equals(right);
 		}
 
-		public bool Equals(ToeMessageDescription other)
+		public bool Equals(FieldDescription other)
 		{
-			if (other.id != this.id)
-			{
-				return false;
-			}
-			if (other.fields.Length != this.fields.Length)
-			{
-				return false;
-			}
-			for (int index = 0; index < this.fields.Length; index++)
-			{
-				if (this.fields[index] != other.fields[index])
-				{
-					return false;
-				}
-			}
-			return true;
+			return other.typeid == this.typeid && other.id == this.id;// && other.count == this.count;
 		}
 
 		/// <summary>
@@ -113,11 +115,11 @@ namespace Toe.Core
 			{
 				return false;
 			}
-			if (obj.GetType() != typeof(ToeMessageDescription))
+			if (obj.GetType() != typeof(FieldDescription))
 			{
 				return false;
 			}
-			return this.Equals((ToeMessageDescription)obj);
+			return this.Equals((FieldDescription)obj);
 		}
 
 		/// <summary>
@@ -131,7 +133,10 @@ namespace Toe.Core
 		{
 			unchecked
 			{
-				return (this.id.GetHashCode() * 397) ^ (this.fields != null ? this.fields.GetHashCode() : 0);
+				int result = this.typeid.GetHashCode();
+				result = (result * 397) ^ this.id.GetHashCode();
+				//result = (result * 397) ^ this.count;
+				return result;
 			}
 		}
 

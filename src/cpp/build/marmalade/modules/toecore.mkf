@@ -1,0 +1,28 @@
+# mkf file for module iwanim
+display_name "'Tiny Open Engine'/core"
+
+includepath ../../../h
+
+files
+{
+	(../../../h)
+	[h]
+	toescene.h
+
+	(../../../src)
+	[src]
+	toescene.c
+}
+
+options
+{
+    strict
+}
+
+subprojects
+{
+    iwgx
+	iwgraphics
+	iwanim
+}
+

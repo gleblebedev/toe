@@ -1,0 +1,26 @@
+#!/usr/bin/env mkb
+
+options
+{
+	s3e-data-dir="../data" 
+}
+
+files
+{
+	[source]
+	(source)
+	ToeMain.cpp
+}
+
+assets
+{
+    (data)
+}
+
+subprojects
+{
+    ../modules/toecore.mkf
+    iwgx
+	iwgraphics
+	# s3eHook
+}
