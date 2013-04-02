@@ -1,0 +1,29 @@
+# mkf file for module TOE Lua
+display_name "'Tiny Open Engine'/lua"
+
+includepath ./h
+
+files
+{
+	[h]
+	(./h)
+	toelua.h
+
+	[src]
+	(./src)
+	toelua.cpp
+}
+
+options
+{
+    strict
+}
+
+package lua
+
+subprojects
+{
+	lua
+	./toecore.mkf
+}
+

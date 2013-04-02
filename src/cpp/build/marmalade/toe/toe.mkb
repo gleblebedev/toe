@@ -20,6 +20,8 @@ assets
 subprojects
 {
     ../modules/toecore.mkf
+    ../modules/toewebview.mkf
+    ../modules/toelua.mkf
     iwgx
 	iwgraphics
 	# s3eHook

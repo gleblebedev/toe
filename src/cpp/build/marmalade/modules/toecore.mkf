@@ -1,17 +1,26 @@
-# mkf file for module iwanim
+# mkf file for module TOE Core
 display_name "'Tiny Open Engine'/core"
 
 includepath ../../../h
 
 files
 {
-	(../../../h)
 	[h]
-	toescene.h
-
+	(../../../h)
+	toecore.h
+	toemsgreg.h
 	(../../../src)
+	toecoreint.h
+	toemsgregint.h
+	(./h)
+	toe.h
+
 	[src]
-	toescene.c
+	(../../../src)
+	toecore.c
+	toemsgreg.c
+	(./src)
+	toe.cpp
 }
 
 options

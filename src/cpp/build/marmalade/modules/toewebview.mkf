@@ -1,0 +1,27 @@
+# mkf file for module TOE Web View
+display_name "'Tiny Open Engine'/webview"
+
+includepath ./h
+
+files
+{
+	[h]
+	(./h)
+	toewebview.h
+
+	[src]
+	(./src)
+	toewebview.cpp
+}
+
+options
+{
+    strict
+}
+
+subprojects
+{
+	s3eWebView
+	toecore.mkf
+}
+

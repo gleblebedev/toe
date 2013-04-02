@@ -8,7 +8,7 @@
 #include "IwTexture.h"
 #include "s3eFile.h"
 
-#include "toescene.h"
+#include "toe.h"
 
 //#include "s3eHook.h"
 //
@@ -167,7 +167,8 @@ int main()
 
 	ToeSceneOptions options;
 	options.CreateSystemCallback = 0;
-	ToeScene* scene = ToeCreateScene(&options);
+	auto scene = new CToeScene();
+	scene->GetScene();
 
 	//LogFileOperations();
 	
@@ -199,7 +200,7 @@ int main()
         s3eDeviceYield(0);
     }
 
-	ToeDestroyScene(scene);
+	delete scene;
 
 	IwAnimTerminate();
     IwGraphicsTerminate();
