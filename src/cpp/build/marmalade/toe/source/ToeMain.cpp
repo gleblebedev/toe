@@ -159,6 +159,7 @@
 // Standard C-style entry point. This can take args if required.
 int main()
 {
+
     // Initialise the IwGx drawing module
     IwGxInit();
 	IwResManagerInit();
@@ -167,8 +168,16 @@ int main()
 
 	ToeSceneOptions options;
 	options.CreateSystemCallback = 0;
+	options.MessageBufferSize = 64*1024;
 	auto scene = new CToeScene();
-	scene->GetScene();
+
+	ToeAllocateMessage(scene->GetScene(), IwHashString("ToeCreateSystem"), 12);
+	uint32 hash = IwHashString("CToeLua");
+	ToeSetMessageProperty(scene->GetScene(),8,sizeof(hash),&hash);
+	ToePostMessage(scene->GetScene());
+	while (ToePorcessMessage(scene->GetScene()))
+	{
+	};
 
 	//LogFileOperations();
 	

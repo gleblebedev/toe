@@ -30,6 +30,8 @@ typedef int TOE_RESULT;
 #define TOE_SUCCESS ((TOE_RESULT)1)
 #define TOE_ERROR ((TOE_RESULT)0)
 
+#define TOE_ASSERT(a,b)
+
 struct ToeScene_t;
 
 typedef struct ToeScene_t ToeScene;
@@ -70,7 +72,10 @@ typedef struct ToeSceneOptions
 {
 	ToeCreateSystemCallback CreateSystemCallback;
 	void* CreateSystemCallbackContext;
+	uint MessageBufferSize;
 } ToeSceneOptions;
+
+void ToeSetDefaultOptions(ToeSceneOptions* options);
 
 /**
  * Allocates new scene.
@@ -86,6 +91,12 @@ ToeScene* ToeCreateScene(const ToeSceneOptions* options);
 void ToeDestroyScene(ToeScene* scene);
 
 /**
+ * Process next message in message buffer.
+ * @param scene Pointer to the scene to destroy.
+ */
+int ToePorcessMessage(ToeScene* scene);
+
+/**
  * Allocates new message in message buffer. One message could be allocated at one time. 
  * Use ToePostMessage to post current message before allocate new one.
  * @param scene Pointer to TOE scene.
@@ -99,6 +110,53 @@ void ToeAllocateMessage(ToeScene* scene, uint messageId, int size);
  * @param scene Pointer to TOE scene.
  */
 void ToePostMessage(ToeScene* scene);
+
+/**
+ * Sets message property value by coping source bytes into message body.
+ * @param scene Pointer to TOE scene.
+ */
+void ToeSetMessageProperty(ToeScene* scene, uint offset, uint size, const void* src);
+
+//inline void ToeSetUIntMessageProperty(ToeScene* scene, uint offset, const uint src)
+//{
+//	ToeSetMessageProperty(scene, offset, sizeof(uint), &src);
+//}
+
+/**
+ * Sets message variable size property value by attaching source bytes to message tail.
+ * @param scene Pointer to TOE scene.
+ */
+void ToeSetVariableSizeMessageProperty(ToeScene* scene, uint offset, uint size, const void* src);
+
+/**
+ * Gets message property value by coping bytes from message body.
+ * @param scene Pointer to TOE scene.
+ */
+void ToeGetMessageProperty(const ToeScene* scene, uint offset, uint size, void* dst);
+
+/**
+ * Gets pointer to message property value at message tail.
+ * @param scene Pointer to TOE scene.
+ */
+uint ToeGetVariableSizeMessageProperty(const ToeScene* scene, uint offset, void** dst);
+
+typedef struct ToeMessage
+{
+	ToeScene* scene;
+} ToeMessage;
+
+typedef struct ToeCreateSystemMessage
+{
+	union {
+	ToeScene* scene;
+	ToeMessage message;
+	};
+} ToeCreateSystemMessage;
+
+typedef struct ToeCreateLayerMessage
+{
+	ToeScene* scene;
+} ToeCreateLayerMessage;
 
 #ifdef  __cplusplus
 }

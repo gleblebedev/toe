@@ -35,6 +35,7 @@ ToeScene*CToeScene::GetScene()
 	if (scene)
 		return scene;
 	ToeSceneOptions options;
+	ToeSetDefaultOptions(&options);
 	options.CreateSystemCallback = CreateSystemCallback;
 	options.CreateSystemCallbackContext = this;
 	scene = ToeCreateScene(&options);

@@ -8,6 +8,7 @@ files
 	[h]
 	(../../../h)
 	toecore.h
+	toecoremsgs.h
 	toemsgreg.h
 	(../../../src)
 	toecoreint.h
