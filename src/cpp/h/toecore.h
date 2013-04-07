@@ -36,6 +36,8 @@ struct ToeScene_t;
 
 typedef struct ToeScene_t ToeScene;
 
+unsigned long ToeHashString(const char* string);
+
 /*
 Toe system factory callback
 */
@@ -51,6 +53,16 @@ typedef struct ToeSceneSystem
 	ToeMessageCallback MessageCallback;
 
 } ToeSceneSystem;
+
+typedef struct ToeMessageCallbackTableItem
+{
+	uint MessageId;
+	ToeMessageCallback Callback;
+} ToeMessageCallbackTableItem;
+
+void ToeSortMessageCallbackTable (ToeMessageCallbackTableItem* table, uint size);
+
+TOE_RESULT ToeLookupMessageCallbackTable (const ToeMessageCallbackTableItem* table, uint size);
 
 /*
 Toe Scene Layer

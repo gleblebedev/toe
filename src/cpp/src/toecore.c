@@ -31,6 +31,35 @@
 //	}
 //}
 
+
+unsigned long ToeHashString(const char* string)
+{
+	unsigned long hash = 5381;
+    int c;
+    while ((c = *string++))
+    {
+        c = (c < 'A' || c > 'Z') ? c : (c - 'A' + 'a');
+        hash = ((hash << 5) + hash) + c;
+    }
+    return hash;
+}
+
+void ToeSortMessageCallbackTable (ToeMessageCallbackTableItem* table, uint size)
+{
+}
+
+TOE_RESULT ToeLookupMessageCallbackTable (const ToeMessageCallbackTableItem* table, uint size)
+{
+	return TOE_ERROR;
+}
+
+TOE_RESULT ToeOnCreateSystemMessage(ToeScene* scene, void* context)
+{
+	return TOE_ERROR;
+}
+
+static ToeMessageCallbackTableItem toeCoreCallbackTable[1] = {{0,ToeOnCreateSystemMessage}};
+
 void ToeSetDefaultOptions(ToeSceneOptions* options)
 {
 	options->CreateSystemCallback = 0;
@@ -69,12 +98,15 @@ void ToeDestroyScene(ToeScene* scene)
 }
 int ToePorcessMessage(ToeScene* scene)
 {
+	TOE_RESULT res;
+
 	if (scene->currentReadPosition == scene->currentWritePosition)
 		return 0;
 	ToeGetMessageProperty(scene,0,sizeof(scene->currentInMessageId),&scene->currentInMessageId);
 	ToeGetMessageProperty(scene,sizeof(scene->currentInMessageId),sizeof(scene->currentInMessageSize),&scene->currentInMessageSize);
 
-	switch (scene->currentInMessageId)
+	res = ToeLookupMessageCallbackTable(toeCoreCallbackTable,sizeof(toeCoreCallbackTable)/sizeof(ToeMessageCallbackTableItem));
+	if (res == TOE_ERROR)
 	{
 	}
 
