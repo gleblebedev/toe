@@ -40,17 +40,17 @@ struct ToeScene_t
 	ToeSceneLayer systems [32];
 	ToeSceneLayer layers [32];
 
-	uint messageBufferSize;
-	uint messageBufferMask;
+	unsigned long messageBufferSize;
+	unsigned long messageBufferMask;
 	unsigned char* messageBuffer;
 
-	uint currentReadPosition;
-	uint currentInMessageId;
-	uint currentInMessageSize;
+	unsigned long currentReadPosition;
+	unsigned long currentInMessageId;
+	unsigned long currentInMessageSize;
 
-	uint currentWritePosition;
-	uint currentOutMessageId;
-	uint currentOutMessageSize;
+	unsigned long currentWritePosition;
+	unsigned long currentOutMessageId;
+	unsigned long currentOutMessageSize;
 };
 
 #ifdef  __cplusplus

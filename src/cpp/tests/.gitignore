@@ -1,0 +1,10 @@
+*.open-sdf
+_ReSharper.*
+*.suo
+*.o
+*.obj
+*.log
+*.tlog
+Debug
+Release
+*.filters

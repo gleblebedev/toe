@@ -48,7 +48,7 @@ Toe Scene Layer
 */
 typedef struct ToeSceneSystem
 {
-	uint Id;
+	unsigned long Id;
 	void* MessageCallbackContext;
 	ToeMessageCallback MessageCallback;
 
@@ -56,26 +56,26 @@ typedef struct ToeSceneSystem
 
 typedef struct ToeMessageCallbackTableItem
 {
-	uint MessageId;
+	unsigned long MessageId;
 	ToeMessageCallback Callback;
 } ToeMessageCallbackTableItem;
 
-void ToeSortMessageCallbackTable (ToeMessageCallbackTableItem* table, uint size);
+void ToeSortMessageCallbackTable (ToeMessageCallbackTableItem* table, unsigned long size);
 
-TOE_RESULT ToeLookupMessageCallbackTable (const ToeMessageCallbackTableItem* table, uint size);
+TOE_RESULT ToeLookupMessageCallbackTable (const ToeMessageCallbackTableItem* table, unsigned long size);
 
 /*
 Toe Scene Layer
 */
 typedef struct ToeSceneLayer
 {
-	uint Id;
+	unsigned long Id;
 } ToeSceneLayer;
 
 /*
 Toe system factory callback
 */
-typedef TOE_RESULT (*ToeCreateSystemCallback)(uint id, void* context, ToeSceneSystem* system);
+typedef TOE_RESULT (*ToeCreateSystemCallback)(unsigned long id, void* context, ToeSceneSystem* system);
 
 /*
 Toe Scene Options
@@ -84,7 +84,7 @@ typedef struct ToeSceneOptions
 {
 	ToeCreateSystemCallback CreateSystemCallback;
 	void* CreateSystemCallbackContext;
-	uint MessageBufferSize;
+	unsigned long MessageBufferSize;
 } ToeSceneOptions;
 
 void ToeSetDefaultOptions(ToeSceneOptions* options);
@@ -115,7 +115,7 @@ int ToePorcessMessage(ToeScene* scene);
  * @param messageId Message identifier (hash of the message name).
  * @param size Size of the message.
  */
-void ToeAllocateMessage(ToeScene* scene, uint messageId, int size);
+void ToeAllocateMessage(ToeScene* scene, unsigned long messageId, int size);
 
 /**
  * Posts current message.
@@ -127,30 +127,30 @@ void ToePostMessage(ToeScene* scene);
  * Sets message property value by coping source bytes into message body.
  * @param scene Pointer to TOE scene.
  */
-void ToeSetMessageProperty(ToeScene* scene, uint offset, uint size, const void* src);
+void ToeSetMessageProperty(ToeScene* scene, unsigned long offset, unsigned long size, const void* src);
 
-//inline void ToeSetUIntMessageProperty(ToeScene* scene, uint offset, const uint src)
+//inline void ToeSetUIntMessageProperty(ToeScene* scene, unsigned long offset, const unsigned long src)
 //{
-//	ToeSetMessageProperty(scene, offset, sizeof(uint), &src);
+//	ToeSetMessageProperty(scene, offset, sizeof(unsigned long), &src);
 //}
 
 /**
  * Sets message variable size property value by attaching source bytes to message tail.
  * @param scene Pointer to TOE scene.
  */
-void ToeSetVariableSizeMessageProperty(ToeScene* scene, uint offset, uint size, const void* src);
+void ToeSetVariableSizeMessageProperty(ToeScene* scene, unsigned long offset, unsigned long size, const void* src);
 
 /**
  * Gets message property value by coping bytes from message body.
  * @param scene Pointer to TOE scene.
  */
-void ToeGetMessageProperty(const ToeScene* scene, uint offset, uint size, void* dst);
+void ToeGetMessageProperty(const ToeScene* scene, unsigned long offset, unsigned long size, void* dst);
 
 /**
  * Gets pointer to message property value at message tail.
  * @param scene Pointer to TOE scene.
  */
-uint ToeGetVariableSizeMessageProperty(const ToeScene* scene, uint offset, void** dst);
+unsigned long ToeGetVariableSizeMessageProperty(const ToeScene* scene, unsigned long offset, void** dst);
 
 typedef struct ToeMessage
 {

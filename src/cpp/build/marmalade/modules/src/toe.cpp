@@ -42,7 +42,7 @@ ToeScene*CToeScene::GetScene()
 	return scene;
 }
 
-TOE_RESULT CToeScene::CreateSystemCallback(uint id, void* context, ToeSceneSystem* system)
+TOE_RESULT CToeScene::CreateSystemCallback(unsigned long id, void* context, ToeSceneSystem* system)
 {
 	void* ptr = IwClassFactoryCreate(id);
 	if (ptr == 0)

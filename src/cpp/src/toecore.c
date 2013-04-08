@@ -44,11 +44,11 @@ unsigned long ToeHashString(const char* string)
     return hash;
 }
 
-void ToeSortMessageCallbackTable (ToeMessageCallbackTableItem* table, uint size)
+void ToeSortMessageCallbackTable (ToeMessageCallbackTableItem* table, unsigned long size)
 {
 }
 
-TOE_RESULT ToeLookupMessageCallbackTable (const ToeMessageCallbackTableItem* table, uint size)
+TOE_RESULT ToeLookupMessageCallbackTable (const ToeMessageCallbackTableItem* table, unsigned long size)
 {
 	return TOE_ERROR;
 }
@@ -124,7 +124,7 @@ int ToePorcessMessage(ToeScene* scene)
  * @param messageId Message identifier (hash of the message name).
  * @param size Size of the message.
  */
-void ToeAllocateMessage(ToeScene* scene, uint messageId, int size)
+void ToeAllocateMessage(ToeScene* scene, unsigned long messageId, int size)
 {
 	TOE_ASSERT(scene->currentOutMessageId==0,"Post previous message before allocating new one");
 	scene->currentOutMessageId = messageId;
@@ -149,9 +149,9 @@ void ToePostMessage(ToeScene* scene)
  * Sets message property value by coping source bytes into message body.
  * @param scene Pointer to TOE scene.
  */
-void ToeSetMessageProperty(ToeScene* scene, uint offset, uint size, const void* src)
+void ToeSetMessageProperty(ToeScene* scene, unsigned long offset, unsigned long size, const void* src)
 {
-	uint pos = (scene->currentWritePosition + offset) & scene->messageBufferMask;
+	unsigned long pos = (scene->currentWritePosition + offset) & scene->messageBufferMask;
 	const unsigned char* begin = (const unsigned char*)src;
 	const unsigned char* end = begin+size;
 	while(begin != end)
@@ -166,9 +166,9 @@ void ToeSetMessageProperty(ToeScene* scene, uint offset, uint size, const void* 
  * Sets message variable size property value by attaching source bytes to message tail.
  * @param scene Pointer to TOE scene.
  */
-void ToeSetMessageVariableSizeProperty(ToeScene* scene, uint offset, uint size, const void* src)
+void ToeSetMessageVariableSizeProperty(ToeScene* scene, unsigned long offset, unsigned long size, const void* src)
 {
-	uint pos = (scene->currentWritePosition + offset) & scene->messageBufferMask;
+	unsigned long pos = (scene->currentWritePosition + offset) & scene->messageBufferMask;
 	const unsigned char* begin = (const unsigned char*)src;
 	const unsigned char* end = begin+size;
 	while(begin != end)
@@ -183,9 +183,9 @@ void ToeSetMessageVariableSizeProperty(ToeScene* scene, uint offset, uint size, 
  * Gets message property value by coping bytes from message body.
  * @param scene Pointer to TOE scene.
  */
-void ToeGetMessageProperty(const ToeScene* scene, uint offset, uint size, void* dst)
+void ToeGetMessageProperty(const ToeScene* scene, unsigned long offset, unsigned long size, void* dst)
 {
-	register uint pos = (scene->currentReadPosition + offset) & scene->messageBufferMask;
+	register unsigned long pos = (scene->currentReadPosition + offset) & scene->messageBufferMask;
 	unsigned char* begin = (unsigned char*)dst;
 	unsigned char* end = begin+size;
 	while(begin != end)
@@ -200,4 +200,4 @@ void ToeGetMessageProperty(const ToeScene* scene, uint offset, uint size, void* 
  * Gets pointer to message property value at message tail.
  * @param scene Pointer to TOE scene.
  */
-uint ToeGetMessageVariableSizeProperty(const ToeScene* scene, uint offset, void** dst);
+unsigned long ToeGetMessageVariableSizeProperty(const ToeScene* scene, unsigned long offset, void** dst);

@@ -50,7 +50,7 @@ public:
 	ToeScene*GetScene();
 protected:
 	
-	static TOE_RESULT  CreateSystemCallback(uint id, void* context, ToeSceneSystem* system);
+	static TOE_RESULT  CreateSystemCallback(unsigned long id, void* context, ToeSceneSystem* system);
 	static TOE_RESULT  MessageCallback(ToeScene* scene, void* context);
 };
 
