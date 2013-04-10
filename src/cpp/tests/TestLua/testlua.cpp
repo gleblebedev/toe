@@ -1,4 +1,5 @@
 #include <toecore.h>
+#include <toemsgreg.h>
 #include <stdio.h>
 extern "C"{
 #include <lua.h>
@@ -6,6 +7,7 @@ extern "C"{
 }
 
 #define ASSERT(flag, msg) { if (!(flag)) printf("Test fail: %s", msg); if (L) lua_close(L); return 1; }
+
 
 int Test1()
 {
@@ -22,6 +24,8 @@ int Test1()
 
 int main()
 {
+	
+
 	int errcode = 0;
 	errcode |= Test1();
 	if (errcode != 0)

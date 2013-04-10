@@ -28,30 +28,79 @@ extern "C" {
 
 struct ToeMessageRegistry;
 
-struct ToeMessage
-{
-	unsigned long Id;
-	const char* Name;
-	unsigned long NumFields;
-};
+typedef struct ToeMessageRegistry ToeMessageRegistry;
 
+/*
+Toe Message field descriptor.
+Lifetime of pointer to this descriptor should be at least the same as life time of message registry.
+Message registry doesn't copy this information, it stores pointer to it.
+*/
 struct ToeMessageField
 {
-	unsigned long Id;
+	/* Name */
 	const char* Name;
+
+	/* Type ID */
 	unsigned long Type;
-	unsigned long Items;
+
+	/* Number of values, 1 for scalar, 3 for vector(x,y,z), etc. */
+	unsigned long Length;
+
+	/* Name hash as unique field identifier. Calculated by Toe Message Registry. */
+	unsigned long Id;
+
+	/* Size of the field in bytes. Calculated by Toe Message Registry. */
+	unsigned long Size;
+
+	/* Offset from message start point in bytes. Calculated by Toe Message Registry. */
 	unsigned long Offset;
 };
 
-typedef struct ToeMessageRegistry* ToeMessageRegistry;
+typedef struct ToeMessageField ToeMessageField;
 
-ToeMessageRegistry* ToeCreateMessageRegistry(unsigned long maxNumMessages,unsigned long maxNumFields);
+
+/*
+Toe Message type descriptor.
+Lifetime of pointer to this descriptor should be at least the same as life time of message registry.
+Message registry doesn't copy this information, it stores pointer to it.
+*/
+struct ToeMessage
+{
+	unsigned long ParentId;
+	const char* Name;
+	unsigned long NumFields;
+	ToeMessageField* Fields;
+
+	/* Message ID. Calculated by Toe Message Registry. */
+	unsigned long Id;
+
+	/* Pointer to parent message. Calculated by Toe Message Registry. */
+	struct ToeMessage* Parent;
+
+	/* Initial message size in bytes. Calculated by Toe Message Registry. */
+	unsigned long InitialSize;
+};
+
+typedef int TOE_REG_RESULT;
+enum ToeRegResults
+{
+	TOE_REG_SUCESS,
+	TOE_REG_PARENT_NOT_FOUND,
+	TOE_REG_DIFFERENT_MESSAGE_ALREADY_REGISTERED
+};
+
+typedef struct ToeMessage ToeMessage;
+
+ToeMessageRegistry* ToeCreateMessageRegistry(unsigned long maxNumMessages);
 
 void ToeDestroyMessageRegistry(ToeMessageRegistry*);
 
-void ToeRegisterMessage(ToeMessageRegistry*, const ToeMessage* message);
+TOE_REG_RESULT ToeRegisterMessage(ToeMessageRegistry*, ToeMessage* message);
+
+ToeMessage* ToeFindMessage(ToeMessageRegistry*, unsigned long messageId);
 
 #ifdef  __cplusplus
 }
+#endif
+
 #endif

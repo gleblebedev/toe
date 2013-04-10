@@ -1,5 +1,5 @@
-#ifndef TOE_SCENE
-#define TOE_SCENE
+#ifndef TOE_CORE_H
+#define TOE_CORE_H
 
 /*
  * Copyright (C) 2013 Gleb Lebedev.
@@ -152,18 +152,18 @@ void ToeGetMessageProperty(const ToeScene* scene, unsigned long offset, unsigned
  */
 unsigned long ToeGetVariableSizeMessageProperty(const ToeScene* scene, unsigned long offset, void** dst);
 
-typedef struct ToeMessage
-{
-	ToeScene* scene;
-} ToeMessage;
-
-typedef struct ToeCreateSystemMessage
-{
-	union {
-	ToeScene* scene;
-	ToeMessage message;
-	};
-} ToeCreateSystemMessage;
+//typedef struct ToeMessage
+//{
+//	ToeScene* scene;
+//} ToeMessage;
+//
+//typedef struct ToeCreateSystemMessage
+//{
+//	union {
+//	ToeScene* scene;
+//	ToeMessage message;
+//	};
+//} ToeCreateSystemMessage;
 
 typedef struct ToeCreateLayerMessage
 {
