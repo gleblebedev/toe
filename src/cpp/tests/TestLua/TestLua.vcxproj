@@ -109,10 +109,12 @@
     <ClCompile Include="..\..\libs\lua\lvm.c" />
     <ClCompile Include="..\..\libs\lua\lzio.c" />
     <ClCompile Include="..\..\src\toecore.c" />
+    <ClCompile Include="..\..\src\toelua.c" />
     <ClCompile Include="..\..\src\toemsgreg.c" />
     <ClCompile Include="testlua.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\h\toelua.h" />
     <ClInclude Include="..\..\libs\lua\lapi.h" />
     <ClInclude Include="..\..\libs\lua\lauxlib.h" />
     <ClInclude Include="..\..\libs\lua\lcode.h" />
@@ -140,6 +142,11 @@
     <ClInclude Include="..\..\libs\lua\lzio.h" />
     <ClInclude Include="..\..\src\toecoreint.h" />
     <ClInclude Include="..\..\src\toemsgregint.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="test1.lua">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
