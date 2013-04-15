@@ -30,6 +30,10 @@ typedef int TOE_RESULT;
 #define TOE_SUCCESS ((TOE_RESULT)1)
 #define TOE_ERROR ((TOE_RESULT)0)
 
+typedef int TOE_MESSAGE_RESULT;
+#define TOE_MESSAGE_HANDELED ((TOE_RESULT)1)
+#define TOE_MESSAGE_IS_NOT_HANDELED ((TOE_RESULT)0)
+
 #define TOE_ASSERT(a,b)
 
 struct ToeScene_t;
@@ -41,7 +45,7 @@ unsigned long ToeHashString(const char* string);
 /*
 Toe system factory callback
 */
-typedef TOE_RESULT (*ToeMessageCallback)(ToeScene* scene, void* context);
+typedef TOE_MESSAGE_RESULT (*ToeMessageCallback)(ToeScene* scene, void* context);
 
 /*
 Toe Scene Layer

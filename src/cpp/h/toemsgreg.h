@@ -22,6 +22,8 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+#include "toecore.h"
+
 #ifdef  __cplusplus
 extern "C" {
 #endif
@@ -81,6 +83,8 @@ struct ToeMessage
 	unsigned long InitialSize;
 };
 
+typedef struct ToeMessage ToeMessage;
+
 typedef int TOE_REG_RESULT;
 enum ToeRegResults
 {
@@ -89,7 +93,19 @@ enum ToeRegResults
 	TOE_REG_DIFFERENT_MESSAGE_ALREADY_REGISTERED
 };
 
-typedef struct ToeMessage ToeMessage;
+/*
+Toe Message Route.
+Single record that stores information on where to jump if message was received.
+*/
+struct ToeMessageRoute
+{
+	/* Message ID (name hash) */
+	unsigned long Id;
+
+	/* Where to jump if the message was received */
+	ToeMessageCallback	Callback;
+};
+typedef struct ToeMessageRoute ToeMessageRoute;
 
 ToeMessageRegistry* ToeCreateMessageRegistry(unsigned long maxNumMessages);
 
@@ -98,6 +114,17 @@ void ToeDestroyMessageRegistry(ToeMessageRegistry*);
 TOE_REG_RESULT ToeRegisterMessage(ToeMessageRegistry*, ToeMessage* message);
 
 ToeMessage* ToeFindMessage(ToeMessageRegistry*, unsigned long messageId);
+
+/*
+Preparing routing table.
+Sorts the table.
+*/
+TOE_MESSAGE_RESULT ToePrapareMessageRoutingTable(ToeMessageRoute* table, unsigned long numRoutes);
+
+/*
+Calls apropriate callback or default one if no callback were found or if the message was not handeled by callback.
+*/
+TOE_MESSAGE_RESULT ToeRouteMessage(ToeScene* scene, void* context, const ToeMessageRoute* table, unsigned long numRoutes, ToeMessageCallback defaultCallback);
 
 #ifdef  __cplusplus
 }
