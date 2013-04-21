@@ -9,6 +9,7 @@
 #include "s3eFile.h"
 
 #include "toe.h"
+#include "toecoremsgs.h"
 
 //#include "s3eHook.h"
 //
@@ -159,19 +160,22 @@
 // Standard C-style entry point. This can take args if required.
 int main()
 {
+	CToeScene* scene;
 
     // Initialise the IwGx drawing module
     IwGxInit();
 	IwResManagerInit();
     IwGraphicsInit();
 	IwAnimInit();
+	ToeInit();
+	
 
 	ToeSceneOptions options;
 	options.CreateSystemCallback = 0;
 	options.MessageBufferSize = 64*1024;
-	auto scene = new CToeScene();
+	scene = new CToeScene();
 
-	ToeAllocateMessage(scene->GetScene(), IwHashString("ToeCreateSystem"), 12);
+	ToeAllocateMessage(scene->GetScene(), IwHashString("CreateSystem"), 12);
 	uint32 hash = IwHashString("CToeLua");
 	ToeSetMessageProperty(scene->GetScene(),8,sizeof(hash),&hash);
 	ToePostMessage(scene->GetScene());
@@ -211,6 +215,7 @@ int main()
 
 	delete scene;
 
+	ToeTerminate();
 	IwAnimTerminate();
     IwGraphicsTerminate();
 	IwResManagerTerminate();

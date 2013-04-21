@@ -33,11 +33,11 @@ Toe Scene
 */
 struct ToeScene_t
 {
-	int totalSystems;
-	int totalLayers;
+	unsigned long totalSystems;
+	unsigned long totalLayers;
 	ToeSceneOptions	options;
 
-	ToeSceneLayer systems [32];
+	ToeSceneSystem systems [32];
 	ToeSceneLayer layers [32];
 
 	unsigned long messageBufferSize;

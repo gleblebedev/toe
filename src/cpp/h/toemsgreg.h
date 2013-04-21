@@ -99,21 +99,26 @@ Single record that stores information on where to jump if message was received.
 */
 struct ToeMessageRoute
 {
-	/* Message ID (name hash) */
-	unsigned long Id;
+	/* Message name */
+	const char* MessageName;
 
 	/* Where to jump if the message was received */
 	ToeMessageCallback	Callback;
+
+	/* Message ID (name hash) */
+	unsigned long Id;
 };
 typedef struct ToeMessageRoute ToeMessageRoute;
 
 ToeMessageRegistry* ToeCreateMessageRegistry(unsigned long maxNumMessages);
 
-void ToeDestroyMessageRegistry(ToeMessageRegistry*);
+void ToeDestroyMessageRegistry(ToeMessageRegistry* reg);
 
-TOE_REG_RESULT ToeRegisterMessage(ToeMessageRegistry*, ToeMessage* message);
+TOE_REG_RESULT ToeRegisterMessage(ToeMessageRegistry* reg, ToeMessage* message);
 
-ToeMessage* ToeFindMessage(ToeMessageRegistry*, unsigned long messageId);
+TOE_REG_RESULT ToeRegisterMessages(ToeMessageRegistry* reg, ToeMessage* message, unsigned int count);
+
+ToeMessage* ToeFindMessage(ToeMessageRegistry* reg, unsigned long messageId);
 
 /*
 Preparing routing table.

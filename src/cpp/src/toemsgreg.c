@@ -52,6 +52,18 @@ ToeMessage* ToeFindMessage(ToeMessageRegistry*reg, unsigned long messageId)
 	}
 	return 0;
 }
+TOE_REG_RESULT ToeRegisterMessages(ToeMessageRegistry* reg, ToeMessage* message, unsigned int count)
+{
+	ToeMessage* end = message+count;
+	while (message != end)
+	{
+		TOE_REG_RESULT res = ToeRegisterMessage(reg,message);
+		if (res != TOE_REG_SUCESS)
+			return res;
+		++message;
+	}
+	return TOE_REG_SUCESS;
+}
 
 TOE_REG_RESULT ToeRegisterMessage(ToeMessageRegistry* reg, ToeMessage* message)
 {
@@ -117,7 +129,15 @@ TOE_RESULT ToePrapareMessageRoutingTable(ToeMessageRoute* table, unsigned long n
 		return TOE_SUCCESS;
 	if (!table)
 		return TOE_ERROR;
+
 	qsort(table,numRoutes,sizeof(ToeMessageRoute),ToeCompareRoutingTables);
+
+	while (numRoutes>0)
+	{
+		--numRoutes;
+		table[numRoutes].Id = ToeHashString(table[numRoutes].MessageName);
+	}
+
 	return TOE_SUCCESS;
 }
 
@@ -139,7 +159,9 @@ TOE_MESSAGE_RESULT ToeRouteMessage(ToeScene* scene, void* context, const ToeMess
 		{
 			if ((table+middle)->Callback(scene,context) == TOE_MESSAGE_HANDELED)
 				return TOE_MESSAGE_HANDELED;
-			return defaultCallback(scene,context);
+			if (defaultCallback)
+				return defaultCallback(scene,context);
+			return TOE_MESSAGE_IS_NOT_HANDELED;
 		}
 		if (id > messageId)
 		{
@@ -150,5 +172,7 @@ TOE_MESSAGE_RESULT ToeRouteMessage(ToeScene* scene, void* context, const ToeMess
 			left = middle+1;
 		}
 	}
-	return defaultCallback(scene,context);
+	if (defaultCallback)
+		return defaultCallback(scene,context);
+	return TOE_MESSAGE_IS_NOT_HANDELED;
 }

@@ -26,6 +26,22 @@
 #include <IwResource.h>
 
 #include <toecore.h>
+#include <toemsgreg.h>
+
+/**
+ * Initialises Toe.
+ */
+void ToeInit();
+
+/**
+ * Returns global message registry.
+ */
+ToeMessageRegistry* ToeGetMessageRegistry();
+
+/**
+ * Shuts down Toe.
+ */
+void ToeTerminate();
 
 class CToeScene: public CIwResource
 {

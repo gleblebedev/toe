@@ -21,6 +21,8 @@
 
 #include <stdlib.h>
 #include "toecoreint.h"
+#include "toemsgreg.h"
+#include "toecoremsgs.h"
 
 #define TOE_ASSERT(a,b)
 //void TOE_ASSERT(bool f, const char* errorMessage)
@@ -31,6 +33,22 @@
 //	}
 //}
 
+ToeMessageField toe_createSystemFields [] = {
+	{
+		/* Name = */	0,
+		/* Type = */	0,
+		/* Length = */	1
+	}
+};
+
+ToeMessage toe_coreMessages[] = {
+	{
+		/* ParentId = */	0,
+		/* Name = */		"CreateSystem",
+		/* NumFields = */	0,
+		/* Fields = */		toe_createSystemFields
+	}
+};
 
 unsigned long ToeHashString(const char* string)
 {
@@ -44,21 +62,16 @@ unsigned long ToeHashString(const char* string)
     return hash;
 }
 
-void ToeSortMessageCallbackTable (ToeMessageCallbackTableItem* table, unsigned long size)
-{
-}
-
-TOE_RESULT ToeLookupMessageCallbackTable (const ToeMessageCallbackTableItem* table, unsigned long size)
-{
-	return TOE_ERROR;
-}
 
 TOE_RESULT ToeOnCreateSystemMessage(ToeScene* scene, void* context)
 {
+
 	return TOE_ERROR;
 }
 
-static ToeMessageCallbackTableItem toeCoreCallbackTable[1] = {{0,ToeOnCreateSystemMessage}};
+static ToeMessageRoute toeCoreCallbackTable[1] = {{"CreateSystem",ToeOnCreateSystemMessage}};
+
+static int toe_coreCallbackTableInitialized = 0;
 
 void ToeSetDefaultOptions(ToeSceneOptions* options)
 {
@@ -69,7 +82,14 @@ void ToeSetDefaultOptions(ToeSceneOptions* options)
 
 ToeScene* ToeCreateScene(const ToeSceneOptions* options)
 {
-	ToeScene* scene = (ToeScene*)malloc(sizeof(ToeScene));
+	ToeScene* scene;
+
+	if (!toe_coreCallbackTableInitialized)
+	{
+		ToePrapareMessageRoutingTable(toeCoreCallbackTable,sizeof(toeCoreCallbackTable)/sizeof(ToeMessageRoute));
+	}
+
+	scene = (ToeScene*)malloc(sizeof(ToeScene));
 	scene->totalLayers = 0;
 	scene->totalSystems = 0;
 	scene->options = *options;
@@ -96,18 +116,42 @@ void ToeDestroyScene(ToeScene* scene)
 	free(scene->messageBuffer);
 	free(scene);
 }
+TOE_MESSAGE_RESULT ToePorcessOtherMessage(ToeScene* scene, void* context)
+{
+	unsigned long layer,i;
+	ToeMessageGetTargetLayer(scene, &layer);
+	if (!layer) 
+	{
+		for (i=0; i<scene->totalLayers;++i) 
+		{
+			//if (TOE_MESSAGE_HANDELED == scene->layers[i].
+		}
+		return TOE_MESSAGE_IS_NOT_HANDELED;
+	}
+	for (i=0; i<scene->totalLayers;++i)
+	{
+		if (scene->layers[i].Id == layer)
+		{
+			//scene->layers[i].
+		}
+	}
+	return TOE_MESSAGE_IS_NOT_HANDELED;
+}
 int ToePorcessMessage(ToeScene* scene)
 {
 	TOE_RESULT res;
 
+	/* Check if there are messages in queue*/
 	if (scene->currentReadPosition == scene->currentWritePosition)
 		return 0;
-	ToeGetMessageProperty(scene,0,sizeof(scene->currentInMessageId),&scene->currentInMessageId);
-	ToeGetMessageProperty(scene,sizeof(scene->currentInMessageId),sizeof(scene->currentInMessageSize),&scene->currentInMessageSize);
 
-	res = ToeLookupMessageCallbackTable(toeCoreCallbackTable,sizeof(toeCoreCallbackTable)/sizeof(ToeMessageCallbackTableItem));
-	if (res == TOE_ERROR)
+	ToeMessageGetId(scene, &scene->currentInMessageId);
+	ToeMessageGetSize(scene, &scene->currentInMessageSize);
+
+	res = ToeRouteMessage(scene,0, toeCoreCallbackTable,sizeof(toeCoreCallbackTable)/sizeof(ToeMessageRoute), ToePorcessOtherMessage);
+	if (res == TOE_MESSAGE_IS_NOT_HANDELED)
 	{
+		//ToeGetMessageProperty(scene,sizeof(scene->currentInMessageId),sizeof(scene->currentInMessageSize),&scene->currentInMessageSize);
 	}
 
 	scene->currentReadPosition += scene->currentInMessageSize;
@@ -201,3 +245,8 @@ void ToeGetMessageProperty(const ToeScene* scene, unsigned long offset, unsigned
  * @param scene Pointer to TOE scene.
  */
 unsigned long ToeGetMessageVariableSizeProperty(const ToeScene* scene, unsigned long offset, void** dst);
+
+void ToeRegisterCoreMessages(ToeMessageRegistry* reg)
+{
+	ToeRegisterMessages(reg, toe_coreMessages,1);
+}

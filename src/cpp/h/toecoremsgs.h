@@ -23,12 +23,19 @@
  */
 
 #include "toemsgreg.h"
+#include "toecore.h"
 
 #ifdef  __cplusplus
 extern "C" {
 #endif
 
-void ToeRegisterCoreMessages();
+void ToeRegisterCoreMessages(ToeMessageRegistry*);
+
+__inline void ToeMessageGetId(const ToeScene* scene, unsigned long* id) { ToeGetMessageProperty(scene, 0, sizeof(unsigned long), id); }
+__inline void ToeMessageGetSize(const ToeScene* scene, unsigned long* size) { ToeGetMessageProperty(scene, sizeof(unsigned long), sizeof(unsigned long), size); }
+__inline void ToeMessageGetTargetLayer(const ToeScene* scene, unsigned long* size) { ToeGetMessageProperty(scene, sizeof(unsigned long)*2, sizeof(unsigned long), size); }
+
+__inline void ToeCreateSystemMessageGetSystemId(const ToeScene* scene, unsigned long* size) { ToeGetMessageProperty(scene, sizeof(unsigned long)*2, sizeof(unsigned long), size); }
 
 #ifdef  __cplusplus
 }

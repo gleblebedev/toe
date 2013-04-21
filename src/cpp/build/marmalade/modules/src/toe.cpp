@@ -1,4 +1,8 @@
 #include "toe.h"
+#include <toecoremsgs.h>
+
+ToeMessageRegistry* toe_global_message_registry = 0;
+int	toe_init_counter = 0;
 
 IW_MANAGED_IMPLEMENT(CToeScene);
 
@@ -56,4 +60,28 @@ TOE_RESULT CToeScene::CreateSystemCallback(unsigned long id, void* context, ToeS
 TOE_RESULT  CToeScene::MessageCallback(ToeScene* scene, void* context)
 {
 	return TOE_ERROR;
+}
+
+void ToeInit()
+{
+	if (!toe_init_counter)
+	{
+		toe_global_message_registry = ToeCreateMessageRegistry(1024);
+		ToeRegisterCoreMessages(toe_global_message_registry);
+	}
+	++toe_init_counter;
+}
+
+ToeMessageRegistry* ToeGetMessageRegistry()
+{
+	return toe_global_message_registry;
+}
+
+void ToeTerminate()
+{
+	--toe_init_counter;
+	if (!toe_init_counter)
+	{
+		ToeDestroyMessageRegistry(toe_global_message_registry);
+	}
 }

@@ -58,16 +58,6 @@ typedef struct ToeSceneSystem
 
 } ToeSceneSystem;
 
-typedef struct ToeMessageCallbackTableItem
-{
-	unsigned long MessageId;
-	ToeMessageCallback Callback;
-} ToeMessageCallbackTableItem;
-
-void ToeSortMessageCallbackTable (ToeMessageCallbackTableItem* table, unsigned long size);
-
-TOE_RESULT ToeLookupMessageCallbackTable (const ToeMessageCallbackTableItem* table, unsigned long size);
-
 /*
 Toe Scene Layer
 */
