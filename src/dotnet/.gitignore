@@ -2,3 +2,4 @@
 _Resharper*
 bin
 *.userprefs
+*.DotSettings.user
