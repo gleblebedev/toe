@@ -3,7 +3,7 @@
   <Identifier Id="cef6b0ee-98c6-451f-938c-dc0552e5fa55">
     <Name>ToeVisualStudioExtension</Name>
     <Author>TinyOpenEngine</Author>
-    <Version>0.1</Version>
+    <Version>0.1.0.1</Version>
     <Description xml:space="preserve">Tiny Open Engine Visual Studio Extension</Description>
     <Locale>1033</Locale>
     <InstalledByMsi>false</InstalledByMsi>

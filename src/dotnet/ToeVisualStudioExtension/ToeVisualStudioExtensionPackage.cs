@@ -47,7 +47,7 @@ namespace TinyOpenEngine.ToeVisualStudioExtension
 	[PackageRegistration(UseManagedResourcesOnly = true)]
 	// This attribute is used to register the informations needed to show the this package
 	// in the Help/About dialog of Visual Studio.
-	[InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)]
+	[InstalledProductRegistration("#110", "#112", "0.1", IconResourceID = 400)]
 	// This attribute is needed to let the shell know that this package exposes some menus.
 	[ProvideMenuResource("Menus.ctmenu", 1)]
 	[ProvideEditorExtension(typeof(EditorFactory), ".group", 50, ProjectGuid = "{A2FE74E1-B743-11d0-AE1A-00A0C90FFFC3}",
@@ -74,6 +74,10 @@ namespace TinyOpenEngine.ToeVisualStudioExtension
 		TemplateDir = "Templates", NameResourceID = 105, DefaultName = "BSP")]
 	[ProvideEditorExtension(typeof(EditorFactory), ".bin", 1000, ProjectGuid = "{A2FE74E1-B743-11d0-AE1A-00A0C90FFFC3}",
 		NameResourceID = 105, DefaultName = "GroupBinary")]
+	[ProvideEditorExtension(typeof(EditorFactory), ".ase", 1000, ProjectGuid = "{A2FE74E1-B743-11d0-AE1A-00A0C90FFFC3}",
+		NameResourceID = 105, DefaultName = "ASE")]
+	[ProvideEditorExtension(typeof(EditorFactory), ".dae", 1000, ProjectGuid = "{A2FE74E1-B743-11d0-AE1A-00A0C90FFFC3}",
+		NameResourceID = 105, DefaultName = "DAE")]
 	[ProvideKeyBindingTable(GuidList.guidToeVisualStudioExtensionEditorFactoryString, 102)]
 	[ProvideEditorLogicalView(typeof(EditorFactory), "{7651a703-06e5-11d1-8ebd-00a0c90f26ea}")]
 	[Guid(GuidList.guidToeVisualStudioExtensionPkgString)]

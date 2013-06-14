@@ -11,10 +11,10 @@ namespace Toe.Resources
 		public override void CanNotRead(string filePath, Exception exception)
 		{
 			Trace.WriteLine(exception);
-			if (Debugger.IsAttached)
-			{
-				Debugger.Break();
-			}
+			//if (Debugger.IsAttached)
+			//{
+			//    Debugger.Break();
+			//}
 			var res = ResourceErrorDialog.ShowDialogOrDefault(filePath, exception.Message);
 			if (res != DialogResult.Ignore)
 			{
