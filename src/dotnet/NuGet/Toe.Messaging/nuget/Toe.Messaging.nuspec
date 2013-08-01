@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
-    <id>Toe.CircularArrayQueue</id>
-    <version>1.0.0.3</version>
-    <title>Tiny Open Engine Circular Array Queue</title>
+    <id>Toe.Messaging</id>
+    <version>1.0.0.0</version>
+    <title>Tiny Open Engine Messaging</title>
     <authors>gleblebedev</authors>
     <owners>gleblebedev</owners>
-    <projectUrl>https://github.com/gleblebedev/toe/tree/master/src/dotnet/NuGet/Toe.CirculArarrayQueue</projectUrl>
+    <projectUrl>https://github.com/gleblebedev/toe.messaging</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Circular array queue for TOE.</description>
+    <description>Messaging via circular array queue.</description>
     <releaseNotes />
     <copyright>Copyright 2013 Gleb Lebedev</copyright>
     <tags>Toe</tags>
