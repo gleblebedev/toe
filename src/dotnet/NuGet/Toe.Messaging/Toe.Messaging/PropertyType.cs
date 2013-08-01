@@ -4,9 +4,19 @@ namespace Toe.Messaging
 	{
 		Unknown,
 
-		Int,
+		Int32,
 
 		Hash,
+
+        Single,
+
+        Vector,
+
+        Quaternion,
+
+        Array,
+
+        Bytes,
 
 		String,
 	}

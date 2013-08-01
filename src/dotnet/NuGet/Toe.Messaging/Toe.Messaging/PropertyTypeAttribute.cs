@@ -3,8 +3,8 @@ using System.Reflection;
 
 namespace Toe.Messaging
 {
-	[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
-	public class MessagePropertyTypeAttribute : Attribute
+    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
+	public class PropertyTypeAttribute : Attribute
 	{
 		#region Constants and Fields
 
@@ -14,7 +14,7 @@ namespace Toe.Messaging
 
 		#region Constructors and Destructors
 
-		public MessagePropertyTypeAttribute(PropertyType propertyType)
+		public PropertyTypeAttribute(PropertyType propertyType)
 		{
 			this.propertyType = propertyType;
 		}
@@ -23,7 +23,7 @@ namespace Toe.Messaging
 
 		public static PropertyType Get(MemberInfo property)
 		{
-			var v = GetCustomAttribute(property, typeof(MessagePropertyTypeAttribute)) as MessagePropertyTypeAttribute;
+			var v = GetCustomAttribute(property, typeof(PropertyTypeAttribute)) as PropertyTypeAttribute;
 			if (v != null) return v.propertyType;
 			return PropertyType.Unknown;
 		}

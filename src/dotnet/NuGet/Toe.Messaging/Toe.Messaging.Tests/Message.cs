@@ -4,9 +4,15 @@ namespace Toe.Messaging.Tests
 	{
 		#region Public Properties
 
-		[MessagePropertyType(PropertyType.Int)]
-		public int M { get; set; }
+		[PropertyType(PropertyType.Int32)]
+        [PropertyOrder(0)]
+        public int MessageId { get; set; }
 
 		#endregion
 	}
+
+    public class SubMessage : Message
+    {
+        public string Text { get; set; }
+    }
 }

@@ -41,7 +41,7 @@
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Toe.CircularArrayQueue">
-      <HintPath>..\packages\Toe.CircularArrayQueue.1.0.0.2\lib\net40\Toe.CircularArrayQueue.dll</HintPath>
+      <HintPath>..\packages\Toe.CircularArrayQueue.1.0.0.3\lib\net40\Toe.CircularArrayQueue.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -53,7 +53,9 @@
     <Compile Include="IMessageSerializer.cs" />
     <Compile Include="MessageDescription.cs" />
     <Compile Include="MessageIdAttribute.cs" />
-    <Compile Include="MessagePropertyTypeAttribute.cs" />
+    <Compile Include="PropertyNameAttribute.cs" />
+    <Compile Include="PropertyOrderAttribute.cs" />
+    <Compile Include="PropertyTypeAttribute.cs" />
     <Compile Include="MessageRegistry.cs" />
     <Compile Include="NamedMessageElement.cs" />
     <Compile Include="NewMessageDescription.cs" />

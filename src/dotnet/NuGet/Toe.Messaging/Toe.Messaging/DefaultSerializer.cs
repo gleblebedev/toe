@@ -27,7 +27,7 @@ namespace Toe.Messaging
 		}
 		private PropertyBinding GetPropertyBinding(PropertyInfo property)
 		{
-			var type = MessagePropertyTypeAttribute.Get(property);
+			var type = PropertyTypeAttribute.Get(property);
 			if (type == PropertyType.Unknown) return null;
 			return new PropertyBinding() {  PropertyId = Hash.Eval(property.Name), Type = type };
 		}

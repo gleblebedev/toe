@@ -45,9 +45,8 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="Toe.CircularArrayQueue, Version=1.0.0.2, Culture=neutral, PublicKeyToken=3bad676bed7449e1, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Toe.CircularArrayQueue.1.0.0.2\lib\net40\Toe.CircularArrayQueue.dll</HintPath>
+    <Reference Include="Toe.CircularArrayQueue">
+      <HintPath>..\packages\Toe.CircularArrayQueue.1.0.0.3\lib\net40\Toe.CircularArrayQueue.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
