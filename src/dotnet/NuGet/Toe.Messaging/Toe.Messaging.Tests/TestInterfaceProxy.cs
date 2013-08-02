@@ -53,7 +53,7 @@ namespace Toe.Messaging.Tests
 		public void Message()
 		{
 			var reg = new MessageRegistry();
-			var pos = reg.DefineMessage(Hash.Eval(typeof(Message).Name), 0);
+            var pos = reg.DefineMessage(Hash.Eval(typeof(SubMessage).Name), 0);
 			var omm = new ObjectMessageMap(reg);
 
 			var r = omm.GetSerializer<SubMessage>();
@@ -77,10 +77,10 @@ namespace Toe.Messaging.Tests
 	    [Test]
 	    public void Experimental()
 	    {
-		    var serializer = new BinarySerializer();
-	        Expression<Action<IMessageQueue, SubMessage>> serialize = (q, m) =>
-					this.Release(Allocate().Allocate(q, 1 + 2, q.GetStringLength(m.Text)).WriteInt32(0, m.MessageId)
-	                                                                         .WriteString(1, m.Text).Commit());
+            //var serializer = new BinarySerializer();
+            //Expression<Action<IMessageQueue, SubMessage>> serialize = (q, m) =>
+            //        this.Release(Allocate().Allocate(q, 1 + 2, q.GetStringLength(m.A)).WriteInt32(0, m.MessageId)
+            //                                                                 .WriteString(1, m.Text).Commit());
 	    }
 
 	    #endregion

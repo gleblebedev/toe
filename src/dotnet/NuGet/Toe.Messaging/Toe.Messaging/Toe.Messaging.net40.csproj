@@ -46,6 +46,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BinaryDeserializerContext.cs" />
     <Compile Include="BinarySerializerContext.cs" />
     <Compile Include="DefaultSerializer.cs" />
     <Compile Include="DynamicSerializer.cs" />

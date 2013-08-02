@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -10,13 +11,15 @@ namespace Toe.Messaging
 {
 	public class DefaultSerializer<T> : IMessageSerializer<T>
 	{
-		private readonly int messageId;
+		private int messageId;
 
 		private BinarySerializerContext reusableContext = new BinarySerializerContext();
 
 		private Action<IMessageQueue, T> serialize;
 
-		private void ReleaseContext(BinarySerializerContext context)
+	    private Action<IMessageQueue, int, T> deserialize;
+
+	    private void ReleaseContext(BinarySerializerContext context)
 		{
 			Interlocked.CompareExchange(ref reusableContext, context, null);
 		}
@@ -31,53 +34,92 @@ namespace Toe.Messaging
 			while (context != Interlocked.CompareExchange(ref reusableContext, null, context));
 			return context;
 		}
-		
-		internal class PropertyBinding
-		{
-			public int PropertyId;
-			public PropertyType Type;
 
-			public int Size;
-			public int Offset;
 
-			public Expression Setter;
-			public Expression Getter;
-			public Expression Allocation;
+	    public DefaultSerializer(MessageRegistry messageRegistry, int messageId)
+        {
+            this.messageId = messageId;
+            var description = messageRegistry.DefineMessage(this.messageId);
 
-			
-		}
-		private PropertyBinding GetPropertyBinding(PropertyInfo property)
-		{
-			var type = PropertyTypeAttribute.Get(property);
-			if (type == PropertyType.Unknown) return null;
-			return new PropertyBinding() {  PropertyId = Hash.Eval(property.Name), Type = type };
-		}
-		public DefaultSerializer(MessageRegistry messageRegistry, int messageId)
-		{
-			this.messageId = messageId;
-			messageRegistry.DefineMessage(this.messageId);
+            var parameter = Expression.Parameter(typeof(T), "value");
 
-			var parameter = Expression.Parameter(typeof(T), "value");
+            var allMembers = GetMembers(typeof(T));
 
-			var all = (from p in typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly) let binding = GetPropertyBinding(p) where binding != null select binding).ToList();
-			var fixedSize = 0;
-			var allocateContext = ((Func<BinarySerializerContext>) AllocateContext).Method;
-			var releaseContext = ((Action<BinarySerializerContext>) ReleaseContext).Method;
-			var allocate = ((Func<IMessageQueue,int,int,BinarySerializerContext>)reusableContext.Allocate).Method;
-			var commit = ((Func<BinarySerializerContext>)reusableContext.Commit).Method;
-			var queueParameter = Expression.Parameter(typeof(IMessageQueue), "q");
-			var messageParameter = Expression.Parameter(typeof(T), "m");
-			var thisExpression = Expression.Constant(this);
-			var chainElement = Expression.Call(thisExpression, allocateContext);
-			chainElement = Expression.Call(
-				chainElement, allocate, queueParameter, Expression.Constant(fixedSize), Expression.Constant(0));
-			chainElement = Expression.Call(chainElement, commit);
-			var body = Expression.Call(thisExpression, releaseContext, chainElement);
-			var serializeExpression = Expression.Lambda<Action<IMessageQueue, T>>(body, queueParameter, messageParameter);
-			this.serialize = serializeExpression.Compile();
-		}
+            var fixedSize = 0;
+            var allocateContext = ((Func<BinarySerializerContext>)AllocateContext).Method;
+            var releaseContext = ((Action<BinarySerializerContext>)ReleaseContext).Method;
+            var allocate =
+                ((Func<IMessageQueue, int, int, BinarySerializerContext>)(new BinarySerializerContext()).Allocate).Method;
+            var writeInt32 = ((Func<int, int, BinarySerializerContext>)(new BinarySerializerContext()).WriteInt32).Method;
+            var commit = ((Func<BinarySerializerContext>)reusableContext.Commit).Method;
+            var queueParameter = Expression.Parameter(typeof(IMessageQueue), "q");
+            var positionParameter = Expression.Parameter(typeof(int), "p");
+            var messageParameter = Expression.Parameter(typeof(T), "m");
+            var thisExpression = Expression.Constant(this);
+            {
+                var chainElement = Expression.Call(thisExpression, allocateContext);
+                chainElement = Expression.Call(
+                    chainElement, allocate, queueParameter, Expression.Constant(fixedSize), Expression.Constant(0));
+                foreach (var member in allMembers)
+                {
+                    switch (member.Type)
+                    {
+                        case PropertyType.Int32:
+                            {
+                                Expression src = Expression.PropertyOrField(messageParameter, member.MemberInfo.Name);
+                                if (member.PropertyType != typeof(int)) src = Expression.Convert(src, typeof(int));
+                                chainElement = Expression.Call(
+                                    chainElement, writeInt32, Expression.Constant(member.Offset), src);
+                            }
+                            break;
+                    }
+                }
+                chainElement = Expression.Call(chainElement, commit);
+                var body = Expression.Call(thisExpression, releaseContext, chainElement);
+                var serializeExpression = Expression.Lambda<Action<IMessageQueue, T>>(body, queueParameter, messageParameter);
+                this.serialize = serializeExpression.Compile();
+            }
+            {
+                //var chainElement = Expression.Call(thisExpression, allocateContext);
 
-		#region Implementation of IMessageSerializer
+                //var deserializeExpression = Expression.Lambda<Action<IMessageQueue, int, T>>(
+                //    body, queueParameter, positionParameter, messageParameter);
+                //this.deserialize = deserializeExpression.Compile();
+            }
+        }
+
+	    private List<MessageMemberInfo> GetMembers(Type type)
+	    {
+	        if (type == typeof(object))
+                return new List<MessageMemberInfo>();
+	        var baseList = this.GetMembers(type.BaseType);
+            baseList.AddRange(this.GetTypeMembers(type));
+	        return baseList;
+	    }
+
+	 
+        private List<MessageMemberInfo> GetTypeMembers(Type t)
+	    {
+	        var all =
+	            t.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)
+	                     .Select(x=>new MessageMemberInfo(x))
+                         .Where(a => a.Type != PropertyType.Unknown)
+	                     .ToList();
+	        all.AddRange(
+	            t.GetFields(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)
+	                      .Select(x=>new MessageMemberInfo(x))
+                          .Where(a => a.Type != PropertyType.Unknown)
+	                     .ToList());
+            all.Sort((a, b) =>
+                {
+                    if (a.Order < b.Order) return -1;
+                    if (a.Order > b.Order) return 1;
+                    return string.Compare(a.Name, b.Name);
+                });
+	        return all;
+	    }
+
+	    #region Implementation of IMessageSerializer
 
 		void IMessageSerializer.Serialize(IMessageQueue queue, object value)
 		{
@@ -100,7 +142,7 @@ namespace Toe.Messaging
 
 		public void Deserialize(IMessageQueue queue,int pos, T value)
 		{
-			throw new NotImplementedException();
+		    this.deserialize(queue, pos, value);
 		}
 
 		#endregion

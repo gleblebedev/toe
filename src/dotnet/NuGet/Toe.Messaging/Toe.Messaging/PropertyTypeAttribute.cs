@@ -25,7 +25,41 @@ namespace Toe.Messaging
 		{
 			var v = GetCustomAttribute(property, typeof(PropertyTypeAttribute)) as PropertyTypeAttribute;
 			if (v != null) return v.propertyType;
-			return PropertyType.Unknown;
+		    var propertyInfo = property as PropertyInfo;
+		    if (propertyInfo != null)
+		    {
+		        return GetDefaultType(propertyInfo.PropertyType);
+		    }
+            var fieldInfo = property as FieldInfo;
+            if (fieldInfo != null)
+            {
+                return GetDefaultType(fieldInfo.FieldType);
+            }
+            return PropertyType.Unknown;
 		}
+
+        private static PropertyType GetDefaultType(Type fieldType)
+        {
+            if (fieldType == typeof(int))
+                return PropertyType.Int32;
+            if (fieldType == typeof(uint))
+                return PropertyType.Int32;
+
+            if (fieldType == typeof(byte))
+                return PropertyType.Int32;
+            if (fieldType == typeof(sbyte))
+                return PropertyType.Int32;
+
+            if (fieldType == typeof(ushort))
+                return PropertyType.Int32;
+            if (fieldType == typeof(short))
+                return PropertyType.Int32;
+
+            if (fieldType == typeof(float))
+                return PropertyType.Single;
+            if (fieldType == typeof(string))
+                return PropertyType.String;
+            return PropertyType.Unknown;
+        }
 	}
 }

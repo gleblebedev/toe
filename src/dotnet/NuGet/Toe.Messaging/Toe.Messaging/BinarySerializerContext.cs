@@ -2,7 +2,7 @@ using Toe.CircularArrayQueue;
 
 namespace Toe.Messaging
 {
-	internal class BinarySerializerContext
+    internal class BinarySerializerContext
 	{
 		private IMessageQueue queue;
 
@@ -25,5 +25,11 @@ namespace Toe.Messaging
 			this.queue.Commit(this.pos);
 			return this;
 		}
+
+        public BinarySerializerContext WriteInt32(int offset, int value)
+        {
+            queue.WriteInt32(offset+pos,value);
+            return this;
+        }
 	}
 }
