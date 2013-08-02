@@ -29,7 +29,7 @@ namespace Toe.Messaging
 
 		#region Implementation of IMessageSerializer
 
-		public int Serialize(IMessageQueue queue, object value)
+		public void Serialize(IMessageQueue queue, object value)
 		{
 			throw new NotImplementedException();
 		}
