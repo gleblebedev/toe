@@ -47,8 +47,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BinaryDeserializerContext.cs" />
-    <Compile Include="BinarySerializerContext.cs" />
     <Compile Include="DefaultSerializer.cs" />
     <Compile Include="DynamicSerializer.cs" />
     <Compile Include="ExistingMessageDescription.cs" />
@@ -59,11 +57,11 @@
     <Compile Include="Types\Int32BinarySerializer.cs" />
     <Compile Include="Types\ITypeBinarySerializer.cs" />
     <Compile Include="MessageDescription.cs" />
-    <Compile Include="MessageIdAttribute.cs" />
+    <Compile Include="Attributes\MessageIdAttribute.cs" />
     <Compile Include="MessageMemberInfo.cs" />
-    <Compile Include="PropertyNameAttribute.cs" />
-    <Compile Include="PropertyOrderAttribute.cs" />
-    <Compile Include="PropertyTypeAttribute.cs" />
+    <Compile Include="Attributes\PropertyNameAttribute.cs" />
+    <Compile Include="Attributes\PropertyOrderAttribute.cs" />
+    <Compile Include="Attributes\PropertyTypeAttribute.cs" />
     <Compile Include="MessageRegistry.cs" />
     <Compile Include="NamedMessageElement.cs" />
     <Compile Include="NewMessageDescription.cs" />

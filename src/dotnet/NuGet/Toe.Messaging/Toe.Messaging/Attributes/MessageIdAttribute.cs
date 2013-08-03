@@ -1,6 +1,6 @@
 using System;
 
-namespace Toe.Messaging
+namespace Toe.Messaging.Attributes
 {
 	[AttributeUsage(AttributeTargets.Class)]
 	public class MessageIdAttribute : Attribute

@@ -1,6 +1,6 @@
 using System.Linq.Expressions;
 
-namespace Toe.Messaging
+namespace Toe.Messaging.Types
 {
 	public interface ITypeBinarySerializer
 	{

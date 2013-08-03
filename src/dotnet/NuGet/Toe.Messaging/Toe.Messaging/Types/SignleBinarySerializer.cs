@@ -1,17 +1,12 @@
-using System;
 using System.Linq.Expressions;
-using System.Reflection;
 
-namespace Toe.Messaging
+namespace Toe.Messaging.Types
 {
 	public class SignleBinarySerializer : ITypeBinarySerializer
 	{
 		#region Constants and Fields
 
 		public static readonly ITypeBinarySerializer Instance = new SignleBinarySerializer();
-
-		public static readonly MethodInfo writeFloat =
-			((Func<int, float, BinarySerializerContext>)(new BinarySerializerContext()).WriteFloat).Method;
 
 		#endregion
 

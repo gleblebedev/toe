@@ -1,20 +1,12 @@
-using System;
 using System.Linq.Expressions;
-using System.Reflection;
 
-namespace Toe.Messaging
+namespace Toe.Messaging.Types
 {
 	public class Int32BinarySerializer : ITypeBinarySerializer
 	{
 		#region Constants and Fields
 
 		public static readonly ITypeBinarySerializer Instance = new Int32BinarySerializer();
-
-		public static readonly MethodInfo readInt32 =
-			((Func<int, Func<int, int>, BinarySerializerContext>)(new BinarySerializerContext()).ReadInt32).Method;
-
-		public static readonly MethodInfo writeInt32 =
-			((Func<int, int, BinarySerializerContext>)(new BinarySerializerContext()).WriteInt32).Method;
 
 		#endregion
 
@@ -40,7 +32,9 @@ namespace Toe.Messaging
 				expression,
 				Expression.Convert(
 					Expression.Call(
-						queue, MessageQueueMethods.ReadInt32, Expression.Add(positionParameter, Expression.Constant(member.Offset))),
+						queue,
+						MessageQueueMethods.ReadInt32,
+						new Expression[] { Expression.Add(positionParameter, Expression.Constant(member.Offset)) }),
 					member.PropertyType));
 		}
 

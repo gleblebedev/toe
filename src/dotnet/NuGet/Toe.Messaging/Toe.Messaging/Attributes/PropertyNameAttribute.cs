@@ -1,7 +1,7 @@
 using System;
 using System.Reflection;
 
-namespace Toe.Messaging
+namespace Toe.Messaging.Attributes
 {
 	[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
 	public class PropertyNameAttribute : Attribute

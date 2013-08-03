@@ -81,20 +81,25 @@ namespace Toe.Messaging
 		{
 			get
 			{
-
-				return writeLine ?? (writeLine = typeof(Trace).GetMethod("WriteLine", new Type[] { typeof(object) }));
+				return writeLine ?? (writeLine = typeof(Trace).GetMethod("WriteLine", new[] { typeof(object) }));
 			}
 		}
+
 		#endregion
+
+		#region Public Methods and Operators
 
 		public static Expression TraceWriteLine(Expression positionParameter)
 		{
-			
-			return Expression.Call(WriteLine, 
-				Expression.Call(((Func<string,object,object,string>)string.Format).Method,
-				Expression.Constant("{0} = {1}"),
-				Expression.Constant((object)(positionParameter.ToString())),
-				Expression.Convert(positionParameter, typeof(object))));
+			return Expression.Call(
+				WriteLine,
+				Expression.Call(
+					((Func<string, object, object, string>)string.Format).Method,
+					Expression.Constant("{0} = {1}"),
+					Expression.Constant((positionParameter.ToString())),
+					Expression.Convert(positionParameter, typeof(object))));
 		}
+
+		#endregion
 	}
 }

@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 
+using Toe.Messaging.Attributes;
+
 namespace Toe.Messaging
 {
 	/// <summary>

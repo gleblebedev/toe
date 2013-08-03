@@ -18,8 +18,6 @@ namespace Toe.Messaging
 
 		private readonly Action<IMessageQueue, T> serialize;
 
-		private BinarySerializerContext reusableContext = new BinarySerializerContext();
-
 		#endregion
 
 		#region Constructors and Destructors
@@ -29,8 +27,6 @@ namespace Toe.Messaging
 			this.messageId = messageId;
 			var description = messageRegistry.DefineMessage(this.messageId);
 
-			var parameter = Expression.Parameter(typeof(T), "value");
-
 			var allMembers = this.GetMembers(typeof(T));
 
 			var fixedSize = 0;
@@ -39,7 +35,6 @@ namespace Toe.Messaging
 			var positionParameter = Expression.Parameter(typeof(int), "p");
 			var dynamicPositionParameter = Expression.Parameter(typeof(int), "d");
 			var messageParameter = Expression.Parameter(typeof(T), "m");
-			var thisExpression = Expression.Constant(this);
 			{
 				Expression dynamicSizeEval = null;
 				foreach (var member in allMembers)
@@ -49,36 +44,26 @@ namespace Toe.Messaging
 					Expression dynamicSize = member.Serializer.BuildDynamicSizeEvaluator(member, messageParameter);
 					if (dynamicSize != null)
 					{
-						if (dynamicSizeEval == null)
-						{
-							dynamicSizeEval = dynamicSize;
-						}
-						else
-						{
-							dynamicSizeEval = Expression.Add(dynamicSizeEval, dynamicSize);
-						}
+						dynamicSizeEval = dynamicSizeEval == null ? dynamicSize : Expression.Add(dynamicSizeEval, dynamicSize);
 					}
 				}
 
-				List<Expression> items = new List<Expression>(allMembers.Count + 3);
-				items.Add(
-					Expression.Assign(
-						positionParameter,
-						Expression.Call(
-							queueParameter,
-							MessageQueueMethods.Allocate,
-							Expression.Add(Expression.Constant(fixedSize), dynamicSizeEval ?? Expression.Constant(0)))));
-				items.Add(Expression.Assign(dynamicPositionParameter, Expression.Add(positionParameter, Expression.Constant(fixedSize))));
-				foreach (var member in allMembers)
-				{
-					if (member.Serializer != null)
+				var items = new List<Expression>(allMembers.Count + 3)
 					{
-						items.Add(
-							member.Serializer.BuildSerializeExpression(
-								member, positionParameter, dynamicPositionParameter, queueParameter, messageParameter));
-					}
-				}
-				items.Add(Expression.Call(queueParameter, MessageQueueMethods.Commit, positionParameter));
+						Expression.Assign(
+							positionParameter,
+							Expression.Call(
+								queueParameter,
+								MessageQueueMethods.Allocate,
+								new Expression[] { Expression.Add(Expression.Constant(fixedSize), dynamicSizeEval ?? Expression.Constant(0)) })),
+						Expression.Assign(dynamicPositionParameter, Expression.Add(positionParameter, Expression.Constant(fixedSize)))
+					};
+				items.AddRange(
+					allMembers.Select(
+						member =>
+						member.Serializer.BuildSerializeExpression(
+							member, positionParameter, dynamicPositionParameter, queueParameter, messageParameter)));
+				items.Add(Expression.Call(queueParameter, MessageQueueMethods.Commit, new Expression[] { positionParameter }));
 				var body = Expression.Block(new[] { positionParameter, dynamicPositionParameter }, items);
 				var serializeExpression = Expression.Lambda<Action<IMessageQueue, T>>(
 					body, new[] { queueParameter, messageParameter });
@@ -87,11 +72,10 @@ namespace Toe.Messaging
 			}
 			{
 				var items = new List<Expression>(allMembers.Count + 3);
-				foreach (var member in allMembers)
-				{
-						items.Add(
-							member.Serializer.BuildDeserializeExpression(member, positionParameter, queueParameter, messageParameter));
-				}
+				items.AddRange(
+					allMembers.Select(
+						member =>
+						member.Serializer.BuildDeserializeExpression(member, positionParameter, queueParameter, messageParameter)));
 				var body = Expression.Block(new ParameterExpression[] { }, items);
 				var deserializeExpression = Expression.Lambda<Action<IMessageQueue, int, T>>(
 					body, new[] { queueParameter, positionParameter, messageParameter });
@@ -161,7 +145,7 @@ namespace Toe.Messaging
 						{
 							return 1;
 						}
-						return string.Compare(a.Name, b.Name);
+						return String.CompareOrdinal(a.Name, b.Name);
 					});
 			return all;
 		}

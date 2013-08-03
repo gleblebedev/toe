@@ -2,6 +2,9 @@ using System;
 using System.Linq.Expressions;
 using System.Reflection;
 
+using Toe.Messaging.Attributes;
+using Toe.Messaging.Types;
+
 namespace Toe.Messaging
 {
 	public class MessageMemberInfo

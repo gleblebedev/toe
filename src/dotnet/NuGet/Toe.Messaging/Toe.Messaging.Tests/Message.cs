@@ -1,3 +1,5 @@
+using Toe.Messaging.Attributes;
+
 namespace Toe.Messaging.Tests
 {
 	public class Message
