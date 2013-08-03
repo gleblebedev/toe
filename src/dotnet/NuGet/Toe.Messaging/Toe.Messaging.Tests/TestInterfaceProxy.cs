@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 
 using NUnit.Framework;
@@ -7,43 +8,62 @@ using Toe.CircularArrayQueue;
 
 namespace Toe.Messaging.Tests
 {
-    public class BinarySerializer
-    {
-        private IMessageQueue queue;
+	public class BinarySerializer
+	{
+		#region Constants and Fields
 
-        private int pos;
+		private int dymanicPos;
 
-        private int dymanicPos;
+		private int pos;
 
-        public BinarySerializer()
-        {
-        }
-		public BinarySerializer Commit()
+		private IMessageQueue queue;
+
+		#endregion
+
+		#region Public Methods and Operators
+
+		public BinarySerializer Allocate(IMessageQueue queue, int fixedLen, int dynamicLen)
 		{
-			this.queue.Commit(pos);
+			this.queue = queue;
+			this.pos = this.queue.Allocate(fixedLen + dynamicLen);
+			this.dymanicPos = fixedLen + this.pos;
 			return this;
 		}
-		public BinarySerializer Allocate(IMessageQueue queue, int fixedLen, int dynamicLen)
-        {
-            this.queue = queue;
-            pos = this.queue.Allocate(fixedLen + dynamicLen);
-            this.dymanicPos = fixedLen + pos;
-			return this;
-        }
 
-        public BinarySerializer WriteInt32(int i, int int32)
-        {
-            queue.WriteInt32(pos+i,int32);
-            return this;
-        }
+		public BinarySerializer Commit()
+		{
+			this.queue.Commit(this.pos);
+			return this;
+		}
+
+		public BinarySerializer ReadAt(int i)
+		{
+			this.pos = i;
+			return this;
+		}
+
+		public BinarySerializer ReadInt32(int offset, Func<int, int> func)
+		{
+			func(this.queue.ReadInt32(this.pos + offset));
+			return this;
+		}
+
+		public BinarySerializer WriteInt32(int i, int int32)
+		{
+			this.queue.WriteInt32(this.pos + i, int32);
+			return this;
+		}
 
 		public BinarySerializer WriteString(int i, string text)
-        {
-            queue.WriteInt32(pos + i, dymanicPos);
-            dymanicPos = queue.WriteString(dymanicPos, text);
+		{
+			this.queue.WriteInt32(this.pos + i, this.dymanicPos);
+			this.dymanicPos = this.queue.WriteString(this.dymanicPos, text);
 			return this;
-        }
-    }
+		}
+
+		#endregion
+	}
+
 	[TestFixture]
 	public class TestObjectMapping
 	{
@@ -53,36 +73,63 @@ namespace Toe.Messaging.Tests
 		public void Message()
 		{
 			var reg = new MessageRegistry();
-            var pos = reg.DefineMessage(Hash.Eval(typeof(SubMessage).Name), 0);
+			var pos = reg.DefineMessage(Hash.Eval(typeof(SubMessage).Name), 0);
 			var omm = new ObjectMessageMap(reg);
 
 			var r = omm.GetSerializer<SubMessage>();
 
 			using (var buf = new ThreadSafeWriteQueue(1024))
 			{
-				var orig = new SubMessage { MessageId = int.MaxValue };
+				var orig = new SubMessage
+					{
+						MessageId = int.MaxValue,
+						A = 1,
+						B = 2,
+						C = 3,
+						Text = "aaa‚Ô‡‡‚",
+					};
+				var orig2 = new SubMessage
+				{
+					MessageId = int.MaxValue,
+					A = 4,
+					B = 5,
+					C = 6,
+					Text = "‚Ô‡‡‚zz",
+				};
 				r.Serialize(buf, orig);
+				r.Serialize(buf, orig2);
+
 				SubMessage message = new SubMessage();
+
 				r.Deserialize(buf, buf.ReadMessage(), message);
 				Assert.AreEqual(orig.MessageId, message.MessageId);
+				Assert.AreEqual(orig.A, message.A);
+				Assert.AreEqual(orig.B, message.B);
+				Assert.AreEqual(orig.C, message.C);
+				Assert.AreEqual(orig.Text, message.Text);
+
+				r.Deserialize(buf, buf.ReadMessage(), message);
+				Assert.AreEqual(orig2.MessageId, message.MessageId);
+				Assert.AreEqual(orig2.A, message.A);
+				Assert.AreEqual(orig2.B, message.B);
+				Assert.AreEqual(orig2.C, message.C);
+				Assert.AreEqual(orig2.Text, message.Text);
 			}
 		}
-		BinarySerializer Allocate()
+
+		#endregion
+
+		#region Methods
+
+		private BinarySerializer Allocate()
 		{
 			return new BinarySerializer();
 		}
-		void Release(BinarySerializer r)
+
+		private void Release(BinarySerializer r)
 		{
 		}
-	    [Test]
-	    public void Experimental()
-	    {
-            //var serializer = new BinarySerializer();
-            //Expression<Action<IMessageQueue, SubMessage>> serialize = (q, m) =>
-            //        this.Release(Allocate().Allocate(q, 1 + 2, q.GetStringLength(m.A)).WriteInt32(0, m.MessageId)
-            //                                                                 .WriteString(1, m.Text).Commit());
-	    }
 
-	    #endregion
+		#endregion
 	}
 }

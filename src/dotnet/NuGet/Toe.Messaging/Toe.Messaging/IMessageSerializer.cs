@@ -4,13 +4,23 @@ namespace Toe.Messaging
 {
 	public interface IMessageSerializer
 	{
-		void Serialize(IMessageQueue queue, object value);
+		#region Public Methods and Operators
+
 		void Deserialize(IMessageQueue queue, int pos, object value);
+
+		void Serialize(IMessageQueue queue, object value);
+
+		#endregion
 	}
 
 	public interface IMessageSerializer<in T> : IMessageSerializer
 	{
-		void Serialize(IMessageQueue queue, T value);
+		#region Public Methods and Operators
+
 		void Deserialize(IMessageQueue queue, int pos, T value);
+
+		void Serialize(IMessageQueue queue, T value);
+
+		#endregion
 	}
 }

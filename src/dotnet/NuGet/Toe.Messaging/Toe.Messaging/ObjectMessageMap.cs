@@ -49,7 +49,6 @@ namespace Toe.Messaging
 			return (IMessageSerializer<T>)v;
 		}
 
-		
 		#endregion
 
 		#region Methods
@@ -58,7 +57,8 @@ namespace Toe.Messaging
 		{
 			if (type == typeof(object))
 			{
-				return new DynamicSerializer(this.registry);;
+				return new DynamicSerializer(this.registry);
+				;
 			}
 			return new DefaultSerializer<T>(this.registry, messageId);
 		}

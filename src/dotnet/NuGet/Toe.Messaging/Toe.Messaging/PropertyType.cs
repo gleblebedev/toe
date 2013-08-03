@@ -8,15 +8,15 @@ namespace Toe.Messaging
 
 		Hash,
 
-        Single,
+		Single,
 
-        Vector,
+		Vector,
 
-        Quaternion,
+		Quaternion,
 
-        Array,
+		Array,
 
-        Bytes,
+		Bytes,
 
 		String,
 	}

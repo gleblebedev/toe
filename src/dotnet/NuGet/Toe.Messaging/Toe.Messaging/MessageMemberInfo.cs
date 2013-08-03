@@ -1,78 +1,128 @@
 using System;
+using System.Linq.Expressions;
 using System.Reflection;
 
 namespace Toe.Messaging
 {
-    internal class MessageMemberInfo
-    {
-        private MemberInfo memberInfo;
+	public class MessageMemberInfo
+	{
+		#region Constants and Fields
 
-        private int order;
+		private readonly MemberInfo memberInfo;
 
-        private string name;
+		private readonly string name;
 
-        private PropertyType type;
+		private readonly int order;
 
-        private Type propertyType;
+		private readonly Type propertyType;
 
-        public MessageMemberInfo(PropertyInfo propertyInfo)
-            : this((MemberInfo)propertyInfo)
-        {
-            this.propertyType = propertyInfo.PropertyType;
-        }
-        public MessageMemberInfo(FieldInfo fieldInfo)
-            : this((MemberInfo)fieldInfo)
-        {
-            this.propertyType = (fieldInfo).FieldType;
-        }
-        public MessageMemberInfo(MemberInfo memberInfo)
-        {
-            this.memberInfo = memberInfo;
-            this.order = PropertyOrderAttribute.Get(this.MemberInfo);
-            this.name = PropertyNameAttribute.Get(this.MemberInfo);
-            this.type = PropertyTypeAttribute.Get(this.MemberInfo);
-        }
+		private readonly ITypeBinarySerializer serializer;
 
-        public PropertyType Type
-        {
-            get
-            {
-                return this.type;
-            }
-        }
+		private readonly PropertyType type;
 
-        public int Order
-        {
-            get
-            {
-                return this.order;
-            }
-        }
+		#endregion
 
-        public string Name
-        {
-            get
-            {
-                return this.name;
-            }
-        }
+		#region Constructors and Destructors
 
-        public int Offset { get; set; }
+		public MessageMemberInfo(PropertyInfo propertyInfo)
+			: this((MemberInfo)propertyInfo)
+		{
+			this.propertyType = propertyInfo.PropertyType;
+		}
 
-        public MemberInfo MemberInfo
-        {
-            get
-            {
-                return this.memberInfo;
-            }
-        }
+		public MessageMemberInfo(FieldInfo fieldInfo)
+			: this((MemberInfo)fieldInfo)
+		{
+			this.propertyType = (fieldInfo).FieldType;
+		}
 
-        public Type PropertyType
-        {
-            get
-            {
-                return this.propertyType;
-            }
-        }
-    }
+		public MessageMemberInfo(MemberInfo memberInfo)
+		{
+			this.memberInfo = memberInfo;
+			this.order = PropertyOrderAttribute.Get(this.MemberInfo);
+			this.name = PropertyNameAttribute.Get(this.MemberInfo);
+			this.type = PropertyTypeAttribute.Get(this.MemberInfo);
+			switch (this.type)
+			{
+				case Messaging.PropertyType.Int32:
+					this.serializer = Int32BinarySerializer.Instance;
+					break;
+				case Messaging.PropertyType.Single:
+					this.serializer = SignleBinarySerializer.Instance;
+					break;
+				case Messaging.PropertyType.String:
+					this.serializer = StringBinarySerializer.Instance;
+					break;
+			}
+		}
+
+		#endregion
+
+		#region Public Properties
+
+		public MemberInfo MemberInfo
+		{
+			get
+			{
+				return this.memberInfo;
+			}
+		}
+
+		public string Name
+		{
+			get
+			{
+				return this.name;
+			}
+		}
+
+		public int Offset { get; set; }
+
+		public int Order
+		{
+			get
+			{
+				return this.order;
+			}
+		}
+
+		public Type PropertyType
+		{
+			get
+			{
+				return this.propertyType;
+			}
+		}
+
+		public ITypeBinarySerializer Serializer
+		{
+			get
+			{
+				return this.serializer;
+			}
+		}
+
+		public PropertyType Type
+		{
+			get
+			{
+				return this.type;
+			}
+		}
+
+		#endregion
+
+		#region Public Methods and Operators
+
+		public Expression GetProperty(Expression instance)
+		{
+			if (this.memberInfo is PropertyInfo)
+			{
+				return Expression.Property(instance, (PropertyInfo)this.memberInfo);
+			}
+			return Expression.Field(instance, (FieldInfo)this.memberInfo);
+		}
+
+		#endregion
+	}
 }

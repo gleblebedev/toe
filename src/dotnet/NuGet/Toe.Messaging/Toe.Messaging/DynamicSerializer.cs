@@ -9,10 +9,15 @@ namespace Toe.Messaging
 {
 	public class DynamicSerializer : IMessageSerializer<object>
 	{
+		#region Constructors and Destructors
+
 		public DynamicSerializer(MessageRegistry registry)
 		{
-			
 		}
+
+		#endregion
+
+		#region Public Methods and Operators
 
 		public static object GetProperty(object target, string name)
 		{
@@ -26,15 +31,12 @@ namespace Toe.Messaging
 			return site.Target(site, target);
 		}
 
-
-		#region Implementation of IMessageSerializer
-
-		public void Serialize(IMessageQueue queue, object value)
+		public void Deserialize(IMessageQueue queue, int pos, object value)
 		{
 			throw new NotImplementedException();
 		}
 
-		public void Deserialize(IMessageQueue queue, int pos, object value)
+		public void Serialize(IMessageQueue queue, object value)
 		{
 			throw new NotImplementedException();
 		}

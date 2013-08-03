@@ -3,29 +3,36 @@ using System.Reflection;
 
 namespace Toe.Messaging
 {
-    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
-    public class PropertyNameAttribute : Attribute
-    {
-        #region Constants and Fields
+	[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
+	public class PropertyNameAttribute : Attribute
+	{
+		#region Constants and Fields
 
-        private readonly string name;
+		private readonly string name;
 
-        #endregion
+		#endregion
 
-        #region Constructors and Destructors
+		#region Constructors and Destructors
 
-        public PropertyNameAttribute(string name)
-        {
-            this.name = name;
-        }
+		public PropertyNameAttribute(string name)
+		{
+			this.name = name;
+		}
 
-        #endregion
+		#endregion
 
-        public static string Get(MemberInfo property)
-        {
-            var v = GetCustomAttribute(property, typeof(PropertyNameAttribute)) as PropertyNameAttribute;
-            if (v != null) return v.name;
-            return property.Name;
-        }
-    }
+		#region Public Methods and Operators
+
+		public static string Get(MemberInfo property)
+		{
+			var v = GetCustomAttribute(property, typeof(PropertyNameAttribute)) as PropertyNameAttribute;
+			if (v != null)
+			{
+				return v.name;
+			}
+			return property.Name;
+		}
+
+		#endregion
+	}
 }
