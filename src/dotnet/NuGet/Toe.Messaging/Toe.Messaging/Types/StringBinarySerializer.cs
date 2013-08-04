@@ -39,11 +39,14 @@ namespace Toe.Messaging.Types
 					Expression.Add(
 						context.PositionParameter,
 						Expression.Call(
-							context.QueueParameter, MessageQueueMethods.ReadInt32, Expression.Add(Expression.Constant(member.Offset), context.PositionParameter)))));
+							context.QueueParameter,
+							MessageQueueMethods.ReadInt32,
+							Expression.Add(Expression.Constant(member.Offset), context.PositionParameter)))));
 			context.Code.Add(
-							Expression.Call(
-								context.QueueParameter, MessageQueueMethods.ReadInt32, Expression.Add(Expression.Constant(member.Offset), context.PositionParameter)))
-			;
+				Expression.Call(
+					context.QueueParameter,
+					MessageQueueMethods.ReadInt32,
+					Expression.Add(Expression.Constant(member.Offset), context.PositionParameter)));
 			context.Code.Add(body);
 		}
 
@@ -54,7 +57,6 @@ namespace Toe.Messaging.Types
 
 		public void BuildSerializeExpression(MessageMemberInfo member, BinarySerilizationContext context)
 		{
-
 			context.Code.Add(
 				Expression.Call(
 					context.QueueParameter,
@@ -62,13 +64,13 @@ namespace Toe.Messaging.Types
 					Expression.Add(context.PositionParameter, Expression.Constant(member.Offset)),
 					Expression.Subtract(context.DynamicPositionParameter, context.PositionParameter)));
 			context.Code.Add(
-						Expression.Assign(
-							context.DynamicPositionParameter,
-							Expression.Call(
-								((Func<IMessageQueue, int, string, int>)CopyString).Method,
-								context.QueueParameter,
-								context.DynamicPositionParameter,
-								member.GetProperty(context.MessageParameter))));
+				Expression.Assign(
+					context.DynamicPositionParameter,
+					Expression.Call(
+						((Func<IMessageQueue, int, string, int>)CopyString).Method,
+						context.QueueParameter,
+						context.DynamicPositionParameter,
+						member.GetProperty(context.MessageParameter))));
 		}
 
 		#endregion
@@ -108,6 +110,10 @@ namespace Toe.Messaging.Types
 
 		internal static int EvaluateSize(string str)
 		{
+			if (string.IsNullOrEmpty(str))
+			{
+				return 1;
+			}
 			return (Encoding.UTF8.GetByteCount(str) + 4) >> 2;
 		}
 
@@ -145,7 +151,8 @@ namespace Toe.Messaging.Types
 				}
 				res.Add(b);
 			}
-			return Encoding.UTF8.GetString(res.ToArray());
+			var array = res.ToArray();
+			return Encoding.UTF8.GetString(array,0,array.Length);
 		}
 
 		#endregion

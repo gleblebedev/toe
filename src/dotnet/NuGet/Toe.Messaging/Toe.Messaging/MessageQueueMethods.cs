@@ -81,7 +81,7 @@ namespace Toe.Messaging
 		{
 			get
 			{
-				return writeLine ?? (writeLine = typeof(Trace).GetMethod("WriteLine", new[] { typeof(object) }));
+				return writeLine ?? (writeLine = typeof(Debug).GetMethod("WriteLine", new[] { typeof(object) }));
 			}
 		}
 

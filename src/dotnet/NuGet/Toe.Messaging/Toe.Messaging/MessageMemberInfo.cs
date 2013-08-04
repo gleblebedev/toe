@@ -17,11 +17,11 @@ namespace Toe.Messaging
 
 		private readonly int order;
 
-		private readonly Type propertyType;
+		private readonly Type type;
 
 		private readonly ITypeBinarySerializer serializer;
 
-		private readonly PropertyType type;
+		private readonly int propertyType;
 
 		#endregion
 
@@ -30,13 +30,13 @@ namespace Toe.Messaging
 		public MessageMemberInfo(PropertyInfo propertyInfo)
 			: this((MemberInfo)propertyInfo)
 		{
-			this.propertyType = propertyInfo.PropertyType;
+			this.type = propertyInfo.PropertyType;
 		}
 
 		public MessageMemberInfo(FieldInfo fieldInfo)
 			: this((MemberInfo)fieldInfo)
 		{
-			this.propertyType = (fieldInfo).FieldType;
+			this.type = (fieldInfo).FieldType;
 		}
 
 		public MessageMemberInfo(MemberInfo memberInfo)
@@ -44,19 +44,13 @@ namespace Toe.Messaging
 			this.memberInfo = memberInfo;
 			this.order = PropertyOrderAttribute.Get(this.MemberInfo);
 			this.name = PropertyNameAttribute.Get(this.MemberInfo);
-			this.type = PropertyTypeAttribute.Get(this.MemberInfo);
-			switch (this.type)
-			{
-				case Messaging.PropertyType.Int32:
-					this.serializer = Int32BinarySerializer.Instance;
-					break;
-				case Messaging.PropertyType.Single:
-					this.serializer = SignleBinarySerializer.Instance;
-					break;
-				case Messaging.PropertyType.String:
-					this.serializer = StringBinarySerializer.Instance;
-					break;
-			}
+			this.propertyType = PropertyTypeAttribute.Get(this.MemberInfo);
+			if (this.propertyType == Messaging.PropertyType.Int32)
+				this.serializer = Int32BinarySerializer.Instance;
+			else if (this.propertyType == Messaging.PropertyType.Single)
+				this.serializer = SignleBinarySerializer.Instance;
+			else if (this.propertyType == Messaging.PropertyType.String)
+				this.serializer = StringBinarySerializer.Instance;
 		}
 
 		#endregion
@@ -89,11 +83,11 @@ namespace Toe.Messaging
 			}
 		}
 
-		public Type PropertyType
+		public Type Type
 		{
 			get
 			{
-				return this.propertyType;
+				return this.type;
 			}
 		}
 
@@ -105,11 +99,11 @@ namespace Toe.Messaging
 			}
 		}
 
-		public PropertyType Type
+		public int PropertyType
 		{
 			get
 			{
-				return this.type;
+				return this.propertyType;
 			}
 		}
 

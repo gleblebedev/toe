@@ -16,7 +16,7 @@ namespace Toe.Messaging.Types
 
 		Expression BuildDynamicSizeEvaluator(MessageMemberInfo member, BinarySerilizationContext context);
 
-		void BuildSerializeExpression(MessageMemberInfo member,BinarySerilizationContext context);
+		void BuildSerializeExpression(MessageMemberInfo member, BinarySerilizationContext context);
 
 		#endregion
 	}

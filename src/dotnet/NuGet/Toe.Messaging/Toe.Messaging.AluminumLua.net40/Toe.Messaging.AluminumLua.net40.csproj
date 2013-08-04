@@ -4,17 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{D1BE86BD-5E9C-4915-AA14-994FCC016B68}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{23D612D7-FFDA-42F5-87E6-DC5F31505548}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Toe.Messaging.Tests</RootNamespace>
-    <AssemblyName>Toe.Messaging.Tests</AssemblyName>
+    <RootNamespace>Toe.Messaging.AluminumLua</RootNamespace>
+    <AssemblyName>Toe.Messaging.AluminumLua</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -22,21 +21,18 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="nunit.framework">
-      <HintPath>..\packages\NUnit.2.6.2\lib\nunit.framework.dll</HintPath>
+    <Reference Include="AluminumLua">
+      <HintPath>..\packages\AluminumLua.1.0.0.6\lib\net40\AluminumLua.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -45,25 +41,22 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="Toe.CircularArrayQueue, Version=1.0.0.2, Culture=neutral, PublicKeyToken=3bad676bed7449e1, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Toe.CircularArrayQueue">
       <HintPath>..\packages\Toe.CircularArrayQueue.1.0.0.3\lib\net40\Toe.CircularArrayQueue.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="Types\ILuaTypeSerializer.cs" />
+    <Compile Include="LuaSerializer.cs" />
+    <Compile Include="LuaTypeRegistry.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SubMessage.cs" />
-    <Compile Include="TestDynamics.cs" />
-    <Compile Include="TestDefaultSerializer.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Toe.Messaging\Toe.Messaging.net40.csproj">
-      <Project>{BC1AA566-D1E7-4AA5-AE93-E9A29490949C}</Project>
+      <Project>{bc1aa566-d1e7-4aa5-ae93-e9a29490949c}</Project>
       <Name>Toe.Messaging.net40</Name>
     </ProjectReference>
   </ItemGroup>

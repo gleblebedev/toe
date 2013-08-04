@@ -5,29 +5,61 @@ namespace Toe.Messaging.Types
 {
 	public class BinarySerilizationContext
 	{
-		private List<ParameterExpression> localVariables = new List<ParameterExpression>();
+		#region Constants and Fields
 
-		private ParameterExpression messageParameter;
+		private readonly List<Expression> code = new List<Expression>();
 
-		private ParameterExpression queueParameter;
+		private readonly ParameterExpression dynamicPositionParameter;
 
-		private ParameterExpression positionParameter;
+		private readonly List<ParameterExpression> localVariables = new List<ParameterExpression>();
 
-		private ParameterExpression dynamicPositionParameter;
+		private readonly ParameterExpression messageParameter;
 
-		public IList<ParameterExpression> LocalVariables
+		private readonly ParameterExpression positionParameter;
+
+		private readonly ParameterExpression queueParameter;
+
+		#endregion
+
+		#region Constructors and Destructors
+
+		public BinarySerilizationContext(
+			ParameterExpression queueParameter,
+			ParameterExpression messageParameter,
+			ParameterExpression positionParameter,
+			ParameterExpression dynamicPositionParameter)
 		{
-			get
-			{
-				return this.localVariables;
-			}
+			this.queueParameter = queueParameter;
+			this.messageParameter = messageParameter;
+			this.positionParameter = positionParameter;
+			this.dynamicPositionParameter = dynamicPositionParameter;
 		}
+
+		#endregion
+
+		#region Public Properties
 
 		public List<Expression> Code
 		{
 			get
 			{
 				return this.code;
+			}
+		}
+
+		public ParameterExpression DynamicPositionParameter
+		{
+			get
+			{
+				return this.dynamicPositionParameter;
+			}
+		}
+
+		public IList<ParameterExpression> LocalVariables
+		{
+			get
+			{
+				return this.localVariables;
 			}
 		}
 
@@ -39,50 +71,22 @@ namespace Toe.Messaging.Types
 			}
 		}
 
-		public ParameterExpression QueueParameter
-		{
-			get
-			{
-				return this.queueParameter;
-			}
-			set
-			{
-				this.queueParameter = value;
-			}
-		}
-
 		public ParameterExpression PositionParameter
 		{
 			get
 			{
 				return this.positionParameter;
 			}
-			set
-			{
-				this.positionParameter = value;
-			}
 		}
 
-		public ParameterExpression DynamicPositionParameter
+		public ParameterExpression QueueParameter
 		{
 			get
 			{
-				return this.dynamicPositionParameter;
-			}
-			set
-			{
-				this.dynamicPositionParameter = value;
+				return this.queueParameter;
 			}
 		}
 
-		private List<Expression> code = new List<Expression>();
-
-		public BinarySerilizationContext(ParameterExpression queueParameter, ParameterExpression messageParameter, ParameterExpression positionParameter, ParameterExpression dynamicPositionParameter)
-		{
-			this.queueParameter = queueParameter;
-			this.messageParameter = messageParameter;
-			this.positionParameter = positionParameter;
-			this.dynamicPositionParameter = dynamicPositionParameter;
-		}
+		#endregion
 	}
 }

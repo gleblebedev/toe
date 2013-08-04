@@ -22,10 +22,22 @@ namespace Toe.Messaging
 				{
 					throw new ArgumentException("Different parent message");
 				}
-				return new ExistingMessageDescription(v, this.GetParentMessage(parentMessageId));
+				return new WritableMessageDescription(v, this.GetParentMessage(parentMessageId));
 			}
 			v = new MessageDescription { MessageId = messageId, ParentId = parentMessageId };
-			return new NewMessageDescription(v, this.GetParentMessage(parentMessageId));
+			this.map.Add(messageId, v);
+			v.ReadOnlyDescription = null;
+			return new WritableMessageDescription(v, this.GetParentMessage(parentMessageId));
+		}
+
+		public IMessageDescription GetDefinition(int messageId)
+		{
+			MessageDescription v;
+			if (this.map.TryGetValue(messageId, out v))
+			{
+				return v.ReadOnlyDescription ?? (v.ReadOnlyDescription = new ReadOnlyMessageDescription(v));
+			}
+			return null;
 		}
 
 		#endregion
@@ -45,7 +57,7 @@ namespace Toe.Messaging
 				throw new ArgumentException("Unknown parent message");
 			}
 
-			return new ExistingMessageDescription(parent, this.GetParentMessage(parent.ParentId));
+			return new WritableMessageDescription(parent, this.GetParentMessage(parent.ParentId));
 		}
 
 		#endregion

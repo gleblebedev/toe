@@ -4,15 +4,22 @@ using System.Runtime.CompilerServices;
 using Microsoft.CSharp.RuntimeBinder;
 
 using Toe.CircularArrayQueue;
+using Toe.Messaging.Types;
 
 namespace Toe.Messaging
 {
 	public class DynamicSerializer : IMessageSerializer<object>
 	{
+		private readonly MessageRegistry registry;
+
+		private readonly TypeRegistry typeRegistry;
+
 		#region Constructors and Destructors
 
-		public DynamicSerializer(MessageRegistry registry)
+		public DynamicSerializer(MessageRegistry registry, TypeRegistry typeRegistry)
 		{
+			this.registry = registry;
+			this.typeRegistry = typeRegistry;
 		}
 
 		#endregion
@@ -31,13 +38,24 @@ namespace Toe.Messaging
 			return site.Target(site, target);
 		}
 
-		public void Deserialize(IMessageQueue queue, int pos, object value)
+		public void Deserialize(IMessageQueue queue, int pos, dynamic value)
 		{
 			throw new NotImplementedException();
 		}
 
-		public void Serialize(IMessageQueue queue, object value)
+		public void Serialize(IMessageQueue queue, dynamic value)
 		{
+			var messageIdValue = value.MessageId;
+			int messageId;
+			if (messageIdValue is int)
+			{
+				messageId = (int)messageIdValue;
+			}
+			else
+			{
+				messageId = Hash.Eval(messageIdValue.ToString());
+			}
+			var m = registry.GetDefinition(messageId);
 			throw new NotImplementedException();
 		}
 

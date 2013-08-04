@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 
 using Toe.Messaging.Attributes;
+using Toe.Messaging.Types;
 
 namespace Toe.Messaging
 {
@@ -15,14 +16,16 @@ namespace Toe.Messaging
 		private readonly Dictionary<int, IMessageSerializer> map = new Dictionary<int, IMessageSerializer>();
 
 		private readonly MessageRegistry registry;
+		private readonly TypeRegistry typeRegistry;
 
 		#endregion
 
 		#region Constructors and Destructors
 
-		public ObjectMessageMap(MessageRegistry registry)
+		public ObjectMessageMap(MessageRegistry registry, TypeRegistry typeRegistry)
 		{
 			this.registry = registry;
+			this.typeRegistry = typeRegistry;
 		}
 
 		#endregion
@@ -59,10 +62,10 @@ namespace Toe.Messaging
 		{
 			if (type == typeof(object))
 			{
-				return new DynamicSerializer(this.registry);
+				return new DynamicSerializer(this.registry, typeRegistry);
 				;
 			}
-			return new DefaultSerializer<T>(this.registry, messageId);
+			return new DefaultSerializer<T>(this.registry, typeRegistry, messageId);
 		}
 
 		#endregion

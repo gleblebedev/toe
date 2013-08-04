@@ -8,13 +8,13 @@ namespace Toe.Messaging.Attributes
 	{
 		#region Constants and Fields
 
-		private readonly PropertyType propertyType;
+		private readonly int propertyType;
 
 		#endregion
 
 		#region Constructors and Destructors
 
-		public PropertyTypeAttribute(PropertyType propertyType)
+		public PropertyTypeAttribute(int propertyType)
 		{
 			this.propertyType = propertyType;
 		}
@@ -23,7 +23,7 @@ namespace Toe.Messaging.Attributes
 
 		#region Public Methods and Operators
 
-		public static PropertyType Get(MemberInfo property)
+		public static int Get(MemberInfo property)
 		{
 			var v = GetCustomAttribute(property, typeof(PropertyTypeAttribute)) as PropertyTypeAttribute;
 			if (v != null)
@@ -47,7 +47,7 @@ namespace Toe.Messaging.Attributes
 
 		#region Methods
 
-		private static PropertyType GetDefaultType(Type fieldType)
+		private static int GetDefaultType(Type fieldType)
 		{
 			if (fieldType == typeof(int))
 			{
@@ -84,7 +84,7 @@ namespace Toe.Messaging.Attributes
 			{
 				return PropertyType.String;
 			}
-			return PropertyType.Unknown;
+			return 0;
 		}
 
 		#endregion
