@@ -105,6 +105,7 @@
     <Compile Include="PropertyDescription.cs" />
     <Compile Include="PropertyType.cs" />
     <Compile Include="ReadOnlyMessageDescription.cs" />
+    <Compile Include="Registry.cs" />
     <Compile Include="Types\BinarySerilizationContext.cs" />
     <Compile Include="Types\Int32BinarySerializer.cs" />
     <Compile Include="Types\ITypeBinarySerializer.cs" />

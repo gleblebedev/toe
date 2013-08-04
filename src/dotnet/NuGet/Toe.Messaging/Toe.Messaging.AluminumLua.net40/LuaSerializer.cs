@@ -69,7 +69,7 @@ namespace Toe.Messaging.AluminumLua
 			{
 				var serializer = luaTypeRegistry.GetSerializer(property.PropertyType);
 				LuaObject propertyValue;
-				table.TryGetValue(LuaObject.FromString(property.Name), out propertyValue)
+				if (table.TryGetValue(LuaObject.FromString(property.Name), out propertyValue))
 				{
 					++foundProperties;
 				}

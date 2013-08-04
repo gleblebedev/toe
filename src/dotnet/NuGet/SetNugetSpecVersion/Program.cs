@@ -41,12 +41,39 @@ namespace SetNugetSpecVersion
 
 		private static string ReplaceContent(string txt, string start, string end, string val)
 		{
-			var i0 = txt.IndexOf(start, StringComparison.InvariantCulture);
-			if (i0 < 0) return txt;
-			i0 += start.Length;
-			var i1 = txt.IndexOf(end,i0, StringComparison.InvariantCulture);
-			if (i1 < 0) return txt;
-			return txt.Substring(0, i0) + val + txt.Substring(i1);
+			StringBuilder sb = new StringBuilder();
+
+			
+			int iterationStart = 0;
+			for (; ; )
+			{
+				var i0 = txt.IndexOf(start, iterationStart, StringComparison.InvariantCulture);
+				if (i0 < 0)
+				{
+					goto addTail;
+				}
+				;
+				i0 += start.Length;
+				if (i0+end.Length > txt.Length)
+				{
+					goto addTail;
+				}
+
+				var i1 = txt.IndexOf(end, i0, StringComparison.InvariantCulture);
+				if (i1 < 0)
+				{
+					goto addTail;
+				}
+				;
+				sb.Append(txt.Substring(iterationStart, i0 - iterationStart));
+				sb.Append(val);
+				sb.Append(end);
+				iterationStart = i1 + end.Length;
+			}
+			addTail:
+			if (iterationStart != txt.Length)
+				sb.Append(txt.Substring(iterationStart, txt.Length - iterationStart));
+			return sb.ToString();
 		}
 
 		private static void FixFile(string file)
