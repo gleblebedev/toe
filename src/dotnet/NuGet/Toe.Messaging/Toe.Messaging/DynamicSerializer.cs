@@ -60,6 +60,10 @@ namespace Toe.Messaging
 				messageId = Hash.Eval(messageIdValue.ToString());
 			}
 			var m = this.registry.GetDefinition(messageId);
+			foreach (var property in m.Properties)
+			{
+				var propertyValue = value.GetType().GetProperty(property.Name).GetValue(value, null);
+			}
 			throw new NotImplementedException();
 		}
 

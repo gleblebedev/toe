@@ -1,7 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Text;
 
 using Toe.CircularArrayQueue;
 
@@ -42,7 +40,7 @@ namespace Toe.Messaging.Types
 			var body = Expression.Assign(
 				member.GetProperty(context.MessageParameter),
 				Expression.Call(
-					((Func<IMessageQueue, int, string>)Toe.CircularArrayQueue.ExtensionMethods.ReadStringContent).Method,
+					((Func<IMessageQueue, int, string>)ExtensionMethods.ReadStringContent).Method,
 					context.QueueParameter,
 					Expression.Add(
 						context.PositionParameter,
@@ -60,7 +58,10 @@ namespace Toe.Messaging.Types
 
 		public Expression BuildDynamicSizeEvaluator(MessageMemberInfo member, BinarySerilizationContext context)
 		{
-			return Expression.Call(((Func<IMessageQueue, string, int>)Toe.CircularArrayQueue.ExtensionMethods.GetStringLength).Method, context.QueueParameter, member.GetProperty(context.MessageParameter));
+			return Expression.Call(
+				((Func<IMessageQueue, string, int>)ExtensionMethods.GetStringLength).Method,
+				context.QueueParameter,
+				member.GetProperty(context.MessageParameter));
 		}
 
 		public void BuildSerializeExpression(MessageMemberInfo member, BinarySerilizationContext context)
@@ -75,18 +76,11 @@ namespace Toe.Messaging.Types
 				Expression.Assign(
 					context.DynamicPositionParameter,
 					Expression.Call(
-						((Func<IMessageQueue, int, string, int>)Toe.CircularArrayQueue.ExtensionMethods.WriteStringContent).Method,
+						((Func<IMessageQueue, int, string, int>)ExtensionMethods.WriteStringContent).Method,
 						context.QueueParameter,
 						context.DynamicPositionParameter,
 						member.GetProperty(context.MessageParameter))));
 		}
-
-		#endregion
-
-		#region Methods
-
-	
-
 
 		#endregion
 	}

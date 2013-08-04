@@ -56,6 +56,7 @@
     <Compile Include="SubMessage.cs" />
     <Compile Include="TestDynamics.cs" />
     <Compile Include="TestDefaultSerializer.cs" />
+    <Compile Include="TypeRegistryTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

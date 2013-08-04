@@ -2,8 +2,6 @@ namespace Toe.Messaging
 {
 	public static class PropertyType
 	{
-		public const int VectorXYZ = -1229582696;
-
 		#region Constants and Fields
 
 		public const int Int32 = -1503481182;
@@ -16,6 +14,8 @@ namespace Toe.Messaging
 		//public static readonly int Single = Hash.Eval("Single");
 		//public static readonly int String = Hash.Eval("String");
 		public const int Unknown = 0;
+
+		public const int VectorXYZ = -1229582696;
 
 		#endregion
 	}

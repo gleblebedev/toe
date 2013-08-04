@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+
 using Microsoft.Xna.Framework;
 
 namespace Toe.Messaging.Types
@@ -36,28 +37,27 @@ namespace Toe.Messaging.Types
 		public void BuildDeserializeExpression(MessageMemberInfo member, BinarySerilizationContext context)
 		{
 			Expression expression = member.GetProperty(context.MessageParameter);
-			
+
 			context.Code.Add(
-				
 				Expression.Assign(
 					expression,
 					Expression.New(
-					typeof(Vector3).GetConstructor(new[]{typeof(float),typeof(float),typeof(float)}),
-					new Expression[]{
-						Expression.Call(
-							context.QueueParameter,
-							MessageQueueMethods.ReadFloat,
-							Expression.Add(context.PositionParameter, Expression.Constant(member.Offset))),
-						Expression.Call(
-							context.QueueParameter,
-							MessageQueueMethods.ReadFloat,
-							Expression.Add(context.PositionParameter, Expression.Constant(member.Offset+1))),
-						Expression.Call(
-							context.QueueParameter,
-							MessageQueueMethods.ReadFloat,
-							Expression.Add(context.PositionParameter, Expression.Constant(member.Offset+2))),
-					}
-						)));
+						typeof(Vector3).GetConstructor(new[] { typeof(float), typeof(float), typeof(float) }),
+						new Expression[]
+							{
+								Expression.Call(
+									context.QueueParameter,
+									MessageQueueMethods.ReadFloat,
+									Expression.Add(context.PositionParameter, Expression.Constant(member.Offset))),
+								Expression.Call(
+									context.QueueParameter,
+									MessageQueueMethods.ReadFloat,
+									Expression.Add(context.PositionParameter, Expression.Constant(member.Offset + 1))),
+								Expression.Call(
+									context.QueueParameter,
+									MessageQueueMethods.ReadFloat,
+									Expression.Add(context.PositionParameter, Expression.Constant(member.Offset + 2))),
+							})));
 		}
 
 		public Expression BuildDynamicSizeEvaluator(MessageMemberInfo member, BinarySerilizationContext context)
@@ -72,22 +72,19 @@ namespace Toe.Messaging.Types
 					context.QueueParameter,
 					MessageQueueMethods.WriteFloat,
 					Expression.Add(context.PositionParameter, Expression.Constant(member.Offset)),
-					Expression.Field(member.GetProperty(context.MessageParameter),typeof(Vector3).GetField("X"))
-					));
+					Expression.Field(member.GetProperty(context.MessageParameter), typeof(Vector3).GetField("X"))));
 			context.Code.Add(
 				Expression.Call(
 					context.QueueParameter,
 					MessageQueueMethods.WriteFloat,
-					Expression.Add(context.PositionParameter, Expression.Constant(member.Offset+1)),
-					Expression.Field(member.GetProperty(context.MessageParameter), typeof(Vector3).GetField("Y"))
-					));
+					Expression.Add(context.PositionParameter, Expression.Constant(member.Offset + 1)),
+					Expression.Field(member.GetProperty(context.MessageParameter), typeof(Vector3).GetField("Y"))));
 			context.Code.Add(
 				Expression.Call(
 					context.QueueParameter,
 					MessageQueueMethods.WriteFloat,
-					Expression.Add(context.PositionParameter, Expression.Constant(member.Offset+2)),
-					Expression.Field(member.GetProperty(context.MessageParameter), typeof(Vector3).GetField("Z"))
-					));
+					Expression.Add(context.PositionParameter, Expression.Constant(member.Offset + 2)),
+					Expression.Field(member.GetProperty(context.MessageParameter), typeof(Vector3).GetField("Z"))));
 		}
 
 		#endregion

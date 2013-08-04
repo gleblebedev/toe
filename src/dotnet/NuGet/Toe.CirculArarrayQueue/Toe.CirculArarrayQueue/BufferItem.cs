@@ -105,7 +105,7 @@ namespace Toe.CircularArrayQueue
 		/// <filterpriority>2</filterpriority>
 		public override string ToString()
 		{
-			return string.Format("{0} (hex:0x{0:X8}, float:{1})",Int32,Single);
+			return string.Format("{0} (hex:0x{0:X8}, float:{1})", this.Int32, this.Single);
 		}
 	}
 }

@@ -1,8 +1,8 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
     <id>Toe.Messaging</id>
-    <version>1.0.0.0</version>
+    <version>1.0.0.4</version>
     <title>Tiny Open Engine Messaging</title>
     <authors>gleblebedev</authors>
     <owners>gleblebedev</owners>
@@ -13,6 +13,9 @@
     <copyright>Copyright 2013 Gleb Lebedev</copyright>
     <tags>Toe</tags>
   </metadata>
+  <dependencies>
+    <dependency id="Toe.CirculArarrayQueue" version="1.0.0.4" />
+  </dependencies>
   <files>
     <file src="lib\net40\Toe.Messaging.dll" target="lib\net40" />
     <file src="lib\net40\Toe.Messaging.pdb" target="lib\net40" />

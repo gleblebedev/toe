@@ -67,21 +67,10 @@ namespace Toe.CircularArrayQueue
 			return b << 32 | a;
 		}
 
-		public static void WriteInt64(this IMessageQueue messageQueue, int position, long value)
-		{
-#if DEBUG
-			if (messageQueue == null)
-			{
-				throw new ArgumentNullException("messageQueue");
-			}
-#endif
-			messageQueue.WriteInt32(position, (int)value);
-			messageQueue.WriteInt32(position + 1, (int)(value >> 32));
-		}
 		public static string ReadStringContent(IMessageQueue queue, int contentIndex)
 		{
 			var res = new List<byte>(32);
-			for (; ; )
+			for (;;)
 			{
 				int val = queue.ReadInt32(contentIndex);
 				++contentIndex;
@@ -114,6 +103,18 @@ namespace Toe.CircularArrayQueue
 			}
 			var array = res.ToArray();
 			return Encoding.UTF8.GetString(array, 0, array.Length);
+		}
+
+		public static void WriteInt64(this IMessageQueue messageQueue, int position, long value)
+		{
+#if DEBUG
+			if (messageQueue == null)
+			{
+				throw new ArgumentNullException("messageQueue");
+			}
+#endif
+			messageQueue.WriteInt32(position, (int)value);
+			messageQueue.WriteInt32(position + 1, (int)(value >> 32));
 		}
 
 		public static int WriteStringContent(this IMessageQueue messageQueue, int contentIndex, string str)

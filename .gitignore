@@ -113,3 +113,4 @@ Backup*/
 UpgradeLog*.XML
 src/dotnet/NuGet/Toe.CirculArarrayQueue/nuget/lib/
 src/dotnet/NuGet/Toe.Messaging/nuget/lib/
+*.vshost.exe*

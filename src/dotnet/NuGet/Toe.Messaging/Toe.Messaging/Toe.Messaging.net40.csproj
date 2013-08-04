@@ -48,6 +48,7 @@
     <Compile Include="DefaultSerializer.cs" />
     <Compile Include="DynamicSerializer.cs" />
     <Compile Include="ReadOnlyMessageDescription.cs" />
+    <Compile Include="Registry.cs" />
     <Compile Include="WritableMessageDescription.cs" />
     <Compile Include="Hash.cs" />
     <Compile Include="IMessageDescription.cs" />
