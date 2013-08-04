@@ -61,6 +61,7 @@ namespace Toe.Messaging
 			}
 			this.messageDescription.Properties.Add(propertyDescription);
 			++this.propertyIndex;
+			this.messageDescription.MinSize += propertyDescription.Size;
 		}
 
 		public PropertyDescription GetPropertyById(int propertyKey)

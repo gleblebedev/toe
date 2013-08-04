@@ -67,7 +67,7 @@
     <Compile Include="Attributes\PropertyOrderAttribute.cs" />
     <Compile Include="Attributes\PropertyTypeAttribute.cs" />
     <Compile Include="MessageRegistry.cs" />
-    <Compile Include="ObjectMessageMap.cs" />
+    <Compile Include="SerializerCollection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PropertyType.cs" />
     <Compile Include="Types\SignleBinarySerializer.cs" />

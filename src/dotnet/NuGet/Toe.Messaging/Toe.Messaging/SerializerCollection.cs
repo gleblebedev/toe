@@ -9,7 +9,7 @@ namespace Toe.Messaging
 	/// <summary>
 	/// Map of objects binded to messages
 	/// </summary>
-	public class ObjectMessageMap
+	public class SerializerCollection
 	{
 		#region Constants and Fields
 
@@ -23,7 +23,7 @@ namespace Toe.Messaging
 
 		#region Constructors and Destructors
 
-		public ObjectMessageMap(MessageRegistry registry, TypeRegistry typeRegistry)
+		public SerializerCollection(MessageRegistry registry, TypeRegistry typeRegistry)
 		{
 			this.registry = registry;
 			this.typeRegistry = typeRegistry;
@@ -64,8 +64,11 @@ namespace Toe.Messaging
 			if (type == typeof(object))
 			{
 				return new DynamicSerializer(this.registry, this.typeRegistry);
-				;
 			}
+			//if (type == typeof(IDictionary<string,object>))
+			//{
+			//	return new DictionarySerializer(this.registry, this.typeRegistry);
+			//}
 			return new DefaultSerializer<T>(this.registry, this.typeRegistry, messageId);
 		}
 

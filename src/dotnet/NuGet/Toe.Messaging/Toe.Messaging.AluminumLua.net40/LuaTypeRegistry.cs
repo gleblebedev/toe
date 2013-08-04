@@ -14,7 +14,12 @@ namespace Toe.Messaging.AluminumLua
 
 		public static LuaTypeRegistry CreateDefault()
 		{
-			return new LuaTypeRegistry(new ILuaTypeSerializer[]{});
+			return new LuaTypeRegistry(new ILuaTypeSerializer[]
+				{
+					new Int32LuaTypeSerializer(), 
+					new SingleLuaTypeSerializer(), 
+					new StringLuaTypeSerializer(), 
+				});
 		}
 
 		#endregion

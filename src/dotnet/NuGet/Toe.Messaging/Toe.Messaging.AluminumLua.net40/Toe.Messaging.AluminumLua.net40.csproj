@@ -47,6 +47,9 @@
     <Compile Include="LuaSerializer.cs" />
     <Compile Include="LuaTypeRegistry.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Types\Int32LuaTypeSerializer.cs" />
+    <Compile Include="Types\SingleLuaTypeSerializer.cs" />
+    <Compile Include="Types\StringLuaTypeSerializer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
