@@ -8,6 +8,8 @@ namespace Toe.Messaging.Types
 
 		int FixedSize { get; }
 
+		int PropertyType { get; }
+
 		#endregion
 
 		#region Public Methods and Operators

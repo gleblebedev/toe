@@ -20,6 +20,14 @@ namespace Toe.Messaging.Types
 			}
 		}
 
+		public int PropertyType
+		{
+			get
+			{
+				return Messaging.PropertyType.Int32;
+			}
+		}
+
 		#endregion
 
 		#region Public Methods and Operators

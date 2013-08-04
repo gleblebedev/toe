@@ -9,7 +9,7 @@ namespace Toe.Messaging
 	{
 		#region Public Properties
 
-		//[PropertyType(PropertyType.Int32)]
+		[PropertyType(PropertyType.Int32)]
 		[PropertyOrder(int.MinValue)]
 		public int MessageId { get; set; }
 

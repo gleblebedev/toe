@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 
 namespace Toe.Messaging
@@ -7,9 +6,9 @@ namespace Toe.Messaging
 	{
 		#region Public Properties
 
-		IEnumerable<PropertyDescription> Properties { get; }
-
 		int MinSize { get; }
+
+		IEnumerable<PropertyDescription> Properties { get; }
 
 		#endregion
 
@@ -17,8 +16,8 @@ namespace Toe.Messaging
 
 		void DefineProperty(string name, int propertyType, int offset, int size);
 
-		#endregion
-
 		PropertyDescription GetPropertyById(int propertyKey);
+
+		#endregion
 	}
 }

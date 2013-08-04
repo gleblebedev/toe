@@ -16,6 +16,8 @@ namespace Toe.Messaging
 
 		#region Public Properties
 
+		public int MinSize { get; set; }
+
 		public List<PropertyDescription> Properties
 		{
 			get
@@ -25,8 +27,6 @@ namespace Toe.Messaging
 		}
 
 		public IMessageDescription ReadOnlyDescription { get; set; }
-
-		public int MinSize { get; set; }
 
 		#endregion
 	}

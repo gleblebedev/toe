@@ -10,9 +10,13 @@ namespace Toe.Messaging
 {
 	public class DynamicSerializer : IMessageSerializer<object>
 	{
+		#region Constants and Fields
+
 		private readonly MessageRegistry registry;
 
 		private readonly TypeRegistry typeRegistry;
+
+		#endregion
 
 		#region Constructors and Destructors
 
@@ -55,7 +59,7 @@ namespace Toe.Messaging
 			{
 				messageId = Hash.Eval(messageIdValue.ToString());
 			}
-			var m = registry.GetDefinition(messageId);
+			var m = this.registry.GetDefinition(messageId);
 			throw new NotImplementedException();
 		}
 

@@ -11,9 +11,9 @@ namespace Toe.Messaging.AluminumLua
 	{
 		#region Constants and Fields
 
-		private readonly MessageRegistry registry;
-
 		private readonly LuaTypeRegistry luaTypeRegistry;
+
+		private readonly MessageRegistry registry;
 
 		#endregion
 
@@ -40,7 +40,7 @@ namespace Toe.Messaging.AluminumLua
 				switch (property.PropertyType)
 				{
 					case PropertyType.Int32:
-						table[key] = LuaObject.FromNumber(queue.ReadInt32(position+property.Offset));
+						table[key] = LuaObject.FromNumber(queue.ReadInt32(position + property.Offset));
 						break;
 					case PropertyType.Single:
 						table[key] = LuaObject.FromNumber(queue.ReadFloat(position + property.Offset));
@@ -74,7 +74,7 @@ namespace Toe.Messaging.AluminumLua
 				switch (property.PropertyType)
 				{
 					case PropertyType.Int32:
-						queue.WriteInt32(position+property.Offset, (int)keyValue.Value.AsNumber());
+						queue.WriteInt32(position + property.Offset, (int)keyValue.Value.AsNumber());
 						break;
 					case PropertyType.Single:
 						queue.WriteFloat(position + property.Offset, (float)keyValue.Value.AsNumber());

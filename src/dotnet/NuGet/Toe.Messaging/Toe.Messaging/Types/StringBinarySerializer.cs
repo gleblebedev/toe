@@ -25,6 +25,14 @@ namespace Toe.Messaging.Types
 			}
 		}
 
+		public int PropertyType
+		{
+			get
+			{
+				return Messaging.PropertyType.String;
+			}
+		}
+
 		#endregion
 
 		#region Public Methods and Operators
@@ -34,7 +42,7 @@ namespace Toe.Messaging.Types
 			var body = Expression.Assign(
 				member.GetProperty(context.MessageParameter),
 				Expression.Call(
-					((Func<IMessageQueue, int, string>)FetchString).Method,
+					((Func<IMessageQueue, int, string>)Toe.CircularArrayQueue.ExtensionMethods.ReadStringContent).Method,
 					context.QueueParameter,
 					Expression.Add(
 						context.PositionParameter,
@@ -52,7 +60,7 @@ namespace Toe.Messaging.Types
 
 		public Expression BuildDynamicSizeEvaluator(MessageMemberInfo member, BinarySerilizationContext context)
 		{
-			return Expression.Call(((Func<string, int>)EvaluateSize).Method, member.GetProperty(context.MessageParameter));
+			return Expression.Call(((Func<IMessageQueue, string, int>)Toe.CircularArrayQueue.ExtensionMethods.GetStringLength).Method, context.QueueParameter, member.GetProperty(context.MessageParameter));
 		}
 
 		public void BuildSerializeExpression(MessageMemberInfo member, BinarySerilizationContext context)
@@ -67,7 +75,7 @@ namespace Toe.Messaging.Types
 				Expression.Assign(
 					context.DynamicPositionParameter,
 					Expression.Call(
-						((Func<IMessageQueue, int, string, int>)CopyString).Method,
+						((Func<IMessageQueue, int, string, int>)Toe.CircularArrayQueue.ExtensionMethods.WriteStringContent).Method,
 						context.QueueParameter,
 						context.DynamicPositionParameter,
 						member.GetProperty(context.MessageParameter))));
@@ -77,83 +85,8 @@ namespace Toe.Messaging.Types
 
 		#region Methods
 
-		internal static int CopyString(IMessageQueue queue, int dynamic, string str)
-		{
-			str = str ?? String.Empty;
-			var bytes = Encoding.UTF8.GetBytes(str);
-			int index = 0;
-			for (; index + 3 < bytes.Length; index += 4)
-			{
-				queue.WriteInt32(
-					dynamic, (bytes[index]) | (bytes[index + 1] << 8) | (bytes[index + 2] << 16) | (bytes[index + 3] << 24));
-				++dynamic;
-			}
-			int val = 0;
-			if (index < bytes.Length)
-			{
-				val |= (bytes[index]);
-				++index;
-				if (index < bytes.Length)
-				{
-					val |= (bytes[index]) << 8;
-					++index;
-					if (index < bytes.Length)
-					{
-						val |= (bytes[index]) << 16;
-					}
-				}
-			}
-			queue.WriteInt32(dynamic, val);
-			++dynamic;
-			return dynamic;
-		}
+	
 
-		internal static int EvaluateSize(string str)
-		{
-			if (string.IsNullOrEmpty(str))
-			{
-				return 1;
-			}
-			return (Encoding.UTF8.GetByteCount(str) + 4) >> 2;
-		}
-
-		internal static string FetchString(IMessageQueue queue, int position)
-		{
-			var res = new List<byte>(32);
-			for (;;)
-			{
-				int val = queue.ReadInt32(position);
-				++position;
-
-				byte b;
-				b = (byte)(val & 255);
-				if (b == 0)
-				{
-					break;
-				}
-				res.Add(b);
-				b = (byte)((val >> 8) & 255);
-				if (b == 0)
-				{
-					break;
-				}
-				res.Add(b);
-				b = (byte)((val >> 16) & 255);
-				if (b == 0)
-				{
-					break;
-				}
-				res.Add(b);
-				b = (byte)((val >> 24) & 255);
-				if (b == 0)
-				{
-					break;
-				}
-				res.Add(b);
-			}
-			var array = res.ToArray();
-			return Encoding.UTF8.GetString(array,0,array.Length);
-		}
 
 		#endregion
 	}

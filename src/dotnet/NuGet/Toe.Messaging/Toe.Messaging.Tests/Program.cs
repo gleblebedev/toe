@@ -1,4 +1,6 @@
-﻿namespace Toe.Messaging.Tests
+﻿using System;
+
+namespace Toe.Messaging.Tests
 {
 	internal class Program
 	{
@@ -6,6 +8,7 @@
 
 		private static void Main(string[] args)
 		{
+			Console.WriteLine("{0}", Hash.Eval("VectorXYZ"));
 		}
 
 		#endregion

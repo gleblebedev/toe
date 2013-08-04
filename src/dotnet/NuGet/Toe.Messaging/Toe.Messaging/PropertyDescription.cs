@@ -1,79 +1,18 @@
-using System;
-
 namespace Toe.Messaging
 {
 	public class PropertyDescription
 	{
-		protected bool Equals(PropertyDescription other)
-		{
-			return string.Equals(this.name, other.name) && this.nameHash == other.nameHash && this.offset == other.offset && this.size == other.size && this.propertyType.Equals(other.propertyType);
-		}
-
-		/// <summary>
-		/// Determines whether the specified <see cref="T:System.Object"/> is equal to the current <see cref="T:System.Object"/>.
-		/// </summary>
-		/// <returns>
-		/// true if the specified <see cref="T:System.Object"/> is equal to the current <see cref="T:System.Object"/>; otherwise, false.
-		/// </returns>
-		/// <param name="obj">The <see cref="T:System.Object"/> to compare with the current <see cref="T:System.Object"/>. </param><filterpriority>2</filterpriority>
-		public override bool Equals(object obj)
-		{
-			if (ReferenceEquals(null, obj))
-			{
-				return false;
-			}
-			if (ReferenceEquals(this, obj))
-			{
-				return true;
-			}
-			if (obj.GetType() != this.GetType())
-			{
-				return false;
-			}
-			return Equals((PropertyDescription)obj);
-		}
-
-		/// <summary>
-		/// Serves as a hash function for a particular type. 
-		/// </summary>
-		/// <returns>
-		/// A hash code for the current <see cref="T:System.Object"/>.
-		/// </returns>
-		/// <filterpriority>2</filterpriority>
-		public override int GetHashCode()
-		{
-			unchecked
-			{
-				int hashCode = (this.name != null ? this.name.GetHashCode() : 0);
-				hashCode = (hashCode * 397) ^ this.nameHash;
-				hashCode = (hashCode * 397) ^ this.offset;
-				hashCode = (hashCode * 397) ^ this.size;
-				hashCode = (hashCode * 397) ^ this.propertyType.GetHashCode();
-				return hashCode;
-			}
-		}
-
-		public static bool operator ==(PropertyDescription left, PropertyDescription right)
-		{
-			return Equals(left, right);
-		}
-
-		public static bool operator !=(PropertyDescription left, PropertyDescription right)
-		{
-			return !Equals(left, right);
-		}
-
 		#region Constants and Fields
 
 		private readonly string name;
 
 		private readonly int nameHash;
 
-		private int offset;
+		private readonly int offset;
 
-		private int size;
+		private readonly int propertyType;
 
-		private int propertyType;
+		private readonly int size;
 
 		#endregion
 
@@ -114,16 +53,6 @@ namespace Toe.Messaging
 			{
 				return this.offset;
 			}
-			
-		}
-
-		public int Size
-		{
-			get
-			{
-				return this.size;
-			}
-		
 		}
 
 		public int PropertyType
@@ -132,7 +61,82 @@ namespace Toe.Messaging
 			{
 				return this.propertyType;
 			}
-			
+		}
+
+		public int Size
+		{
+			get
+			{
+				return this.size;
+			}
+		}
+
+		#endregion
+
+		#region Public Methods and Operators
+
+		public static bool operator ==(PropertyDescription left, PropertyDescription right)
+		{
+			return Equals(left, right);
+		}
+
+		public static bool operator !=(PropertyDescription left, PropertyDescription right)
+		{
+			return !Equals(left, right);
+		}
+
+		/// <summary>
+		/// Determines whether the specified <see cref="T:System.Object"/> is equal to the current <see cref="T:System.Object"/>.
+		/// </summary>
+		/// <returns>
+		/// true if the specified <see cref="T:System.Object"/> is equal to the current <see cref="T:System.Object"/>; otherwise, false.
+		/// </returns>
+		/// <param name="obj">The <see cref="T:System.Object"/> to compare with the current <see cref="T:System.Object"/>. </param><filterpriority>2</filterpriority>
+		public override bool Equals(object obj)
+		{
+			if (ReferenceEquals(null, obj))
+			{
+				return false;
+			}
+			if (ReferenceEquals(this, obj))
+			{
+				return true;
+			}
+			if (obj.GetType() != this.GetType())
+			{
+				return false;
+			}
+			return this.Equals((PropertyDescription)obj);
+		}
+
+		/// <summary>
+		/// Serves as a hash function for a particular type. 
+		/// </summary>
+		/// <returns>
+		/// A hash code for the current <see cref="T:System.Object"/>.
+		/// </returns>
+		/// <filterpriority>2</filterpriority>
+		public override int GetHashCode()
+		{
+			unchecked
+			{
+				int hashCode = (this.name != null ? this.name.GetHashCode() : 0);
+				hashCode = (hashCode * 397) ^ this.nameHash;
+				hashCode = (hashCode * 397) ^ this.offset;
+				hashCode = (hashCode * 397) ^ this.size;
+				hashCode = (hashCode * 397) ^ this.propertyType.GetHashCode();
+				return hashCode;
+			}
+		}
+
+		#endregion
+
+		#region Methods
+
+		protected bool Equals(PropertyDescription other)
+		{
+			return string.Equals(this.name, other.name) && this.nameHash == other.nameHash && this.offset == other.offset
+			       && this.size == other.size && this.propertyType.Equals(other.propertyType);
 		}
 
 		#endregion

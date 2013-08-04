@@ -41,9 +41,6 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="Toe.CircularArrayQueue">
-      <HintPath>..\packages\Toe.CircularArrayQueue.1.0.0.3\lib\net40\Toe.CircularArrayQueue.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Types\ILuaTypeSerializer.cs" />
@@ -55,8 +52,12 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Toe.CirculArarrayQueue\Toe.CirculArarrayQueue\Toe.CircularArrayQueue.net40.csproj">
+      <Project>{f4e9d25f-ddef-44a7-b8ca-1cd4df77d2e9}</Project>
+      <Name>Toe.CircularArrayQueue.net40</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Toe.Messaging\Toe.Messaging.net40.csproj">
-      <Project>{bc1aa566-d1e7-4aa5-ae93-e9a29490949c}</Project>
+      <Project>{BC1AA566-D1E7-4AA5-AE93-E9A29490949C}</Project>
       <Name>Toe.Messaging.net40</Name>
     </ProjectReference>
   </ItemGroup>

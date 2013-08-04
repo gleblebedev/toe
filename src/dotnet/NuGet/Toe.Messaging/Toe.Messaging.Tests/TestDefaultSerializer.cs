@@ -11,6 +11,7 @@ namespace Toe.Messaging.Tests
 		#region Constants and Fields
 
 		private readonly MessageRegistry messageRegistry = new MessageRegistry();
+
 		private readonly TypeRegistry typeRegistry = TypeRegistry.CreateDefault();
 
 		#endregion
@@ -20,7 +21,7 @@ namespace Toe.Messaging.Tests
 		[Test]
 		public void EmptyString()
 		{
-			var r = new DefaultSerializer<SubMessage>(this.messageRegistry, typeRegistry);
+			var r = new DefaultSerializer<SubMessage>(this.messageRegistry, this.typeRegistry);
 
 			using (var buf = new ThreadSafeWriteQueue(1024))
 			{
@@ -38,7 +39,7 @@ namespace Toe.Messaging.Tests
 		[Test]
 		public void FourBytesString()
 		{
-			var r = new DefaultSerializer<SubMessage>(this.messageRegistry, typeRegistry);
+			var r = new DefaultSerializer<SubMessage>(this.messageRegistry, this.typeRegistry);
 
 			using (var buf = new ThreadSafeWriteQueue(1024))
 			{
@@ -61,7 +62,7 @@ namespace Toe.Messaging.Tests
 		[Test]
 		public void NullString()
 		{
-			var r = new DefaultSerializer<SubMessage>(this.messageRegistry, typeRegistry);
+			var r = new DefaultSerializer<SubMessage>(this.messageRegistry, this.typeRegistry);
 
 			using (var buf = new ThreadSafeWriteQueue(1024))
 			{
@@ -79,7 +80,7 @@ namespace Toe.Messaging.Tests
 		[Test]
 		public void ThreeBytesString()
 		{
-			var r = new DefaultSerializer<SubMessage>(this.messageRegistry, typeRegistry);
+			var r = new DefaultSerializer<SubMessage>(this.messageRegistry, this.typeRegistry);
 
 			using (var buf = new ThreadSafeWriteQueue(1024))
 			{
@@ -102,7 +103,7 @@ namespace Toe.Messaging.Tests
 		[Test]
 		public void TwoMessages()
 		{
-			var r = new DefaultSerializer<SubMessage>(this.messageRegistry, typeRegistry);
+			var r = new DefaultSerializer<SubMessage>(this.messageRegistry, this.typeRegistry);
 
 			using (var buf = new ThreadSafeWriteQueue(1024))
 			{

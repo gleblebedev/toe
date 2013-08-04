@@ -16,6 +16,7 @@ namespace Toe.Messaging
 		private readonly Dictionary<int, IMessageSerializer> map = new Dictionary<int, IMessageSerializer>();
 
 		private readonly MessageRegistry registry;
+
 		private readonly TypeRegistry typeRegistry;
 
 		#endregion
@@ -62,10 +63,10 @@ namespace Toe.Messaging
 		{
 			if (type == typeof(object))
 			{
-				return new DynamicSerializer(this.registry, typeRegistry);
+				return new DynamicSerializer(this.registry, this.typeRegistry);
 				;
 			}
-			return new DefaultSerializer<T>(this.registry, typeRegistry, messageId);
+			return new DefaultSerializer<T>(this.registry, this.typeRegistry, messageId);
 		}
 
 		#endregion

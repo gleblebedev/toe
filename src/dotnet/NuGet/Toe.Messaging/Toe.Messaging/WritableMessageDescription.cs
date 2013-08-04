@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -28,6 +27,14 @@ namespace Toe.Messaging
 
 		#region Public Properties
 
+		public int MinSize
+		{
+			get
+			{
+				return this.messageDescription.MinSize;
+			}
+		}
+
 		public IEnumerable<PropertyDescription> Properties
 		{
 			get
@@ -35,11 +42,6 @@ namespace Toe.Messaging
 				return this.messageDescription.Properties;
 			}
 		}
-
-		public int MinSize { get
-		{
-			return messageDescription.MinSize;
-		} }
 
 		#endregion
 
@@ -63,7 +65,7 @@ namespace Toe.Messaging
 
 		public PropertyDescription GetPropertyById(int propertyKey)
 		{
-			return messageDescription.Properties.FirstOrDefault(x => x.NameHash == propertyKey);
+			return this.messageDescription.Properties.FirstOrDefault(x => x.NameHash == propertyKey);
 		}
 
 		#endregion

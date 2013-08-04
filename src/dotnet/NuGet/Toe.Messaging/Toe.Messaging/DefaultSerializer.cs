@@ -12,11 +12,11 @@ namespace Toe.Messaging
 {
 	public class DefaultSerializer<T> : IMessageSerializer<T>
 	{
-		private readonly TypeRegistry typeRegistry;
-
 		#region Constants and Fields
 
 		private readonly int messageId;
+
+		private readonly TypeRegistry typeRegistry;
 
 		private Action<IMessageQueue, int, T> deserialize;
 
@@ -29,12 +29,12 @@ namespace Toe.Messaging
 		public DefaultSerializer(MessageRegistry messageRegistry, TypeRegistry typeRegistry)
 			: this(messageRegistry, typeRegistry, MessageIdAttribute.Get(typeof(T)))
 		{
-			this.typeRegistry = typeRegistry;
 		}
 
-		public DefaultSerializer(MessageRegistry messageRegistry,  TypeRegistry typeRegistry, int messageId)
+		public DefaultSerializer(MessageRegistry messageRegistry, TypeRegistry typeRegistry, int messageId)
 		{
 			this.messageId = messageId;
+			this.typeRegistry = typeRegistry;
 			var description = messageRegistry.DefineMessage(this.messageId);
 
 			if (typeof(T).BaseType != typeof(object))
@@ -49,13 +49,16 @@ namespace Toe.Messaging
 			this.DefineMessageProperties(allMembers, description);
 		}
 
+		#endregion
+
+		#region Public Properties
+
 		public int MessageId
 		{
 			get
 			{
 				return this.messageId;
 			}
-			
 		}
 
 		#endregion
@@ -161,7 +164,7 @@ namespace Toe.Messaging
 			return fixedSize;
 		}
 
-		private void DefineMessageProperties(List<MessageMemberInfo> allMembers, IMessageDescription description)
+		private void DefineMessageProperties(IEnumerable<MessageMemberInfo> allMembers, IMessageDescription description)
 		{
 			foreach (var member in allMembers)
 			{
@@ -184,10 +187,10 @@ namespace Toe.Messaging
 		{
 			var all =
 				t.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly).Select(
-					x => new MessageMemberInfo(x)).Where(a => a.PropertyType != PropertyType.Unknown).ToList();
+					x => new MessageMemberInfo(x, this.typeRegistry)).Where(a => a.PropertyType != PropertyType.Unknown).ToList();
 			all.AddRange(
 				t.GetFields(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly).Select(
-					x => new MessageMemberInfo(x)).Where(a => a.PropertyType != PropertyType.Unknown).ToList());
+					x => new MessageMemberInfo(x, this.typeRegistry)).Where(a => a.PropertyType != PropertyType.Unknown).ToList());
 			all.Sort(
 				(a, b) =>
 					{

@@ -4,12 +4,12 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{4D12B560-79F4-49A5-8AEC-1363EF1D90B9}</ProjectGuid>
+    <ProjectGuid>{7E83296B-70E9-43B9-891E-45CF42490937}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Toe.Messaging.AluminumLua.Tests</RootNamespace>
-    <AssemblyName>Toe.Messaging.AluminumLua.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <RootNamespace>SetNugetSpecVersion</RootNamespace>
+    <AssemblyName>SetNugetSpecVersion</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -32,12 +32,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AluminumLua">
-      <HintPath>..\packages\AluminumLua.1.0.0.6\lib\net40\AluminumLua.dll</HintPath>
-    </Reference>
-    <Reference Include="nunit.framework">
-      <HintPath>..\packages\NUnit.2.6.2\lib\nunit.framework.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -49,25 +43,6 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Test.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\Toe.CirculArarrayQueue\Toe.CirculArarrayQueue\Toe.CircularArrayQueue.net40.csproj">
-      <Project>{F4E9D25F-DDEF-44A7-B8CA-1CD4DF77D2E9}</Project>
-      <Name>Toe.CircularArrayQueue.net40</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Toe.Messaging.AluminumLua.net40\Toe.Messaging.AluminumLua.net40.csproj">
-      <Project>{23D612D7-FFDA-42F5-87E6-DC5F31505548}</Project>
-      <Name>Toe.Messaging.AluminumLua.net40</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Toe.Messaging\Toe.Messaging.net40.csproj">
-      <Project>{BC1AA566-D1E7-4AA5-AE93-E9A29490949C}</Project>
-      <Name>Toe.Messaging.net40</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

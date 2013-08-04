@@ -9,10 +9,10 @@ using Toe.Messaging.Types;
 
 namespace Toe.Messaging.AluminumLua.Tests
 {
-	public class SubMessage:Message
+	public class SubMessage : Message
 	{
-		
 	}
+
 	[TestFixture]
 	public class Test
 	{
@@ -27,10 +27,10 @@ namespace Toe.Messaging.AluminumLua.Tests
 
 			using (var buf = new ThreadSafeWriteQueue(1024))
 			{
-				var dictionary = new Dictionary<LuaObject, LuaObject> {  };
+				var dictionary = new Dictionary<LuaObject, LuaObject> { };
 				dictionary.Add(LuaObject.FromString("MessageId"), LuaObject.FromNumber(ser.MessageId));
 				var table = LuaObject.FromTable(dictionary);
-				a.Send(buf,table);
+				a.Send(buf, table);
 
 				int pos = buf.ReadMessage();
 				var id = buf.ReadInt32(pos);
@@ -38,8 +38,6 @@ namespace Toe.Messaging.AluminumLua.Tests
 
 				var table2 = a.Receive(buf, pos);
 				Assert.AreEqual(ser.MessageId, table2[LuaObject.FromString("MessageId")].AsNumber());
-				
-
 			}
 		}
 

@@ -10,6 +10,8 @@ namespace Toe.Messaging.Tests
 	[TestFixture]
 	public class TypeRegistryTests
 	{
+		#region Public Methods and Operators
+
 		[Test]
 		public void Test1()
 		{
@@ -20,6 +22,8 @@ namespace Toe.Messaging.Tests
 			Assert.AreEqual(Hash.Eval("Single"), PropertyType.Single);
 			Assert.AreEqual(Hash.Eval("String"), PropertyType.String);
 		}
+
+		#endregion
 	}
 
 	[TestFixture]
@@ -37,7 +41,7 @@ namespace Toe.Messaging.Tests
 
 			using (var buf = new ThreadSafeWriteQueue(1024))
 			{
-				r.Serialize(buf, new { MessageId = ser.MessageId, A = 1, B = 2 });
+				r.Serialize(buf, new { ser.MessageId, A = 1, B = 2 });
 				dynamic a = new { };
 				r.Deserialize(buf, buf.ReadMessage(), a);
 			}

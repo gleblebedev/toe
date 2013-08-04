@@ -6,24 +6,42 @@ namespace Toe.Messaging
 {
 	internal class ReadOnlyMessageDescription : IMessageDescription
 	{
+		#region Constants and Fields
+
 		private readonly MessageDescription messageDescription;
+
+		#endregion
+
+		#region Constructors and Destructors
 
 		public ReadOnlyMessageDescription(MessageDescription messageDescription)
 		{
 			this.messageDescription = messageDescription;
 		}
 
-		#region Implementation of IMessageDescription
+		#endregion
 
-		public IEnumerable<PropertyDescription> Properties { get
-		{
-			return messageDescription.Properties;
-		} }
+		#region Public Properties
 
-		public int MinSize { get
+		public int MinSize
 		{
-			return messageDescription.MinSize;
-		} }
+			get
+			{
+				return this.messageDescription.MinSize;
+			}
+		}
+
+		public IEnumerable<PropertyDescription> Properties
+		{
+			get
+			{
+				return this.messageDescription.Properties;
+			}
+		}
+
+		#endregion
+
+		#region Public Methods and Operators
 
 		public void DefineProperty(string name, int propertyType, int offset, int size)
 		{
@@ -33,7 +51,7 @@ namespace Toe.Messaging
 		public PropertyDescription GetPropertyById(int propertyKey)
 		{
 			//TODO: make it fast!
-			return messageDescription.Properties.FirstOrDefault(x => x.NameHash == propertyKey);
+			return this.messageDescription.Properties.FirstOrDefault(x => x.NameHash == propertyKey);
 		}
 
 		#endregion
