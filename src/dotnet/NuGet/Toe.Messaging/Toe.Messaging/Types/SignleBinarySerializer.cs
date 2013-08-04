@@ -24,35 +24,29 @@ namespace Toe.Messaging.Types
 
 		#region Public Methods and Operators
 
-		public Expression BuildDeserializeExpression(
-			MessageMemberInfo member, Expression positionParameter, Expression queue, ParameterExpression messageParameter)
+		public void BuildDeserializeExpression(MessageMemberInfo member, BinarySerilizationContext context)
 		{
-			Expression expression = member.GetProperty(messageParameter);
-			return Expression.Assign(
+			Expression expression = member.GetProperty(context.MessageParameter);
+			context.Code.Add( Expression.Assign(
 				expression,
 				Expression.Convert(
 					Expression.Call(
-						queue, MessageQueueMethods.ReadFloat, Expression.Add(positionParameter, Expression.Constant(member.Offset))),
-					member.PropertyType));
+						context.QueueParameter, MessageQueueMethods.ReadFloat, Expression.Add(context.PositionParameter, Expression.Constant(member.Offset))),
+					member.PropertyType)));
 		}
 
-		public Expression BuildDynamicSizeEvaluator(MessageMemberInfo member, ParameterExpression messageParameter)
+		public Expression BuildDynamicSizeEvaluator(MessageMemberInfo member, BinarySerilizationContext context)
 		{
 			return null;
 		}
 
-		public Expression BuildSerializeExpression(
-			MessageMemberInfo member,
-			Expression positionParameter,
-			Expression dynamicPositionParameter,
-			Expression queue,
-			ParameterExpression messageParameter)
+		public void BuildSerializeExpression(MessageMemberInfo member, BinarySerilizationContext context)
 		{
-			return Expression.Call(
-				queue,
+			context.Code.Add( Expression.Call(
+				context.QueueParameter,
 				MessageQueueMethods.WriteFloat,
-				Expression.Add(positionParameter, Expression.Constant(member.Offset)),
-				member.GetProperty(messageParameter));
+				Expression.Add(context.PositionParameter, Expression.Constant(member.Offset)),
+				member.GetProperty(context.MessageParameter)));
 		}
 
 		#endregion

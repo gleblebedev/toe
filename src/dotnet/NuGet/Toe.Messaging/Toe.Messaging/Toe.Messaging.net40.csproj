@@ -54,6 +54,7 @@
     <Compile Include="IMessageDescription.cs" />
     <Compile Include="IMessageSerializer.cs" />
     <Compile Include="MessageQueueMethods.cs" />
+    <Compile Include="Types\BinarySerilizationContext.cs" />
     <Compile Include="Types\Int32BinarySerializer.cs" />
     <Compile Include="Types\ITypeBinarySerializer.cs" />
     <Compile Include="MessageDescription.cs" />

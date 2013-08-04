@@ -22,45 +22,42 @@ namespace Toe.Messaging.Types
 
 		#endregion
 
-		#region Public Methods and Operators
-
-		public Expression BuildDeserializeExpression(
-			MessageMemberInfo member, Expression positionParameter, Expression queue, ParameterExpression messageParameter)
+		public void BuildDeserializeExpression(MessageMemberInfo member, BinarySerilizationContext context)
 		{
-			Expression expression = member.GetProperty(messageParameter);
-			return Expression.Assign(
+			Expression expression = member.GetProperty(context.MessageParameter);
+			context.Code.Add(Expression.Assign(
 				expression,
 				Expression.Convert(
 					Expression.Call(
-						queue,
+						context.QueueParameter,
 						MessageQueueMethods.ReadInt32,
-						new Expression[] { Expression.Add(positionParameter, Expression.Constant(member.Offset)) }),
-					member.PropertyType));
+						new Expression[] { Expression.Add(context.PositionParameter, Expression.Constant(member.Offset)) }),
+					member.PropertyType)));
 		}
 
-		public Expression BuildDynamicSizeEvaluator(MessageMemberInfo member, ParameterExpression messageParameter)
+		public Expression BuildDynamicSizeEvaluator(MessageMemberInfo member, BinarySerilizationContext context)
 		{
 			return null;
 		}
 
-		public Expression BuildSerializeExpression(
-			MessageMemberInfo member,
-			Expression positionParameter,
-			Expression dynamicPositionParameter,
-			Expression queue,
-			ParameterExpression messageParameter)
+		public void BuildSerializeExpression(MessageMemberInfo member, BinarySerilizationContext context)
 		{
-			Expression expression = member.GetProperty(messageParameter);
+			Expression expression = member.GetProperty(context.MessageParameter);
 			if (member.PropertyType != typeof(int))
 			{
 				expression = Expression.Convert(expression, typeof(int));
 			}
-			return Expression.Call(
-				queue,
+			context.Code.Add( Expression.Call(
+				context.QueueParameter,
 				MessageQueueMethods.WriteInt32,
-				Expression.Add(positionParameter, Expression.Constant(member.Offset)),
-				expression);
+				Expression.Add(context.PositionParameter, Expression.Constant(member.Offset)),
+				expression));
+
 		}
+
+
+		#region Public Methods and Operators
+
 
 		#endregion
 	}

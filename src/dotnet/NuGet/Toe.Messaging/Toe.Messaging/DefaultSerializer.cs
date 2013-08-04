@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 
 using Toe.CircularArrayQueue;
+using Toe.Messaging.Types;
 
 namespace Toe.Messaging
 {
@@ -35,48 +36,54 @@ namespace Toe.Messaging
 			var positionParameter = Expression.Parameter(typeof(int), "p");
 			var dynamicPositionParameter = Expression.Parameter(typeof(int), "d");
 			var messageParameter = Expression.Parameter(typeof(T), "m");
+
 			{
+				var context = new BinarySerilizationContext(queueParameter, messageParameter, positionParameter, dynamicPositionParameter);
+				context.Code.Capacity = allMembers.Count + 8;
+				context.LocalVariables.Add(positionParameter);
+				context.LocalVariables.Add(dynamicPositionParameter);
+
 				Expression dynamicSizeEval = null;
 				foreach (var member in allMembers)
 				{
 					member.Offset = fixedSize;
 					fixedSize += member.Serializer.FixedSize;
-					Expression dynamicSize = member.Serializer.BuildDynamicSizeEvaluator(member, messageParameter);
+					Expression dynamicSize = member.Serializer.BuildDynamicSizeEvaluator(member, context);
 					if (dynamicSize != null)
 					{
 						dynamicSizeEval = dynamicSizeEval == null ? dynamicSize : Expression.Add(dynamicSizeEval, dynamicSize);
 					}
 				}
-
-				var items = new List<Expression>(allMembers.Count + 3)
-					{
-						Expression.Assign(
+				context.Code.Add(Expression.Assign(
 							positionParameter,
 							Expression.Call(
 								queueParameter,
 								MessageQueueMethods.Allocate,
-								new Expression[] { Expression.Add(Expression.Constant(fixedSize), dynamicSizeEval ?? Expression.Constant(0)) })),
-						Expression.Assign(dynamicPositionParameter, Expression.Add(positionParameter, Expression.Constant(fixedSize)))
-					};
-				items.AddRange(
-					allMembers.Select(
-						member =>
-						member.Serializer.BuildSerializeExpression(
-							member, positionParameter, dynamicPositionParameter, queueParameter, messageParameter)));
-				items.Add(Expression.Call(queueParameter, MessageQueueMethods.Commit, new Expression[] { positionParameter }));
-				var body = Expression.Block(new[] { positionParameter, dynamicPositionParameter }, items);
+								new Expression[] { Expression.Add(Expression.Constant(fixedSize), dynamicSizeEval ?? Expression.Constant(0)) })));
+				context.Code.Add(
+					Expression.Assign(dynamicPositionParameter, Expression.Add(positionParameter, Expression.Constant(fixedSize))));
+
+				foreach (var memberInfo in allMembers)
+				{
+					memberInfo.Serializer.BuildSerializeExpression(memberInfo,context);
+				}
+				context.Code.Add(Expression.Call(queueParameter, MessageQueueMethods.Commit, new Expression[] { positionParameter }));
+				var body = Expression.Block(context.LocalVariables, context.Code);
 				var serializeExpression = Expression.Lambda<Action<IMessageQueue, T>>(
 					body, new[] { queueParameter, messageParameter });
 
 				this.serialize = serializeExpression.Compile();
 			}
 			{
-				var items = new List<Expression>(allMembers.Count + 3);
-				items.AddRange(
-					allMembers.Select(
-						member =>
-						member.Serializer.BuildDeserializeExpression(member, positionParameter, queueParameter, messageParameter)));
-				var body = Expression.Block(new ParameterExpression[] { }, items);
+				var context = new BinarySerilizationContext(queueParameter, messageParameter, positionParameter, dynamicPositionParameter);
+
+				context.Code.Capacity = allMembers.Count + 8;
+
+				foreach (var memberInfo in allMembers)
+				{
+					memberInfo.Serializer.BuildDeserializeExpression(memberInfo, context);
+				}
+				var body = Expression.Block(context.LocalVariables, context.Code);
 				var deserializeExpression = Expression.Lambda<Action<IMessageQueue, int, T>>(
 					body, new[] { queueParameter, positionParameter, messageParameter });
 				this.deserialize = deserializeExpression.Compile();

@@ -12,17 +12,11 @@ namespace Toe.Messaging.Types
 
 		#region Public Methods and Operators
 
-		Expression BuildDeserializeExpression(
-			MessageMemberInfo member, Expression positionParameter, Expression queue, ParameterExpression messageParameter);
+		void BuildDeserializeExpression(MessageMemberInfo member, BinarySerilizationContext context);
 
-		Expression BuildDynamicSizeEvaluator(MessageMemberInfo member, ParameterExpression messageParameter);
+		Expression BuildDynamicSizeEvaluator(MessageMemberInfo member, BinarySerilizationContext context);
 
-		Expression BuildSerializeExpression(
-			MessageMemberInfo member,
-			Expression positionParameter,
-			Expression dynamicPositionParameter,
-			Expression queue,
-			ParameterExpression messageParameter);
+		void BuildSerializeExpression(MessageMemberInfo member,BinarySerilizationContext context);
 
 		#endregion
 	}

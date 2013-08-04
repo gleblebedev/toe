@@ -29,72 +29,46 @@ namespace Toe.Messaging.Types
 
 		#region Public Methods and Operators
 
-		public Expression BuildDeserializeExpression(
-			MessageMemberInfo member, Expression positionParameter, Expression queue, ParameterExpression messageParameter)
+		public void BuildDeserializeExpression(MessageMemberInfo member, BinarySerilizationContext context)
 		{
 			var body = Expression.Assign(
-				member.GetProperty(messageParameter),
+				member.GetProperty(context.MessageParameter),
 				Expression.Call(
 					((Func<IMessageQueue, int, string>)FetchString).Method,
-					queue,
+					context.QueueParameter,
 					Expression.Add(
-						positionParameter,
+						context.PositionParameter,
 						Expression.Call(
-							queue, MessageQueueMethods.ReadInt32, Expression.Add(Expression.Constant(member.Offset), positionParameter)))));
-			return Expression.Block(
-				new ParameterExpression[] { },
-				new[]
-					{
-						MessageQueueMethods.TraceWriteLine(positionParameter),
-						MessageQueueMethods.TraceWriteLine(Expression.Add(Expression.Constant(member.Offset), positionParameter)),
-						MessageQueueMethods.TraceWriteLine(
+							context.QueueParameter, MessageQueueMethods.ReadInt32, Expression.Add(Expression.Constant(member.Offset), context.PositionParameter)))));
+			context.Code.Add(
 							Expression.Call(
-								queue, MessageQueueMethods.ReadInt32, Expression.Add(Expression.Constant(member.Offset), positionParameter))),
-						body,
-					});
+								context.QueueParameter, MessageQueueMethods.ReadInt32, Expression.Add(Expression.Constant(member.Offset), context.PositionParameter)))
+			;
+			context.Code.Add(body);
 		}
 
-		public Expression BuildDynamicSizeEvaluator(MessageMemberInfo member, ParameterExpression messageParameter)
+		public Expression BuildDynamicSizeEvaluator(MessageMemberInfo member, BinarySerilizationContext context)
 		{
-			return Expression.Call(((Func<string, int>)EvaluateSize).Method, member.GetProperty(messageParameter));
+			return Expression.Call(((Func<string, int>)EvaluateSize).Method, member.GetProperty(context.MessageParameter));
 		}
 
-		public Expression BuildSerializeExpression(
-			MessageMemberInfo member,
-			Expression positionParameter,
-			Expression dynamicPositionParameter,
-			Expression queue,
-			ParameterExpression messageParameter)
+		public void BuildSerializeExpression(MessageMemberInfo member, BinarySerilizationContext context)
 		{
-			//Expression expression = member.GetProperty(messageParameter);
-			//if (member.PropertyType != typeof(int))
-			//{
-			//	expression = Expression.Convert(expression, typeof(int));
-			//}
-			//return Expression.Call(
-			//	queue,
-			//	MessageQueueMethods.WriteInt32,
-			//	Expression.Add(positionParameter, Expression.Constant(member.Offset)),
-			//	expression);
 
-			return Expression.Block(
-				new ParameterExpression[] { },
-				new[]
-					{
-						Expression.Call(
-							queue,
-							MessageQueueMethods.WriteInt32,
-							Expression.Add(positionParameter, Expression.Constant(member.Offset)),
-							Expression.Subtract(dynamicPositionParameter, positionParameter)),
-						MessageQueueMethods.TraceWriteLine(positionParameter),
+			context.Code.Add(
+				Expression.Call(
+					context.QueueParameter,
+					MessageQueueMethods.WriteInt32,
+					Expression.Add(context.PositionParameter, Expression.Constant(member.Offset)),
+					Expression.Subtract(context.DynamicPositionParameter, context.PositionParameter)));
+			context.Code.Add(
 						Expression.Assign(
-							dynamicPositionParameter,
+							context.DynamicPositionParameter,
 							Expression.Call(
 								((Func<IMessageQueue, int, string, int>)CopyString).Method,
-								queue,
-								dynamicPositionParameter,
-								member.GetProperty(messageParameter)))
-					});
+								context.QueueParameter,
+								context.DynamicPositionParameter,
+								member.GetProperty(context.MessageParameter))));
 		}
 
 		#endregion
