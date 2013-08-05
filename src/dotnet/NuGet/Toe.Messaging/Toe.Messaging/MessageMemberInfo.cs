@@ -50,19 +50,6 @@ namespace Toe.Messaging
 			this.propertyType = PropertyTypeAttribute.Get(this.MemberInfo);
 
 			this.serializer = typeRegistry.ResolveSerializer(this.propertyType);
-
-			if (this.propertyType == Messaging.PropertyType.Int32)
-			{
-				this.serializer = Int32BinarySerializer.Instance;
-			}
-			else if (this.propertyType == Messaging.PropertyType.Single)
-			{
-				this.serializer = SignleBinarySerializer.Instance;
-			}
-			else if (this.propertyType == Messaging.PropertyType.String)
-			{
-				this.serializer = StringBinarySerializer.Instance;
-			}
 		}
 
 		#endregion
