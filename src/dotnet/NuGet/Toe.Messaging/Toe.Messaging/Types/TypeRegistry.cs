@@ -7,7 +7,7 @@ namespace Toe.Messaging.Types
 	{
 		#region Constructors and Destructors
 
-		private TypeRegistry(IEnumerable<ITypeBinarySerializer> typeBinarySerializers)
+	    public TypeRegistry(IEnumerable<ITypeBinarySerializer> typeBinarySerializers)
 			: base(typeBinarySerializers, x => x.PropertyType)
 		{
 		}

@@ -12,14 +12,18 @@ namespace Toe.Messaging.AluminumLua
 		}
 		#region Public Methods and Operators
 
-		public static LuaTypeRegistry CreateDefault()
+	    public static IEnumerable<ILuaTypeSerializer> StandartTypes
+	    {
+	        get
+	        {
+	            return new ILuaTypeSerializer[]
+	                { new Int32LuaTypeSerializer(), new SingleLuaTypeSerializer(), new StringLuaTypeSerializer(), };
+	        }
+	    }
+
+	    public static LuaTypeRegistry CreateDefault()
 		{
-			return new LuaTypeRegistry(new ILuaTypeSerializer[]
-				{
-					new Int32LuaTypeSerializer(), 
-					new SingleLuaTypeSerializer(), 
-					new StringLuaTypeSerializer(), 
-				});
+            return new LuaTypeRegistry(StandartTypes);
 		}
 
 		#endregion
