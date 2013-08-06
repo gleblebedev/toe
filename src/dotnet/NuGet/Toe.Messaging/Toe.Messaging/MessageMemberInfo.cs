@@ -11,7 +11,6 @@ namespace Toe.Messaging
 	{
 		#region Constants and Fields
 
-		private readonly MemberInfo memberInfo;
 
 		private readonly string name;
 
@@ -25,6 +24,8 @@ namespace Toe.Messaging
 
 		private readonly Type type;
 
+		private object memberInfo;
+
 		#endregion
 
 		#region Constructors and Destructors
@@ -33,49 +34,45 @@ namespace Toe.Messaging
 			: this((MemberInfo)propertyInfo, typeRegistry)
 		{
 			this.type = propertyInfo.PropertyType;
+			this.memberInfo = propertyInfo;
 		}
 
 		public MessageMemberInfo(FieldInfo fieldInfo, TypeRegistry typeRegistry)
 			: this((MemberInfo)fieldInfo, typeRegistry)
 		{
 			this.type = (fieldInfo).FieldType;
+			this.memberInfo = fieldInfo;
 		}
 
 		public MessageMemberInfo(MemberInfo memberInfo, TypeRegistry typeRegistry)
 		{
-			this.memberInfo = memberInfo;
-			this.order = PropertyOrderAttribute.Get(this.MemberInfo);
-			this.name = PropertyNameAttribute.Get(this.MemberInfo);
+	
+			this.order = PropertyOrderAttribute.Get(memberInfo);
+			this.name = PropertyNameAttribute.Get(memberInfo);
 			this.nameHash = Hash.Eval(this.name);
-			this.propertyType = PropertyTypeAttribute.Get(this.MemberInfo);
+			this.propertyType = PropertyTypeAttribute.Get(memberInfo, typeRegistry);
 
 			this.serializer = typeRegistry.ResolveSerializer(this.propertyType);
-
-			if (this.propertyType == Messaging.PropertyType.Int32)
-			{
-				this.serializer = Int32BinarySerializer.Instance;
-			}
-			else if (this.propertyType == Messaging.PropertyType.Single)
-			{
-				this.serializer = SignleBinarySerializer.Instance;
-			}
-			else if (this.propertyType == Messaging.PropertyType.String)
-			{
-				this.serializer = StringBinarySerializer.Instance;
-			}
 		}
+
+		public MessageMemberInfo(ParameterInfo par, TypeRegistry typeRegistry)
+		{
+			this.memberInfo = par;
+			this.type = par.ParameterType;
+
+			this.order = PropertyOrderAttribute.Get(par);
+			this.name = PropertyNameAttribute.Get(par);
+			this.nameHash = Hash.Eval(this.name);
+			this.propertyType = PropertyTypeAttribute.Get(par, typeRegistry);
+			this.serializer = typeRegistry.ResolveSerializer(this.propertyType);
+		}
+
+
 
 		#endregion
 
 		#region Public Properties
 
-		public MemberInfo MemberInfo
-		{
-			get
-			{
-				return this.memberInfo;
-			}
-		}
 
 		public string Name
 		{
@@ -133,9 +130,10 @@ namespace Toe.Messaging
 
 		public Expression GetProperty(Expression instance)
 		{
-			if (this.memberInfo is PropertyInfo)
+			var propertyInfo = this.memberInfo as PropertyInfo;
+			if (propertyInfo != null)
 			{
-				return Expression.Property(instance, (PropertyInfo)this.memberInfo);
+				return Expression.Property(instance, propertyInfo);
 			}
 			return Expression.Field(instance, (FieldInfo)this.memberInfo);
 		}

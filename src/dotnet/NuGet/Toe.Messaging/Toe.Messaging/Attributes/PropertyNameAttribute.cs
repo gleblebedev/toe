@@ -3,7 +3,7 @@ using System.Reflection;
 
 namespace Toe.Messaging.Attributes
 {
-	[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
+	[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter)]
 	public class PropertyNameAttribute : Attribute
 	{
 		#region Constants and Fields
@@ -32,7 +32,15 @@ namespace Toe.Messaging.Attributes
 			}
 			return property.Name;
 		}
-
+		public static string Get(ParameterInfo parameterInfo)
+		{
+			var v = GetCustomAttribute(parameterInfo, typeof(PropertyNameAttribute)) as PropertyNameAttribute;
+			if (v != null)
+			{
+				return v.name;
+			}
+			return parameterInfo.Name;
+		}
 		#endregion
 	}
 }

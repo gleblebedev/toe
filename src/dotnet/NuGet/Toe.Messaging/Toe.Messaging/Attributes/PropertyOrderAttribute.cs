@@ -3,7 +3,7 @@ using System.Reflection;
 
 namespace Toe.Messaging.Attributes
 {
-	[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
+	[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter)]
 	public class PropertyOrderAttribute : Attribute
 	{
 		#region Constants and Fields
@@ -26,6 +26,15 @@ namespace Toe.Messaging.Attributes
 		public static int Get(MemberInfo property)
 		{
 			var v = GetCustomAttribute(property, typeof(PropertyOrderAttribute)) as PropertyOrderAttribute;
+			if (v != null)
+			{
+				return v.order;
+			}
+			return int.MaxValue;
+		}
+		public static int Get(ParameterInfo parameterInfo)
+		{
+			var v = GetCustomAttribute(parameterInfo, typeof(PropertyOrderAttribute)) as PropertyOrderAttribute;
 			if (v != null)
 			{
 				return v.order;

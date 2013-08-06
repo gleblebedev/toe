@@ -12,6 +12,8 @@ namespace Toe.Messaging.Tests
 
 		public string Text { get; set; }
 
+		public byte Byte { get; set; }
+
 		#endregion
 	}
 }

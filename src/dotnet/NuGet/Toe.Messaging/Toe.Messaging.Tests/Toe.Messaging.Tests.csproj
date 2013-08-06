@@ -51,11 +51,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="SampleApi.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SubMessage.cs" />
     <Compile Include="TestDynamics.cs" />
     <Compile Include="TestDefaultSerializer.cs" />
+    <Compile Include="TestMessageDispatcher.cs" />
+    <Compile Include="TestMethodSerializer.cs" />
     <Compile Include="TypeRegistryTests.cs" />
   </ItemGroup>
   <ItemGroup>

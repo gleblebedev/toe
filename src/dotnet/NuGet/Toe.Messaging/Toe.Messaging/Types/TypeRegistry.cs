@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace Toe.Messaging.Types
@@ -44,5 +45,19 @@ namespace Toe.Messaging.Types
 		}
 
 		#endregion
+
+		public bool TryResolvePropertyType(Type fieldType, out int v)
+		{
+			foreach (var serializer in sortedValues)
+			{
+				if (serializer.CanHandleType(fieldType))
+				{
+					v = serializer.PropertyType;
+					return true;
+				}
+			}
+			v = PropertyType.Unknown;
+			return false;
+		}
 	}
 }

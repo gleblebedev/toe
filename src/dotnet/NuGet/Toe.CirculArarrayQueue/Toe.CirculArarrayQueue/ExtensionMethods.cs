@@ -11,47 +11,48 @@ namespace Toe.CircularArrayQueue
 	{
 		#region Public Methods and Operators
 
+		public static int GetByteCount(string str)
+		{
+			if (string.IsNullOrEmpty(str)) return 0;
+			int length = 0;
+			foreach (var currentChar in str)
+			{
+				if (currentChar == 0) 
+					throw new ArgumentException("String can not contain \\0 character");
+					if (currentChar < '\x80')
+					{
+						++length;
+					}
+					else if (currentChar < '\x800')
+					{
+						length += 2;
+					}
+					else if (currentChar < 0x10000)
+					{
+						length += 3;
+					}
+					else if (currentChar < 0x200000)
+					{
+						length += 4;
+					}
+					else if (currentChar < 0x4000000)
+					{
+						length += 5;
+					}
+					else 
+					{
+						length += 6;
+					}
+			}
+			return length;
+		}
 		public static int GetStringLength(this IMessageQueue messageQueue, string text)
 		{
 			if (string.IsNullOrEmpty(text))
 			{
 				return 1;
 			}
-			return (Encoding.UTF8.GetByteCount(text) + 4) >> 2;
-
-			//int counter = 0;
-			//foreach (var c in text)
-			//{
-			//	++counter;
-			//	if (c >= 0x80)
-			//	{
-			//		++counter;
-			//	}
-			//	if (c >= 0x800)
-			//	{
-			//		++counter;
-			//	}
-			//	if (c >= 0x10000)
-			//	{
-			//		++counter;
-			//	}
-			//	if (c >= 0x200000)
-			//	{
-			//		++counter;
-			//	}
-			//	if (c >= 0x4000000)
-			//	{
-			//		++counter;
-			//	}
-
-			//	//if (c < 0x80) {++counter; continue;}
-			//	//if (c < 0x800) { counter+=2; continue; }
-			//	//if (c < 0x10000) { counter += 3; continue; }
-			//	//if (c < 0x200000) { counter += 4; continue; }
-			//	//if (c < 0x4000000) { counter += 5; continue; }
-			//	//counter += 6;
-			//}
-			//return (counter + 4) >> 2;
+			return (GetByteCount(text) + 4) >> 2;
 		}
 
 		public static long ReadInt64(this IMessageQueue messageQueue, int position)
@@ -69,6 +70,7 @@ namespace Toe.CircularArrayQueue
 
 		public static string ReadStringContent(IMessageQueue queue, int contentIndex)
 		{
+			//TODO: avoid list allocation.
 			var res = new List<byte>(32);
 			for (;;)
 			{
@@ -116,10 +118,25 @@ namespace Toe.CircularArrayQueue
 			messageQueue.WriteInt32(position, (int)value);
 			messageQueue.WriteInt32(position + 1, (int)(value >> 32));
 		}
-
+		/// <summary>
+		/// Copy message to other message queue.
+		/// </summary>
+		/// <param name="messageQueue">Soutce queue.</param>
+		/// <param name="position">Position at source queue. Should be valid postion returned by   messageQueue.ReadMessage()</param>
+		/// <param name="destinationQueue">Destination queue.</param>
+		public static void CopyTo(this IMessageQueue messageQueue, int position, IMessageQueue destinationQueue)
+		{
+			var len = messageQueue.GetSize(position);
+			var targetPosition = destinationQueue.Allocate(len);
+			for (int i = 0; i < len;++i )
+				destinationQueue.WriteInt32(targetPosition+i,messageQueue.ReadInt32(i+position));
+			destinationQueue.Commit(len);
+		}
 		public static int WriteStringContent(this IMessageQueue messageQueue, int contentIndex, string str)
 		{
 			str = str ?? String.Empty;
+
+			//TODO: avoid array allocation.
 			var bytes = Encoding.UTF8.GetBytes(str);
 			int index = 0;
 			for (; index + 3 < bytes.Length; index += 4)

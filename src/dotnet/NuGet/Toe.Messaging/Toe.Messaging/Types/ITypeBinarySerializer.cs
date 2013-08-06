@@ -1,3 +1,4 @@
+using System;
 using System.Linq.Expressions;
 
 namespace Toe.Messaging.Types
@@ -21,5 +22,7 @@ namespace Toe.Messaging.Types
 		void BuildSerializeExpression(MessageMemberInfo member, BinarySerilizationContext context);
 
 		#endregion
+
+		bool CanHandleType(Type fieldType);
 	}
 }

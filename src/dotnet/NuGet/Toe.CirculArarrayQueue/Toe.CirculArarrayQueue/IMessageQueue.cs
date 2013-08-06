@@ -50,7 +50,7 @@ namespace Toe.CircularArrayQueue
 		/// <summary>
 		/// Read position of a next available chunk.
 		/// </summary>
-		/// <returns>Integer value value.</returns>
+		/// <returns>Position at the queue buffer or -1 if there are no messages available.</returns>
 		int ReadMessage();
 
 		/// <summary>

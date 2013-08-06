@@ -1,3 +1,4 @@
+using System;
 using System.Linq.Expressions;
 
 namespace Toe.Messaging.Types
@@ -64,6 +65,18 @@ namespace Toe.Messaging.Types
 					MessageQueueMethods.WriteInt32,
 					Expression.Add(context.PositionParameter, Expression.Constant(member.Offset)),
 					expression));
+		}
+
+		public bool CanHandleType(Type fieldType)
+		{
+			//if (typeof(int).IsAssignableFrom(fieldType)) return true;
+			if (typeof(uint) == fieldType) return true;
+			if (typeof(int) == fieldType) return true;
+			if (typeof(ushort) == fieldType) return true;
+			if (typeof(short) == fieldType) return true;
+			if (typeof(byte) == fieldType) return true;
+			if (typeof(sbyte) == fieldType) return true;
+			return false;
 		}
 
 		#endregion

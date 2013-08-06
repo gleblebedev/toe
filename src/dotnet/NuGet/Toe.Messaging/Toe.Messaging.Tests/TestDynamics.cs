@@ -1,3 +1,5 @@
+using System.Text;
+
 using NUnit.Framework;
 
 using Toe.CircularArrayQueue;
@@ -5,6 +7,22 @@ using Toe.Messaging.Types;
 
 namespace Toe.Messaging.Tests
 {
+	[TestFixture]
+	public class TestStringSerilization
+	{
+		[Test]
+		public void Test()
+		{
+			for (int i=char.MinValue; i<=char.MaxValue;++i)
+			{
+				if (i != '\0')
+				{
+					var str = ((char)i).ToString();
+					Assert.AreEqual(Encoding.UTF8.GetByteCount(str), CircularArrayQueue.ExtensionMethods.GetByteCount(str));
+				}
+			}
+		}
+	}
 	[TestFixture]
 	public class TestDynamics
 	{

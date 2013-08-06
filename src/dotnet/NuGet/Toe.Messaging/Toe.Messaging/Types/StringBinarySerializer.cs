@@ -58,10 +58,12 @@ namespace Toe.Messaging.Types
 
 		public Expression BuildDynamicSizeEvaluator(MessageMemberInfo member, BinarySerilizationContext context)
 		{
-			return Expression.Call(
-				((Func<IMessageQueue, string, int>)ExtensionMethods.GetStringLength).Method,
-				context.QueueParameter,
-				member.GetProperty(context.MessageParameter));
+			return 
+				Expression.RightShift(
+				Expression.Add(Expression.Constant(4),
+				Expression.Call(
+				((Func<string, int>)ExtensionMethods.GetByteCount).Method,
+				member.GetProperty(context.MessageParameter))), Expression.Constant(2));
 		}
 
 		public void BuildSerializeExpression(MessageMemberInfo member, BinarySerilizationContext context)
@@ -80,6 +82,11 @@ namespace Toe.Messaging.Types
 						context.QueueParameter,
 						context.DynamicPositionParameter,
 						member.GetProperty(context.MessageParameter))));
+		}
+
+		public bool CanHandleType(Type fieldType)
+		{
+			return typeof(string) == fieldType;
 		}
 
 		#endregion

@@ -93,6 +93,11 @@ namespace Toe.Messaging.OpenTK
 					Expression.Field(member.GetProperty(context.MessageParameter), typeof(Vector3).GetField("Z"))));
 		}
 
+		public bool CanHandleType(Type fieldType)
+		{
+			return typeof(Vector3) == fieldType;
+		}
+
 		#endregion
 	}
 }

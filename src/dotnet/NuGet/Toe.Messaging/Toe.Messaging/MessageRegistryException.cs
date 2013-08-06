@@ -10,8 +10,8 @@ namespace Toe.Messaging
 	{
 		#region Constructors and Destructors
 
-		public MessageRegistryException(string propertyName)
-			: base(string.Format("Mismatch description for property {0}", propertyName))
+		public MessageRegistryException(PropertyDescription newDesc, PropertyDescription oldDesc)
+			: base(string.Format("Mismatch description for property {0} / {1}", newDesc, oldDesc))
 		{
 		}
 

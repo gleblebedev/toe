@@ -52,9 +52,10 @@ namespace Toe.Messaging
 			var propertyDescription = new PropertyDescription(name, offset, size, propertyType);
 			if (this.propertyIndex < this.messageDescription.Properties.Count)
 			{
-				if (this.messageDescription.Properties[this.propertyIndex] != propertyDescription)
+				var existingDesc = this.messageDescription.Properties[this.propertyIndex];
+				if (existingDesc != propertyDescription)
 				{
-					throw new MessageRegistryException(name);
+					throw new MessageRegistryException(propertyDescription, existingDesc);
 				}
 				++this.propertyIndex;
 				return;

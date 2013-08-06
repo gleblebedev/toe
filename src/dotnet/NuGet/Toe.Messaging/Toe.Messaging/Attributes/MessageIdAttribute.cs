@@ -1,8 +1,9 @@
 using System;
+using System.Reflection;
 
 namespace Toe.Messaging.Attributes
 {
-	[AttributeUsage(AttributeTargets.Class)]
+	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
 	public class MessageIdAttribute : Attribute
 	{
 		#region Constants and Fields
@@ -40,7 +41,19 @@ namespace Toe.Messaging.Attributes
 			}
 			return Hash.Eval(t.Name);
 		}
-
+		public static int Get(MethodInfo methodInfo)
+		{
+			var a = (MessageIdAttribute)GetCustomAttribute(methodInfo, typeof(MessageIdAttribute));
+			if (a != null)
+			{
+				return a.messageId;
+			}
+			if (methodInfo.Name.StartsWith("On"))
+			{
+				return Hash.Eval(methodInfo.Name.Substring(2));
+			}
+			return Hash.Eval(methodInfo.Name);
+		}
 		#endregion
 	}
 }

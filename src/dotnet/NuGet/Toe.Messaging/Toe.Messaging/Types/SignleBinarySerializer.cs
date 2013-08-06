@@ -1,3 +1,4 @@
+using System;
 using System.Linq.Expressions;
 
 namespace Toe.Messaging.Types
@@ -59,6 +60,11 @@ namespace Toe.Messaging.Types
 					MessageQueueMethods.WriteFloat,
 					Expression.Add(context.PositionParameter, Expression.Constant(member.Offset)),
 					member.GetProperty(context.MessageParameter)));
+		}
+
+		public bool CanHandleType(Type fieldType)
+		{
+			return typeof(float) == fieldType;
 		}
 
 		#endregion

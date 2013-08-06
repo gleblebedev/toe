@@ -1,3 +1,4 @@
+using System;
 using System.Linq.Expressions;
 
 using Microsoft.Xna.Framework;
@@ -85,6 +86,11 @@ namespace Toe.Messaging.Types
 					MessageQueueMethods.WriteFloat,
 					Expression.Add(context.PositionParameter, Expression.Constant(member.Offset + 2)),
 					Expression.Field(member.GetProperty(context.MessageParameter), typeof(Vector3).GetField("Z"))));
+		}
+
+		public bool CanHandleType(Type fieldType)
+		{
+			return typeof(Vector3) == fieldType;
 		}
 
 		#endregion

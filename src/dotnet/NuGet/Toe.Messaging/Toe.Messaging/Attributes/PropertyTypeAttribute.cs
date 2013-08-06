@@ -1,9 +1,11 @@
 using System;
 using System.Reflection;
 
+using Toe.Messaging.Types;
+
 namespace Toe.Messaging.Attributes
 {
-	[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
+	[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter)]
 	public class PropertyTypeAttribute : Attribute
 	{
 		#region Constants and Fields
@@ -23,7 +25,17 @@ namespace Toe.Messaging.Attributes
 
 		#region Public Methods and Operators
 
-		public static int Get(MemberInfo property)
+		public static int Get(ParameterInfo parameterInfo, TypeRegistry typeRegistry = null)
+		{
+			var v = GetCustomAttribute(parameterInfo, typeof(PropertyTypeAttribute)) as PropertyTypeAttribute;
+			if (v != null)
+			{
+				return v.propertyType;
+			}
+			return GetDefaultType(parameterInfo.ParameterType, typeRegistry);
+		}
+
+		public static int Get(MemberInfo property, TypeRegistry typeRegistry = null)
 		{
 			var v = GetCustomAttribute(property, typeof(PropertyTypeAttribute)) as PropertyTypeAttribute;
 			if (v != null)
@@ -33,12 +45,12 @@ namespace Toe.Messaging.Attributes
 			var propertyInfo = property as PropertyInfo;
 			if (propertyInfo != null)
 			{
-				return GetDefaultType(propertyInfo.PropertyType);
+				return GetDefaultType(propertyInfo.PropertyType, typeRegistry);
 			}
 			var fieldInfo = property as FieldInfo;
 			if (fieldInfo != null)
 			{
-				return GetDefaultType(fieldInfo.FieldType);
+				return GetDefaultType(fieldInfo.FieldType, typeRegistry);
 			}
 			return PropertyType.Unknown;
 		}
@@ -47,8 +59,13 @@ namespace Toe.Messaging.Attributes
 
 		#region Methods
 
-		private static int GetDefaultType(Type fieldType)
+		private static int GetDefaultType(Type fieldType, TypeRegistry typeRegistry = null)
 		{
+			if (typeRegistry != null)
+			{
+				int res;
+				if (typeRegistry.TryResolvePropertyType(fieldType, out res)) return res;
+			}
 			if (fieldType == typeof(int))
 			{
 				return PropertyType.Int32;
