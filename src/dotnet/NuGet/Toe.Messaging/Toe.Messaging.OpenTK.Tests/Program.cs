@@ -1,13 +1,13 @@
-﻿using System;
-using System.Linq;
-using System.Text;
-
-namespace Toe.Messaging.OpenTK.Tests
+﻿namespace Toe.Messaging.OpenTK.Tests
 {
-	class Program
+	internal class Program
 	{
-		static void Main(string[] args)
+		#region Methods
+
+		private static void Main(string[] args)
 		{
 		}
+
+		#endregion
 	}
 }

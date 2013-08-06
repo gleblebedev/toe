@@ -129,6 +129,11 @@ namespace Toe.Messaging
 			}
 		}
 
+		public override string ToString()
+		{
+			return string.Format("{0} (type: {1}, offset: {2}, size: {3})", this.name, this.propertyType, this.offset, this.size);
+		}
+
 		#endregion
 
 		#region Methods
@@ -140,10 +145,5 @@ namespace Toe.Messaging
 		}
 
 		#endregion
-
-		public override string ToString()
-		{
-			return string.Format("{0} (type: {1}, offset: {2}, size: {3})", this.name, this.propertyType, this.offset, this.size);
-		}
 	}
 }

@@ -11,6 +11,7 @@ namespace Toe.Messaging
 	{
 		#region Constants and Fields
 
+		private readonly object memberInfo;
 
 		private readonly string name;
 
@@ -23,8 +24,6 @@ namespace Toe.Messaging
 		private readonly ITypeBinarySerializer serializer;
 
 		private readonly Type type;
-
-		private object memberInfo;
 
 		#endregion
 
@@ -46,7 +45,6 @@ namespace Toe.Messaging
 
 		public MessageMemberInfo(MemberInfo memberInfo, TypeRegistry typeRegistry)
 		{
-	
 			this.order = PropertyOrderAttribute.Get(memberInfo);
 			this.name = PropertyNameAttribute.Get(memberInfo);
 			this.nameHash = Hash.Eval(this.name);
@@ -67,12 +65,9 @@ namespace Toe.Messaging
 			this.serializer = typeRegistry.ResolveSerializer(this.propertyType);
 		}
 
-
-
 		#endregion
 
 		#region Public Properties
-
 
 		public string Name
 		{
@@ -136,6 +131,11 @@ namespace Toe.Messaging
 				return Expression.Property(instance, propertyInfo);
 			}
 			return Expression.Field(instance, (FieldInfo)this.memberInfo);
+		}
+
+		public override string ToString()
+		{
+			return string.Format("{0} (type: {1}, offset: {2})", this.name, this.propertyType, this.Offset);
 		}
 
 		#endregion

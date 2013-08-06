@@ -4,14 +4,21 @@ using Toe.CircularArrayQueue;
 
 namespace Toe.Messaging.AluminumLua.Types
 {
-	public class Int32LuaTypeSerializer:ILuaTypeSerializer
+	public class Int32LuaTypeSerializer : ILuaTypeSerializer
 	{
-		#region Implementation of ILuaTypeSerializer
+		#region Public Properties
 
-		public int PropertyType { get
+		public int PropertyType
 		{
-			return Messaging.PropertyType.Int32;
-		} }
+			get
+			{
+				return Messaging.PropertyType.Int32;
+			}
+		}
+
+		#endregion
+
+		#region Public Methods and Operators
 
 		public int GetDynamicSize(IMessageQueue queue, LuaObject propertyValue)
 		{

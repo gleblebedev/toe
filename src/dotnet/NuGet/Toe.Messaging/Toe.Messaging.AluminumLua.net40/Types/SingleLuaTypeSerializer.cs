@@ -6,7 +6,7 @@ namespace Toe.Messaging.AluminumLua.Types
 {
 	public class SingleLuaTypeSerializer : ILuaTypeSerializer
 	{
-		#region Implementation of ILuaTypeSerializer
+		#region Public Properties
 
 		public int PropertyType
 		{
@@ -15,6 +15,10 @@ namespace Toe.Messaging.AluminumLua.Types
 				return Messaging.PropertyType.Single;
 			}
 		}
+
+		#endregion
+
+		#region Public Methods and Operators
 
 		public int GetDynamicSize(IMessageQueue queue, LuaObject propertyValue)
 		{

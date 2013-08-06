@@ -8,11 +8,11 @@ namespace Toe.Messaging.Tests
 
 		public float B { get; set; }
 
+		public byte Byte { get; set; }
+
 		public uint C { get; set; }
 
 		public string Text { get; set; }
-
-		public byte Byte { get; set; }
 
 		#endregion
 	}

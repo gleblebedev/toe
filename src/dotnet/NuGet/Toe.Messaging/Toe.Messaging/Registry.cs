@@ -6,19 +6,29 @@ namespace Toe.Messaging
 {
 	public class Registry<T>
 	{
-		private readonly Func<T, int> getKey;
+		#region Constants and Fields
 
 		protected T[] sortedValues;
 
-		public Registry(IEnumerable<T> values, Func<T,int> getKey)
+		private readonly Func<T, int> getKey;
+
+		#endregion
+
+		#region Constructors and Destructors
+
+		public Registry(IEnumerable<T> values, Func<T, int> getKey)
 		{
 			this.getKey = getKey;
 			this.sortedValues = values.OrderBy(getKey).ToArray();
 		}
 
+		#endregion
+
+		#region Methods
+
 		protected T BinarySearch(int propertyType, int leftIndex, int rightIndex)
 		{
-		retry:
+			retry:
 			if (rightIndex < leftIndex)
 			{
 				return default(T);
@@ -26,7 +36,7 @@ namespace Toe.Messaging
 			// calculate midpoint to cut set in half
 			int midIndex = (leftIndex + rightIndex) >> 1;
 
-			var key = getKey(this.sortedValues[midIndex]);
+			var key = this.getKey(this.sortedValues[midIndex]);
 
 			// three-way comparison
 			if (key > propertyType)
@@ -47,7 +57,9 @@ namespace Toe.Messaging
 
 		protected T BinarySearch(int propertyType)
 		{
-			return BinarySearch(propertyType, 0, sortedValues.Length-1);
+			return this.BinarySearch(propertyType, 0, this.sortedValues.Length - 1);
 		}
+
+		#endregion
 	}
 }

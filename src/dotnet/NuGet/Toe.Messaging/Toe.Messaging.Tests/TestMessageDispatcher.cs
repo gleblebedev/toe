@@ -9,18 +9,6 @@ namespace Toe.Messaging.Tests
 	[TestFixture]
 	public class TestMessageDispatcher
 	{
-		public class SampleMessage : Message
-		{
-			public int A { get; set; }
-		}
-		public class SampleApiClass
-		{
-			public bool OnSampleMessage([PropertyOrder(int.MinValue), PropertyName("MessageId")] int id, [PropertyName("A")] int a)
-			{
-				Assert.AreEqual(10,a);
-				return true;
-			}
-		}
 		#region Constants and Fields
 
 		private readonly MessageRegistry messageRegistry = new MessageRegistry();
@@ -28,6 +16,8 @@ namespace Toe.Messaging.Tests
 		private readonly TypeRegistry typeRegistry = TypeRegistry.CreateDefault();
 
 		#endregion
+
+		#region Public Methods and Operators
 
 		[Test]
 		public void SampleMessageFieldParams()
@@ -43,5 +33,29 @@ namespace Toe.Messaging.Tests
 			}
 		}
 
+		#endregion
+
+		public class SampleApiClass
+		{
+			#region Public Methods and Operators
+
+			public bool OnSampleMessage(
+				[PropertyOrder(int.MinValue)] [PropertyName("MessageId")] int id, [PropertyName("A")] int a)
+			{
+				Assert.AreEqual(10, a);
+				return true;
+			}
+
+			#endregion
+		}
+
+		public class SampleMessage : Message
+		{
+			#region Public Properties
+
+			public int A { get; set; }
+
+			#endregion
+		}
 	}
 }

@@ -1,5 +1,3 @@
-using System;
-
 using NUnit.Framework;
 
 using Toe.CircularArrayQueue;
@@ -109,8 +107,17 @@ namespace Toe.Messaging.Tests
 
 			using (var buf = new ThreadSafeWriteQueue(1024))
 			{
-				var orig = new SubMessage { MessageId = int.MaxValue, A = int.MinValue, B = float.Epsilon, C = uint.MinValue, Byte=1, Text = "aaa‚Ô‡‡‚", };
-				var orig2 = new SubMessage { MessageId = int.MaxValue, A = int.MaxValue, B = float.MaxValue, C = uint.MaxValue, Byte = 255, Text = "‚Ô‡‡‚zz", };
+				var orig = new SubMessage
+					{ MessageId = int.MaxValue, A = int.MinValue, B = float.Epsilon, C = uint.MinValue, Byte = 1, Text = "aaa‚Ô‡‡‚", };
+				var orig2 = new SubMessage
+					{
+						MessageId = int.MaxValue,
+						A = int.MaxValue,
+						B = float.MaxValue,
+						C = uint.MaxValue,
+						Byte = 255,
+						Text = "‚Ô‡‡‚zz",
+					};
 				r.Serialize(buf, orig);
 				r.Serialize(buf, orig2);
 

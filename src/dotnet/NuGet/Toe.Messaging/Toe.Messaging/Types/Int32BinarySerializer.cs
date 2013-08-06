@@ -70,12 +70,30 @@ namespace Toe.Messaging.Types
 		public bool CanHandleType(Type fieldType)
 		{
 			//if (typeof(int).IsAssignableFrom(fieldType)) return true;
-			if (typeof(uint) == fieldType) return true;
-			if (typeof(int) == fieldType) return true;
-			if (typeof(ushort) == fieldType) return true;
-			if (typeof(short) == fieldType) return true;
-			if (typeof(byte) == fieldType) return true;
-			if (typeof(sbyte) == fieldType) return true;
+			if (typeof(uint) == fieldType)
+			{
+				return true;
+			}
+			if (typeof(int) == fieldType)
+			{
+				return true;
+			}
+			if (typeof(ushort) == fieldType)
+			{
+				return true;
+			}
+			if (typeof(short) == fieldType)
+			{
+				return true;
+			}
+			if (typeof(byte) == fieldType)
+			{
+				return true;
+			}
+			if (typeof(sbyte) == fieldType)
+			{
+				return true;
+			}
 			return false;
 		}
 

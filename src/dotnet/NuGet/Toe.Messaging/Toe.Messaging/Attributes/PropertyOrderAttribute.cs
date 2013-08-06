@@ -32,6 +32,7 @@ namespace Toe.Messaging.Attributes
 			}
 			return int.MaxValue;
 		}
+
 		public static int Get(ParameterInfo parameterInfo)
 		{
 			var v = GetCustomAttribute(parameterInfo, typeof(PropertyOrderAttribute)) as PropertyOrderAttribute;

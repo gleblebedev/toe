@@ -64,7 +64,10 @@ namespace Toe.Messaging.Attributes
 			if (typeRegistry != null)
 			{
 				int res;
-				if (typeRegistry.TryResolvePropertyType(fieldType, out res)) return res;
+				if (typeRegistry.TryResolvePropertyType(fieldType, out res))
+				{
+					return res;
+				}
 			}
 			if (fieldType == typeof(int))
 			{

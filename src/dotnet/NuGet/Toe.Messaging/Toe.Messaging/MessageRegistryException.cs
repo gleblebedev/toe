@@ -5,7 +5,6 @@ namespace Toe.Messaging
 #if !WINDOWS_PHONE
 	[Serializable]
 #endif
-
 	public class MessageRegistryException : Exception
 	{
 		#region Constructors and Destructors

@@ -6,31 +6,40 @@ namespace Toe.Messaging.AluminumLua
 {
 	public class LuaTypeRegistry : Registry<ILuaTypeSerializer>
 	{
-		public LuaTypeRegistry(IEnumerable<ILuaTypeSerializer> serializers):base(serializers,x=>x.PropertyType)
-		{
-			
-		}
-		#region Public Methods and Operators
+		#region Constructors and Destructors
 
-	    public static IEnumerable<ILuaTypeSerializer> StandartTypes
-	    {
-	        get
-	        {
-	            return new ILuaTypeSerializer[]
-	                { new Int32LuaTypeSerializer(), new SingleLuaTypeSerializer(), new StringLuaTypeSerializer(), };
-	        }
-	    }
-
-	    public static LuaTypeRegistry CreateDefault()
+		public LuaTypeRegistry(IEnumerable<ILuaTypeSerializer> serializers)
+			: base(serializers, x => x.PropertyType)
 		{
-            return new LuaTypeRegistry(StandartTypes);
 		}
 
 		#endregion
+
+		#region Public Properties
+
+		public static IEnumerable<ILuaTypeSerializer> StandartTypes
+		{
+			get
+			{
+				return new ILuaTypeSerializer[]
+					{ new Int32LuaTypeSerializer(), new SingleLuaTypeSerializer(), new StringLuaTypeSerializer(), };
+			}
+		}
+
+		#endregion
+
+		#region Public Methods and Operators
+
+		public static LuaTypeRegistry CreateDefault()
+		{
+			return new LuaTypeRegistry(StandartTypes);
+		}
 
 		public ILuaTypeSerializer GetSerializer(int propertyType)
 		{
 			return base.BinarySearch(propertyType);
 		}
+
+		#endregion
 	}
 }

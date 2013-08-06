@@ -32,6 +32,7 @@ namespace Toe.Messaging.Attributes
 			}
 			return property.Name;
 		}
+
 		public static string Get(ParameterInfo parameterInfo)
 		{
 			var v = GetCustomAttribute(parameterInfo, typeof(PropertyNameAttribute)) as PropertyNameAttribute;
@@ -41,6 +42,7 @@ namespace Toe.Messaging.Attributes
 			}
 			return parameterInfo.Name;
 		}
+
 		#endregion
 	}
 }

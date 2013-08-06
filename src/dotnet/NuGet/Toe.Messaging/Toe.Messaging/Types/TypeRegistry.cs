@@ -7,7 +7,7 @@ namespace Toe.Messaging.Types
 	{
 		#region Constructors and Destructors
 
-	    public TypeRegistry(IEnumerable<ITypeBinarySerializer> typeBinarySerializers)
+		public TypeRegistry(IEnumerable<ITypeBinarySerializer> typeBinarySerializers)
 			: base(typeBinarySerializers, x => x.PropertyType)
 		{
 		}
@@ -44,11 +44,9 @@ namespace Toe.Messaging.Types
 			return this.BinarySearch(propertyType, 0, this.sortedValues.Length - 1);
 		}
 
-		#endregion
-
 		public bool TryResolvePropertyType(Type fieldType, out int v)
 		{
-			foreach (var serializer in sortedValues)
+			foreach (var serializer in this.sortedValues)
 			{
 				if (serializer.CanHandleType(fieldType))
 				{
@@ -59,5 +57,7 @@ namespace Toe.Messaging.Types
 			v = PropertyType.Unknown;
 			return false;
 		}
+
+		#endregion
 	}
 }

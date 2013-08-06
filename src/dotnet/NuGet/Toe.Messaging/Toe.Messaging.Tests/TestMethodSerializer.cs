@@ -1,6 +1,3 @@
-using System;
-using System.Diagnostics;
-
 using NUnit.Framework;
 
 using Toe.CircularArrayQueue;
@@ -11,18 +8,6 @@ namespace Toe.Messaging.Tests
 	[TestFixture]
 	public class TestMessageDispatcherClassParam
 	{
-		public class SampleMessage:Message
-		{
-			
-		}
-		public class SampleApiClass
-		{
-			public bool OnSampleMessage(SampleMessage message)
-			{
-				Assert.Pass("Ok!");
-				return true;
-			}
-		}
 		#region Constants and Fields
 
 		private readonly MessageRegistry messageRegistry = new MessageRegistry();
@@ -30,6 +15,8 @@ namespace Toe.Messaging.Tests
 		private readonly TypeRegistry typeRegistry = TypeRegistry.CreateDefault();
 
 		#endregion
+
+		#region Public Methods and Operators
 
 		[Test]
 		public void SampleMessageClassParam()
@@ -46,5 +33,23 @@ namespace Toe.Messaging.Tests
 			}
 		}
 
+		#endregion
+
+		public class SampleApiClass
+		{
+			#region Public Methods and Operators
+
+			public bool OnSampleMessage(SampleMessage message)
+			{
+				Assert.Pass("Ok!");
+				return true;
+			}
+
+			#endregion
+		}
+
+		public class SampleMessage : Message
+		{
+		}
 	}
 }

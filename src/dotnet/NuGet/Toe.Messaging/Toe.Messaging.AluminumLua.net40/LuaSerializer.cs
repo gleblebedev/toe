@@ -46,7 +46,9 @@ namespace Toe.Messaging.AluminumLua
 						table[key] = LuaObject.FromNumber(queue.ReadFloat(position + property.Offset));
 						break;
 					case PropertyType.String:
-						table[key] = LuaObject.FromString(Toe.CircularArrayQueue.ExtensionMethods.ReadStringContent(queue, position + queue.ReadInt32(position + property.Offset)));
+						table[key] =
+							LuaObject.FromString(
+								ExtensionMethods.ReadStringContent(queue, position + queue.ReadInt32(position + property.Offset)));
 						break;
 					default:
 						throw new NotImplementedException();
@@ -60,14 +62,13 @@ namespace Toe.Messaging.AluminumLua
 			var id = (int)luaObject[LuaObject.FromString("MessageId")].AsNumber();
 			var message = this.registry.GetDefinition(id);
 
-
 			var table = luaObject.AsTable();
 
 			int dynamicSize = 0;
 			int foundProperties = 0;
 			foreach (var property in message.Properties)
 			{
-				var serializer = luaTypeRegistry.GetSerializer(property.PropertyType);
+				var serializer = this.luaTypeRegistry.GetSerializer(property.PropertyType);
 				LuaObject propertyValue;
 				if (table.TryGetValue(LuaObject.FromString(property.Name), out propertyValue))
 				{

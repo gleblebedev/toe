@@ -133,8 +133,10 @@ namespace Toe.Messaging
 			Expression dynamicSizeEval = null;
 			foreach (var member in allMembers)
 			{
-                if (member.Serializer == null)
-                    throw new ArgumentException(string.Format("Can't serialize property {0}.{1} of type {2}", member.MemberInfo.DeclaringType.FullName, member.MemberInfo.Name, member.PropertyType));
+				if (member.Serializer == null)
+				{
+					throw new ArgumentException(string.Format("Can't serialize property {0}", member));
+				}
 				member.Offset = fixedSize;
 				fixedSize += member.Serializer.FixedSize;
 				Expression dynamicSize = member.Serializer.BuildDynamicSizeEvaluator(member, context);

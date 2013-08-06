@@ -58,12 +58,13 @@ namespace Toe.Messaging.Types
 
 		public Expression BuildDynamicSizeEvaluator(MessageMemberInfo member, BinarySerilizationContext context)
 		{
-			return 
+			return
 				Expression.RightShift(
-				Expression.Add(Expression.Constant(4),
-				Expression.Call(
-				((Func<string, int>)ExtensionMethods.GetByteCount).Method,
-				member.GetProperty(context.MessageParameter))), Expression.Constant(2));
+					Expression.Add(
+						Expression.Constant(4),
+						Expression.Call(
+							((Func<string, int>)ExtensionMethods.GetByteCount).Method, member.GetProperty(context.MessageParameter))),
+					Expression.Constant(2));
 		}
 
 		public void BuildSerializeExpression(MessageMemberInfo member, BinarySerilizationContext context)

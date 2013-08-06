@@ -41,6 +41,7 @@ namespace Toe.Messaging.Attributes
 			}
 			return Hash.Eval(t.Name);
 		}
+
 		public static int Get(MethodInfo methodInfo)
 		{
 			var a = (MessageIdAttribute)GetCustomAttribute(methodInfo, typeof(MessageIdAttribute));
@@ -54,6 +55,7 @@ namespace Toe.Messaging.Attributes
 			}
 			return Hash.Eval(methodInfo.Name);
 		}
+
 		#endregion
 	}
 }
