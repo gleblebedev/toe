@@ -15,7 +15,7 @@ namespace Toe.Messaging.Types
 
 		#region Public Methods and Operators
 
-		void BuildDeserializeExpression(MessageMemberInfo member, BinarySerilizationContext context);
+		Expression BuildDeserializeExpression(MessageMemberInfo member, BinarySerilizationContext context);
 
 		Expression BuildDynamicSizeEvaluator(MessageMemberInfo member, BinarySerilizationContext context);
 

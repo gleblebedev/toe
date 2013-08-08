@@ -5,6 +5,8 @@ using OpenTK;
 
 using Toe.Messaging.Types;
 
+using Vector3 = OpenTK.Vector3;
+
 namespace Toe.Messaging.OpenTK
 {
 	public class VectorXyzBinarySerializer : ITypeBinarySerializer
@@ -37,13 +39,8 @@ namespace Toe.Messaging.OpenTK
 
 		#region Public Methods and Operators
 
-		public void BuildDeserializeExpression(MessageMemberInfo member, BinarySerilizationContext context)
-		{
-			Expression expression = member.GetProperty(context.MessageParameter);
-
-			context.Code.Add(
-				Expression.Assign(
-					expression,
+		public Expression BuildDeserializeExpression(MessageMemberInfo member, BinarySerilizationContext context)
+		{return 
 					Expression.New(
 						typeof(Vector3).GetConstructor(new[] { typeof(float), typeof(float), typeof(float) }),
 						new Expression[]
@@ -60,7 +57,7 @@ namespace Toe.Messaging.OpenTK
 									context.QueueParameter,
 									MessageQueueMethods.ReadFloat,
 									Expression.Add(context.PositionParameter, Expression.Constant(member.Offset + 2))),
-							})));
+							});
 		}
 
 		public Expression BuildDynamicSizeEvaluator(MessageMemberInfo member, BinarySerilizationContext context)

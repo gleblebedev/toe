@@ -109,9 +109,13 @@
     <Compile Include="Types\BinarySerilizationContext.cs" />
     <Compile Include="Types\Int32BinarySerializer.cs" />
     <Compile Include="Types\ITypeBinarySerializer.cs" />
+    <Compile Include="Types\MathHelper.cs" />
+    <Compile Include="Types\Quaternion.cs" />
     <Compile Include="Types\SignleBinarySerializer.cs" />
     <Compile Include="Types\StringBinarySerializer.cs" />
     <Compile Include="Types\TypeRegistry.cs" />
+    <Compile Include="Types\Vector3.cs" />
+    <Compile Include="Types\Vector4.cs" />
     <Compile Include="Types\VectorXYZBinarySerializer.cs" />
     <Compile Include="WritableMessageDescription.cs" />
   </ItemGroup>

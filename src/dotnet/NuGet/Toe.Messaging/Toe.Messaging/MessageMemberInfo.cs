@@ -69,6 +69,14 @@ namespace Toe.Messaging
 
 		#region Public Properties
 
+		public ParameterInfo MethodParameter
+		{
+			get
+			{
+				return this.memberInfo as ParameterInfo;
+			}
+		}
+
 		public string Name
 		{
 			get

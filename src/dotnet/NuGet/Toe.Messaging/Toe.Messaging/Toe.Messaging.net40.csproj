@@ -50,6 +50,11 @@
     <Compile Include="MessageDispatcher.cs" />
     <Compile Include="ReadOnlyMessageDescription.cs" />
     <Compile Include="Registry.cs" />
+    <Compile Include="Types\MathHelper.cs" />
+    <Compile Include="Types\Quaternion.cs" />
+    <Compile Include="Types\Vector3.cs" />
+    <Compile Include="Types\Vector4.cs" />
+    <Compile Include="Types\VectorXYZBinarySerializer.cs" />
     <Compile Include="WritableMessageDescription.cs" />
     <Compile Include="Hash.cs" />
     <Compile Include="IMessageDescription.cs" />

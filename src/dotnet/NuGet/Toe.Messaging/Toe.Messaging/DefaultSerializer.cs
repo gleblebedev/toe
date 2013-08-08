@@ -107,7 +107,7 @@ namespace Toe.Messaging
 
 			foreach (var memberInfo in allMembers)
 			{
-				memberInfo.Serializer.BuildDeserializeExpression(memberInfo, context);
+				memberInfo.Serializer.BuildDeserilizationAndAssignment(memberInfo, context);
 			}
 			var body = Expression.Block(context.LocalVariables, context.Code);
 			var deserializeExpression = Expression.Lambda<Action<IMessageQueue, int, T>>(

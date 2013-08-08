@@ -3,6 +3,20 @@ using System.Linq.Expressions;
 
 namespace Toe.Messaging.Types
 {
+	public static class ExtensionMethods
+	{
+		#region Public Methods and Operators
+
+		public static void BuildDeserilizationAndAssignment(
+			this ITypeBinarySerializer binarySerializer, MessageMemberInfo member, BinarySerilizationContext context)
+		{
+			Expression expression = member.GetProperty(context.MessageParameter);
+			context.Code.Add(Expression.Assign(expression, binarySerializer.BuildDeserializeExpression(member, context)));
+		}
+
+		#endregion
+	}
+
 	public class Int32BinarySerializer : ITypeBinarySerializer
 	{
 		#region Constants and Fields
@@ -33,18 +47,15 @@ namespace Toe.Messaging.Types
 
 		#region Public Methods and Operators
 
-		public void BuildDeserializeExpression(MessageMemberInfo member, BinarySerilizationContext context)
+		public Expression BuildDeserializeExpression(MessageMemberInfo member, BinarySerilizationContext context)
 		{
-			Expression expression = member.GetProperty(context.MessageParameter);
-			context.Code.Add(
-				Expression.Assign(
-					expression,
-					Expression.Convert(
-						Expression.Call(
-							context.QueueParameter,
-							MessageQueueMethods.ReadInt32,
-							new Expression[] { Expression.Add(context.PositionParameter, Expression.Constant(member.Offset)) }),
-						member.Type)));
+			return
+				Expression.Convert(
+					Expression.Call(
+						context.QueueParameter,
+						MessageQueueMethods.ReadInt32,
+						new Expression[] { Expression.Add(context.PositionParameter, Expression.Constant(member.Offset)) }),
+					member.Type);
 		}
 
 		public Expression BuildDynamicSizeEvaluator(MessageMemberInfo member, BinarySerilizationContext context)

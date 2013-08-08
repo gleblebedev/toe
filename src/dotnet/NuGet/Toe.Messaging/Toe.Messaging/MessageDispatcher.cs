@@ -121,10 +121,19 @@ namespace Toe.Messaging
 				fixedSize += member.Serializer.FixedSize;
 				messageDefinition.DefineProperty(member.Name, member.PropertyType, member.Offset, member.Serializer.FixedSize);
 			}
-
+			BinarySerilizationContext context = new BinarySerilizationContext(
+				messageQueueParameter, null, positionParameter, null);
 			foreach (var methodParameter in methodParameters)
 			{
-				callArgs.Add(Expression.New(methodParameter.ParameterType));
+				if (methodParameter.ParameterType == typeof(IMessageQueue))
+				{
+					callArgs.Add(messageQueueParameter);
+				}
+				else
+				{
+					var property = all.First(x => x.MethodParameter == methodParameter);
+					callArgs.Add(property.Serializer.BuildDeserializeExpression(property, context));
+				}
 			}
 			var body = Expression.Call(apiParameter, methodInfo, callArgs);
 			return

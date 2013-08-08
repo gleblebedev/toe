@@ -35,25 +35,18 @@ namespace Toe.Messaging.Types
 
 		#region Public Methods and Operators
 
-		public void BuildDeserializeExpression(MessageMemberInfo member, BinarySerilizationContext context)
+		public Expression BuildDeserializeExpression(MessageMemberInfo member, BinarySerilizationContext context)
 		{
-			var body = Expression.Assign(
-				member.GetProperty(context.MessageParameter),
+			return
 				Expression.Call(
-					((Func<IMessageQueue, int, string>)ExtensionMethods.ReadStringContent).Method,
+					((Func<IMessageQueue, int, string>)CircularArrayQueue.ExtensionMethods.ReadStringContent).Method,
 					context.QueueParameter,
 					Expression.Add(
 						context.PositionParameter,
 						Expression.Call(
 							context.QueueParameter,
 							MessageQueueMethods.ReadInt32,
-							Expression.Add(Expression.Constant(member.Offset), context.PositionParameter)))));
-			context.Code.Add(
-				Expression.Call(
-					context.QueueParameter,
-					MessageQueueMethods.ReadInt32,
-					Expression.Add(Expression.Constant(member.Offset), context.PositionParameter)));
-			context.Code.Add(body);
+							Expression.Add(Expression.Constant(member.Offset), context.PositionParameter))));
 		}
 
 		public Expression BuildDynamicSizeEvaluator(MessageMemberInfo member, BinarySerilizationContext context)
@@ -63,7 +56,8 @@ namespace Toe.Messaging.Types
 					Expression.Add(
 						Expression.Constant(4),
 						Expression.Call(
-							((Func<string, int>)ExtensionMethods.GetByteCount).Method, member.GetProperty(context.MessageParameter))),
+							((Func<string, int>)CircularArrayQueue.ExtensionMethods.GetByteCount).Method,
+							member.GetProperty(context.MessageParameter))),
 					Expression.Constant(2));
 		}
 
@@ -79,7 +73,7 @@ namespace Toe.Messaging.Types
 				Expression.Assign(
 					context.DynamicPositionParameter,
 					Expression.Call(
-						((Func<IMessageQueue, int, string, int>)ExtensionMethods.WriteStringContent).Method,
+						((Func<IMessageQueue, int, string, int>)CircularArrayQueue.ExtensionMethods.WriteStringContent).Method,
 						context.QueueParameter,
 						context.DynamicPositionParameter,
 						member.GetProperty(context.MessageParameter))));

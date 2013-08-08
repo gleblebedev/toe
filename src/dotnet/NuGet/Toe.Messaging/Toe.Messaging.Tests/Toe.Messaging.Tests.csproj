@@ -59,6 +59,7 @@
     <Compile Include="TestDefaultSerializer.cs" />
     <Compile Include="TestMessageDispatcher.cs" />
     <Compile Include="TestMethodSerializer.cs" />
+    <Compile Include="TestStringSerilization.cs" />
     <Compile Include="TypeRegistryTests.cs" />
   </ItemGroup>
   <ItemGroup>

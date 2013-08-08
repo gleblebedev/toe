@@ -11,6 +11,8 @@ using Toe.CircularArrayQueue;
 using Toe.Messaging.AluminumLua;
 using Toe.Messaging.Types;
 
+using Vector3 = OpenTK.Vector3;
+
 namespace Toe.Messaging.OpenTK.Tests
 {
 	[TestFixture]
@@ -22,9 +24,7 @@ namespace Toe.Messaging.OpenTK.Tests
 		public void BinarySerilization()
 		{
 			var reg = new MessageRegistry();
-			var typeReg =
-				new TypeRegistry(new[] { TypeRegistry.StandartTypes, new[] { new VectorXyzBinarySerializer() } }.SelectMany(x => x));
-			var ser = new DefaultSerializer<SubMessage>(reg, typeReg);
+			var ser = new DefaultSerializer<SubMessage>(reg, new TypeRegistry( new[] { TypeRegistry.StandartTypes, new[] { new VectorXyzBinarySerializer() }}));
 
 			using (var buf = new ThreadSafeWriteQueue(1024))
 			{

@@ -1,8 +1,6 @@
 using System;
 using System.Linq.Expressions;
 
-using Microsoft.Xna.Framework;
-
 namespace Toe.Messaging.Types
 {
 	public class VectorXYZBinarySerializer : ITypeBinarySerializer
@@ -35,30 +33,25 @@ namespace Toe.Messaging.Types
 
 		#region Public Methods and Operators
 
-		public void BuildDeserializeExpression(MessageMemberInfo member, BinarySerilizationContext context)
+		public Expression BuildDeserializeExpression(MessageMemberInfo member, BinarySerilizationContext context)
 		{
-			Expression expression = member.GetProperty(context.MessageParameter);
-
-			context.Code.Add(
-				Expression.Assign(
-					expression,
-					Expression.New(
-						typeof(Vector3).GetConstructor(new[] { typeof(float), typeof(float), typeof(float) }),
-						new Expression[]
-							{
-								Expression.Call(
-									context.QueueParameter,
-									MessageQueueMethods.ReadFloat,
-									Expression.Add(context.PositionParameter, Expression.Constant(member.Offset))),
-								Expression.Call(
-									context.QueueParameter,
-									MessageQueueMethods.ReadFloat,
-									Expression.Add(context.PositionParameter, Expression.Constant(member.Offset + 1))),
-								Expression.Call(
-									context.QueueParameter,
-									MessageQueueMethods.ReadFloat,
-									Expression.Add(context.PositionParameter, Expression.Constant(member.Offset + 2))),
-							})));
+			return Expression.New(
+				typeof(Vector3).GetConstructor(new[] { typeof(float), typeof(float), typeof(float) }),
+				new Expression[]
+					{
+						Expression.Call(
+							context.QueueParameter,
+							MessageQueueMethods.ReadFloat,
+							Expression.Add(context.PositionParameter, Expression.Constant(member.Offset))),
+						Expression.Call(
+							context.QueueParameter,
+							MessageQueueMethods.ReadFloat,
+							Expression.Add(context.PositionParameter, Expression.Constant(member.Offset + 1))),
+						Expression.Call(
+							context.QueueParameter,
+							MessageQueueMethods.ReadFloat,
+							Expression.Add(context.PositionParameter, Expression.Constant(member.Offset + 2))),
+					});
 		}
 
 		public Expression BuildDynamicSizeEvaluator(MessageMemberInfo member, BinarySerilizationContext context)

@@ -33,18 +33,15 @@ namespace Toe.Messaging.Types
 
 		#region Public Methods and Operators
 
-		public void BuildDeserializeExpression(MessageMemberInfo member, BinarySerilizationContext context)
+		public Expression BuildDeserializeExpression(MessageMemberInfo member, BinarySerilizationContext context)
 		{
-			Expression expression = member.GetProperty(context.MessageParameter);
-			context.Code.Add(
-				Expression.Assign(
-					expression,
-					Expression.Convert(
-						Expression.Call(
-							context.QueueParameter,
-							MessageQueueMethods.ReadFloat,
-							Expression.Add(context.PositionParameter, Expression.Constant(member.Offset))),
-						member.Type)));
+			return
+				Expression.Convert(
+					Expression.Call(
+						context.QueueParameter,
+						MessageQueueMethods.ReadFloat,
+						Expression.Add(context.PositionParameter, Expression.Constant(member.Offset))),
+					member.Type);
 		}
 
 		public Expression BuildDynamicSizeEvaluator(MessageMemberInfo member, BinarySerilizationContext context)

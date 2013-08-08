@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Toe.Messaging.Types
 {
@@ -9,6 +10,11 @@ namespace Toe.Messaging.Types
 
 		public TypeRegistry(IEnumerable<ITypeBinarySerializer> typeBinarySerializers)
 			: base(typeBinarySerializers, x => x.PropertyType)
+		{
+		}
+
+		public TypeRegistry(IEnumerable<IEnumerable<ITypeBinarySerializer>> typeBinarySerializers)
+			: base(Merge(typeBinarySerializers), x => x.PropertyType)
 		{
 		}
 
@@ -23,9 +29,7 @@ namespace Toe.Messaging.Types
 				return new ITypeBinarySerializer[]
 					{
 						new Int32BinarySerializer(), new StringBinarySerializer(), new SignleBinarySerializer(),
-#if WINDOWS_PHONE
 						new VectorXYZBinarySerializer(),
-#endif
 					};
 			}
 		}
@@ -56,6 +60,25 @@ namespace Toe.Messaging.Types
 			}
 			v = PropertyType.Unknown;
 			return false;
+		}
+
+		#endregion
+
+		#region Methods
+
+		private static IEnumerable<ITypeBinarySerializer> Merge(
+			IEnumerable<IEnumerable<ITypeBinarySerializer>> typeBinarySerializers)
+		{
+			//TODO: Replace with sort with order preservation + unique()
+			Dictionary<int, ITypeBinarySerializer> map = new Dictionary<int, ITypeBinarySerializer>();
+			foreach (var typeBinarySerializer in typeBinarySerializers)
+			{
+				foreach (var binarySerializer in typeBinarySerializer)
+				{
+					map[binarySerializer.PropertyType] = binarySerializer;
+				}
+			}
+			return (from a in map select a.Value);
 		}
 
 		#endregion
