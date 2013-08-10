@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 
 namespace Toe.Messaging.Types
 {
-	public class BinarySerilizationContext
+	public class BinarySerializationContext
 	{
 		#region Constants and Fields
 
@@ -23,7 +23,7 @@ namespace Toe.Messaging.Types
 
 		#region Constructors and Destructors
 
-		public BinarySerilizationContext(
+		public BinarySerializationContext(
 			ParameterExpression queueParameter,
 			ParameterExpression messageParameter,
 			ParameterExpression positionParameter,

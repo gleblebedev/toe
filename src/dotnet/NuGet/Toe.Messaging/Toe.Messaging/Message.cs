@@ -16,7 +16,7 @@ namespace Toe.Messaging
 		/// Message type id.
 		/// The value should be equal to the Hash.Eval function result of message name.
 		/// </summary>
-		[PropertyType(PropertyType.Int32)]
+		[PropertyType(PropertyTypes.Int32)]
 		[PropertyOrder(int.MinValue)]
 		public int MessageId { get; set; }
 

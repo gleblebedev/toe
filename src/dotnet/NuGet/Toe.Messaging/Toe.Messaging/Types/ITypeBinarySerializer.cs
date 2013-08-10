@@ -15,11 +15,11 @@ namespace Toe.Messaging.Types
 
 		#region Public Methods and Operators
 
-		Expression BuildDeserializeExpression(MessageMemberInfo member, BinarySerilizationContext context);
+		Expression BuildDeserializeExpression(MessageMemberInfo member, BinarySerializationContext context);
 
-		Expression BuildDynamicSizeEvaluator(MessageMemberInfo member, BinarySerilizationContext context);
+		Expression BuildDynamicSizeEvaluator(MessageMemberInfo member, BinarySerializationContext context);
 
-		void BuildSerializeExpression(MessageMemberInfo member, BinarySerilizationContext context);
+		void BuildSerializeExpression(MessageMemberInfo member, BinarySerializationContext context);
 
 		bool CanHandleType(Type fieldType);
 

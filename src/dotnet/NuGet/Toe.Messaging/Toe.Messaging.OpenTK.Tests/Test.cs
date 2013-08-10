@@ -21,10 +21,10 @@ namespace Toe.Messaging.OpenTK.Tests
 		#region Public Methods and Operators
 
 		[Test]
-		public void BinarySerilization()
+		public void BinarySerialization()
 		{
 			var reg = new MessageRegistry();
-			var ser = new DefaultSerializer<SubMessage>(reg, new TypeRegistry( new[] { TypeRegistry.StandartTypes, new[] { new VectorXyzBinarySerializer() }}));
+			var ser = new DefaultSerializer<SubMessage>(reg, new TypeRegistry( new[] { TypeRegistry.StandartTypes, new[] { new VectorXYZBinarySerializer() }}));
 
 			using (var buf = new ThreadSafeWriteQueue(1024))
 			{
@@ -37,7 +37,7 @@ namespace Toe.Messaging.OpenTK.Tests
 		}
 
 		[Test]
-		public void LuaSerilization()
+		public void LuaSerialization()
 		{
 			var reg = new MessageRegistry();
 			var luaReg = new LuaTypeRegistry(new[] { LuaTypeRegistry.StandartTypes }.SelectMany(x => x));

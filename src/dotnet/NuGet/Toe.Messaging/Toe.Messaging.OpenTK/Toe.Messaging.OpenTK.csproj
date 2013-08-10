@@ -42,8 +42,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="VectorXyzBinarySerializer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QuaternionXYZWBinarySerializer.cs" />
+    <Compile Include="VectorXYBinarySerializer.cs" />
+    <Compile Include="VectorXYZBinarySerializer.cs" />
+    <Compile Include="VectorXYZWBinarySerializer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -35,7 +35,74 @@ namespace Toe.Messaging.Tests
 				Assert.IsTrue(string.IsNullOrEmpty(message.Text));
 			}
 		}
+		[Test]
+		public void TestVec3()
+		{
+			var r = new DefaultSerializer<SingleMessage<Vector3>>(this.messageRegistry, this.typeRegistry,3);
+			using (var buf = new ThreadSafeWriteQueue(1024))
+			{
+				var orig = new SingleMessage<Vector3> { MessageId = r.MessageId, A = new Vector3(1.1f, 2.2f, 3.3f) };
+				r.Serialize(buf, orig);
 
+				SingleMessage<Vector3> message = new SingleMessage<Vector3>();
+
+				r.Deserialize(buf, buf.ReadMessage(), message);
+				Assert.AreEqual(orig.MessageId, message.MessageId);
+				Assert.AreEqual(orig.A, message.A);
+			}
+			
+		}
+		[Test]
+		public void TestVec2()
+		{
+			var r = new DefaultSerializer<SingleMessage<Vector2>>(this.messageRegistry, this.typeRegistry,2);
+			using (var buf = new ThreadSafeWriteQueue(1024))
+			{
+				var orig = new SingleMessage<Vector2> { MessageId = r.MessageId, A = new Vector2(1.1f, 2.2f) };
+				r.Serialize(buf, orig);
+
+				SingleMessage<Vector2> message = new SingleMessage<Vector2>();
+
+				r.Deserialize(buf, buf.ReadMessage(), message);
+				Assert.AreEqual(orig.MessageId, message.MessageId);
+				Assert.AreEqual(orig.A, message.A);
+			}
+
+		}
+		[Test]
+		public void TestVec4()
+		{
+			var r = new DefaultSerializer<SingleMessage<Vector4>>(this.messageRegistry, this.typeRegistry,4);
+			using (var buf = new ThreadSafeWriteQueue(1024))
+			{
+				var orig = new SingleMessage<Vector4> { MessageId = r.MessageId, A = new Vector4(1.1f, 2.2f, 3.3f,( 4.4f)) };
+				r.Serialize(buf, orig);
+
+				SingleMessage<Vector4> message = new SingleMessage<Vector4>();
+
+				r.Deserialize(buf, buf.ReadMessage(), message);
+				Assert.AreEqual(orig.MessageId, message.MessageId);
+				Assert.AreEqual(orig.A, message.A);
+			}
+
+		}
+		[Test]
+		public void TestQuaternion()
+		{
+			var r = new DefaultSerializer<SingleMessage<Quaternion>>(this.messageRegistry, this.typeRegistry);
+			using (var buf = new ThreadSafeWriteQueue(1024))
+			{
+				var orig = new SingleMessage<Quaternion> { MessageId = r.MessageId, A = new Quaternion(1.1f, 2.2f, 3.3f, (4.4f)) };
+				r.Serialize(buf, orig);
+
+				SingleMessage<Quaternion> message = new SingleMessage<Quaternion>();
+
+				r.Deserialize(buf, buf.ReadMessage(), message);
+				Assert.AreEqual(orig.MessageId, message.MessageId);
+				Assert.AreEqual(orig.A, message.A);
+			}
+
+		}
 		[Test]
 		public void FourBytesString()
 		{

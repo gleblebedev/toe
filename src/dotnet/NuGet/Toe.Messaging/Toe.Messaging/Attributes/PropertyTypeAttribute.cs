@@ -52,7 +52,7 @@ namespace Toe.Messaging.Attributes
 			{
 				return GetDefaultType(fieldInfo.FieldType, typeRegistry);
 			}
-			return PropertyType.Unknown;
+			return PropertyTypes.Unknown;
 		}
 
 		#endregion
@@ -71,38 +71,38 @@ namespace Toe.Messaging.Attributes
 			}
 			if (fieldType == typeof(int))
 			{
-				return PropertyType.Int32;
+				return PropertyTypes.Int32;
 			}
 			if (fieldType == typeof(uint))
 			{
-				return PropertyType.Int32;
+				return PropertyTypes.Int32;
 			}
 
 			if (fieldType == typeof(byte))
 			{
-				return PropertyType.Int32;
+				return PropertyTypes.Int32;
 			}
 			if (fieldType == typeof(sbyte))
 			{
-				return PropertyType.Int32;
+				return PropertyTypes.Int32;
 			}
 
 			if (fieldType == typeof(ushort))
 			{
-				return PropertyType.Int32;
+				return PropertyTypes.Int32;
 			}
 			if (fieldType == typeof(short))
 			{
-				return PropertyType.Int32;
+				return PropertyTypes.Int32;
 			}
 
 			if (fieldType == typeof(float))
 			{
-				return PropertyType.Single;
+				return PropertyTypes.Single;
 			}
 			if (fieldType == typeof(string))
 			{
-				return PropertyType.String;
+				return PropertyTypes.String;
 			}
 			return 0;
 		}

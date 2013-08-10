@@ -42,6 +42,7 @@
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestSignleBuffer.cs" />
     <Compile Include="TestThreadSafe.cs" />
     <Compile Include="TestThreadUnsafe.cs" />
   </ItemGroup>

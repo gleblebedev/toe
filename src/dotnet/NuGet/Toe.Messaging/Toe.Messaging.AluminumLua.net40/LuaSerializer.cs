@@ -39,13 +39,13 @@ namespace Toe.Messaging.AluminumLua
 				var key = LuaObject.FromString(property.Name);
 				switch (property.PropertyType)
 				{
-					case PropertyType.Int32:
+					case PropertyTypes.Int32:
 						table[key] = LuaObject.FromNumber(queue.ReadInt32(position + property.Offset));
 						break;
-					case PropertyType.Single:
+					case PropertyTypes.Single:
 						table[key] = LuaObject.FromNumber(queue.ReadFloat(position + property.Offset));
 						break;
-					case PropertyType.String:
+					case PropertyTypes.String:
 						table[key] =
 							LuaObject.FromString(
 								ExtensionMethods.ReadStringContent(queue, position + queue.ReadInt32(position + property.Offset)));
@@ -94,13 +94,13 @@ namespace Toe.Messaging.AluminumLua
 				var property = message.GetPropertyById(propertyKey);
 				switch (property.PropertyType)
 				{
-					case PropertyType.Int32:
+					case PropertyTypes.Int32:
 						queue.WriteInt32(position + property.Offset, (int)keyValue.Value.AsNumber());
 						break;
-					case PropertyType.Single:
+					case PropertyTypes.Single:
 						queue.WriteFloat(position + property.Offset, (float)keyValue.Value.AsNumber());
 						break;
-					case PropertyType.String:
+					case PropertyTypes.String:
 						queue.WriteInt32(position + property.Offset, message.MinSize);
 						queue.WriteStringContent(position + message.MinSize, keyValue.Value.AsString());
 						break;

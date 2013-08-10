@@ -100,14 +100,14 @@ namespace Toe.Messaging
 			var dynamicPositionParameter = Expression.Parameter(typeof(int), "d");
 			var messageParameter = Expression.Parameter(typeof(T), "m");
 
-			var context = new BinarySerilizationContext(
+			var context = new BinarySerializationContext(
 				queueParameter, messageParameter, positionParameter, dynamicPositionParameter);
 
 			context.Code.Capacity = allMembers.Count + 8;
 
 			foreach (var memberInfo in allMembers)
 			{
-				memberInfo.Serializer.BuildDeserilizationAndAssignment(memberInfo, context);
+				memberInfo.Serializer.BuildDeSerializationAndAssignment(memberInfo, context);
 			}
 			var body = Expression.Block(context.LocalVariables, context.Code);
 			var deserializeExpression = Expression.Lambda<Action<IMessageQueue, int, T>>(
@@ -124,7 +124,7 @@ namespace Toe.Messaging
 			var dynamicPositionParameter = Expression.Parameter(typeof(int), "d");
 			var messageParameter = Expression.Parameter(typeof(T), "m");
 
-			var context = new BinarySerilizationContext(
+			var context = new BinarySerializationContext(
 				queueParameter, messageParameter, positionParameter, dynamicPositionParameter);
 			context.Code.Capacity = allMembers.Count + 8;
 			context.LocalVariables.Add(positionParameter);
@@ -191,10 +191,10 @@ namespace Toe.Messaging
 		{
 			var all =
 				t.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly).Select(
-					x => new MessageMemberInfo(x, this.typeRegistry)).Where(a => a.PropertyType != PropertyType.Unknown).ToList();
+					x => new MessageMemberInfo(x, this.typeRegistry)).Where(a => a.PropertyType != PropertyTypes.Unknown).ToList();
 			all.AddRange(
 				t.GetFields(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly).Select(
-					x => new MessageMemberInfo(x, this.typeRegistry)).Where(a => a.PropertyType != PropertyType.Unknown).ToList());
+					x => new MessageMemberInfo(x, this.typeRegistry)).Where(a => a.PropertyType != PropertyTypes.Unknown).ToList());
 			all.Sort(
 				(a, b) =>
 					{

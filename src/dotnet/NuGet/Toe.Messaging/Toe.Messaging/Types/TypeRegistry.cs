@@ -29,7 +29,8 @@ namespace Toe.Messaging.Types
 				return new ITypeBinarySerializer[]
 					{
 						new Int32BinarySerializer(), new StringBinarySerializer(), new SignleBinarySerializer(),
-						new VectorXYZBinarySerializer(),
+						new VectorXYBinarySerializer(), new VectorXYZBinarySerializer(), new VectorXYZWBinarySerializer(),
+						new QuaternionXYZWBinarySerializer(),
 					};
 			}
 		}
@@ -58,7 +59,7 @@ namespace Toe.Messaging.Types
 					return true;
 				}
 			}
-			v = PropertyType.Unknown;
+			v = PropertyTypes.Unknown;
 			return false;
 		}
 

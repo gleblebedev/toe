@@ -43,6 +43,7 @@
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="IMessageQueue.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SingleMessageBuffer.cs" />
     <Compile Include="ThreadSafeWriteQueue.cs" />
     <Compile Include="ThreadUnsafeQueue.cs" />
   </ItemGroup>

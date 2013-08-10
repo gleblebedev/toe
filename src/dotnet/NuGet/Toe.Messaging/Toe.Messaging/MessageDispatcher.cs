@@ -121,7 +121,7 @@ namespace Toe.Messaging
 				fixedSize += member.Serializer.FixedSize;
 				messageDefinition.DefineProperty(member.Name, member.PropertyType, member.Offset, member.Serializer.FixedSize);
 			}
-			BinarySerilizationContext context = new BinarySerilizationContext(
+			BinarySerializationContext context = new BinarySerializationContext(
 				messageQueueParameter, null, positionParameter, null);
 			foreach (var methodParameter in methodParameters)
 			{
@@ -176,8 +176,8 @@ namespace Toe.Messaging
 		private IEnumerable<MessageMemberInfo> GetTypeMembers(IEnumerable<ParameterInfo> t)
 		{
 			var all =
-				t.Select(x => new MessageMemberInfo(x, this.typeRegistry)).Where(a => a.PropertyType != PropertyType.Unknown).ToList
-					();
+				t.Select(x => new MessageMemberInfo(x, this.typeRegistry)).Where(a => a.PropertyType != PropertyTypes.Unknown).
+					ToList();
 			all.Sort(
 				(a, b) =>
 					{

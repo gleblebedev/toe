@@ -12,7 +12,7 @@ namespace Toe.Messaging.AluminumLua.Types
 		{
 			get
 			{
-				return Messaging.PropertyType.Single;
+				return Messaging.PropertyTypes.Single;
 			}
 		}
 

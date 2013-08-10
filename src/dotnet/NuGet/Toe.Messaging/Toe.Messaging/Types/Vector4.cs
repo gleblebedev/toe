@@ -101,17 +101,17 @@ namespace Toe.Messaging.Types
 			this.W = w;
 		}
 
-		///// <summary>
-		///// Constructs a new Vector4 from the given Vector2.
-		///// </summary>
-		///// <param name="v">The Vector2 to copy components from.</param>
-		//public Vector4(Vector2 v)
-		//{
-		//	this.X = v.X;
-		//	this.Y = v.Y;
-		//	this.Z = 0.0f;
-		//	this.W = 0.0f;
-		//}
+		/// <summary>
+		/// Constructs a new Vector4 from the given Vector2.
+		/// </summary>
+		/// <param name="v">The Vector2 to copy components from.</param>
+		public Vector4(Vector2 v)
+		{
+			this.X = v.X;
+			this.Y = v.Y;
+			this.Z = 0.0f;
+			this.W = 0.0f;
+		}
 
 		/// <summary>
 		/// Constructs a new Vector4 from the given Vector3.

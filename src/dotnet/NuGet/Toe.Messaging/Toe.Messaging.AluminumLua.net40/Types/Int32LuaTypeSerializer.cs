@@ -12,7 +12,7 @@ namespace Toe.Messaging.AluminumLua.Types
 		{
 			get
 			{
-				return Messaging.PropertyType.Int32;
+				return Messaging.PropertyTypes.Int32;
 			}
 		}
 

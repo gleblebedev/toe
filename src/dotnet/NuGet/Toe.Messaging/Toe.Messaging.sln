@@ -27,6 +27,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toe.Messaging.OpenTK", "Toe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toe.Messaging.OpenTK.Tests", "Toe.Messaging.OpenTK.Tests\Toe.Messaging.OpenTK.Tests.csproj", "{AD8E49C5-2749-41CE-BFA0-0E05DC961BD2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toe.CircularArrayQueue.Tests", "..\Toe.CirculArarrayQueue\Toe.CirculArarrayQueue.Tests\Toe.CircularArrayQueue.Tests.csproj", "{276F7381-C1D0-440B-9B60-3229804FB0F5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -193,6 +195,20 @@ Global
 		{AD8E49C5-2749-41CE-BFA0-0E05DC961BD2}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{AD8E49C5-2749-41CE-BFA0-0E05DC961BD2}.Release|Win32.ActiveCfg = Release|Any CPU
 		{AD8E49C5-2749-41CE-BFA0-0E05DC961BD2}.Release|x86.ActiveCfg = Release|Any CPU
+		{276F7381-C1D0-440B-9B60-3229804FB0F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{276F7381-C1D0-440B-9B60-3229804FB0F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{276F7381-C1D0-440B-9B60-3229804FB0F5}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{276F7381-C1D0-440B-9B60-3229804FB0F5}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{276F7381-C1D0-440B-9B60-3229804FB0F5}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{276F7381-C1D0-440B-9B60-3229804FB0F5}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{276F7381-C1D0-440B-9B60-3229804FB0F5}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{276F7381-C1D0-440B-9B60-3229804FB0F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{276F7381-C1D0-440B-9B60-3229804FB0F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{276F7381-C1D0-440B-9B60-3229804FB0F5}.Release|ARM.ActiveCfg = Release|Any CPU
+		{276F7381-C1D0-440B-9B60-3229804FB0F5}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{276F7381-C1D0-440B-9B60-3229804FB0F5}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{276F7381-C1D0-440B-9B60-3229804FB0F5}.Release|Win32.ActiveCfg = Release|Any CPU
+		{276F7381-C1D0-440B-9B60-3229804FB0F5}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -209,5 +225,6 @@ Global
 		{F4E9D25F-DDEF-44A7-B8CA-1CD4DF77D2E9} = {22AE5201-4526-4DA6-B138-BDE335BF5D40}
 		{AEE13E39-6448-450B-8646-B6B945D3736D} = {22AE5201-4526-4DA6-B138-BDE335BF5D40}
 		{EE421B0C-C954-4616-97CB-71F6DBC82E15} = {22AE5201-4526-4DA6-B138-BDE335BF5D40}
+		{276F7381-C1D0-440B-9B60-3229804FB0F5} = {22AE5201-4526-4DA6-B138-BDE335BF5D40}
 	EndGlobalSection
 EndGlobal

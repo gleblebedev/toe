@@ -25,7 +25,7 @@ namespace Toe.Messaging.Types
 		{
 			get
 			{
-				return Messaging.PropertyType.Single;
+				return PropertyTypes.Single;
 			}
 		}
 
@@ -33,7 +33,7 @@ namespace Toe.Messaging.Types
 
 		#region Public Methods and Operators
 
-		public Expression BuildDeserializeExpression(MessageMemberInfo member, BinarySerilizationContext context)
+		public Expression BuildDeserializeExpression(MessageMemberInfo member, BinarySerializationContext context)
 		{
 			return
 				Expression.Convert(
@@ -44,12 +44,12 @@ namespace Toe.Messaging.Types
 					member.Type);
 		}
 
-		public Expression BuildDynamicSizeEvaluator(MessageMemberInfo member, BinarySerilizationContext context)
+		public Expression BuildDynamicSizeEvaluator(MessageMemberInfo member, BinarySerializationContext context)
 		{
 			return null;
 		}
 
-		public void BuildSerializeExpression(MessageMemberInfo member, BinarySerilizationContext context)
+		public void BuildSerializeExpression(MessageMemberInfo member, BinarySerializationContext context)
 		{
 			context.Code.Add(
 				Expression.Call(

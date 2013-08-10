@@ -7,7 +7,7 @@ using Toe.CircularArrayQueue;
 namespace Toe.Messaging.Tests
 {
 	[TestFixture]
-	public class TestStringSerilization
+	public class TestStringSerialization
 	{
 		#region Public Methods and Operators
 

@@ -8,7 +8,7 @@ namespace Toe.Messaging.OpenTK.Tests
 	{
 		#region Public Properties
 
-		[PropertyType(PropertyType.VectorXYZ)]
+		[PropertyType(PropertyTypes.VectorXYZ)]
 		public Vector3 Vector3 { get; set; }
 
 		#endregion
