@@ -17,7 +17,7 @@ namespace SetNugetSpecVersion
 			if (args.Length > 0) versionText = args[0];
 			foreach (var file in Directory.GetFiles(Directory.GetCurrentDirectory(),"Toe.*.nuspec", SearchOption.AllDirectories))
 			{
-				if (Path.GetFileName(Path.GetDirectoryName(file)) == "nuget")
+				//if (Path.GetFileName(Path.GetDirectoryName(file)) == "nuget")
 				{
 					FixFile(file);
 				}

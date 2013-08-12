@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>Toe.Messaging</id>
+    <version>1.0.0.5</version>
+    <title>Tiny Open Engine Messaging</title>
+    <authors>gleblebedev</authors>
+    <owners>gleblebedev</owners>
+    <projectUrl>https://github.com/gleblebedev/toe.messaging</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Messaging via circular array queue.</description>
+    <releaseNotes />
+    <copyright>Copyright 2013 Gleb Lebedev</copyright>
+    <tags>Toe</tags>
+    <dependencies>
+      <dependency id="Toe.CirculArarrayQueue" version="1.0.0.5" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="lib\net40\Toe.Messaging.dll" target="lib\net40" />
+    <file src="lib\net40\Toe.Messaging.pdb" target="lib\net40" />
+    <file src="lib\net40\Toe.Messaging.xml" target="lib\net40" />
+    <file src="lib\wp8\Toe.Messaging.dll" target="lib\wp8" />
+    <file src="lib\wp8\Toe.Messaging.pdb" target="lib\wp8" />
+    <file src="lib\wp8\Toe.Messaging.xml" target="lib\wp8" />
+  </files>
+</package>
