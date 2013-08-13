@@ -8,7 +8,7 @@ namespace Toe.Scene
 		private SceneGraphRange[] ranges;
 
 		private Entity[] entities;
-		SceneGraph(IEnumerable<int> ranges)
+		public SceneGraph(IEnumerable<int> ranges)
 		{
 			this.ranges = new SceneGraphRange[ranges.Count()];
 			this.entities = new Entity[ranges.Sum() + 1];
