@@ -53,6 +53,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toe.WebView.win8", "Toe.Web
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toe.WebView.wp71", "Toe.WebView\Toe.WebView.wp71.csproj", "{1A79B203-C7F4-4A5A-B236-FB4397D5BF38}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toe.CircularArrayQueue.Tests", "Toe.CirculArarrayQueue.Tests\Toe.CircularArrayQueue.Tests.csproj", "{276F7381-C1D0-440B-9B60-3229804FB0F5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
