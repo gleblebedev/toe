@@ -1,0 +1,294 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Toe.CircularArrayQueue</name>
+    </assembly>
+    <members>
+        <member name="T:Toe.CircularArrayQueue.BufferItem">
+            <summary>
+            Array item.
+            </summary>
+        </member>
+        <member name="M:Toe.CircularArrayQueue.BufferItem.Equals(Toe.CircularArrayQueue.BufferItem)">
+            <summary>
+            Indicates whether this instance and a specified object are equal.
+            </summary>
+        </member>
+        <member name="M:Toe.CircularArrayQueue.BufferItem.Equals(System.Object)">
+            <summary>
+            Indicates whether this instance and a specified object are equal.
+            </summary>
+            <returns>
+            true if <paramref name="obj"/> and this instance are the same type and represent the same value; otherwise, false.
+            </returns>
+            <param name="obj">Another object to compare to. </param><filterpriority>2</filterpriority>
+        </member>
+        <member name="M:Toe.CircularArrayQueue.BufferItem.GetHashCode">
+            <summary>
+            Returns the hash code for this instance.
+            </summary>
+            <returns>
+            A 32-bit signed integer that is the hash code for this instance.
+            </returns>
+            <filterpriority>2</filterpriority>
+        </member>
+        <member name="M:Toe.CircularArrayQueue.BufferItem.op_Equality(Toe.CircularArrayQueue.BufferItem,Toe.CircularArrayQueue.BufferItem)">
+            <summary>
+            Indicates whether instancies are equal.
+            </summary>
+        </member>
+        <member name="M:Toe.CircularArrayQueue.BufferItem.op_Inequality(Toe.CircularArrayQueue.BufferItem,Toe.CircularArrayQueue.BufferItem)">
+            <summary>
+            Indicates whether instancies are not equal.
+            </summary>
+        </member>
+        <member name="F:Toe.CircularArrayQueue.BufferItem.Int32">
+            <summary>
+            Integer representation of underlaying data.
+            </summary>
+        </member>
+        <member name="F:Toe.CircularArrayQueue.BufferItem.Single">
+            <summary>
+            Float representation of underlaying data.
+            </summary>
+        </member>
+        <member name="F:Toe.CircularArrayQueue.BufferItem.Byte0">
+            <summary>
+            First byte of underlaying data.
+            </summary>
+        </member>
+        <member name="F:Toe.CircularArrayQueue.BufferItem.Byte1">
+            <summary>
+            Second byte of underlaying data.
+            </summary>
+        </member>
+        <member name="F:Toe.CircularArrayQueue.BufferItem.Byte2">
+            <summary>
+            Third byte of underlaying data.
+            </summary>
+        </member>
+        <member name="F:Toe.CircularArrayQueue.BufferItem.Byte3">
+            <summary>
+            Forth byte of underlaying data.
+            </summary>
+        </member>
+        <member name="M:Toe.CircularArrayQueue.BufferItem.ToString">
+            <summary>
+            Returns the fully qualified type name of this instance.
+            </summary>
+            <returns>
+            A <see cref="T:System.String"/> containing a fully qualified type name.
+            </returns>
+            <filterpriority>2</filterpriority>
+        </member>
+        <member name="T:Toe.CircularArrayQueue.ExtensionMethods">
+            <summary>
+            Extension methods for IMessageQueue.
+            </summary>
+        </member>
+        <member name="M:Toe.CircularArrayQueue.ExtensionMethods.CopyTo(Toe.CircularArrayQueue.IMessageQueue,System.Int32,Toe.CircularArrayQueue.IMessageQueue)">
+            <summary>
+            Copy message to other message queue.
+            </summary>
+            <param name="messageQueue">Soutce queue.</param>
+            <param name="position">Position at source queue. Should be valid postion returned by   messageQueue.ReadMessage()</param>
+            <param name="destinationQueue">Destination queue.</param>
+        </member>
+        <member name="T:Toe.CircularArrayQueue.IMessageQueue">
+            <summary>
+            Message queue interface.
+            </summary>
+        </member>
+        <member name="M:Toe.CircularArrayQueue.IMessageQueue.Allocate(System.Int32)">
+            <summary>
+            Allocate buffer range for message data.
+            </summary>
+            <param name="numDWords">Number of 4-byte double words in the message.</param>
+            <returns>Position where range is allocated.</returns>
+        </member>
+        <member name="M:Toe.CircularArrayQueue.IMessageQueue.Commit(System.Int32)">
+            <summary>
+            Mark chunk as complete and ready to be readed.
+            </summary>
+            <param name="position">Position of the chunk, previously returned by Allocate.</param>
+        </member>
+        <member name="M:Toe.CircularArrayQueue.IMessageQueue.Flush">
+            <summary>
+            Causes any buffered data to be written to the underlying device (network, etc).
+            </summary>
+        </member>
+        <member name="M:Toe.CircularArrayQueue.IMessageQueue.GetSize(System.Int32)">
+            <summary>
+            Gets size of the chunk at position.
+            </summary>
+            <param name="position">Position of the chunk, previously returned by Allocate.</param>
+        </member>
+        <member name="M:Toe.CircularArrayQueue.IMessageQueue.ReadFloat(System.Int32)">
+            <summary>
+            Read 4 byte floating point value at position.
+            </summary>
+            <param name="position">Absolute position to read.</param>
+            <returns>Floating point value.</returns>
+        </member>
+        <member name="M:Toe.CircularArrayQueue.IMessageQueue.ReadInt32(System.Int32)">
+            <summary>
+            Read 4 byte integer value at position.
+            </summary>
+            <param name="position">Absolute position to read.</param>
+            <returns>Integer value value.</returns>
+        </member>
+        <member name="M:Toe.CircularArrayQueue.IMessageQueue.ReadMessage">
+            <summary>
+            Read position of a next available chunk.
+            </summary>
+            <returns>Position at the queue buffer or -1 if there are no messages available.</returns>
+        </member>
+        <member name="M:Toe.CircularArrayQueue.IMessageQueue.WriteFloat(System.Int32,System.Single)">
+            <summary>
+            Write 4 byte floating point value at absolute position.
+            </summary>
+            <param name="position">Absolute position to write at.</param>
+            <param name="value">4 byte floating point value to write.</param>
+        </member>
+        <member name="M:Toe.CircularArrayQueue.IMessageQueue.WriteInt32(System.Int32,System.Int32)">
+            <summary>
+            Write 4 byte integer value at absolute position.
+            </summary>
+            <param name="position">Absolute position to write at.</param>
+            <param name="value">4 byte integer value to write.</param>
+        </member>
+        <member name="T:Toe.CircularArrayQueue.ThreadSafeWriteQueue">
+            <summary>
+            Message queue implementation with thread safe allocations.
+            </summary>
+        </member>
+        <member name="M:Toe.CircularArrayQueue.ThreadSafeWriteQueue.Allocate(System.Int32)">
+            <summary>
+            Allocate buffer range for message data.
+            </summary>
+            <param name="numDWords">Number of 4-byte double words in the message.</param>
+            <returns>Position where range is allocated.</returns>
+        </member>
+        <member name="M:Toe.CircularArrayQueue.ThreadSafeWriteQueue.Commit(System.Int32)">
+            <summary>
+            Mark chunk as complete and ready to be readed.
+            </summary>
+            <param name="position">Position of the chunk, previously returned by Allocate.</param>
+        </member>
+        <member name="M:Toe.CircularArrayQueue.ThreadSafeWriteQueue.Dispose">
+            <summary>
+            Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+            </summary>
+            <filterpriority>2</filterpriority>
+        </member>
+        <member name="M:Toe.CircularArrayQueue.ThreadSafeWriteQueue.Flush">
+            <summary>
+            Causes any buffered data to be written to the underlying device (network, etc).
+            </summary>
+        </member>
+        <member name="M:Toe.CircularArrayQueue.ThreadSafeWriteQueue.GetSize(System.Int32)">
+            <summary>
+            Gets size of the chunk at position.
+            </summary>
+            <param name="position">Position of the chunk, previously returned by Allocate.</param>
+        </member>
+        <member name="M:Toe.CircularArrayQueue.ThreadSafeWriteQueue.ReadFloat(System.Int32)">
+            <summary>
+            Read 4 byte floating point value at position.
+            </summary>
+            <param name="position">Absolute position to read.</param>
+            <returns>Floating point value.</returns>
+        </member>
+        <member name="M:Toe.CircularArrayQueue.ThreadSafeWriteQueue.ReadInt32(System.Int32)">
+            <summary>
+            Read 4 byte integer value at position.
+            </summary>
+            <param name="position">Absolute position to read.</param>
+            <returns>Integer value value.</returns>
+        </member>
+        <member name="M:Toe.CircularArrayQueue.ThreadSafeWriteQueue.ReadMessage">
+            <summary>
+            Read position of a next available chunk.
+            </summary>
+            <returns>Integer value value.</returns>
+        </member>
+        <member name="M:Toe.CircularArrayQueue.ThreadSafeWriteQueue.WriteFloat(System.Int32,System.Single)">
+            <summary>
+            Write 4 byte floating point value at absolute position.
+            </summary>
+            <param name="position">Absolute position to write at.</param>
+            <param name="value">4 byte floating point value to write.</param>
+        </member>
+        <member name="M:Toe.CircularArrayQueue.ThreadSafeWriteQueue.WriteInt32(System.Int32,System.Int32)">
+            <summary>
+            Write 4 byte integer value at absolute position.
+            </summary>
+            <param name="position">Absolute position to write at.</param>
+            <param name="value">4 byte integer value to write.</param>
+        </member>
+        <member name="M:Toe.CircularArrayQueue.ThreadUnsafeQueue.Allocate(System.Int32)">
+            <summary>
+            Allocate buffer range for message data.
+            </summary>
+            <param name="numDWords">Number of 4-byte double words in the message.</param>
+            <returns>Position where range is allocated.</returns>
+        </member>
+        <member name="M:Toe.CircularArrayQueue.ThreadUnsafeQueue.Commit(System.Int32)">
+            <summary>
+            Mark chunk as complete and ready to be readed.
+            </summary>
+            <param name="position">Position of the chunk, previously returned by Allocate.</param>
+        </member>
+        <member name="M:Toe.CircularArrayQueue.ThreadUnsafeQueue.Dispose">
+            <summary>
+            Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+            </summary>
+            <filterpriority>2</filterpriority>
+        </member>
+        <member name="M:Toe.CircularArrayQueue.ThreadUnsafeQueue.Flush">
+            <summary>
+            Causes any buffered data to be written to the underlying device (network, etc).
+            </summary>
+        </member>
+        <member name="M:Toe.CircularArrayQueue.ThreadUnsafeQueue.GetSize(System.Int32)">
+            <summary>
+            Gets size of the chunk at position.
+            </summary>
+            <param name="position">Position of the chunk, previously returned by Allocate.</param>
+        </member>
+        <member name="M:Toe.CircularArrayQueue.ThreadUnsafeQueue.ReadFloat(System.Int32)">
+            <summary>
+            Read 4 byte floating point value at position.
+            </summary>
+            <param name="position">Absolute position to read.</param>
+            <returns>Floating point value.</returns>
+        </member>
+        <member name="M:Toe.CircularArrayQueue.ThreadUnsafeQueue.ReadInt32(System.Int32)">
+            <summary>
+            Read 4 byte integer value at position.
+            </summary>
+            <param name="position">Absolute position to read.</param>
+            <returns>Integer value value.</returns>
+        </member>
+        <member name="M:Toe.CircularArrayQueue.ThreadUnsafeQueue.ReadMessage">
+            <summary>
+            Read position of a next available chunk.
+            </summary>
+            <returns>Integer value value.</returns>
+        </member>
+        <member name="M:Toe.CircularArrayQueue.ThreadUnsafeQueue.WriteFloat(System.Int32,System.Single)">
+            <summary>
+            Write 4 byte floating point value at absolute position.
+            </summary>
+            <param name="position">Absolute position to write at.</param>
+            <param name="value">4 byte floating point value to write.</param>
+        </member>
+        <member name="M:Toe.CircularArrayQueue.ThreadUnsafeQueue.WriteInt32(System.Int32,System.Int32)">
+            <summary>
+            Write 4 byte integer value at absolute position.
+            </summary>
+            <param name="position">Absolute position to write at.</param>
+            <param name="value">4 byte integer value to write.</param>
+        </member>
+    </members>
+</doc>

@@ -97,6 +97,15 @@
       <Project>{7a23bbfc-5c21-46c3-9674-c017354efdcd}</Project>
       <Name>Toe.CircularArrayQueue.sl5</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Toe.Scene\Toe.Scene.sl5.csproj">
+      <Project>{EAB8A20F-FA40-44A8-9F58-1B8837C50638}</Project>
+      <Name>Toe.Scene.sl5</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="..\..\..\..\testcontent\rgbtest.png">
+      <Link>rgbtest.png</Link>
+    </Resource>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Silverlight\$(SilverlightVersion)\Microsoft.Silverlight.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

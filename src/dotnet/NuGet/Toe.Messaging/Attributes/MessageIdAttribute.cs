@@ -3,6 +3,7 @@ using System.Reflection;
 
 namespace Toe.Messaging.Attributes
 {
+	[CLSCompliant(true)]
 	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
 	public class MessageIdAttribute : Attribute
 	{

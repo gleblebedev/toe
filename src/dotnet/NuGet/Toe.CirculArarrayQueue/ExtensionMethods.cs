@@ -28,6 +28,11 @@ namespace Toe.CircularArrayQueue
 			destinationQueue.Commit(len);
 		}
 
+		/// <summary>
+		/// Calculates the number of bytes produced by encoding the characters in the specified <see cref="T:System.String"/>.
+		/// </summary>
+		/// <param name="str">The <see cref="T:System.String"/> containing the set of characters to encode.</param>
+		/// <returns>The number of bytes produced by encoding the specified characters.</returns>
 		public static int GetByteCount(string str)
 		{
 			if (string.IsNullOrEmpty(str))
@@ -49,7 +54,7 @@ namespace Toe.CircularArrayQueue
 				{
 					length += 2;
 				}
-				else if (currentChar < 0x10000)
+				else if (currentChar <= 0x0FFFF)
 				{
 					length += 3;
 				}
@@ -68,7 +73,11 @@ namespace Toe.CircularArrayQueue
 			}
 			return length;
 		}
-
+		/// <summary>
+		/// Calculates the number of 32-bit integers produced by encoding the characters in the specified <see cref="T:System.String"/>.
+		/// </summary>
+		/// <param name="text">The <see cref="T:System.String"/> containing the set of characters to encode.</param>
+		/// <returns>The number of 32-bit integers produced by encoding the specified characters.</returns>
 		public static int GetStringLength(this IMessageQueue messageQueue, string text)
 		{
 			if (string.IsNullOrEmpty(text))

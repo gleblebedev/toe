@@ -7,6 +7,12 @@
     d:DesignHeight="300" d:DesignWidth="400">
 
     <Grid x:Name="LayoutRoot" Background="White">
-
+        <Canvas>
+            <Image Canvas.Left="164" Canvas.Top="64" Source="rgbtest.png">
+                <Image.RenderTransform>
+                    <TranslateTransform Y="-64"  X="-64"></TranslateTransform>
+                </Image.RenderTransform>
+            </Image>
+        </Canvas>
     </Grid>
 </UserControl>

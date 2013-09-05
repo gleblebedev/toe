@@ -1,0 +1,1806 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Toe.Messaging</name>
+    </assembly>
+    <members>
+        <member name="T:Toe.Messaging.Message">
+            <summary>
+            Base message container.
+            </summary>
+        </member>
+        <member name="P:Toe.Messaging.Message.MessageId">
+            <summary>
+            Message type id.
+            The value should be equal to the Hash.Eval function result of message name.
+            </summary>
+        </member>
+        <member name="M:Toe.Messaging.PropertyDescription.Equals(System.Object)">
+            <summary>
+            Determines whether the specified <see cref="T:System.Object"/> is equal to the current <see cref="T:System.Object"/>.
+            </summary>
+            <returns>
+            true if the specified <see cref="T:System.Object"/> is equal to the current <see cref="T:System.Object"/>; otherwise, false.
+            </returns>
+            <param name="obj">The <see cref="T:System.Object"/> to compare with the current <see cref="T:System.Object"/>. </param><filterpriority>2</filterpriority>
+        </member>
+        <member name="M:Toe.Messaging.PropertyDescription.GetHashCode">
+            <summary>
+            Serves as a hash function for a particular type. 
+            </summary>
+            <returns>
+            A hash code for the current <see cref="T:System.Object"/>.
+            </returns>
+            <filterpriority>2</filterpriority>
+        </member>
+        <member name="T:Toe.Messaging.SerializerCollection">
+            <summary>
+            Map of objects binded to messages
+            </summary>
+        </member>
+        <member name="T:Toe.Messaging.Types.Quaternion">
+            <summary>
+            Represents a Quaternion.
+            </summary>
+        </member>
+        <member name="M:Toe.Messaging.Types.Quaternion.#ctor(Toe.Messaging.Types.Vector3,System.Single)">
+            <summary>
+            Construct a new Quaternion from vector and w components
+            </summary>
+            <param name="v">The vector part</param>
+            <param name="w">The w part</param>
+        </member>
+        <member name="M:Toe.Messaging.Types.Quaternion.#ctor(System.Single,System.Single,System.Single,System.Single)">
+            <summary>
+            Construct a new Quaternion
+            </summary>
+            <param name="x">The x component</param>
+            <param name="y">The y component</param>
+            <param name="z">The z component</param>
+            <param name="w">The w component</param>
+        </member>
+        <member name="M:Toe.Messaging.Types.Quaternion.ToAxisAngle(Toe.Messaging.Types.Vector3@,System.Single@)">
+            <summary>
+            Convert the current quaternion to axis angle representation
+            </summary>
+            <param name="axis">The resultant axis</param>
+            <param name="angle">The resultant angle</param>
+        </member>
+        <member name="M:Toe.Messaging.Types.Quaternion.ToAxisAngle">
+            <summary>
+            Convert this instance to an axis-angle representation.
+            </summary>
+            <returns>A Vector4 that is the axis-angle representation of this quaternion.</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Quaternion.Normalize">
+            <summary>
+            Scales the Quaternion to unit length.
+            </summary>
+        </member>
+        <member name="M:Toe.Messaging.Types.Quaternion.Conjugate">
+            <summary>
+            Convert this quaternion to its conjugate
+            </summary>
+        </member>
+        <member name="F:Toe.Messaging.Types.Quaternion.Identity">
+            <summary>
+            Defines the identity quaternion.
+            </summary>
+        </member>
+        <member name="M:Toe.Messaging.Types.Quaternion.Add(Toe.Messaging.Types.Quaternion,Toe.Messaging.Types.Quaternion)">
+            <summary>
+            Add two quaternions
+            </summary>
+            <param name="left">The first operand</param>
+            <param name="right">The second operand</param>
+            <returns>The result of the addition</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Quaternion.Add(Toe.Messaging.Types.Quaternion@,Toe.Messaging.Types.Quaternion@,Toe.Messaging.Types.Quaternion@)">
+            <summary>
+            Add two quaternions
+            </summary>
+            <param name="left">The first operand</param>
+            <param name="right">The second operand</param>
+            <param name="result">The result of the addition</param>
+        </member>
+        <member name="M:Toe.Messaging.Types.Quaternion.Sub(Toe.Messaging.Types.Quaternion,Toe.Messaging.Types.Quaternion)">
+            <summary>
+            Subtracts two instances.
+            </summary>
+            <param name="left">The left instance.</param>
+            <param name="right">The right instance.</param>
+            <returns>The result of the operation.</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Quaternion.Sub(Toe.Messaging.Types.Quaternion@,Toe.Messaging.Types.Quaternion@,Toe.Messaging.Types.Quaternion@)">
+            <summary>
+            Subtracts two instances.
+            </summary>
+            <param name="left">The left instance.</param>
+            <param name="right">The right instance.</param>
+            <param name="result">The result of the operation.</param>
+        </member>
+        <member name="M:Toe.Messaging.Types.Quaternion.Multiply(Toe.Messaging.Types.Quaternion,Toe.Messaging.Types.Quaternion)">
+            <summary>
+            Multiplies two instances.
+            </summary>
+            <param name="left">The first instance.</param>
+            <param name="right">The second instance.</param>
+            <returns>A new instance containing the result of the calculation.</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Quaternion.Multiply(Toe.Messaging.Types.Quaternion@,Toe.Messaging.Types.Quaternion@,Toe.Messaging.Types.Quaternion@)">
+            <summary>
+            Multiplies two instances.
+            </summary>
+            <param name="left">The first instance.</param>
+            <param name="right">The second instance.</param>
+            <param name="result">A new instance containing the result of the calculation.</param>
+        </member>
+        <member name="M:Toe.Messaging.Types.Quaternion.Multiply(Toe.Messaging.Types.Quaternion@,System.Single,Toe.Messaging.Types.Quaternion@)">
+            <summary>
+            Multiplies an instance by a scalar.
+            </summary>
+            <param name="quaternion">The instance.</param>
+            <param name="scale">The scalar.</param>
+            <param name="result">A new instance containing the result of the calculation.</param>
+        </member>
+        <member name="M:Toe.Messaging.Types.Quaternion.Multiply(Toe.Messaging.Types.Quaternion,System.Single)">
+            <summary>
+            Multiplies an instance by a scalar.
+            </summary>
+            <param name="quaternion">The instance.</param>
+            <param name="scale">The scalar.</param>
+            <returns>A new instance containing the result of the calculation.</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Quaternion.Conjugate(Toe.Messaging.Types.Quaternion)">
+            <summary>
+            Get the conjugate of the given quaternion
+            </summary>
+            <param name="q">The quaternion</param>
+            <returns>The conjugate of the given quaternion</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Quaternion.Conjugate(Toe.Messaging.Types.Quaternion@,Toe.Messaging.Types.Quaternion@)">
+            <summary>
+            Get the conjugate of the given quaternion
+            </summary>
+            <param name="q">The quaternion</param>
+            <param name="result">The conjugate of the given quaternion</param>
+        </member>
+        <member name="M:Toe.Messaging.Types.Quaternion.Invert(Toe.Messaging.Types.Quaternion)">
+            <summary>
+            Get the inverse of the given quaternion
+            </summary>
+            <param name="q">The quaternion to invert</param>
+            <returns>The inverse of the given quaternion</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Quaternion.Invert(Toe.Messaging.Types.Quaternion@,Toe.Messaging.Types.Quaternion@)">
+            <summary>
+            Get the inverse of the given quaternion
+            </summary>
+            <param name="q">The quaternion to invert</param>
+            <param name="result">The inverse of the given quaternion</param>
+        </member>
+        <member name="M:Toe.Messaging.Types.Quaternion.Normalize(Toe.Messaging.Types.Quaternion)">
+            <summary>
+            Scale the given quaternion to unit length
+            </summary>
+            <param name="q">The quaternion to normalize</param>
+            <returns>The normalized quaternion</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Quaternion.Normalize(Toe.Messaging.Types.Quaternion@,Toe.Messaging.Types.Quaternion@)">
+            <summary>
+            Scale the given quaternion to unit length
+            </summary>
+            <param name="q">The quaternion to normalize</param>
+            <param name="result">The normalized quaternion</param>
+        </member>
+        <member name="M:Toe.Messaging.Types.Quaternion.FromAxisAngle(Toe.Messaging.Types.Vector3,System.Single)">
+            <summary>
+            Build a quaternion from the given axis and angle
+            </summary>
+            <param name="axis">The axis to rotate about</param>
+            <param name="angle">The rotation angle in radians</param>
+            <returns></returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Quaternion.Slerp(Toe.Messaging.Types.Quaternion,Toe.Messaging.Types.Quaternion,System.Single)">
+            <summary>
+            Do Spherical linear interpolation between two quaternions 
+            </summary>
+            <param name="q1">The first quaternion</param>
+            <param name="q2">The second quaternion</param>
+            <param name="blend">The blend factor</param>
+            <returns>A smooth blend between the given quaternions</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Quaternion.op_Addition(Toe.Messaging.Types.Quaternion,Toe.Messaging.Types.Quaternion)">
+            <summary>
+            Adds two instances.
+            </summary>
+            <param name="left">The first instance.</param>
+            <param name="right">The second instance.</param>
+            <returns>The result of the calculation.</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Quaternion.op_Subtraction(Toe.Messaging.Types.Quaternion,Toe.Messaging.Types.Quaternion)">
+            <summary>
+            Subtracts two instances.
+            </summary>
+            <param name="left">The first instance.</param>
+            <param name="right">The second instance.</param>
+            <returns>The result of the calculation.</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Quaternion.op_Multiply(Toe.Messaging.Types.Quaternion,Toe.Messaging.Types.Quaternion)">
+            <summary>
+            Multiplies two instances.
+            </summary>
+            <param name="left">The first instance.</param>
+            <param name="right">The second instance.</param>
+            <returns>The result of the calculation.</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Quaternion.op_Multiply(Toe.Messaging.Types.Quaternion,System.Single)">
+            <summary>
+            Multiplies an instance by a scalar.
+            </summary>
+            <param name="quaternion">The instance.</param>
+            <param name="scale">The scalar.</param>
+            <returns>A new instance containing the result of the calculation.</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Quaternion.op_Multiply(System.Single,Toe.Messaging.Types.Quaternion)">
+            <summary>
+            Multiplies an instance by a scalar.
+            </summary>
+            <param name="quaternion">The instance.</param>
+            <param name="scale">The scalar.</param>
+            <returns>A new instance containing the result of the calculation.</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Quaternion.op_Equality(Toe.Messaging.Types.Quaternion,Toe.Messaging.Types.Quaternion)">
+            <summary>
+            Compares two instances for equality.
+            </summary>
+            <param name="left">The first instance.</param>
+            <param name="right">The second instance.</param>
+            <returns>True, if left equals right; false otherwise.</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Quaternion.op_Inequality(Toe.Messaging.Types.Quaternion,Toe.Messaging.Types.Quaternion)">
+            <summary>
+            Compares two instances for inequality.
+            </summary>
+            <param name="left">The first instance.</param>
+            <param name="right">The second instance.</param>
+            <returns>True, if left does not equal right; false otherwise.</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Quaternion.ToString">
+            <summary>
+            Returns a System.String that represents the current Quaternion.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Quaternion.Equals(System.Object)">
+            <summary>
+            Compares this object instance to another object for equality. 
+            </summary>
+            <param name="other">The other object to be used in the comparison.</param>
+            <returns>True if both objects are Quaternions of equal value. Otherwise it returns false.</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Quaternion.GetHashCode">
+            <summary>
+            Provides the hash code for this object. 
+            </summary>
+            <returns>A hash code formed from the bitwise XOR of this objects members.</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Quaternion.Equals(Toe.Messaging.Types.Quaternion)">
+            <summary>
+            Compares this Quaternion instance to another Quaternion for equality. 
+            </summary>
+            <param name="other">The other Quaternion to be used in the comparison.</param>
+            <returns>True if both instances are equal; false otherwise.</returns>
+        </member>
+        <member name="P:Toe.Messaging.Types.Quaternion.Xyz">
+            <summary>
+            Gets or sets an OpenTK.Vector3 with the X, Y and Z components of this instance.
+            </summary>
+        </member>
+        <member name="P:Toe.Messaging.Types.Quaternion.X">
+            <summary>
+            Gets or sets the X component of this instance.
+            </summary>
+        </member>
+        <member name="P:Toe.Messaging.Types.Quaternion.Y">
+            <summary>
+            Gets or sets the Y component of this instance.
+            </summary>
+        </member>
+        <member name="P:Toe.Messaging.Types.Quaternion.Z">
+            <summary>
+            Gets or sets the Z component of this instance.
+            </summary>
+        </member>
+        <member name="P:Toe.Messaging.Types.Quaternion.W">
+            <summary>
+            Gets or sets the W component of this instance.
+            </summary>
+        </member>
+        <member name="P:Toe.Messaging.Types.Quaternion.Length">
+            <summary>
+            Gets the length (magnitude) of the quaternion.
+            </summary>
+            <seealso cref="P:Toe.Messaging.Types.Quaternion.LengthSquared"/>
+        </member>
+        <member name="P:Toe.Messaging.Types.Quaternion.LengthSquared">
+            <summary>
+            Gets the square of the quaternion length (magnitude).
+            </summary>
+        </member>
+        <member name="T:Toe.Messaging.Types.Vector2">
+            <summary>Represents a 2D vector using two single-precision floating-point numbers.</summary>
+            <remarks>
+            The Vector2 structure is suitable for interoperation with unmanaged code requiring two consecutive floats.
+            </remarks>
+        </member>
+        <member name="F:Toe.Messaging.Types.Vector2.X">
+            <summary>
+            The X component of the Vector2.
+            </summary>
+        </member>
+        <member name="F:Toe.Messaging.Types.Vector2.Y">
+            <summary>
+            The Y component of the Vector2.
+            </summary>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector2.#ctor(System.Single)">
+            <summary>
+            Constructs a new instance.
+            </summary>
+            <param name="value">The value that will initialize this instance.</param>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector2.#ctor(System.Single,System.Single)">
+            <summary>
+            Constructs a new Vector2.
+            </summary>
+            <param name="x">The x coordinate of the net Vector2.</param>
+            <param name="y">The y coordinate of the net Vector2.</param>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector2.Normalize">
+            <summary>
+            Scales the Vector2 to unit length.
+            </summary>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector2.NormalizeFast">
+            <summary>
+            Scales the Vector2 to approximately unit length.
+            </summary>
+        </member>
+        <member name="F:Toe.Messaging.Types.Vector2.UnitX">
+            <summary>
+            Defines a unit-length Vector2 that points towards the X-axis.
+            </summary>
+        </member>
+        <member name="F:Toe.Messaging.Types.Vector2.UnitY">
+            <summary>
+            Defines a unit-length Vector2 that points towards the Y-axis.
+            </summary>
+        </member>
+        <member name="F:Toe.Messaging.Types.Vector2.Zero">
+            <summary>
+            Defines a zero-length Vector2.
+            </summary>
+        </member>
+        <member name="F:Toe.Messaging.Types.Vector2.One">
+            <summary>
+            Defines an instance with all components set to 1.
+            </summary>
+        </member>
+        <member name="F:Toe.Messaging.Types.Vector2.SizeInBytes">
+            <summary>
+            Defines the size of the Vector2 struct in bytes.
+            </summary>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector2.Add(Toe.Messaging.Types.Vector2,Toe.Messaging.Types.Vector2)">
+            <summary>
+            Adds two vectors.
+            </summary>
+            <param name="a">Left operand.</param>
+            <param name="b">Right operand.</param>
+            <returns>Result of operation.</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector2.Add(Toe.Messaging.Types.Vector2@,Toe.Messaging.Types.Vector2@,Toe.Messaging.Types.Vector2@)">
+            <summary>
+            Adds two vectors.
+            </summary>
+            <param name="a">Left operand.</param>
+            <param name="b">Right operand.</param>
+            <param name="result">Result of operation.</param>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector2.Subtract(Toe.Messaging.Types.Vector2,Toe.Messaging.Types.Vector2)">
+            <summary>
+            Subtract one Vector from another
+            </summary>
+            <param name="a">First operand</param>
+            <param name="b">Second operand</param>
+            <returns>Result of subtraction</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector2.Subtract(Toe.Messaging.Types.Vector2@,Toe.Messaging.Types.Vector2@,Toe.Messaging.Types.Vector2@)">
+            <summary>
+            Subtract one Vector from another
+            </summary>
+            <param name="a">First operand</param>
+            <param name="b">Second operand</param>
+            <param name="result">Result of subtraction</param>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector2.Multiply(Toe.Messaging.Types.Vector2,System.Single)">
+            <summary>
+            Multiplies a vector by a scalar.
+            </summary>
+            <param name="vector">Left operand.</param>
+            <param name="scale">Right operand.</param>
+            <returns>Result of the operation.</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector2.Multiply(Toe.Messaging.Types.Vector2@,System.Single,Toe.Messaging.Types.Vector2@)">
+            <summary>
+            Multiplies a vector by a scalar.
+            </summary>
+            <param name="vector">Left operand.</param>
+            <param name="scale">Right operand.</param>
+            <param name="result">Result of the operation.</param>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector2.Multiply(Toe.Messaging.Types.Vector2,Toe.Messaging.Types.Vector2)">
+            <summary>
+            Multiplies a vector by the components a vector (scale).
+            </summary>
+            <param name="vector">Left operand.</param>
+            <param name="scale">Right operand.</param>
+            <returns>Result of the operation.</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector2.Multiply(Toe.Messaging.Types.Vector2@,Toe.Messaging.Types.Vector2@,Toe.Messaging.Types.Vector2@)">
+            <summary>
+            Multiplies a vector by the components of a vector (scale).
+            </summary>
+            <param name="vector">Left operand.</param>
+            <param name="scale">Right operand.</param>
+            <param name="result">Result of the operation.</param>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector2.Divide(Toe.Messaging.Types.Vector2,System.Single)">
+            <summary>
+            Divides a vector by a scalar.
+            </summary>
+            <param name="vector">Left operand.</param>
+            <param name="scale">Right operand.</param>
+            <returns>Result of the operation.</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector2.Divide(Toe.Messaging.Types.Vector2@,System.Single,Toe.Messaging.Types.Vector2@)">
+            <summary>
+            Divides a vector by a scalar.
+            </summary>
+            <param name="vector">Left operand.</param>
+            <param name="scale">Right operand.</param>
+            <param name="result">Result of the operation.</param>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector2.Divide(Toe.Messaging.Types.Vector2,Toe.Messaging.Types.Vector2)">
+            <summary>
+            Divides a vector by the components of a vector (scale).
+            </summary>
+            <param name="vector">Left operand.</param>
+            <param name="scale">Right operand.</param>
+            <returns>Result of the operation.</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector2.Divide(Toe.Messaging.Types.Vector2@,Toe.Messaging.Types.Vector2@,Toe.Messaging.Types.Vector2@)">
+            <summary>
+            Divide a vector by the components of a vector (scale).
+            </summary>
+            <param name="vector">Left operand.</param>
+            <param name="scale">Right operand.</param>
+            <param name="result">Result of the operation.</param>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector2.ComponentMin(Toe.Messaging.Types.Vector2,Toe.Messaging.Types.Vector2)">
+            <summary>
+            Calculate the component-wise minimum of two vectors
+            </summary>
+            <param name="a">First operand</param>
+            <param name="b">Second operand</param>
+            <returns>The component-wise minimum</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector2.ComponentMin(Toe.Messaging.Types.Vector2@,Toe.Messaging.Types.Vector2@,Toe.Messaging.Types.Vector2@)">
+            <summary>
+            Calculate the component-wise minimum of two vectors
+            </summary>
+            <param name="a">First operand</param>
+            <param name="b">Second operand</param>
+            <param name="result">The component-wise minimum</param>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector2.ComponentMax(Toe.Messaging.Types.Vector2,Toe.Messaging.Types.Vector2)">
+            <summary>
+            Calculate the component-wise maximum of two vectors
+            </summary>
+            <param name="a">First operand</param>
+            <param name="b">Second operand</param>
+            <returns>The component-wise maximum</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector2.ComponentMax(Toe.Messaging.Types.Vector2@,Toe.Messaging.Types.Vector2@,Toe.Messaging.Types.Vector2@)">
+            <summary>
+            Calculate the component-wise maximum of two vectors
+            </summary>
+            <param name="a">First operand</param>
+            <param name="b">Second operand</param>
+            <param name="result">The component-wise maximum</param>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector2.Min(Toe.Messaging.Types.Vector2,Toe.Messaging.Types.Vector2)">
+            <summary>
+            Returns the Vector3 with the minimum magnitude
+            </summary>
+            <param name="left">Left operand</param>
+            <param name="right">Right operand</param>
+            <returns>The minimum Vector3</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector2.Max(Toe.Messaging.Types.Vector2,Toe.Messaging.Types.Vector2)">
+            <summary>
+            Returns the Vector3 with the minimum magnitude
+            </summary>
+            <param name="left">Left operand</param>
+            <param name="right">Right operand</param>
+            <returns>The minimum Vector3</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector2.Clamp(Toe.Messaging.Types.Vector2,Toe.Messaging.Types.Vector2,Toe.Messaging.Types.Vector2)">
+            <summary>
+            Clamp a vector to the given minimum and maximum vectors
+            </summary>
+            <param name="vec">Input vector</param>
+            <param name="min">Minimum vector</param>
+            <param name="max">Maximum vector</param>
+            <returns>The clamped vector</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector2.Clamp(Toe.Messaging.Types.Vector2@,Toe.Messaging.Types.Vector2@,Toe.Messaging.Types.Vector2@,Toe.Messaging.Types.Vector2@)">
+            <summary>
+            Clamp a vector to the given minimum and maximum vectors
+            </summary>
+            <param name="vec">Input vector</param>
+            <param name="min">Minimum vector</param>
+            <param name="max">Maximum vector</param>
+            <param name="result">The clamped vector</param>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector2.Normalize(Toe.Messaging.Types.Vector2)">
+            <summary>
+            Scale a vector to unit length
+            </summary>
+            <param name="vec">The input vector</param>
+            <returns>The normalized vector</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector2.Normalize(Toe.Messaging.Types.Vector2@,Toe.Messaging.Types.Vector2@)">
+            <summary>
+            Scale a vector to unit length
+            </summary>
+            <param name="vec">The input vector</param>
+            <param name="result">The normalized vector</param>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector2.NormalizeFast(Toe.Messaging.Types.Vector2)">
+            <summary>
+            Scale a vector to approximately unit length
+            </summary>
+            <param name="vec">The input vector</param>
+            <returns>The normalized vector</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector2.NormalizeFast(Toe.Messaging.Types.Vector2@,Toe.Messaging.Types.Vector2@)">
+            <summary>
+            Scale a vector to approximately unit length
+            </summary>
+            <param name="vec">The input vector</param>
+            <param name="result">The normalized vector</param>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector2.Dot(Toe.Messaging.Types.Vector2,Toe.Messaging.Types.Vector2)">
+            <summary>
+            Calculate the dot (scalar) product of two vectors
+            </summary>
+            <param name="left">First operand</param>
+            <param name="right">Second operand</param>
+            <returns>The dot product of the two inputs</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector2.Dot(Toe.Messaging.Types.Vector2@,Toe.Messaging.Types.Vector2@,System.Single@)">
+            <summary>
+            Calculate the dot (scalar) product of two vectors
+            </summary>
+            <param name="left">First operand</param>
+            <param name="right">Second operand</param>
+            <param name="result">The dot product of the two inputs</param>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector2.Lerp(Toe.Messaging.Types.Vector2,Toe.Messaging.Types.Vector2,System.Single)">
+            <summary>
+            Returns a new Vector that is the linear blend of the 2 given Vectors
+            </summary>
+            <param name="a">First input vector</param>
+            <param name="b">Second input vector</param>
+            <param name="blend">The blend factor. a when blend=0, b when blend=1.</param>
+            <returns>a when blend=0, b when blend=1, and a linear combination otherwise</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector2.Lerp(Toe.Messaging.Types.Vector2@,Toe.Messaging.Types.Vector2@,System.Single,Toe.Messaging.Types.Vector2@)">
+            <summary>
+            Returns a new Vector that is the linear blend of the 2 given Vectors
+            </summary>
+            <param name="a">First input vector</param>
+            <param name="b">Second input vector</param>
+            <param name="blend">The blend factor. a when blend=0, b when blend=1.</param>
+            <param name="result">a when blend=0, b when blend=1, and a linear combination otherwise</param>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector2.BaryCentric(Toe.Messaging.Types.Vector2,Toe.Messaging.Types.Vector2,Toe.Messaging.Types.Vector2,System.Single,System.Single)">
+            <summary>
+            Interpolate 3 Vectors using Barycentric coordinates
+            </summary>
+            <param name="a">First input Vector</param>
+            <param name="b">Second input Vector</param>
+            <param name="c">Third input Vector</param>
+            <param name="u">First Barycentric Coordinate</param>
+            <param name="v">Second Barycentric Coordinate</param>
+            <returns>a when u=v=0, b when u=1,v=0, c when u=0,v=1, and a linear combination of a,b,c otherwise</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector2.BaryCentric(Toe.Messaging.Types.Vector2@,Toe.Messaging.Types.Vector2@,Toe.Messaging.Types.Vector2@,System.Single,System.Single,Toe.Messaging.Types.Vector2@)">
+            <summary>Interpolate 3 Vectors using Barycentric coordinates</summary>
+            <param name="a">First input Vector.</param>
+            <param name="b">Second input Vector.</param>
+            <param name="c">Third input Vector.</param>
+            <param name="u">First Barycentric Coordinate.</param>
+            <param name="v">Second Barycentric Coordinate.</param>
+            <param name="result">Output Vector. a when u=v=0, b when u=1,v=0, c when u=0,v=1, and a linear combination of a,b,c otherwise</param>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector2.Transform(Toe.Messaging.Types.Vector2,Toe.Messaging.Types.Quaternion)">
+            <summary>
+            Transforms a vector by a quaternion rotation.
+            </summary>
+            <param name="vec">The vector to transform.</param>
+            <param name="quat">The quaternion to rotate the vector by.</param>
+            <returns>The result of the operation.</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector2.Transform(Toe.Messaging.Types.Vector2@,Toe.Messaging.Types.Quaternion@,Toe.Messaging.Types.Vector2@)">
+            <summary>
+            Transforms a vector by a quaternion rotation.
+            </summary>
+            <param name="vec">The vector to transform.</param>
+            <param name="quat">The quaternion to rotate the vector by.</param>
+            <param name="result">The result of the operation.</param>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector2.op_Addition(Toe.Messaging.Types.Vector2,Toe.Messaging.Types.Vector2)">
+            <summary>
+            Adds the specified instances.
+            </summary>
+            <param name="left">Left operand.</param>
+            <param name="right">Right operand.</param>
+            <returns>Result of addition.</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector2.op_Subtraction(Toe.Messaging.Types.Vector2,Toe.Messaging.Types.Vector2)">
+            <summary>
+            Subtracts the specified instances.
+            </summary>
+            <param name="left">Left operand.</param>
+            <param name="right">Right operand.</param>
+            <returns>Result of subtraction.</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector2.op_UnaryNegation(Toe.Messaging.Types.Vector2)">
+            <summary>
+            Negates the specified instance.
+            </summary>
+            <param name="vec">Operand.</param>
+            <returns>Result of negation.</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector2.op_Multiply(Toe.Messaging.Types.Vector2,System.Single)">
+            <summary>
+            Multiplies the specified instance by a scalar.
+            </summary>
+            <param name="vec">Left operand.</param>
+            <param name="scale">Right operand.</param>
+            <returns>Result of multiplication.</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector2.op_Multiply(System.Single,Toe.Messaging.Types.Vector2)">
+            <summary>
+            Multiplies the specified instance by a scalar.
+            </summary>
+            <param name="scale">Left operand.</param>
+            <param name="vec">Right operand.</param>
+            <returns>Result of multiplication.</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector2.op_Division(Toe.Messaging.Types.Vector2,System.Single)">
+            <summary>
+            Divides the specified instance by a scalar.
+            </summary>
+            <param name="vec">Left operand</param>
+            <param name="scale">Right operand</param>
+            <returns>Result of the division.</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector2.op_Equality(Toe.Messaging.Types.Vector2,Toe.Messaging.Types.Vector2)">
+            <summary>
+            Compares the specified instances for equality.
+            </summary>
+            <param name="left">Left operand.</param>
+            <param name="right">Right operand.</param>
+            <returns>True if both instances are equal; false otherwise.</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector2.op_Inequality(Toe.Messaging.Types.Vector2,Toe.Messaging.Types.Vector2)">
+            <summary>
+            Compares the specified instances for inequality.
+            </summary>
+            <param name="left">Left operand.</param>
+            <param name="right">Right operand.</param>
+            <returns>True if both instances are not equal; false otherwise.</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector2.ToString">
+            <summary>
+            Returns a System.String that represents the current Vector2.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector2.GetHashCode">
+            <summary>
+            Returns the hashcode for this instance.
+            </summary>
+            <returns>A System.Int32 containing the unique hashcode for this instance.</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector2.Equals(System.Object)">
+            <summary>
+            Indicates whether this instance and a specified object are equal.
+            </summary>
+            <param name="obj">The object to compare to.</param>
+            <returns>True if the instances are equal; false otherwise.</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector2.Equals(Toe.Messaging.Types.Vector2)">
+            <summary>Indicates whether the current vector is equal to another vector.</summary>
+            <param name="other">A vector to compare with this vector.</param>
+            <returns>true if the current vector is equal to the vector parameter; otherwise, false.</returns>
+        </member>
+        <member name="P:Toe.Messaging.Types.Vector2.Length">
+            <summary>
+            Gets the length (magnitude) of the vector.
+            </summary>
+            <see cref="P:Toe.Messaging.Types.Vector2.LengthFast"/>
+            <seealso cref="P:Toe.Messaging.Types.Vector2.LengthSquared"/>
+        </member>
+        <member name="P:Toe.Messaging.Types.Vector2.LengthFast">
+            <summary>
+            Gets an approximation of the vector length (magnitude).
+            </summary>
+            <remarks>
+            This property uses an approximation of the square root function to calculate vector magnitude, with
+            an upper error bound of 0.001.
+            </remarks>
+            <see cref="P:Toe.Messaging.Types.Vector2.Length"/>
+            <seealso cref="P:Toe.Messaging.Types.Vector2.LengthSquared"/>
+        </member>
+        <member name="P:Toe.Messaging.Types.Vector2.LengthSquared">
+            <summary>
+            Gets the square of the vector length (magnitude).
+            </summary>
+            <remarks>
+            This property avoids the costly square root operation required by the Length property. This makes it more suitable
+            for comparisons.
+            </remarks>
+            <see cref="P:Toe.Messaging.Types.Vector2.Length"/>
+            <seealso cref="P:Toe.Messaging.Types.Vector2.LengthFast"/>
+        </member>
+        <member name="P:Toe.Messaging.Types.Vector2.PerpendicularRight">
+            <summary>
+            Gets the perpendicular vector on the right side of this vector.
+            </summary>
+        </member>
+        <member name="P:Toe.Messaging.Types.Vector2.PerpendicularLeft">
+            <summary>
+            Gets the perpendicular vector on the left side of this vector.
+            </summary>
+        </member>
+        <member name="T:Toe.Messaging.Types.Vector3">
+            <summary>
+            Represents a 3D vector using three single-precision floating-point numbers.
+            </summary>
+            <remarks>
+            The Vector3 structure is suitable for interoperation with unmanaged code requiring three consecutive floats.
+            </remarks>
+        </member>
+        <member name="F:Toe.Messaging.Types.Vector3.X">
+            <summary>
+            The X component of the Vector3.
+            </summary>
+        </member>
+        <member name="F:Toe.Messaging.Types.Vector3.Y">
+            <summary>
+            The Y component of the Vector3.
+            </summary>
+        </member>
+        <member name="F:Toe.Messaging.Types.Vector3.Z">
+            <summary>
+            The Z component of the Vector3.
+            </summary>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector3.#ctor(System.Single)">
+            <summary>
+            Constructs a new instance.
+            </summary>
+            <param name="value">The value that will initialize this instance.</param>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector3.#ctor(System.Single,System.Single,System.Single)">
+            <summary>
+            Constructs a new Vector3.
+            </summary>
+            <param name="x">The x component of the Vector3.</param>
+            <param name="y">The y component of the Vector3.</param>
+            <param name="z">The z component of the Vector3.</param>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector3.#ctor(Toe.Messaging.Types.Vector2)">
+            <summary>
+            Constructs a new Vector3 from the given Vector2.
+            </summary>
+            <param name="v">The Vector2 to copy components from.</param>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector3.#ctor(Toe.Messaging.Types.Vector3)">
+            <summary>
+            Constructs a new Vector3 from the given Vector3.
+            </summary>
+            <param name="v">The Vector3 to copy components from.</param>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector3.Normalize">
+            <summary>
+            Scales the Vector3 to unit length.
+            </summary>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector3.NormalizeFast">
+            <summary>
+            Scales the Vector3 to approximately unit length.
+            </summary>
+        </member>
+        <member name="F:Toe.Messaging.Types.Vector3.UnitX">
+            <summary>
+            Defines a unit-length Vector3 that points towards the X-axis.
+            </summary>
+        </member>
+        <member name="F:Toe.Messaging.Types.Vector3.UnitY">
+            <summary>
+            Defines a unit-length Vector3 that points towards the Y-axis.
+            </summary>
+        </member>
+        <member name="F:Toe.Messaging.Types.Vector3.UnitZ">
+            <summary>
+            /// Defines a unit-length Vector3 that points towards the Z-axis.
+            </summary>
+        </member>
+        <member name="F:Toe.Messaging.Types.Vector3.Zero">
+            <summary>
+            Defines a zero-length Vector3.
+            </summary>
+        </member>
+        <member name="F:Toe.Messaging.Types.Vector3.One">
+            <summary>
+            Defines an instance with all components set to 1.
+            </summary>
+        </member>
+        <member name="F:Toe.Messaging.Types.Vector3.SizeInBytes">
+            <summary>
+            Defines the size of the Vector3 struct in bytes.
+            </summary>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector3.Add(Toe.Messaging.Types.Vector3,Toe.Messaging.Types.Vector3)">
+            <summary>
+            Adds two vectors.
+            </summary>
+            <param name="a">Left operand.</param>
+            <param name="b">Right operand.</param>
+            <returns>Result of operation.</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector3.Add(Toe.Messaging.Types.Vector3@,Toe.Messaging.Types.Vector3@,Toe.Messaging.Types.Vector3@)">
+            <summary>
+            Adds two vectors.
+            </summary>
+            <param name="a">Left operand.</param>
+            <param name="b">Right operand.</param>
+            <param name="result">Result of operation.</param>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector3.Subtract(Toe.Messaging.Types.Vector3,Toe.Messaging.Types.Vector3)">
+            <summary>
+            Subtract one Vector from another
+            </summary>
+            <param name="a">First operand</param>
+            <param name="b">Second operand</param>
+            <returns>Result of subtraction</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector3.Subtract(Toe.Messaging.Types.Vector3@,Toe.Messaging.Types.Vector3@,Toe.Messaging.Types.Vector3@)">
+            <summary>
+            Subtract one Vector from another
+            </summary>
+            <param name="a">First operand</param>
+            <param name="b">Second operand</param>
+            <param name="result">Result of subtraction</param>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector3.Multiply(Toe.Messaging.Types.Vector3,System.Single)">
+            <summary>
+            Multiplies a vector by a scalar.
+            </summary>
+            <param name="vector">Left operand.</param>
+            <param name="scale">Right operand.</param>
+            <returns>Result of the operation.</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector3.Multiply(Toe.Messaging.Types.Vector3@,System.Single,Toe.Messaging.Types.Vector3@)">
+            <summary>
+            Multiplies a vector by a scalar.
+            </summary>
+            <param name="vector">Left operand.</param>
+            <param name="scale">Right operand.</param>
+            <param name="result">Result of the operation.</param>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector3.Multiply(Toe.Messaging.Types.Vector3,Toe.Messaging.Types.Vector3)">
+            <summary>
+            Multiplies a vector by the components a vector (scale).
+            </summary>
+            <param name="vector">Left operand.</param>
+            <param name="scale">Right operand.</param>
+            <returns>Result of the operation.</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector3.Multiply(Toe.Messaging.Types.Vector3@,Toe.Messaging.Types.Vector3@,Toe.Messaging.Types.Vector3@)">
+            <summary>
+            Multiplies a vector by the components of a vector (scale).
+            </summary>
+            <param name="vector">Left operand.</param>
+            <param name="scale">Right operand.</param>
+            <param name="result">Result of the operation.</param>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector3.Divide(Toe.Messaging.Types.Vector3,System.Single)">
+            <summary>
+            Divides a vector by a scalar.
+            </summary>
+            <param name="vector">Left operand.</param>
+            <param name="scale">Right operand.</param>
+            <returns>Result of the operation.</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector3.Divide(Toe.Messaging.Types.Vector3@,System.Single,Toe.Messaging.Types.Vector3@)">
+            <summary>
+            Divides a vector by a scalar.
+            </summary>
+            <param name="vector">Left operand.</param>
+            <param name="scale">Right operand.</param>
+            <param name="result">Result of the operation.</param>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector3.Divide(Toe.Messaging.Types.Vector3,Toe.Messaging.Types.Vector3)">
+            <summary>
+            Divides a vector by the components of a vector (scale).
+            </summary>
+            <param name="vector">Left operand.</param>
+            <param name="scale">Right operand.</param>
+            <returns>Result of the operation.</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector3.Divide(Toe.Messaging.Types.Vector3@,Toe.Messaging.Types.Vector3@,Toe.Messaging.Types.Vector3@)">
+            <summary>
+            Divide a vector by the components of a vector (scale).
+            </summary>
+            <param name="vector">Left operand.</param>
+            <param name="scale">Right operand.</param>
+            <param name="result">Result of the operation.</param>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector3.ComponentMin(Toe.Messaging.Types.Vector3,Toe.Messaging.Types.Vector3)">
+            <summary>
+            Calculate the component-wise minimum of two vectors
+            </summary>
+            <param name="a">First operand</param>
+            <param name="b">Second operand</param>
+            <returns>The component-wise minimum</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector3.ComponentMin(Toe.Messaging.Types.Vector3@,Toe.Messaging.Types.Vector3@,Toe.Messaging.Types.Vector3@)">
+            <summary>
+            Calculate the component-wise minimum of two vectors
+            </summary>
+            <param name="a">First operand</param>
+            <param name="b">Second operand</param>
+            <param name="result">The component-wise minimum</param>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector3.ComponentMax(Toe.Messaging.Types.Vector3,Toe.Messaging.Types.Vector3)">
+            <summary>
+            Calculate the component-wise maximum of two vectors
+            </summary>
+            <param name="a">First operand</param>
+            <param name="b">Second operand</param>
+            <returns>The component-wise maximum</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector3.ComponentMax(Toe.Messaging.Types.Vector3@,Toe.Messaging.Types.Vector3@,Toe.Messaging.Types.Vector3@)">
+            <summary>
+            Calculate the component-wise maximum of two vectors
+            </summary>
+            <param name="a">First operand</param>
+            <param name="b">Second operand</param>
+            <param name="result">The component-wise maximum</param>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector3.Min(Toe.Messaging.Types.Vector3,Toe.Messaging.Types.Vector3)">
+            <summary>
+            Returns the Vector3 with the minimum magnitude
+            </summary>
+            <param name="left">Left operand</param>
+            <param name="right">Right operand</param>
+            <returns>The minimum Vector3</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector3.Max(Toe.Messaging.Types.Vector3,Toe.Messaging.Types.Vector3)">
+            <summary>
+            Returns the Vector3 with the minimum magnitude
+            </summary>
+            <param name="left">Left operand</param>
+            <param name="right">Right operand</param>
+            <returns>The minimum Vector3</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector3.Clamp(Toe.Messaging.Types.Vector3,Toe.Messaging.Types.Vector3,Toe.Messaging.Types.Vector3)">
+            <summary>
+            Clamp a vector to the given minimum and maximum vectors
+            </summary>
+            <param name="vec">Input vector</param>
+            <param name="min">Minimum vector</param>
+            <param name="max">Maximum vector</param>
+            <returns>The clamped vector</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector3.Clamp(Toe.Messaging.Types.Vector3@,Toe.Messaging.Types.Vector3@,Toe.Messaging.Types.Vector3@,Toe.Messaging.Types.Vector3@)">
+            <summary>
+            Clamp a vector to the given minimum and maximum vectors
+            </summary>
+            <param name="vec">Input vector</param>
+            <param name="min">Minimum vector</param>
+            <param name="max">Maximum vector</param>
+            <param name="result">The clamped vector</param>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector3.Normalize(Toe.Messaging.Types.Vector3)">
+            <summary>
+            Scale a vector to unit length
+            </summary>
+            <param name="vec">The input vector</param>
+            <returns>The normalized vector</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector3.Normalize(Toe.Messaging.Types.Vector3@,Toe.Messaging.Types.Vector3@)">
+            <summary>
+            Scale a vector to unit length
+            </summary>
+            <param name="vec">The input vector</param>
+            <param name="result">The normalized vector</param>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector3.NormalizeFast(Toe.Messaging.Types.Vector3)">
+            <summary>
+            Scale a vector to approximately unit length
+            </summary>
+            <param name="vec">The input vector</param>
+            <returns>The normalized vector</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector3.NormalizeFast(Toe.Messaging.Types.Vector3@,Toe.Messaging.Types.Vector3@)">
+            <summary>
+            Scale a vector to approximately unit length
+            </summary>
+            <param name="vec">The input vector</param>
+            <param name="result">The normalized vector</param>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector3.Dot(Toe.Messaging.Types.Vector3,Toe.Messaging.Types.Vector3)">
+            <summary>
+            Calculate the dot (scalar) product of two vectors
+            </summary>
+            <param name="left">First operand</param>
+            <param name="right">Second operand</param>
+            <returns>The dot product of the two inputs</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector3.Dot(Toe.Messaging.Types.Vector3@,Toe.Messaging.Types.Vector3@,System.Single@)">
+            <summary>
+            Calculate the dot (scalar) product of two vectors
+            </summary>
+            <param name="left">First operand</param>
+            <param name="right">Second operand</param>
+            <param name="result">The dot product of the two inputs</param>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector3.Cross(Toe.Messaging.Types.Vector3,Toe.Messaging.Types.Vector3)">
+            <summary>
+            Caclulate the cross (vector) product of two vectors
+            </summary>
+            <param name="left">First operand</param>
+            <param name="right">Second operand</param>
+            <returns>The cross product of the two inputs</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector3.Cross(Toe.Messaging.Types.Vector3@,Toe.Messaging.Types.Vector3@,Toe.Messaging.Types.Vector3@)">
+            <summary>
+            Caclulate the cross (vector) product of two vectors
+            </summary>
+            <param name="left">First operand</param>
+            <param name="right">Second operand</param>
+            <returns>The cross product of the two inputs</returns>
+            <param name="result">The cross product of the two inputs</param>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector3.Lerp(Toe.Messaging.Types.Vector3,Toe.Messaging.Types.Vector3,System.Single)">
+            <summary>
+            Returns a new Vector that is the linear blend of the 2 given Vectors
+            </summary>
+            <param name="a">First input vector</param>
+            <param name="b">Second input vector</param>
+            <param name="blend">The blend factor. a when blend=0, b when blend=1.</param>
+            <returns>a when blend=0, b when blend=1, and a linear combination otherwise</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector3.Lerp(Toe.Messaging.Types.Vector3@,Toe.Messaging.Types.Vector3@,System.Single,Toe.Messaging.Types.Vector3@)">
+            <summary>
+            Returns a new Vector that is the linear blend of the 2 given Vectors
+            </summary>
+            <param name="a">First input vector</param>
+            <param name="b">Second input vector</param>
+            <param name="blend">The blend factor. a when blend=0, b when blend=1.</param>
+            <param name="result">a when blend=0, b when blend=1, and a linear combination otherwise</param>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector3.BaryCentric(Toe.Messaging.Types.Vector3,Toe.Messaging.Types.Vector3,Toe.Messaging.Types.Vector3,System.Single,System.Single)">
+            <summary>
+            Interpolate 3 Vectors using Barycentric coordinates
+            </summary>
+            <param name="a">First input Vector</param>
+            <param name="b">Second input Vector</param>
+            <param name="c">Third input Vector</param>
+            <param name="u">First Barycentric Coordinate</param>
+            <param name="v">Second Barycentric Coordinate</param>
+            <returns>a when u=v=0, b when u=1,v=0, c when u=0,v=1, and a linear combination of a,b,c otherwise</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector3.BaryCentric(Toe.Messaging.Types.Vector3@,Toe.Messaging.Types.Vector3@,Toe.Messaging.Types.Vector3@,System.Single,System.Single,Toe.Messaging.Types.Vector3@)">
+            <summary>Interpolate 3 Vectors using Barycentric coordinates</summary>
+            <param name="a">First input Vector.</param>
+            <param name="b">Second input Vector.</param>
+            <param name="c">Third input Vector.</param>
+            <param name="u">First Barycentric Coordinate.</param>
+            <param name="v">Second Barycentric Coordinate.</param>
+            <param name="result">Output Vector. a when u=v=0, b when u=1,v=0, c when u=0,v=1, and a linear combination of a,b,c otherwise</param>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector3.Transform(Toe.Messaging.Types.Vector3,Toe.Messaging.Types.Quaternion)">
+            <summary>
+            Transforms a vector by a quaternion rotation.
+            </summary>
+            <param name="vec">The vector to transform.</param>
+            <param name="quat">The quaternion to rotate the vector by.</param>
+            <returns>The result of the operation.</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector3.Transform(Toe.Messaging.Types.Vector3@,Toe.Messaging.Types.Quaternion@,Toe.Messaging.Types.Vector3@)">
+            <summary>
+            Transforms a vector by a quaternion rotation.
+            </summary>
+            <param name="vec">The vector to transform.</param>
+            <param name="quat">The quaternion to rotate the vector by.</param>
+            <param name="result">The result of the operation.</param>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector3.CalculateAngle(Toe.Messaging.Types.Vector3,Toe.Messaging.Types.Vector3)">
+            <summary>
+            Calculates the angle (in radians) between two vectors.
+            </summary>
+            <param name="first">The first vector.</param>
+            <param name="second">The second vector.</param>
+            <returns>Angle (in radians) between the vectors.</returns>
+            <remarks>Note that the returned angle is never bigger than the constant Pi.</remarks>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector3.CalculateAngle(Toe.Messaging.Types.Vector3@,Toe.Messaging.Types.Vector3@,System.Single@)">
+            <summary>Calculates the angle (in radians) between two vectors.</summary>
+            <param name="first">The first vector.</param>
+            <param name="second">The second vector.</param>
+            <param name="result">Angle (in radians) between the vectors.</param>
+            <remarks>Note that the returned angle is never bigger than the constant Pi.</remarks>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector3.op_Addition(Toe.Messaging.Types.Vector3,Toe.Messaging.Types.Vector3)">
+            <summary>
+            Adds two instances.
+            </summary>
+            <param name="left">The first instance.</param>
+            <param name="right">The second instance.</param>
+            <returns>The result of the calculation.</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector3.op_Subtraction(Toe.Messaging.Types.Vector3,Toe.Messaging.Types.Vector3)">
+            <summary>
+            Subtracts two instances.
+            </summary>
+            <param name="left">The first instance.</param>
+            <param name="right">The second instance.</param>
+            <returns>The result of the calculation.</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector3.op_UnaryNegation(Toe.Messaging.Types.Vector3)">
+            <summary>
+            Negates an instance.
+            </summary>
+            <param name="vec">The instance.</param>
+            <returns>The result of the calculation.</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector3.op_Multiply(Toe.Messaging.Types.Vector3,System.Single)">
+            <summary>
+            Multiplies an instance by a scalar.
+            </summary>
+            <param name="vec">The instance.</param>
+            <param name="scale">The scalar.</param>
+            <returns>The result of the calculation.</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector3.op_Multiply(System.Single,Toe.Messaging.Types.Vector3)">
+            <summary>
+            Multiplies an instance by a scalar.
+            </summary>
+            <param name="scale">The scalar.</param>
+            <param name="vec">The instance.</param>
+            <returns>The result of the calculation.</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector3.op_Division(Toe.Messaging.Types.Vector3,System.Single)">
+            <summary>
+            Divides an instance by a scalar.
+            </summary>
+            <param name="vec">The instance.</param>
+            <param name="scale">The scalar.</param>
+            <returns>The result of the calculation.</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector3.op_Equality(Toe.Messaging.Types.Vector3,Toe.Messaging.Types.Vector3)">
+            <summary>
+            Compares two instances for equality.
+            </summary>
+            <param name="left">The first instance.</param>
+            <param name="right">The second instance.</param>
+            <returns>True, if left equals right; false otherwise.</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector3.op_Inequality(Toe.Messaging.Types.Vector3,Toe.Messaging.Types.Vector3)">
+            <summary>
+            Compares two instances for inequality.
+            </summary>
+            <param name="left">The first instance.</param>
+            <param name="right">The second instance.</param>
+            <returns>True, if left does not equa lright; false otherwise.</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector3.ToString">
+            <summary>
+            Returns a System.String that represents the current Vector3.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector3.GetHashCode">
+            <summary>
+            Returns the hashcode for this instance.
+            </summary>
+            <returns>A System.Int32 containing the unique hashcode for this instance.</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector3.Equals(System.Object)">
+            <summary>
+            Indicates whether this instance and a specified object are equal.
+            </summary>
+            <param name="obj">The object to compare to.</param>
+            <returns>True if the instances are equal; false otherwise.</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector3.Equals(Toe.Messaging.Types.Vector3)">
+            <summary>Indicates whether the current vector is equal to another vector.</summary>
+            <param name="other">A vector to compare with this vector.</param>
+            <returns>true if the current vector is equal to the vector parameter; otherwise, false.</returns>
+        </member>
+        <member name="P:Toe.Messaging.Types.Vector3.Length">
+            <summary>
+            Gets the length (magnitude) of the vector.
+            </summary>
+            <see cref="P:Toe.Messaging.Types.Vector3.LengthFast"/>
+            <seealso cref="P:Toe.Messaging.Types.Vector3.LengthSquared"/>
+        </member>
+        <member name="P:Toe.Messaging.Types.Vector3.LengthFast">
+            <summary>
+            Gets an approximation of the vector length (magnitude).
+            </summary>
+            <remarks>
+            This property uses an approximation of the square root function to calculate vector magnitude, with
+            an upper error bound of 0.001.
+            </remarks>
+            <see cref="P:Toe.Messaging.Types.Vector3.Length"/>
+            <seealso cref="P:Toe.Messaging.Types.Vector3.LengthSquared"/>
+        </member>
+        <member name="P:Toe.Messaging.Types.Vector3.LengthSquared">
+            <summary>
+            Gets the square of the vector length (magnitude).
+            </summary>
+            <remarks>
+            This property avoids the costly square root operation required by the Length property. This makes it more suitable
+            for comparisons.
+            </remarks>
+            <see cref="P:Toe.Messaging.Types.Vector3.Length"/>
+            <seealso cref="P:Toe.Messaging.Types.Vector3.LengthFast"/>
+        </member>
+        <member name="T:Toe.Messaging.Types.Vector4">
+            <summary>Represents a 4D vector using four single-precision floating-point numbers.</summary>
+            <remarks>
+            The Vector4 structure is suitable for interoperation with unmanaged code requiring four consecutive floats.
+            </remarks>
+        </member>
+        <member name="F:Toe.Messaging.Types.Vector4.X">
+            <summary>
+            The X component of the Vector4.
+            </summary>
+        </member>
+        <member name="F:Toe.Messaging.Types.Vector4.Y">
+            <summary>
+            The Y component of the Vector4.
+            </summary>
+        </member>
+        <member name="F:Toe.Messaging.Types.Vector4.Z">
+            <summary>
+            The Z component of the Vector4.
+            </summary>
+        </member>
+        <member name="F:Toe.Messaging.Types.Vector4.W">
+            <summary>
+            The W component of the Vector4.
+            </summary>
+        </member>
+        <member name="F:Toe.Messaging.Types.Vector4.UnitX">
+            <summary>
+            Defines a unit-length Vector4 that points towards the X-axis.
+            </summary>
+        </member>
+        <member name="F:Toe.Messaging.Types.Vector4.UnitY">
+            <summary>
+            Defines a unit-length Vector4 that points towards the Y-axis.
+            </summary>
+        </member>
+        <member name="F:Toe.Messaging.Types.Vector4.UnitZ">
+            <summary>
+            Defines a unit-length Vector4 that points towards the Z-axis.
+            </summary>
+        </member>
+        <member name="F:Toe.Messaging.Types.Vector4.UnitW">
+            <summary>
+            Defines a unit-length Vector4 that points towards the W-axis.
+            </summary>
+        </member>
+        <member name="F:Toe.Messaging.Types.Vector4.Zero">
+            <summary>
+            Defines a zero-length Vector4.
+            </summary>
+        </member>
+        <member name="F:Toe.Messaging.Types.Vector4.One">
+            <summary>
+            Defines an instance with all components set to 1.
+            </summary>
+        </member>
+        <member name="F:Toe.Messaging.Types.Vector4.SizeInBytes">
+            <summary>
+            Defines the size of the Vector4 struct in bytes.
+            </summary>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector4.#ctor(System.Single)">
+            <summary>
+            Constructs a new instance.
+            </summary>
+            <param name="value">The value that will initialize this instance.</param>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector4.#ctor(System.Single,System.Single,System.Single,System.Single)">
+            <summary>
+            Constructs a new Vector4.
+            </summary>
+            <param name="x">The x component of the Vector4.</param>
+            <param name="y">The y component of the Vector4.</param>
+            <param name="z">The z component of the Vector4.</param>
+            <param name="w">The w component of the Vector4.</param>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector4.#ctor(Toe.Messaging.Types.Vector2)">
+            <summary>
+            Constructs a new Vector4 from the given Vector2.
+            </summary>
+            <param name="v">The Vector2 to copy components from.</param>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector4.#ctor(Toe.Messaging.Types.Vector3)">
+            <summary>
+            Constructs a new Vector4 from the given Vector3.
+            The w component is initialized to 0.
+            </summary>
+            <param name="v">The Vector3 to copy components from.</param>
+            <remarks><seealso cref="M:Toe.Messaging.Types.Vector4.#ctor(Toe.Messaging.Types.Vector3,System.Single)"/></remarks>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector4.#ctor(Toe.Messaging.Types.Vector3,System.Single)">
+            <summary>
+            Constructs a new Vector4 from the specified Vector3 and w component.
+            </summary>
+            <param name="v">The Vector3 to copy components from.</param>
+            <param name="w">The w component of the new Vector4.</param>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector4.#ctor(Toe.Messaging.Types.Vector4)">
+            <summary>
+            Constructs a new Vector4 from the given Vector4.
+            </summary>
+            <param name="v">The Vector4 to copy components from.</param>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector4.Normalize">
+            <summary>
+            Scales the Vector4 to unit length.
+            </summary>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector4.NormalizeFast">
+            <summary>
+            Scales the Vector4 to approximately unit length.
+            </summary>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector4.Sub(Toe.Messaging.Types.Vector4,Toe.Messaging.Types.Vector4)">
+            <summary>
+            Subtract one Vector from another
+            </summary>
+            <param name="a">First operand</param>
+            <param name="b">Second operand</param>
+            <returns>Result of subtraction</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector4.Sub(Toe.Messaging.Types.Vector4@,Toe.Messaging.Types.Vector4@,Toe.Messaging.Types.Vector4@)">
+            <summary>
+            Subtract one Vector from another
+            </summary>
+            <param name="a">First operand</param>
+            <param name="b">Second operand</param>
+            <param name="result">Result of subtraction</param>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector4.Mult(Toe.Messaging.Types.Vector4,System.Single)">
+            <summary>
+            Multiply a vector and a scalar
+            </summary>
+            <param name="a">Vector operand</param>
+            <param name="f">Scalar operand</param>
+            <returns>Result of the multiplication</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector4.Mult(Toe.Messaging.Types.Vector4@,System.Single,Toe.Messaging.Types.Vector4@)">
+            <summary>
+            Multiply a vector and a scalar
+            </summary>
+            <param name="a">Vector operand</param>
+            <param name="f">Scalar operand</param>
+            <param name="result">Result of the multiplication</param>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector4.Div(Toe.Messaging.Types.Vector4,System.Single)">
+            <summary>
+            Divide a vector by a scalar
+            </summary>
+            <param name="a">Vector operand</param>
+            <param name="f">Scalar operand</param>
+            <returns>Result of the division</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector4.Div(Toe.Messaging.Types.Vector4@,System.Single,Toe.Messaging.Types.Vector4@)">
+            <summary>
+            Divide a vector by a scalar
+            </summary>
+            <param name="a">Vector operand</param>
+            <param name="f">Scalar operand</param>
+            <param name="result">Result of the division</param>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector4.Add(Toe.Messaging.Types.Vector4,Toe.Messaging.Types.Vector4)">
+            <summary>
+            Adds two vectors.
+            </summary>
+            <param name="a">Left operand.</param>
+            <param name="b">Right operand.</param>
+            <returns>Result of operation.</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector4.Add(Toe.Messaging.Types.Vector4@,Toe.Messaging.Types.Vector4@,Toe.Messaging.Types.Vector4@)">
+            <summary>
+            Adds two vectors.
+            </summary>
+            <param name="a">Left operand.</param>
+            <param name="b">Right operand.</param>
+            <param name="result">Result of operation.</param>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector4.Subtract(Toe.Messaging.Types.Vector4,Toe.Messaging.Types.Vector4)">
+            <summary>
+            Subtract one Vector from another
+            </summary>
+            <param name="a">First operand</param>
+            <param name="b">Second operand</param>
+            <returns>Result of subtraction</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector4.Subtract(Toe.Messaging.Types.Vector4@,Toe.Messaging.Types.Vector4@,Toe.Messaging.Types.Vector4@)">
+            <summary>
+            Subtract one Vector from another
+            </summary>
+            <param name="a">First operand</param>
+            <param name="b">Second operand</param>
+            <param name="result">Result of subtraction</param>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector4.Multiply(Toe.Messaging.Types.Vector4,System.Single)">
+            <summary>
+            Multiplies a vector by a scalar.
+            </summary>
+            <param name="vector">Left operand.</param>
+            <param name="scale">Right operand.</param>
+            <returns>Result of the operation.</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector4.Multiply(Toe.Messaging.Types.Vector4@,System.Single,Toe.Messaging.Types.Vector4@)">
+            <summary>
+            Multiplies a vector by a scalar.
+            </summary>
+            <param name="vector">Left operand.</param>
+            <param name="scale">Right operand.</param>
+            <param name="result">Result of the operation.</param>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector4.Multiply(Toe.Messaging.Types.Vector4,Toe.Messaging.Types.Vector4)">
+            <summary>
+            Multiplies a vector by the components a vector (scale).
+            </summary>
+            <param name="vector">Left operand.</param>
+            <param name="scale">Right operand.</param>
+            <returns>Result of the operation.</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector4.Multiply(Toe.Messaging.Types.Vector4@,Toe.Messaging.Types.Vector4@,Toe.Messaging.Types.Vector4@)">
+            <summary>
+            Multiplies a vector by the components of a vector (scale).
+            </summary>
+            <param name="vector">Left operand.</param>
+            <param name="scale">Right operand.</param>
+            <param name="result">Result of the operation.</param>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector4.Divide(Toe.Messaging.Types.Vector4,System.Single)">
+            <summary>
+            Divides a vector by a scalar.
+            </summary>
+            <param name="vector">Left operand.</param>
+            <param name="scale">Right operand.</param>
+            <returns>Result of the operation.</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector4.Divide(Toe.Messaging.Types.Vector4@,System.Single,Toe.Messaging.Types.Vector4@)">
+            <summary>
+            Divides a vector by a scalar.
+            </summary>
+            <param name="vector">Left operand.</param>
+            <param name="scale">Right operand.</param>
+            <param name="result">Result of the operation.</param>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector4.Divide(Toe.Messaging.Types.Vector4,Toe.Messaging.Types.Vector4)">
+            <summary>
+            Divides a vector by the components of a vector (scale).
+            </summary>
+            <param name="vector">Left operand.</param>
+            <param name="scale">Right operand.</param>
+            <returns>Result of the operation.</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector4.Divide(Toe.Messaging.Types.Vector4@,Toe.Messaging.Types.Vector4@,Toe.Messaging.Types.Vector4@)">
+            <summary>
+            Divide a vector by the components of a vector (scale).
+            </summary>
+            <param name="vector">Left operand.</param>
+            <param name="scale">Right operand.</param>
+            <param name="result">Result of the operation.</param>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector4.Min(Toe.Messaging.Types.Vector4,Toe.Messaging.Types.Vector4)">
+            <summary>
+            Calculate the component-wise minimum of two vectors
+            </summary>
+            <param name="a">First operand</param>
+            <param name="b">Second operand</param>
+            <returns>The component-wise minimum</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector4.Min(Toe.Messaging.Types.Vector4@,Toe.Messaging.Types.Vector4@,Toe.Messaging.Types.Vector4@)">
+            <summary>
+            Calculate the component-wise minimum of two vectors
+            </summary>
+            <param name="a">First operand</param>
+            <param name="b">Second operand</param>
+            <param name="result">The component-wise minimum</param>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector4.Max(Toe.Messaging.Types.Vector4,Toe.Messaging.Types.Vector4)">
+            <summary>
+            Calculate the component-wise maximum of two vectors
+            </summary>
+            <param name="a">First operand</param>
+            <param name="b">Second operand</param>
+            <returns>The component-wise maximum</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector4.Max(Toe.Messaging.Types.Vector4@,Toe.Messaging.Types.Vector4@,Toe.Messaging.Types.Vector4@)">
+            <summary>
+            Calculate the component-wise maximum of two vectors
+            </summary>
+            <param name="a">First operand</param>
+            <param name="b">Second operand</param>
+            <param name="result">The component-wise maximum</param>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector4.Clamp(Toe.Messaging.Types.Vector4,Toe.Messaging.Types.Vector4,Toe.Messaging.Types.Vector4)">
+            <summary>
+            Clamp a vector to the given minimum and maximum vectors
+            </summary>
+            <param name="vec">Input vector</param>
+            <param name="min">Minimum vector</param>
+            <param name="max">Maximum vector</param>
+            <returns>The clamped vector</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector4.Clamp(Toe.Messaging.Types.Vector4@,Toe.Messaging.Types.Vector4@,Toe.Messaging.Types.Vector4@,Toe.Messaging.Types.Vector4@)">
+            <summary>
+            Clamp a vector to the given minimum and maximum vectors
+            </summary>
+            <param name="vec">Input vector</param>
+            <param name="min">Minimum vector</param>
+            <param name="max">Maximum vector</param>
+            <param name="result">The clamped vector</param>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector4.Normalize(Toe.Messaging.Types.Vector4)">
+            <summary>
+            Scale a vector to unit length
+            </summary>
+            <param name="vec">The input vector</param>
+            <returns>The normalized vector</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector4.Normalize(Toe.Messaging.Types.Vector4@,Toe.Messaging.Types.Vector4@)">
+            <summary>
+            Scale a vector to unit length
+            </summary>
+            <param name="vec">The input vector</param>
+            <param name="result">The normalized vector</param>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector4.NormalizeFast(Toe.Messaging.Types.Vector4)">
+            <summary>
+            Scale a vector to approximately unit length
+            </summary>
+            <param name="vec">The input vector</param>
+            <returns>The normalized vector</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector4.NormalizeFast(Toe.Messaging.Types.Vector4@,Toe.Messaging.Types.Vector4@)">
+            <summary>
+            Scale a vector to approximately unit length
+            </summary>
+            <param name="vec">The input vector</param>
+            <param name="result">The normalized vector</param>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector4.Dot(Toe.Messaging.Types.Vector4,Toe.Messaging.Types.Vector4)">
+            <summary>
+            Calculate the dot product of two vectors
+            </summary>
+            <param name="left">First operand</param>
+            <param name="right">Second operand</param>
+            <returns>The dot product of the two inputs</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector4.Dot(Toe.Messaging.Types.Vector4@,Toe.Messaging.Types.Vector4@,System.Single@)">
+            <summary>
+            Calculate the dot product of two vectors
+            </summary>
+            <param name="left">First operand</param>
+            <param name="right">Second operand</param>
+            <param name="result">The dot product of the two inputs</param>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector4.Lerp(Toe.Messaging.Types.Vector4,Toe.Messaging.Types.Vector4,System.Single)">
+            <summary>
+            Returns a new Vector that is the linear blend of the 2 given Vectors
+            </summary>
+            <param name="a">First input vector</param>
+            <param name="b">Second input vector</param>
+            <param name="blend">The blend factor. a when blend=0, b when blend=1.</param>
+            <returns>a when blend=0, b when blend=1, and a linear combination otherwise</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector4.Lerp(Toe.Messaging.Types.Vector4@,Toe.Messaging.Types.Vector4@,System.Single,Toe.Messaging.Types.Vector4@)">
+            <summary>
+            Returns a new Vector that is the linear blend of the 2 given Vectors
+            </summary>
+            <param name="a">First input vector</param>
+            <param name="b">Second input vector</param>
+            <param name="blend">The blend factor. a when blend=0, b when blend=1.</param>
+            <param name="result">a when blend=0, b when blend=1, and a linear combination otherwise</param>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector4.BaryCentric(Toe.Messaging.Types.Vector4,Toe.Messaging.Types.Vector4,Toe.Messaging.Types.Vector4,System.Single,System.Single)">
+            <summary>
+            Interpolate 3 Vectors using Barycentric coordinates
+            </summary>
+            <param name="a">First input Vector</param>
+            <param name="b">Second input Vector</param>
+            <param name="c">Third input Vector</param>
+            <param name="u">First Barycentric Coordinate</param>
+            <param name="v">Second Barycentric Coordinate</param>
+            <returns>a when u=v=0, b when u=1,v=0, c when u=0,v=1, and a linear combination of a,b,c otherwise</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector4.BaryCentric(Toe.Messaging.Types.Vector4@,Toe.Messaging.Types.Vector4@,Toe.Messaging.Types.Vector4@,System.Single,System.Single,Toe.Messaging.Types.Vector4@)">
+            <summary>Interpolate 3 Vectors using Barycentric coordinates</summary>
+            <param name="a">First input Vector.</param>
+            <param name="b">Second input Vector.</param>
+            <param name="c">Third input Vector.</param>
+            <param name="u">First Barycentric Coordinate.</param>
+            <param name="v">Second Barycentric Coordinate.</param>
+            <param name="result">Output Vector. a when u=v=0, b when u=1,v=0, c when u=0,v=1, and a linear combination of a,b,c otherwise</param>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector4.Transform(Toe.Messaging.Types.Vector4,Toe.Messaging.Types.Quaternion)">
+            <summary>
+            Transforms a vector by a quaternion rotation.
+            </summary>
+            <param name="vec">The vector to transform.</param>
+            <param name="quat">The quaternion to rotate the vector by.</param>
+            <returns>The result of the operation.</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector4.Transform(Toe.Messaging.Types.Vector4@,Toe.Messaging.Types.Quaternion@,Toe.Messaging.Types.Vector4@)">
+            <summary>
+            Transforms a vector by a quaternion rotation.
+            </summary>
+            <param name="vec">The vector to transform.</param>
+            <param name="quat">The quaternion to rotate the vector by.</param>
+            <param name="result">The result of the operation.</param>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector4.op_Addition(Toe.Messaging.Types.Vector4,Toe.Messaging.Types.Vector4)">
+            <summary>
+            Adds two instances.
+            </summary>
+            <param name="left">The first instance.</param>
+            <param name="right">The second instance.</param>
+            <returns>The result of the calculation.</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector4.op_Subtraction(Toe.Messaging.Types.Vector4,Toe.Messaging.Types.Vector4)">
+            <summary>
+            Subtracts two instances.
+            </summary>
+            <param name="left">The first instance.</param>
+            <param name="right">The second instance.</param>
+            <returns>The result of the calculation.</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector4.op_UnaryNegation(Toe.Messaging.Types.Vector4)">
+            <summary>
+            Negates an instance.
+            </summary>
+            <param name="vec">The instance.</param>
+            <returns>The result of the calculation.</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector4.op_Multiply(Toe.Messaging.Types.Vector4,System.Single)">
+            <summary>
+            Multiplies an instance by a scalar.
+            </summary>
+            <param name="vec">The instance.</param>
+            <param name="scale">The scalar.</param>
+            <returns>The result of the calculation.</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector4.op_Multiply(System.Single,Toe.Messaging.Types.Vector4)">
+            <summary>
+            Multiplies an instance by a scalar.
+            </summary>
+            <param name="scale">The scalar.</param>
+            <param name="vec">The instance.</param>
+            <returns>The result of the calculation.</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector4.op_Division(Toe.Messaging.Types.Vector4,System.Single)">
+            <summary>
+            Divides an instance by a scalar.
+            </summary>
+            <param name="vec">The instance.</param>
+            <param name="scale">The scalar.</param>
+            <returns>The result of the calculation.</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector4.op_Equality(Toe.Messaging.Types.Vector4,Toe.Messaging.Types.Vector4)">
+            <summary>
+            Compares two instances for equality.
+            </summary>
+            <param name="left">The first instance.</param>
+            <param name="right">The second instance.</param>
+            <returns>True, if left equals right; false otherwise.</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector4.op_Inequality(Toe.Messaging.Types.Vector4,Toe.Messaging.Types.Vector4)">
+            <summary>
+            Compares two instances for inequality.
+            </summary>
+            <param name="left">The first instance.</param>
+            <param name="right">The second instance.</param>
+            <returns>True, if left does not equa lright; false otherwise.</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector4.ToString">
+            <summary>
+            Returns a System.String that represents the current Vector4.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector4.GetHashCode">
+            <summary>
+            Returns the hashcode for this instance.
+            </summary>
+            <returns>A System.Int32 containing the unique hashcode for this instance.</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector4.Equals(System.Object)">
+            <summary>
+            Indicates whether this instance and a specified object are equal.
+            </summary>
+            <param name="obj">The object to compare to.</param>
+            <returns>True if the instances are equal; false otherwise.</returns>
+        </member>
+        <member name="M:Toe.Messaging.Types.Vector4.Equals(Toe.Messaging.Types.Vector4)">
+            <summary>Indicates whether the current vector is equal to another vector.</summary>
+            <param name="other">A vector to compare with this vector.</param>
+            <returns>true if the current vector is equal to the vector parameter; otherwise, false.</returns>
+        </member>
+        <member name="P:Toe.Messaging.Types.Vector4.Length">
+            <summary>
+            Gets the length (magnitude) of the vector.
+            </summary>
+            <see cref="P:Toe.Messaging.Types.Vector4.LengthFast"/>
+            <seealso cref="P:Toe.Messaging.Types.Vector4.LengthSquared"/>
+        </member>
+        <member name="P:Toe.Messaging.Types.Vector4.LengthFast">
+            <summary>
+            Gets an approximation of the vector length (magnitude).
+            </summary>
+            <remarks>
+            This property uses an approximation of the square root function to calculate vector magnitude, with
+            an upper error bound of 0.001.
+            </remarks>
+            <see cref="P:Toe.Messaging.Types.Vector4.Length"/>
+            <seealso cref="P:Toe.Messaging.Types.Vector4.LengthSquared"/>
+        </member>
+        <member name="P:Toe.Messaging.Types.Vector4.LengthSquared">
+            <summary>
+            Gets the square of the vector length (magnitude).
+            </summary>
+            <remarks>
+            This property avoids the costly square root operation required by the Length property. This makes it more suitable
+            for comparisons.
+            </remarks>
+            <see cref="P:Toe.Messaging.Types.Vector4.Length"/>
+            <seealso cref="P:Toe.Messaging.Types.Vector4.LengthFast"/>
+        </member>
+        <member name="P:Toe.Messaging.Types.Vector4.Xyz">
+            <summary>
+            Gets or sets an OpenTK.Vector3 with the X, Y and Z components of this instance.
+            </summary>
+        </member>
+    </members>
+</doc>
