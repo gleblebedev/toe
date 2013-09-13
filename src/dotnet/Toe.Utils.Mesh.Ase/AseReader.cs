@@ -680,11 +680,29 @@ namespace Toe.Utils.Mesh.Ase
 					parser.Consume();
 					continue;
 				}
+
+				if (0 == string.Compare(attr, "*MAP_AMBIENT", StringComparison.InvariantCultureIgnoreCase))
+				{
+					sceneEffect.Ambient = this.ParseMap(parser, scene);
+					continue;
+				}
 				if (0 == string.Compare(attr, "*MAP_DIFFUSE", StringComparison.InvariantCultureIgnoreCase))
 				{
 					sceneEffect.Diffuse = this.ParseMap(parser, scene);
 					continue;
 				}
+				if (0 == string.Compare(attr, "*NUMSUBMTLS", StringComparison.InvariantCultureIgnoreCase))
+				{
+					var numMaterials = parser.ConsumeInt();
+					continue;
+				}
+				if (0 == string.Compare(attr, "*SUBMATERIAL", StringComparison.InvariantCultureIgnoreCase))
+				{
+					var index = parser.ConsumeInt();
+					ParseMaterial(parser, scene);
+					continue;
+				}
+				
 
 				parser.UnknownLexemError();
 			}
@@ -758,6 +776,11 @@ namespace Toe.Utils.Mesh.Ase
 				if (0 == string.Compare(meshSection, "*GEOMOBJECT", StringComparison.InvariantCultureIgnoreCase))
 				{
 					ParsSubMesh(parser, s);
+					continue;
+				}
+				if (0 == string.Compare(meshSection, "*LIGHTOBJECT", StringComparison.InvariantCultureIgnoreCase))
+				{
+					this.SkipBlock(parser);
 					continue;
 				}
 				parser.UnknownLexemError();
