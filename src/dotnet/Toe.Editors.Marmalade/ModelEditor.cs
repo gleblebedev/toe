@@ -81,11 +81,7 @@ namespace Toe.Editors.Marmalade
 					box = box.Union(vertex);
 				}
 			}
-			if (!box.IsEmpty)
-			{
-				this.base3DEditor.CameraController.TargetDistance = Math.Min(1024, box.Size() / 2);
-				this.base3DEditor.Camera.LookAt(box.Max * 1.5f, Vector3.Zero);
-			}
+			this.base3DEditor.CameraController.Reset(box);
 		}
 
 		#endregion

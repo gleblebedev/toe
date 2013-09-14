@@ -4,6 +4,8 @@ using System.Windows.Forms;
 
 using OpenTK;
 
+using Toe.Utils.Mesh;
+
 namespace Toe.Editors
 {
 	public class GameCameraController : ICameraController
@@ -86,6 +88,11 @@ namespace Toe.Editors
 
 		public void MouseWheel(float delta, Point location)
 		{
+		}
+
+		public void Reset(BoundingBox box)
+		{
+			
 		}
 
 		#endregion

@@ -108,6 +108,11 @@ namespace Toe.Utils.Mesh
 			
 		}
 
+		public Vector3 Center { get
+		{
+			return (min + max) * 0.5f;
+		} }
+
 		public BoundingBox Union(Vector3 vertex)
 		{
 			return new BoundingBox(

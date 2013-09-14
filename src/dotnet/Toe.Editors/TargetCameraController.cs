@@ -4,6 +4,8 @@ using System.Windows.Forms;
 
 using OpenTK;
 
+using Toe.Utils.Mesh;
+
 namespace Toe.Editors
 {
 	public class TargetCameraController : ICameraController
@@ -198,7 +200,20 @@ namespace Toe.Editors
 
 		public void MouseWheel(float delta, Point location)
 		{
-			this.Camera.Pos = this.Camera.Pos + this.Camera.Forward * delta;
+			this.Camera.Pos = this.Camera.Pos + this.Camera.Forward * delta/120.0f * targetDistance / 32.0f;
+		}
+
+		public void Reset(BoundingBox box)
+		{
+			if (!box.IsEmpty)
+			{
+				var sceneSize = Math.Min(1024*1024,box.Size());
+				this.TargetDistance = sceneSize;
+				this.Camera.LookAt(box.Max * 1.5f, box.Center);
+				this.Camera.ZFar = sceneSize * 4f;
+				this.Camera.ZNear = sceneSize * 0.001f;
+			}
+
 		}
 
 		#endregion
