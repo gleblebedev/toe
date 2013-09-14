@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.ComponentModel;
 
 namespace Toe.Utils.Mesh
@@ -13,6 +14,8 @@ namespace Toe.Utils.Mesh
 			new PropertyChangedEventArgs(Expr.Path<SceneMaterial>(a => a.Effect));
 
 		private IEffect effect;
+
+		private IList<IMaterial> submaterials = new List<IMaterial>();
 
 		#endregion
 
@@ -31,6 +34,18 @@ namespace Toe.Utils.Mesh
 					this.effect = value;
 					this.RaisePropertyChanged(EffectChangedEventArgs);
 				}
+			}
+		}
+
+		public IList<IMaterial> Submaterials
+		{
+			get
+			{
+				return this.submaterials;
+			}
+			set
+			{
+				this.submaterials = value;
 			}
 		}
 
