@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="BaseSubmesh.cs" />
     <Compile Include="BoneCollection.cs" />
+    <Compile Include="BoundingBox.cs" />
     <Compile Include="BoxBuilder.cs" />
     <Compile Include="ColorSourceType.cs" />
     <Compile Include="ColorVisitorCallback.cs" />

@@ -87,10 +87,46 @@ namespace Toe.Editors
 				case Keys.D:
 					this.cameraStrifeRight = true;
 					break;
+				case Keys.T:
+					this.SetTop();
+					break;
+				case Keys.B:
+					this.SetBottom();
+					break;
+				case Keys.R:
+					this.SetRight();
+					break;
+				case Keys.L:
+					this.SetLeft();
+					break;
+				case Keys.F:
+					this.SetForward();
+					break;
 			}
 			this.EnableAnimationIfNecessery();
 		}
+		public void SetTop()
+		{
+			this.Camera.LookAt(this.Camera.WorldUp * targetDistance, Vector3.Zero, this.Camera.WorldForward);
+		}
+		public void SetBottom()
+		{
+			this.Camera.LookAt(this.Camera.WorldUp * -targetDistance, Vector3.Zero, this.Camera.WorldForward);
+		}
+		public void SetRight()
+		{
+			this.Camera.LookAt(this.Camera.WorldRight * targetDistance, Vector3.Zero, this.Camera.WorldUp);
+		}
 
+		public void SetLeft()
+		{
+			this.Camera.LookAt(this.Camera.WorldRight * -targetDistance, Vector3.Zero, this.Camera.WorldUp);
+		}
+
+		public void SetForward()
+		{
+			this.Camera.LookAt(this.Camera.WorldForward * -targetDistance, Vector3.Zero, this.Camera.WorldUp);
+		}
 		public void KeyUp(KeyEventArgs keyEventArgs)
 		{
 			switch (keyEventArgs.KeyCode)
@@ -173,11 +209,13 @@ namespace Toe.Editors
 		{
 			if (this.cameraForward || this.cameraBackward || this.cameraStrifeLeft || this.cameraStrifeRight)
 			{
-				this.animationTimer.Start();
+				if (!this.animationTimer.Enabled)
+					this.animationTimer.Start();
 			}
 			else
 			{
-				this.animationTimer.Stop();
+				if (this.animationTimer.Enabled)
+					this.animationTimer.Stop();
 			}
 		}
 

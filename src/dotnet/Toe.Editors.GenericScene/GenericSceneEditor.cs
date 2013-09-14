@@ -135,6 +135,12 @@ namespace Toe.Editors.GenericScene
 					using (var s = File.OpenRead(filename))
 					{
 						this.scene = reader.Load(s, Path.GetDirectoryName(Path.GetFullPath(filename)));
+						var targetDistance = this.scene.GetBoundingBox();
+						if (!targetDistance.IsEmpty)
+						{
+							this.base3DEditor.CameraController.TargetDistance = Math.Min(1024, targetDistance.Size() / 2);
+							this.base3DEditor.Camera.LookAt(targetDistance.Max*1.5f, Vector3.Zero);
+						}
 					}
 				}
 			}

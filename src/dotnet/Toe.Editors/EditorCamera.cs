@@ -353,7 +353,6 @@ namespace Toe.Editors
 
 			result = new Matrix4(x, 0, 0, 0, 0, y, 0, 0, a, b, c, -1, 0, 0, d, 0);
 		}
-
 		/// <summary>
 		/// Build a world space to camera space matrix
 		/// </summary>
@@ -361,9 +360,11 @@ namespace Toe.Editors
 		/// <param name="target">Target position in world space</param>
 		/// <param name="up">Up vector in world space (should not be parallel to the camera direction, that is target - eye)</param>
 		/// <returns>A Matrix4 that transforms world space to camera space</returns>
-		public void LookAt(Vector3 eye, Vector3 target)
+		public void LookAt(Vector3 eye, Vector3 target, Vector3 up)
 		{
-			var up = this.WorldUp;
+			this.RaisePropertyChanging(RotEventArgs.Changing);
+			this.RaisePropertyChanging(PosEventArgs.Changing);
+
 			this.pos = eye;
 			//Vector3 z = Vector3.Normalize(eye - target);
 			//Vector3 x = Vector3.Normalize(Vector3.Cross(up, z));
@@ -377,6 +378,21 @@ namespace Toe.Editors
 
 			this.rot = QuaternionFromBasis(-x, y, -z);
 			//this.rot.Conjugate();
+
+			this.RaisePropertyChanged(RotEventArgs.Changed);
+			this.RaisePropertyChanged(PosEventArgs.Changed);
+		}
+
+		/// <summary>
+		/// Build a world space to camera space matrix
+		/// </summary>
+		/// <param name="eye">Eye (camera) position in world space</param>
+		/// <param name="target">Target position in world space</param>
+		/// <param name="up">Up vector in world space (should not be parallel to the camera direction, that is target - eye)</param>
+		/// <returns>A Matrix4 that transforms world space to camera space</returns>
+		public void LookAt(Vector3 eye, Vector3 target)
+		{
+			LookAt(eye,target,WorldUp);
 		}
 
 		public void SetProjection(ToeGraphicsContext graphicsContext)
@@ -408,15 +424,72 @@ namespace Toe.Editors
 		private static Quaternion QuaternionFromBasis(Vector3 x, Vector3 y, Vector3 z)
 		{
 			Quaternion rot = Quaternion.Identity;
-			rot.W = (float)Math.Sqrt(1.0f + x.X + y.Y + z.Z) * 0.5f;
-			float w4_recip = 1.0f / (4.0f * rot.W);
-			rot.X = (y.Z - z.Y) * w4_recip;
-			rot.Y = (z.X - x.Z) * w4_recip;
-			rot.Z = (x.Y - y.X) * w4_recip;
-			rot.Normalize();
-			return rot;
+			var T = 1.0f + x.X + y.Y + z.Z;
+			if (T > 0)
+			{
+				rot.W = (float)Math.Sqrt(T) * 0.5f;
+				float w4_recip = 1.0f / (4.0f * rot.W);
+				rot.X = (y.Z - z.Y) * w4_recip;
+				rot.Y = (z.X - x.Z) * w4_recip;
+				rot.Z = (x.Y - y.X) * w4_recip;
+				rot.Normalize();
+				return rot;
+			}
+			else
+			{
+				var index = 0;
+				var value = (x.X);
+				if ((y.Y) > value)
+				{
+				index =1;
+				value = (y.Y);
+				}
+				if ((z.Z) > value)
+				{
+				index =2;
+				}
+				switch (index)
+				{
+					case 0:
+						{
+							var S = (float)Math.Sqrt(1.0 + x.X - y.Y - z.Z) * 2;
+
+							rot.X = 0.5f / S;
+							rot.Y = (y.X + x.Y) / S;
+							rot.Z = (z.X + x.Z) / S;
+							rot.W = (z.Y + y.Z) / S;
+						}
+						break;
+					case 1:
+						{
+							var S = (float)Math.Sqrt( 1.0 + y.Y - x.X - z.Z ) * 2;
+
+				rot.X = (y.X + x.Y ) / S;
+				rot.Y = 0.5f / S;
+				rot.Z = (z.Y + y.Z ) / S;
+				rot.W = (z.X + x.Z ) / S;
+						}
+						break;
+					case 2:
+						{
+							var S= (float)Math.Sqrt( 1.0 + z.Z - x.X - y.Y ) * 2;
+
+				rot.X = (z.X + x.Z ) / S;
+				rot.Y = (z.Y + y.Z ) / S;
+				rot.Z = 0.5f / S;
+				rot.W = (y.X + x.Y ) / S;
+						}
+						break;
+
+				}
+
+				rot.Normalize();
+				return rot;
+			}
 		}
 
 		#endregion
+
+		
 	}
 }

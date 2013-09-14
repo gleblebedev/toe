@@ -18,6 +18,8 @@ namespace Toe.Editors
 
 		public EditorCamera Camera { get; set; }
 
+		public float TargetDistance { get; set; }
+
 		#endregion
 
 		#region Public Methods and Operators

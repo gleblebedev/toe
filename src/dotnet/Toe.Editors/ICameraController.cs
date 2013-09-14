@@ -11,6 +11,8 @@ namespace Toe.Editors
 
 		EditorCamera Camera { get; set; }
 
+		float TargetDistance { get; set; }
+
 		#endregion
 
 		#region Public Methods and Operators

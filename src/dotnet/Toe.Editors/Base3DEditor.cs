@@ -350,6 +350,7 @@ namespace Toe.Editors
 				this.errMessage.Text = ex.ToString();
 			}
 		}
+	
 
 		private void GLControlResize(object sender, EventArgs e)
 		{
@@ -537,6 +538,7 @@ namespace Toe.Editors
 			this.Controls.Add(this.toolStrip1);
 			this.Name = "Base3DEditor";
 			this.Size = new System.Drawing.Size(550, 450);
+			this.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.OnPreviewKeyDown);
 			this.toolStrip1.ResumeLayout(false);
 			this.toolStrip1.PerformLayout();
 			this.errPanel.ResumeLayout(false);
@@ -826,5 +828,12 @@ namespace Toe.Editors
 		}
 
 		#endregion
+
+		private void OnPreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+		{
+
+		}
+
+		
 	}
 }

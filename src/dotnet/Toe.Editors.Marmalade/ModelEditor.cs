@@ -5,6 +5,7 @@ using System.Windows.Forms;
 
 using Autofac;
 
+using OpenTK;
 using OpenTK.Graphics.OpenGL;
 
 using Toe.Editors.Interfaces;
@@ -14,6 +15,7 @@ using Toe.Editors.Marmalade.Views;
 using Toe.Gx;
 using Toe.Marmalade.IwGraphics;
 using Toe.Resources;
+using Toe.Utils.Mesh;
 
 namespace Toe.Editors.Marmalade
 {
@@ -61,9 +63,29 @@ namespace Toe.Editors.Marmalade
 			this.graphicsContext = graphicsContext;
 			this.options = options;
 			this.history = history;
+			this.dataContext.DataContextChanged += ResetModel;
 			this.InitializeComponent();
 
 			this.InitializeEditor();
+		}
+
+		private void ResetModel(object sender, DataContextChangedEventArgs e)
+		{
+			if (this.Model == null)
+				return;
+			BoundingBox box = BoundingBox.Zero;
+			foreach (var mesh in this.Model.Meshes)
+			{
+				foreach (var vertex in mesh.Vertices)
+				{
+					box = box.Union(vertex);
+				}
+			}
+			if (!box.IsEmpty)
+			{
+				this.base3DEditor.CameraController.TargetDistance = Math.Min(1024, box.Size() / 2);
+				this.base3DEditor.Camera.LookAt(box.Max * 1.5f, Vector3.Zero);
+			}
 		}
 
 		#endregion
