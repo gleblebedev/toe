@@ -144,6 +144,7 @@ namespace Toe.Editor
 				fileFormatInfo.Create(this.FilePath, s);
 				s.Close();
 			}
+			EnsureDirectory(this.FilePath);
 			File.Copy(tempFileName, this.FilePath, true);
 			File.Delete(tempFileName);
 
@@ -151,6 +152,16 @@ namespace Toe.Editor
 			this.editorOptions.Save();
 
 			this.DialogResult = DialogResult.OK;
+		}
+
+		private void EnsureDirectory(string filePath)
+		{
+			var dir = Path.GetDirectoryName(filePath);
+			if (!Directory.Exists(dir))
+			{
+				this.EnsureDirectory(dir);
+				Directory.CreateDirectory(dir);
+			}
 		}
 
 		private void OnSelectedItemChanged(object sender, EventArgs e)

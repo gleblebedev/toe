@@ -226,6 +226,31 @@ namespace Toe.Editors.Marmalade
 			var scene = dialog.ImportScene();
 			if (scene != null)
 			{
+				foreach (var sourceNode in scene.GetAllNodes())
+				{
+					var sourceMesh = sourceNode.Mesh;
+					if (sourceMesh != null)
+					{
+						var mesh = this.context.Resolve<Mesh>();
+						var verts = sourceMesh.Count;
+						for (int i = 0; i < verts;++i )
+						{
+							Vector3 v;
+							sourceMesh.GetVertexAt(i, out v);
+							mesh.Vertices.Add(v);
+						}
+						foreach (var submesh in sourceMesh.Submeshes)
+						{
+							var surface = this.context.Resolve<ModelBlockPrimBase>();
+							mesh.Surfaces.Add(surface);
+							foreach (var face in submesh)
+							{
+								surface.Indices.Add(new ComplexIndex(){Vertex = face, Color = face});
+							}
+						}
+						this.Model.Meshes.Add(mesh);
+					}
+				}
 			}
 		}
 

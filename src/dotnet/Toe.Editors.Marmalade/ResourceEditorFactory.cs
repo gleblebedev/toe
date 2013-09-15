@@ -60,7 +60,7 @@ namespace Toe.Editors.Marmalade
 					new FileFormatInfo((a, b) => this.CreateEmptyFile(a, b, "CIwResGroup"))
 						{
 							CanCreate = true,
-							DefaultFileName = "group.geo",
+							DefaultFileName = "group.group",
 							Extensions = new[] { ".group" },
 							Factory = this,
 							Name = "Marmalade SDK Group"

@@ -1,9 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
 using Toe.Utils.Mesh;
+using Toe.Utils.Mesh.Ase;
 
 namespace Toe.Editors
 {
@@ -20,7 +23,6 @@ namespace Toe.Editors
 		public ImportSceneDialog(IEnumerable<ISceneFileFormat> formats)
 		{
 			this.formats = formats;
-			this.BuildFilterString();
 			this.InitializeComponent();
 		}
 
@@ -31,22 +33,63 @@ namespace Toe.Editors
 		public IScene ImportScene()
 		{
 			var f = new OpenFileDialog();
-
-			if (f.ShowDialog() == DialogResult.OK)
+			f.Filter = BuildFilter();
+			if (f.ShowDialog() != DialogResult.OK)
+				return null;
+			foreach (var format in formats)
 			{
+				if (format.CanLoad(f.FileName))
+				{
+					var r = format.CreateReader();
+					using (var stream = File.Open(f.FileName, FileMode.Open, FileAccess.Read, FileShare.Read))
+					{
+						var s = r.Load(stream,Path.GetDirectoryName(Path.GetFullPath( f.FileName)));
+						return s;
+					}
+				}
 			}
 			return null;
 		}
+		private string BuildFilter()
+		{
+			StringBuilder filterBuilder = new StringBuilder();
+			foreach (var format in formats)
+			{
+				BuildFilterOption(format, filterBuilder);
+				filterBuilder.Append("|");
+			}
+			
+			filterBuilder.Append("All (*.*)|*.*");
 
+			var filter = filterBuilder.ToString();
+			return filter;
+		}
+		private static void BuildFilterOption(ISceneFileFormat format, StringBuilder allBuilder)
+		{
+			allBuilder.Append(format.Name);
+			allBuilder.Append(" (");
+			string separator = String.Empty;
+			foreach (var ex in format.Extensions)
+			{
+				allBuilder.Append(separator);
+				allBuilder.Append("*");
+				allBuilder.Append(ex);
+				separator = ", ";
+			}
+			allBuilder.Append(")|");
+			separator = String.Empty;
+			foreach (var ex in format.Extensions)
+			{
+				allBuilder.Append(separator);
+				allBuilder.Append("*");
+				allBuilder.Append(ex);
+				separator = ";";
+			}
+		}
 		#endregion
 
 		#region Methods
 
-		private void BuildFilterString()
-		{
-			StringBuilder sb = new StringBuilder();
-			List<string> ex = (from format in this.formats from f in format.Extensions select f).ToList();
-		}
 
 		#endregion
 	}
