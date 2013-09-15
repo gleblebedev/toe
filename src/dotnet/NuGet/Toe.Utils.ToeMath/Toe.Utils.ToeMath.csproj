@@ -1,0 +1,163 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{C138CBF1-49EB-4761-ACB4-D254A0F7A02B}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Toe.Utils.ToeMath</RootNamespace>
+    <AssemblyName>Toe.Utils.ToeMath.net40</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>Toe.Utils.ToeMath.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Double1.cs" />
+    <Compile Include="Double1x1.cs" />
+    <Compile Include="Double1x2.cs" />
+    <Compile Include="Double1x3.cs" />
+    <Compile Include="Double1x4.cs" />
+    <Compile Include="Double2.cs" />
+    <Compile Include="Double2x1.cs" />
+    <Compile Include="Double2x2.cs" />
+    <Compile Include="Double2x3.cs" />
+    <Compile Include="Double2x4.cs" />
+    <Compile Include="Double3.cs" />
+    <Compile Include="Double3x1.cs" />
+    <Compile Include="Double3x2.cs" />
+    <Compile Include="Double3x3.cs" />
+    <Compile Include="Double3x4.cs" />
+    <Compile Include="Double4.cs" />
+    <Compile Include="Double4x1.cs" />
+    <Compile Include="Double4x2.cs" />
+    <Compile Include="Double4x3.cs" />
+    <Compile Include="Double4x4.cs" />
+    <Compile Include="Float1.cs" />
+    <Compile Include="Float1x1.cs" />
+    <Compile Include="Float1x2.cs" />
+    <Compile Include="Float1x3.cs" />
+    <Compile Include="Float1x4.cs" />
+    <Compile Include="Float2.cs" />
+    <Compile Include="Float2x1.cs" />
+    <Compile Include="Float2x2.cs" />
+    <Compile Include="Float2x3.cs" />
+    <Compile Include="Float2x4.cs" />
+    <Compile Include="Float3.cs" />
+    <Compile Include="Float3x1.cs" />
+    <Compile Include="Float3x2.cs" />
+    <Compile Include="Float3x3.cs" />
+    <Compile Include="Float3x4.cs" />
+    <Compile Include="Float4.cs" />
+    <Compile Include="Float4x1.cs" />
+    <Compile Include="Float4x2.cs" />
+    <Compile Include="Float4x3.cs" />
+    <Compile Include="Float4x4.cs" />
+    <Compile Include="half.cs" />
+    <Compile Include="Half1.cs" />
+    <Compile Include="Half1x1.cs" />
+    <Compile Include="Half1x2.cs" />
+    <Compile Include="Half1x3.cs" />
+    <Compile Include="Half1x4.cs" />
+    <Compile Include="Half2.cs" />
+    <Compile Include="Half2x1.cs" />
+    <Compile Include="Half2x2.cs" />
+    <Compile Include="Half2x3.cs" />
+    <Compile Include="Half2x4.cs" />
+    <Compile Include="Half3.cs" />
+    <Compile Include="Half3x1.cs" />
+    <Compile Include="Half3x2.cs" />
+    <Compile Include="Half3x3.cs" />
+    <Compile Include="Half3x4.cs" />
+    <Compile Include="Half4.cs" />
+    <Compile Include="Half4x1.cs" />
+    <Compile Include="Half4x2.cs" />
+    <Compile Include="Half4x3.cs" />
+    <Compile Include="Half4x4.cs" />
+    <Compile Include="HalfHelper.cs" />
+    <Compile Include="Int1.cs" />
+    <Compile Include="Int1x1.cs" />
+    <Compile Include="Int1x2.cs" />
+    <Compile Include="Int1x3.cs" />
+    <Compile Include="Int1x4.cs" />
+    <Compile Include="Int2.cs" />
+    <Compile Include="Int2x1.cs" />
+    <Compile Include="Int2x2.cs" />
+    <Compile Include="Int2x3.cs" />
+    <Compile Include="Int2x4.cs" />
+    <Compile Include="Int3.cs" />
+    <Compile Include="Int3x1.cs" />
+    <Compile Include="Int3x2.cs" />
+    <Compile Include="Int3x3.cs" />
+    <Compile Include="Int3x4.cs" />
+    <Compile Include="Int4.cs" />
+    <Compile Include="Int4x1.cs" />
+    <Compile Include="Int4x2.cs" />
+    <Compile Include="Int4x3.cs" />
+    <Compile Include="Int4x4.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Uint1.cs" />
+    <Compile Include="Uint1x1.cs" />
+    <Compile Include="Uint1x2.cs" />
+    <Compile Include="Uint1x3.cs" />
+    <Compile Include="Uint1x4.cs" />
+    <Compile Include="Uint2.cs" />
+    <Compile Include="Uint2x1.cs" />
+    <Compile Include="Uint2x2.cs" />
+    <Compile Include="Uint2x3.cs" />
+    <Compile Include="Uint2x4.cs" />
+    <Compile Include="Uint3.cs" />
+    <Compile Include="Uint3x1.cs" />
+    <Compile Include="Uint3x2.cs" />
+    <Compile Include="Uint3x3.cs" />
+    <Compile Include="Uint3x4.cs" />
+    <Compile Include="Uint4.cs" />
+    <Compile Include="Uint4x1.cs" />
+    <Compile Include="Uint4x2.cs" />
+    <Compile Include="Uint4x3.cs" />
+    <Compile Include="Uint4x4.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Toe.Utils.ToeMath.snk" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

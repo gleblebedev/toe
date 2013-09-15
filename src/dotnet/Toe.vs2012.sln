@@ -43,6 +43,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toe.Utils", "Toe.Utils\Toe.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toe.Utils.TextParser", "Toe.Utils.TextParser\Toe.Utils.TextParser.csproj", "{91EF330C-981F-49F0-8BD6-5D8FA36B2871}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{37593ED1-3FFA-497D-842B-FD66FA39AB37}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

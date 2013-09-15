@@ -83,6 +83,10 @@
     <Compile Include="Material.cs" />
     <Compile Include="MaterialBinding.cs" />
     <Compile Include="MeshBone.cs" />
+    <Compile Include="MeshMath\Float1.cs" />
+    <Compile Include="MeshMath\Float2.cs" />
+    <Compile Include="MeshMath\Float3.cs" />
+    <Compile Include="MeshMath\Float4.cs" />
     <Compile Include="MeshStream.cs" />
     <Compile Include="Node.cs" />
     <Compile Include="NodeSkin.cs" />
