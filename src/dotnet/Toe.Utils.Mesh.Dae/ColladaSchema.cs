@@ -144,6 +144,8 @@ namespace Toe.Utils.Mesh.Dae
 
 		public XName urlName;
 
+		public XName matrixName;
+
 		public XName vcountName;
 
 		public XName verticesName;
@@ -180,6 +182,7 @@ namespace Toe.Utils.Mesh.Dae
 			this.colorName = XName.Get("color", this.colladaSchema);
 			this.lightName = XName.Get("light", this.colladaSchema);
 			this.rotateName = XName.Get("rotate", this.colladaSchema);
+			this.matrixName = XName.Get("matrix", this.colladaSchema);
 			this.nodeName = XName.Get("node", this.colladaSchema);
 			this.instanceGeometryName = XName.Get("instance_geometry", this.colladaSchema);
 			this.instanceControllerName = XName.Get("instance_controller", this.colladaSchema);

@@ -196,13 +196,12 @@ namespace Toe.Utils.Mesh.Ase
 				parser.UnknownLexemError();
 			}
 		}
-
-		private void ParsSubMesh(AseParser parser, Scene scene)
+		private void ParseNode(AseParser parser, Scene scene, Action<AseParser,Scene,Node,string> extendedProperties = null)
 		{
 			var node = new Node();
 			scene.Nodes.Add(node);
 			parser.Consume("{");
-			for (;;)
+			for (; ; )
 			{
 				var attr = parser.Consume();
 				if (attr == null || attr == "}")
@@ -214,35 +213,148 @@ namespace Toe.Utils.Mesh.Ase
 					node.Id = parser.Consume();
 					continue;
 				}
+				if (0 == string.Compare(attr, "*NODE_PARENT", StringComparison.InvariantCultureIgnoreCase))
+				{
+					string parentName = parser.Consume();
+					finishActions.Add((s) =>
+					{
+						var parentNode = s.FindNode(x => x.Id == parentName);
+						if (parentNode != null)
+						{
+							s.Nodes.Remove(node);
+							((INodeContainer)parentNode).Nodes.Add(node);
+						}
+						else
+						{
+							parentNode = parentNode;
+						}
+					});
+					continue;
+				}
 				if (0 == string.Compare(attr, "*NODE_TM", StringComparison.InvariantCultureIgnoreCase))
 				{
 					this.SkipBlock(parser);
 					continue;
 				}
+				if (extendedProperties != null)
+				{
+					extendedProperties(parser, scene, node,attr);
+				}
+				else
+				{
+					parser.UnknownLexemError();
+				}
+			}
+		}
+		private void ParseCamera(AseParser parser, Scene scene, Node node, string attr)
+		{
+			if (0 == string.Compare(attr, "*CAMERA_TYPE", StringComparison.InvariantCultureIgnoreCase))
+			{
+				switch (parser.Consume())
+				{
+					case "Target":
+						break;
+					default:
+						break;
+				}
+				return;
+			}
+			if (0 == string.Compare(attr, "*CAMERA_SETTINGS", StringComparison.InvariantCultureIgnoreCase))
+			{
+				this.SkipBlock(parser);
+				//*TIMEVALUE 0
+				//*CAMERA_NEAR 0.0000
+				//*CAMERA_FAR 1000.0000
+				//*CAMERA_FOV 0.7854
+				//*CAMERA_TDIST 140.6371
+
+				return;
+			}
+		
+			parser.UnknownLexemError();
+		}
+		private void ParseLight(AseParser parser, Scene scene, Node node, string attr)
+		{
+			if (0 == string.Compare(attr, "*LIGHT_TYPE", StringComparison.InvariantCultureIgnoreCase))
+			{
+				parser.Consume();
+				return;
+			}
+			if (0 == string.Compare(attr, "*LIGHT_SHADOWS", StringComparison.InvariantCultureIgnoreCase))
+			{
+				parser.Consume();
+				return;
+			}
+			if (0 == string.Compare(attr, "*LIGHT_USELIGHT", StringComparison.InvariantCultureIgnoreCase))
+			{
+				parser.ConsumeInt();
+				return;
+			}
+			if (0 == string.Compare(attr, "*LIGHT_SPOTSHAPE", StringComparison.InvariantCultureIgnoreCase))
+			{
+				parser.Consume();
+				return;
+			}
+			if (0 == string.Compare(attr, "*LIGHT_USEGLOBAL", StringComparison.InvariantCultureIgnoreCase))
+			{
+				parser.ConsumeInt();
+				return;
+			}
+			if (0 == string.Compare(attr, "*LIGHT_ABSMAPBIAS", StringComparison.InvariantCultureIgnoreCase))
+			{
+				parser.ConsumeInt();
+				return;
+			}
+			if (0 == string.Compare(attr, "*LIGHT_OVERSHOOT", StringComparison.InvariantCultureIgnoreCase))
+			{
+				parser.ConsumeInt();
+				return;
+			}
+			if (0 == string.Compare(attr, "*LIGHT_SETTINGS", StringComparison.InvariantCultureIgnoreCase))
+			{
+				this.SkipBlock(parser);
+				//*TIMEVALUE 0
+				//*LIGHT_COLOR 1.0000	1.0000	1.0000
+				//*LIGHT_INTENS 1.0000
+				//*LIGHT_ASPECT -1.0000
+				//*LIGHT_TDIST -1.0000
+				//*LIGHT_MAPBIAS 1.0000
+				//*LIGHT_MAPRANGE 4.0000
+				//*LIGHT_MAPSIZE 512
+				//*LIGHT_RAYBIAS 0.0000
+				return;
+			}
+
+			parser.UnknownLexemError();
+		}
+
+		private void ParsSubMesh(AseParser parser, Scene scene, Node node,string attr)
+		{
+				
 				if (0 == string.Compare(attr, "*MESH", StringComparison.InvariantCultureIgnoreCase))
 				{
 					ParsSubMesh(parser, node);
-					continue;
+					return;
 				}
 				if (0 == string.Compare(attr, "*MESH_ANIMATION", StringComparison.InvariantCultureIgnoreCase))
 				{
 					this.ParsMeshAnimation(parser, node);
-					continue;
+					return;
 				}
 				if (0 == string.Compare(attr, "*PROP_MOTIONBLUR", StringComparison.InvariantCultureIgnoreCase))
 				{
 					parser.ConsumeFloat();
-					continue;
+					return;
 				}
 				if (0 == string.Compare(attr, "*PROP_CASTSHADOW", StringComparison.InvariantCultureIgnoreCase))
 				{
 					parser.ConsumeInt();
-					continue;
+					return;
 				}
 				if (0 == string.Compare(attr, "*PROP_RECVSHADOW", StringComparison.InvariantCultureIgnoreCase))
 				{
 					parser.ConsumeInt();
-					continue;
+					return;
 				}
 				if (0 == string.Compare(attr, "*MATERIAL_REF", StringComparison.InvariantCultureIgnoreCase))
 				{
@@ -254,23 +366,23 @@ namespace Toe.Utils.Mesh.Ase
 							submesh.Material = scene.Materials[materialId];
 						}
 					}
-					continue;
+					return;
 				}
 				if (0 == string.Compare(attr, "*TM_ANIMATION", StringComparison.InvariantCultureIgnoreCase))
 				{
 					this.SkipBlock(parser);
-					continue;
+					return;
 				}
 				if (0 == string.Compare(attr, "*WIREFRAME_COLOR", StringComparison.InvariantCultureIgnoreCase))
 				{
 					parser.ConsumeFloat();
 					parser.ConsumeFloat();
 					parser.ConsumeFloat();
-					continue;
+					return;
 				}
 
 				parser.UnknownLexemError();
-			}
+			
 		}
 
 		private void ParsSubMesh(AseParser parser, Node node)
@@ -781,7 +893,7 @@ namespace Toe.Utils.Mesh.Ase
 				parser.UnknownLexemError();
 			}
 		}
-
+		List<Action<Scene>> finishActions = new List<Action<Scene>>();
 		private IScene ParseScene(AseParser parser)
 		{
 			Scene s = new Scene();
@@ -790,7 +902,8 @@ namespace Toe.Utils.Mesh.Ase
 				var meshSection = parser.Consume();
 				if (meshSection == null)
 				{
-					return s;
+					
+					break;
 				}
 				if (0 == string.Compare(meshSection, "*3DSMAX_ASCIIEXPORT", StringComparison.InvariantCultureIgnoreCase))
 				{
@@ -814,23 +927,30 @@ namespace Toe.Utils.Mesh.Ase
 				}
 				if (0 == string.Compare(meshSection, "*CAMERAOBJECT", StringComparison.InvariantCultureIgnoreCase))
 				{
-					this.SkipBlock(parser);
+					this.ParseNode(parser, s, ParseCamera);
 					continue;
 				}
 				if (0 == string.Compare(meshSection, "*GEOMOBJECT", StringComparison.InvariantCultureIgnoreCase))
 				{
-					ParsSubMesh(parser, s);
+					ParseNode(parser, s, ParsSubMesh);
 					continue;
 				}
 				if (0 == string.Compare(meshSection, "*LIGHTOBJECT", StringComparison.InvariantCultureIgnoreCase))
 				{
-					this.SkipBlock(parser);
+					ParseNode(parser, s, ParseLight);
 					continue;
 				}
 				parser.UnknownLexemError();
 			}
+			foreach (var finishAction in finishActions)
+			{
+				finishAction(s);
+			}
+			finishActions.Clear();
+			return s;
 		}
 
+	
 		private void ParseScene(AseParser parser, Scene scene)
 		{
 			parser.Consume("{");

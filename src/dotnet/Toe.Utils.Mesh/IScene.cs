@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using OpenTK;
 
@@ -29,6 +31,11 @@ namespace Toe.Utils.Mesh
 	}
 	public static class ExtensionMethods
 	{
+		public static INode FindNode(this INodeContainer scene,Func<INode,bool> predicate)
+		{
+			return GetAllNodes(scene).FirstOrDefault(predicate);
+		}
+		
 		public static BoundingBox GetBoundingBox(this INode node)
 		{
 			if (node.Mesh == null) return BoundingBox.Empty;

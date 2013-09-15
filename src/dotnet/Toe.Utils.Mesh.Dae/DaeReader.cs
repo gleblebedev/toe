@@ -426,6 +426,18 @@ namespace Toe.Utils.Mesh.Dae
 			}
 		}
 
+		private void ParseFloatArray(string polygon, float[] poligonArray)
+		{
+			var items = polygon.Split(new[] { ' ', '\t', '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
+			if (items.Length != poligonArray.Length)
+			{
+				throw new DaeException(string.Format("Array size doesn't match expected value {0}", poligonArray.Length));
+			}
+			for (int index = 0; index < items.Length; ++index)
+			{
+				poligonArray[index] = float.Parse(items[index], CultureInfo.InvariantCulture);
+			}
+		}
 		private void ParseIntArray(string polygon, int[] poligonArray)
 		{
 			var items = polygon.Split(new[] { ' ', '\t', '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
@@ -494,6 +506,9 @@ namespace Toe.Utils.Mesh.Dae
 		{
 			var n = new Node();
 			this.ParseIdAndName(node, n);
+			var mat = this.ParseMatrix(node.Element(this.schema.matrixName));
+			n.Position = new Vector3(mat.M14, mat.M24, mat.M34);
+			//n.Rotation = 
 
 			var geo = node.Element(this.schema.instanceGeometryName);
 			if (geo != null)
@@ -517,6 +532,17 @@ namespace Toe.Utils.Mesh.Dae
 			}
 
 			parent.Nodes.Add(n);
+		}
+
+		private Matrix4 ParseMatrix(XElement element)
+		{
+			if (element == null) return Matrix4.Identity;
+			var array = new float[16];
+			this.ParseFloatArray(element.Value, array);
+			return new Matrix4(array[0], array[1], array[2], array[3], 
+				array[4], array[5], array[6], array[7], 
+				array[8], array[9], array[10], array[11], 
+				array[12], array[13], array[14], array[15] );
 		}
 
 		private void ParseNodes(Scene scene, INodeContainer parent, IEnumerable<XElement> elements)
