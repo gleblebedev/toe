@@ -246,8 +246,37 @@ namespace Toe.Editor
 			{
 				return;
 			}
+			var editor = tab.Tag as IResourceEditor;
+			if (editor == null)
+			{
+				return;
+			}
+			Save(editor, editor.CurrentFileName);
 		}
 
+		private void Save(IResourceEditor editor, string currentFileName)
+		{
+			
+		}
+
+		private void OnSaveAsMenuOption(object sender, EventArgs e)
+		{
+			var tab = this.fileTabs.SelectedTab;
+			if (tab == null)
+			{
+				return;
+			}
+			var editor = tab.Tag as IResourceEditor;
+			if (editor == null)
+			{
+				return;
+			}
+			var d = new SaveFileDialog();
+			if (d.ShowDialog() == DialogResult.OK)
+			{
+				Save(editor, d.FileName);
+			}
+		}
 		private void RebindToEditor(object sender, EventArgs e)
 		{
 			var tab = this.fileTabs.SelectedTab;
@@ -328,5 +357,7 @@ namespace Toe.Editor
 		}
 
 		#endregion
+
+		
 	}
 }

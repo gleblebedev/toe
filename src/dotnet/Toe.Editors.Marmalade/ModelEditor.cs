@@ -71,8 +71,15 @@ namespace Toe.Editors.Marmalade
 
 		private void ResetModel(object sender, DataContextChangedEventArgs e)
 		{
+			this.ResetModelBox();
+		}
+
+		private void ResetModelBox()
+		{
 			if (this.Model == null)
+			{
 				return;
+			}
 			BoundingBox box = BoundingBox.Zero;
 			foreach (var mesh in this.Model.Meshes)
 			{
@@ -238,6 +245,18 @@ namespace Toe.Editors.Marmalade
 							Vector3 v;
 							sourceMesh.GetVertexAt(i, out v);
 							mesh.Vertices.Add(v);
+
+							if (sourceMesh.IsNormalStreamAvailable)
+							{
+								sourceMesh.GetNormalAt(i, out v);
+								mesh.Normals.Add(v);
+							}
+							if (sourceMesh.IsColorStreamAvailable)
+							{
+								Color col;
+								sourceMesh.GetColorAt(i, out col);
+								mesh.Colors.Add(col);
+							}
 						}
 						foreach (var submesh in sourceMesh.Submeshes)
 						{
@@ -245,12 +264,13 @@ namespace Toe.Editors.Marmalade
 							mesh.Surfaces.Add(surface);
 							foreach (var face in submesh)
 							{
-								surface.Indices.Add(new ComplexIndex(){Vertex = face, Color = face});
+								surface.Indices.Add(new ComplexIndex() { Vertex = face, Color = sourceMesh.IsColorStreamAvailable?face:0, Normal = sourceMesh.IsNormalStreamAvailable ? face : 0 });
 							}
 						}
 						this.Model.Meshes.Add(mesh);
 					}
 				}
+				ResetModelBox();
 			}
 		}
 
