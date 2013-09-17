@@ -53,6 +53,27 @@ namespace Toe.Editors
 		private string BuildFilter()
 		{
 			StringBuilder filterBuilder = new StringBuilder();
+			filterBuilder.Append("All supported types (");
+			foreach (var format in formats)
+			{
+				foreach (var ex in format.Extensions)
+				{
+					filterBuilder.Append(ex);
+				}
+			}
+			filterBuilder.Append(")|");
+			string separator = "";
+			foreach (var format in formats)
+			{
+				foreach (var ex in format.Extensions)
+				{
+					filterBuilder.Append(separator);
+					filterBuilder.Append("*");
+					filterBuilder.Append(ex);
+					separator = ";";
+				}
+			}
+			filterBuilder.Append("|");
 			foreach (var format in formats)
 			{
 				BuildFilterOption(format, filterBuilder);

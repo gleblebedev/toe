@@ -58,6 +58,7 @@
     <Compile Include="Bindings\DataContextChangedEventArgs.cs" />
     <Compile Include="Bindings\DataContextContainer.cs" />
     <Compile Include="Bindings\IBinding.cs" />
+    <Compile Include="Bindings\IEditorView.cs" />
     <Compile Include="Bindings\IView.cs" />
     <Compile Include="Bindings\PropertyBinding.cs" />
     <Compile Include="CommandExt.cs" />

@@ -26,6 +26,8 @@ namespace Toe.Editors.Marmalade
 
 		private IResourceFile resourceFile;
 
+		private IEditorView currentEditor;
+
 		#endregion
 
 		#region Constructors and Destructors
@@ -147,6 +149,11 @@ namespace Toe.Editors.Marmalade
 
 		public void SaveFile(string filename)
 		{
+			if (currentEditor != null)
+			{
+				currentEditor.SaveFile(filename);
+			}
+			
 			//throw new NotImplementedException();
 			//if (filename.EndsWith(".group.bin"))
 			//{
@@ -301,6 +308,7 @@ namespace Toe.Editors.Marmalade
 			var v = view as Control;
 			v.Dock = DockStyle.Fill;
 			controlCollection.Add(v);
+			this.currentEditor = view as IEditorView;
 
 			this.itemsPropertiesSplitter.Panel2Collapsed = false;
 		}

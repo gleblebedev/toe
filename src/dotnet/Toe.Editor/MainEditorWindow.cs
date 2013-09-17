@@ -239,44 +239,56 @@ namespace Toe.Editor
 			}
 		}
 
-		private void OnSaveMenuOption(object sender, EventArgs e)
-		{
-			var tab = this.fileTabs.SelectedTab;
-			if (tab == null)
-			{
-				return;
-			}
-			var editor = tab.Tag as IResourceEditor;
-			if (editor == null)
-			{
-				return;
-			}
-			Save(editor, editor.CurrentFileName);
-		}
-
-		private void Save(IResourceEditor editor, string currentFileName)
-		{
-			
-		}
-
 		private void OnSaveAsMenuOption(object sender, EventArgs e)
 		{
-			var tab = this.fileTabs.SelectedTab;
-			if (tab == null)
+			try
 			{
-				return;
+				var tab = this.fileTabs.SelectedTab;
+				if (tab == null)
+				{
+					return;
+				}
+				var editor = tab.Tag as IResourceEditor;
+				if (editor == null)
+				{
+					return;
+				}
+				var d = new SaveFileDialog();
+				var mask = "*" + Path.GetExtension(editor.CurrentFileName);
+				d.Filter = mask + "|" + mask + "|All (*.*)|(*.*)";
+				if (d.ShowDialog() == DialogResult.OK)
+				{
+					editor.SaveFile(d.FileName);
+				}
 			}
-			var editor = tab.Tag as IResourceEditor;
-			if (editor == null)
+			catch (Exception ex)
 			{
-				return;
-			}
-			var d = new SaveFileDialog();
-			if (d.ShowDialog() == DialogResult.OK)
-			{
-				Save(editor, d.FileName);
+				MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButtons.OK);
 			}
 		}
+
+		private void OnSaveMenuOption(object sender, EventArgs e)
+		{
+			try
+			{
+				var tab = this.fileTabs.SelectedTab;
+				if (tab == null)
+				{
+					return;
+				}
+				var editor = tab.Tag as IResourceEditor;
+				if (editor == null)
+				{
+					return;
+				}
+				editor.SaveFile(editor.CurrentFileName);
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show(ex.ToString(), ex.Message, MessageBoxButtons.OK);
+			}
+		}
+
 		private void RebindToEditor(object sender, EventArgs e)
 		{
 			var tab = this.fileTabs.SelectedTab;
@@ -357,7 +369,5 @@ namespace Toe.Editor
 		}
 
 		#endregion
-
-		
 	}
 }

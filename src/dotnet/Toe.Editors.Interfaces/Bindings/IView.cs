@@ -7,5 +7,6 @@ namespace Toe.Editors.Interfaces.Bindings
 		DataContextContainer DataContext { get; }
 
 		#endregion
+
 	}
 }

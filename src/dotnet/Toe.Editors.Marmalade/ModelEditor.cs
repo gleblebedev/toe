@@ -19,7 +19,7 @@ using Toe.Utils.Mesh;
 
 namespace Toe.Editors.Marmalade
 {
-	public class ModelEditor : UserControl, IView
+	public class ModelEditor : UserControl,  IEditorView
 	{
 		#region Constants and Fields
 
@@ -101,6 +101,11 @@ namespace Toe.Editors.Marmalade
 			{
 				return this.dataContext;
 			}
+		}
+
+		public void SaveFile(string filename)
+		{
+			
 		}
 
 		public Model Model
