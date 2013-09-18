@@ -4,7 +4,7 @@ using Toe.Marmalade.IwAnim;
 
 namespace Toe.Marmalade.TextFiles.IwAnim
 {
-	public class AnimTextSerializer : ITextSerializer
+	public class AnimTextDeserializer : ITextDeserializer
 	{
 		#region Constants and Fields
 
@@ -14,7 +14,7 @@ namespace Toe.Marmalade.TextFiles.IwAnim
 
 		#region Constructors and Destructors
 
-		public AnimTextSerializer(IComponentContext context)
+		public AnimTextDeserializer(IComponentContext context)
 		{
 			this.context = context;
 		}

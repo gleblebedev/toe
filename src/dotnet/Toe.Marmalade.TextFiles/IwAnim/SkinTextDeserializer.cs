@@ -8,7 +8,7 @@ using Toe.Utils.TextParser;
 
 namespace Toe.Marmalade.TextFiles.IwAnim
 {
-	public class SkinTextSerializer : ITextSerializer
+	public class SkinTextDeserializer : ITextDeserializer
 	{
 		#region Constants and Fields
 
@@ -18,7 +18,7 @@ namespace Toe.Marmalade.TextFiles.IwAnim
 
 		#region Constructors and Destructors
 
-		public SkinTextSerializer(IComponentContext context)
+		public SkinTextDeserializer(IComponentContext context)
 		{
 			this.context = context;
 		}

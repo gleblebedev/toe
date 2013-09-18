@@ -123,6 +123,10 @@
       <Project>{1D297D66-08E0-4239-9D2C-0F29F6F5A895}</Project>
       <Name>Toe.Gx.net40.vs2010</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Toe.Marmalade.TextFiles\Toe.Marmalade.TextFiles.csproj">
+      <Project>{6A49694C-C9B0-4E1D-83B2-2A445B3371FE}</Project>
+      <Name>Toe.Marmalade.TextFiles</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Toe.Marmalade\Toe.Marmalade.net40.vs2010.csproj">
       <Project>{2708D020-33C1-4A4A-BDB0-035FB9EEDFFD}</Project>
       <Name>Toe.Marmalade.net40.vs2010</Name>

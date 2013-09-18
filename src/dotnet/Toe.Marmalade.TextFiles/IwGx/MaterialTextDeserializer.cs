@@ -6,7 +6,7 @@ using Toe.Utils.Marmalade.IwGx;
 
 namespace Toe.Marmalade.TextFiles.IwGx
 {
-	public class MaterialTextSerializer : ITextSerializer
+	public class MaterialTextDeserializer : ITextDeserializer
 	{
 		#region Constants and Fields
 
@@ -18,7 +18,7 @@ namespace Toe.Marmalade.TextFiles.IwGx
 
 		#region Constructors and Destructors
 
-		public MaterialTextSerializer(IResourceManager resourceManager, IComponentContext context)
+		public MaterialTextDeserializer(IResourceManager resourceManager, IComponentContext context)
 		{
 			this.resourceManager = resourceManager;
 			this.context = context;

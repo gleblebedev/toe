@@ -1,12 +1,15 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 
 using Toe.Editors.Interfaces;
 using Toe.Editors.Interfaces.Bindings;
 using Toe.Resources;
+using Toe.Utils.Marmalade;
 
 namespace Toe.Editors.Marmalade
 {
@@ -22,6 +25,8 @@ namespace Toe.Editors.Marmalade
 
 		private readonly IResourceManager resourceManager;
 
+		private readonly TextResourceWriter textResourceWriter;
+
 		private SplitContainer itemsPropertiesSplitter;
 
 		private IResourceFile resourceFile;
@@ -32,11 +37,12 @@ namespace Toe.Editors.Marmalade
 
 		#region Constructors and Destructors
 
-		public ResourceFileEditor(IEditorEnvironment editorEnvironment, IResourceManager resourceManager)
+		public ResourceFileEditor(IEditorEnvironment editorEnvironment, IResourceManager resourceManager, TextResourceWriter textResourceWriter)
 		{
 			this.history = new CommandHistory();
 			this.editorEnvironment = editorEnvironment;
 			this.resourceManager = resourceManager;
+			this.textResourceWriter = textResourceWriter;
 			this.history.PropertyChanged += this.NotifyHistoryChanged;
 			this.InitializeComponent();
 			this.InitializeEditor();
@@ -149,24 +155,20 @@ namespace Toe.Editors.Marmalade
 
 		public void SaveFile(string filename)
 		{
-			if (currentEditor != null)
+			if (filename.EndsWith(".group.bin"))
 			{
-				currentEditor.SaveFile(filename);
+				throw new NotImplementedException();
 			}
-			
-			//throw new NotImplementedException();
-			//if (filename.EndsWith(".group.bin"))
-			//{
-			//    throw new NotImplementedException();
-			//}
-			//else
-			//{
-			//    using (var stream = new MemoryStream())
-			//    {
-			//        var w = new TextResourceWriter();
-			//        w.Save(stream, (IEnumerable<Managed>)this.dataContext.Value);
-			//    }
-			//}
+			else
+			{
+				using (var stream = new MemoryStream())
+				{
+					textResourceWriter.Save(stream, (IEnumerable<IResourceFileItem>)this.dataContext.Value, Path.GetDirectoryName(Path.GetFullPath(filename)));
+					if (File.Exists(filename))
+						File.Copy(filename,filename+".bak");
+					File.WriteAllBytes(filename, stream.ToArray());
+				}
+			}
 		}
 
 		public void StopRecorder()

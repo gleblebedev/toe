@@ -7,7 +7,7 @@ using Toe.Resources;
 
 namespace Toe.Marmalade.TextFiles.IwGx
 {
-	public class ShaderTextSerializer : ITextSerializer
+	public class ShaderTextDeserializer : ITextDeserializer
 	{
 		#region Constants and Fields
 
@@ -17,7 +17,7 @@ namespace Toe.Marmalade.TextFiles.IwGx
 
 		#region Constructors and Destructors
 
-		public ShaderTextSerializer(IResourceManager resourceManager)
+		public ShaderTextDeserializer(IResourceManager resourceManager)
 		{
 			this.resourceManager = resourceManager;
 		}

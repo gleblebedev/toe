@@ -16,18 +16,27 @@ namespace Toe.Marmalade.TextFiles
 
 		private static readonly string[] extensions = new[] { ".mtl", ".group", ".geo", ".anim", ".skel", ".skin", ".itx" };
 
-		private readonly IComponentContext context;
-
 		private readonly IResourceManager resourceManager;
+
+		private readonly Func<uint, ITextDeserializer> textDeserializerFactory;
+
+		private readonly Func<IList<IResourceFileItem>> itemsCollectionFactory;
+
+		private readonly Func<IList<Managed>> managedCollectionFactory;
 
 		#endregion
 
 		#region Constructors and Destructors
 
-		public TextResourceFormat(IResourceManager resourceManager, IComponentContext context)
+		public TextResourceFormat(IResourceManager resourceManager, 
+			Func<uint,ITextDeserializer> textDeserializerFactory,
+			Func<IList<IResourceFileItem>> itemsCollectionFactory,
+			Func<IList<Managed>> managedCollectionFactory)
 		{
 			this.resourceManager = resourceManager;
-			this.context = context;
+			this.textDeserializerFactory = textDeserializerFactory;
+			this.itemsCollectionFactory = itemsCollectionFactory;
+			this.managedCollectionFactory = managedCollectionFactory;
 		}
 
 		#endregion
@@ -73,7 +82,7 @@ namespace Toe.Marmalade.TextFiles
 
 		public IList<Managed> Load(Stream stream, string defaultName, IResourceFile resourceFile, string basePath)
 		{
-			IList<Managed> items = this.context.Resolve<IList<Managed>>();
+			IList<Managed> items = managedCollectionFactory();
 
 			using (var source = new StreamReader(stream))
 			{
@@ -86,10 +95,10 @@ namespace Toe.Marmalade.TextFiles
 					{
 						return items;
 					}
-					object serializer;
-					if (this.context.TryResolveKeyed(Hash.Get(lexem), typeof(ITextSerializer), out serializer))
+					object serializer = textDeserializerFactory(Hash.Get(lexem));
+					if (serializer != null)
 					{
-						items.Add(((ITextSerializer)serializer).Parse(parser, defaultName));
+						items.Add(((ITextDeserializer)serializer).Parse(parser, defaultName));
 						continue;
 					}
 
@@ -100,7 +109,7 @@ namespace Toe.Marmalade.TextFiles
 
 		public IList<IResourceFileItem> Read(string filePath, IResourceFile resourceFile)
 		{
-			var items = this.context.Resolve<IList<IResourceFileItem>>();
+			var items = itemsCollectionFactory();
 
 			using (var fileStream = File.OpenRead(filePath))
 			{

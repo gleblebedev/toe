@@ -1,3 +1,5 @@
+using Toe.Resources;
+
 namespace Toe.Marmalade.TextFiles
 {
 	public interface ITextSerializer
@@ -16,8 +18,9 @@ namespace Toe.Marmalade.TextFiles
 		/// <summary>
 		/// Parse text block.
 		/// </summary>
-		Managed Parse(TextParser parser, string defaultName);
+		void Serialize(TextSerializer parser, Managed managed);
 
 		#endregion
+
 	}
 }
