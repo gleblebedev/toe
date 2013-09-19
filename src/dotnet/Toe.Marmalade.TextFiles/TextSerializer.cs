@@ -1,5 +1,6 @@
 using System.Globalization;
 using System.IO;
+using System.Linq;
 
 using Toe.Resources;
 using Toe.Utils.TextParser;
@@ -86,6 +87,15 @@ namespace Toe.Marmalade.TextFiles
 		{
 			reader.Write(" ");
 			reader.Write(string.Format(CultureInfo.InvariantCulture, "{0}", i));
+		}
+
+		public void WriteRaw(string str)
+		{
+			if (!string.IsNullOrEmpty(str))
+			{
+				reader.Write(str);
+				isNewLine = (str.Last() == '\n' || str.Last() == '\r');
+			}
 		}
 	}
 }

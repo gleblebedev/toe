@@ -165,7 +165,12 @@ namespace Toe.Editors.Marmalade
 				{
 					textResourceWriter.Save(stream, (IEnumerable<IResourceFileItem>)this.dataContext.Value, Path.GetDirectoryName(Path.GetFullPath(filename)));
 					if (File.Exists(filename))
-						File.Copy(filename,filename+".bak");
+					{
+						var destFileName = filename + ".bak";
+						if (File.Exists(destFileName))
+							File.Delete(destFileName);
+						File.Copy(filename, destFileName);
+					}
 					File.WriteAllBytes(filename, stream.ToArray());
 				}
 			}

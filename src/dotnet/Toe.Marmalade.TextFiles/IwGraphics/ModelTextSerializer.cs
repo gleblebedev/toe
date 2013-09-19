@@ -40,21 +40,56 @@ namespace Toe.Marmalade.TextFiles.IwGraphics
 		{
 			base.SerializeContent(parser, managed);
 			var variables = (Model)managed;
+			int i = 1;
 			foreach (var mesh in variables.Meshes)
 			{
 				parser.WriteAttribute("CMesh");
 				parser.OpenBlock();
 				parser.WriteAttribute("name");
-				parser.WriteStringValue(mesh.Name);
+				parser.WriteStringValue(mesh.Name,"mesh"+i);
 
 				parser.WriteAttribute("scale");
 				parser.WriteFloatValue(1);
 
-				parser.WriteAttribute("CVerts");
-				parser.OpenBlock();
-				parser.WriteAttribute("numVerts");
-				parser.WriteIntValue(0);
-				parser.CloseBlock();
+				if (mesh.IsVertexStreamAvailable)
+				{
+					parser.WriteAttribute("CVerts");
+					parser.OpenBlock();
+					parser.WriteAttribute("numVerts");
+					parser.WriteIntValue(mesh.Vertices.Count);
+					foreach (var vector3 in mesh.Vertices)
+					{
+						parser.WriteAttribute("v");
+						parser.WriteRaw(" {");
+						parser.WriteFloatValue(vector3.X);
+						parser.WriteRaw(",");
+						parser.WriteFloatValue(vector3.Y);
+						parser.WriteRaw(",");
+						parser.WriteFloatValue(vector3.Z);
+						parser.WriteRaw(" }");
+					}
+					parser.CloseBlock();
+				}
+
+				if (mesh.IsNormalStreamAvailable)
+				{
+					parser.WriteAttribute("CVertNorms");
+					parser.OpenBlock();
+					parser.WriteAttribute("numVertNorms");
+					parser.WriteIntValue(mesh.Normals.Count);
+					foreach (var vector3 in mesh.Normals)
+					{
+						parser.WriteAttribute("vn");
+						parser.WriteRaw(" {");
+						parser.WriteFloatValue(vector3.X);
+						parser.WriteRaw(",");
+						parser.WriteFloatValue(vector3.Y);
+						parser.WriteRaw(",");
+						parser.WriteFloatValue(vector3.Z);
+						parser.WriteRaw(" }");
+					}
+					parser.CloseBlock();
+				}
 
 				foreach (var surface in mesh.Surfaces)
 				{
@@ -65,12 +100,23 @@ namespace Toe.Marmalade.TextFiles.IwGraphics
 					parser.WriteAttribute("CTris");
 					parser.OpenBlock();
 					parser.WriteAttribute("numTris");
-					parser.WriteIntValue(0);
+					parser.WriteIntValue(surface.Count);
+					//foreach (var index in surface)
+					//{
+					//	parser.WriteAttribute("t");
+					//	parser.WriteRaw(" {");
+					//	parser.WriteRaw(",");
+					//	parser.WriteFloatValue(vector3.Y);
+					//	parser.WriteRaw(",");
+					//	parser.WriteFloatValue(vector3.Z);
+					//	parser.WriteRaw(" }");
+					//}
 					parser.CloseBlock();
 					parser.CloseBlock();
 				}
 
 				parser.CloseBlock();
+				++i;
 			}
 		}
 
