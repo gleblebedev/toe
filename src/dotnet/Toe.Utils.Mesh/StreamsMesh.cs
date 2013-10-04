@@ -1,4 +1,4 @@
-using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -13,27 +13,19 @@ using Microsoft.Xna.Framework;
 
 namespace Toe.Utils.Mesh
 {
-	public class StreamMesh : SceneItem, IMesh
+	public class SeparateStreamsMesh : SceneItem, IMesh
 	{
 		#region Constants and Fields
 
-		public MeshStream<VertexWeight> weights = new MeshStream<VertexWeight>();
+		Dictionary<StreamKey, IMeshStream> availableStreams = new Dictionary<StreamKey, IMeshStream>();
 
-		private readonly MeshStream<Vector3> binormals = new MeshStream<Vector3>();
 
 		private readonly BoneCollection bones = new BoneCollection();
 
-		private readonly MeshStream<Color> colors = new MeshStream<Color>();
 
-		private readonly MeshStream<Vector3> normals = new MeshStream<Vector3>();
+		private readonly List<SeparateStreamsSubmesh> submeshes = new List<SeparateStreamsSubmesh>();
 
-		private readonly List<ISubMesh> submeshes = new List<ISubMesh>();
-
-		private readonly MeshStream<Vector3> tangents = new MeshStream<Vector3>();
-
-		private readonly List<MeshStream<Vector3>> uv = new List<MeshStream<Vector3>>();
-
-		private readonly MeshStream<Vector3> vertices = new MeshStream<Vector3>();
+		
 
 		private bool areBoundsValid;
 
@@ -51,13 +43,23 @@ namespace Toe.Utils.Mesh
 
 		public string BaseName { get; set; }
 
-		public MeshStream<Vector3> Binormals
+		public IMeshStream GetStream(string key, int channel)
 		{
-			get
+			IMeshStream list;
+			if (availableStreams.TryGetValue(new StreamKey(key,channel), out list))
 			{
-				return this.binormals;
+				return list;
 			}
+			return null;
 		}
+
+		
+		public IMeshStream SetStream(string key, int channel, IMeshStream stream)
+		{
+			availableStreams[new StreamKey(key, channel)] = stream;
+			return stream;
+		}
+
 
 		public BoneCollection Bones
 		{
@@ -103,13 +105,6 @@ namespace Toe.Utils.Mesh
 			}
 		}
 
-		public MeshStream<Color> Colors
-		{
-			get
-			{
-				return this.colors;
-			}
-		}
 
 		public int Count
 		{
@@ -119,71 +114,30 @@ namespace Toe.Utils.Mesh
 			}
 		}
 
-		public bool IsBinormalStreamAvailable
+		/// <summary>
+		/// Gets mesh stream reader if available.
+		/// </summary>
+		/// <typeparam name="T">Type of stream element.</typeparam>
+		/// <param name="key">Stream key.</param>
+		/// <param name="channel">Stream channel.</param>
+		/// <returns>Stream reader if available, null if not.</returns>
+		public IList<T> GetStreamReader<T>(string key, int channel)
 		{
-			get
-			{
-				return this.binormals != null && this.binormals.Count > 0;
-			}
+			var stream = this.GetStream(key, channel);
+			if (stream == null) return null;
+			return stream.GetReader<T>();
 		}
 
-		public bool IsColorStreamAvailable
+		public bool HasStream(string key, int channel)
 		{
-			get
-			{
-				return this.colors != null && this.colors.Count > 0;
-			}
+			return this.GetStream(key, channel) != null;
 		}
 
-		public bool IsNormalStreamAvailable
-		{
-			get
-			{
-				return this.normals != null && this.normals.Count > 0;
-			}
-		}
 
-		public bool IsTangentStreamAvailable
-		{
-			get
-			{
-				return this.tangents != null && this.tangents.Count > 0;
-			}
-		}
-
-		public bool IsUV0StreamAvailable
-		{
-			get
-			{
-				return this.uv.Count > 0 && this.uv[0].Count > 0;
-			}
-		}
-
-		public bool IsUV1StreamAvailable
-		{
-			get
-			{
-				return this.uv.Count > 1 && this.uv[1].Count > 0;
-			}
-		}
-
-		public bool IsVertexStreamAvailable
-		{
-			get
-			{
-				return this.vertices != null && this.vertices.Count > 0;
-			}
-		}
 
 		public uint NameHash { get; set; }
 
-		public MeshStream<Vector3> Normals
-		{
-			get
-			{
-				return this.normals;
-			}
-		}
+		
 
 		public object RenderData { get; set; }
 
@@ -193,45 +147,15 @@ namespace Toe.Utils.Mesh
 
 		public string SkeletonModel { get; set; }
 
-		public IList<ISubMesh> Submeshes
+		IList<ISubMesh> IMesh.Submeshes
 		{
 			get
 			{
-				return this.submeshes;
+				return this.submeshes.Cast<ISubMesh>().ToArray();
 			}
 		}
 
-		public MeshStream<Vector3> Tangents
-		{
-			get
-			{
-				return this.tangents;
-			}
-		}
-
-		public IList<MeshStream<Vector3>> UV
-		{
-			get
-			{
-				return this.uv;
-			}
-		}
-
-		public MeshStream<Vector3> Vertices
-		{
-			get
-			{
-				return this.vertices;
-			}
-		}
-
-		public MeshStream<VertexWeight> Weights
-		{
-			get
-			{
-				return this.weights;
-			}
-		}
+		
 
 		public string useGeo { get; set; }
 
@@ -241,10 +165,10 @@ namespace Toe.Utils.Mesh
 
 		#region Public Methods and Operators
 
-		public ISubMesh CreateSubmesh()
+		public SeparateStreamsSubmesh CreateSubmesh()
 		{
-			var streamSubmesh = new StreamSubmesh(this);
-			this.Submeshes.Add(streamSubmesh);
+			var streamSubmesh = new SeparateStreamsSubmesh(this);
+			this.submeshes.Add(streamSubmesh);
 			return streamSubmesh;
 		}
 
@@ -253,132 +177,15 @@ namespace Toe.Utils.Mesh
 			return this.bones.EnsureBone(boneName);
 		}
 
-		public MeshStream<Vector3> EnsureUVStream(int setId)
-		{
-			while (this.UV.Count <= setId)
-			{
-				this.UV.Add(new MeshStream<Vector3>());
-			}
-			return this.UV[setId];
-		}
+		
 
-		/// <summary>
-		/// Get vertex color by index.
-		/// </summary>
-		/// <param name="index">Vertex index.</param>
-		/// <param name="color">Vertex color.</param>
-		public void GetColorAt(int index, out Color color)
-		{
-			foreach (StreamSubmesh submesh in this.submeshes)
-			{
-				if (index < submesh.Indices.Count)
-				{
-					color = this.colors[submesh.Indices[index].Color];
-					return;
-				}
-				index -= submesh.Indices.Count;
-			}
-			throw new IndexOutOfRangeException();
-		}
-
-		/// <summary>
-		/// Get normal position by index.
-		/// </summary>
-		/// <param name="index">Vertex index.</param>
-		/// <param name="vector">Vertex normal.</param>
-		public void GetNormalAt(int index, out Vector3 vector)
-		{
-			foreach (StreamSubmesh submesh in this.submeshes)
-			{
-				if (index < submesh.Indices.Count)
-				{
-					vector = this.normals[submesh.Indices[index].Normal];
-					return;
-				}
-				index -= submesh.Indices.Count;
-			}
-			throw new IndexOutOfRangeException();
-		}
-
-		/// <summary>
-		/// Get vertex texture coords by index.
-		/// </summary>
-		/// <param name="index">Vertex index.</param>
-		/// <param name="channel">Texture channel.</param>
-		/// <param name="uv">Vertex UV.</param>
-		public void GetUV3At(int index, int channel, out Vector3 uv)
-		{
-			foreach (StreamSubmesh submesh in this.submeshes)
-			{
-				if (index < submesh.Indices.Count)
-				{
-					uv = this.uv[channel][submesh.Indices[index].GetUV(channel)];
-					return;
-				}
-				index -= submesh.Indices.Count;
-			}
-			throw new IndexOutOfRangeException();
-		}
-
-		/// <summary>
-		/// Get vertex position by index.
-		/// </summary>
-		/// <param name="index">Vertex index.</param>
-		/// <param name="vector">Vertex position.</param>
-		public void GetVertexAt(int index, out Vector3 vector)
-		{
-			foreach (StreamSubmesh submesh in this.submeshes)
-			{
-				if (index < submesh.Indices.Count)
-				{
-					vector = this.vertices[submesh.Indices[index].Vertex];
-					return;
-				}
-				index -= submesh.Indices.Count;
-			}
-			throw new IndexOutOfRangeException();
-		}
 
 		public void InvalidateBounds()
 		{
 			this.areBoundsValid = false;
 		}
 
-		public void VisitBinormals(Vector3VisitorCallback callback)
-		{
-			foreach (StreamSubmesh submesh in this.submeshes)
-			{
-				foreach (var index in submesh.Indices)
-				{
-					var v = this.binormals[index.Binormal];
-					callback(ref v);
-				}
-			}
-		}
-
-		public void VisitNormals(Vector3VisitorCallback callback)
-		{
-			foreach (StreamSubmesh submesh in this.submeshes)
-			{
-				foreach (var index in submesh.Indices)
-				{
-					var v = this.normals[index.Vertex];
-					callback(ref v);
-				}
-			}
-		}
-
-		public void VisitTangents(Vector3VisitorCallback callback)
-		{
-			foreach (StreamSubmesh submesh in this.submeshes)
-			{
-				foreach (var index in submesh.Indices)
-				{
-					var v = this.tangents[index.Tangent];
-					callback(ref v);
-				}
-			}
-		}
+	
 
 		#endregion
 
@@ -393,7 +200,9 @@ namespace Toe.Utils.Mesh
 			this.areBoundsValid = true;
 			this.boundingBoxMin = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
 			this.boundingBoxMax = new Vector3(float.MinValue, float.MinValue, float.MinValue);
-			foreach (var vector3 in this.Vertices)
+			var streamReader = this.GetStreamReader<Vector3>(Streams.Position, 0);
+			if (streamReader != null)
+			foreach (var vector3 in streamReader)
 			{
 				if (this.boundingBoxMax.X < vector3.X)
 				{

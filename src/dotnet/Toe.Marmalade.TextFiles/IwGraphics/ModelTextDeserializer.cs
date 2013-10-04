@@ -243,7 +243,7 @@ namespace Toe.Marmalade.TextFiles.IwGraphics
 
 		private static void ParseUVs(TextParser parser, Mesh mesh)
 		{
-			MeshStream<Vector2> uvs = null;
+			ListMeshStream<Vector2> uvs = null;
 
 			for (;;)
 			{
@@ -321,7 +321,7 @@ namespace Toe.Marmalade.TextFiles.IwGraphics
 			}
 		}
 
-		private static void ParseVertNorms(TextParser parser, MeshStream<Vector3> vertices)
+		private static void ParseVertNorms(TextParser parser, ListMeshStream<Vector3> vertices)
 		{
 			for (;;)
 			{
@@ -347,7 +347,7 @@ namespace Toe.Marmalade.TextFiles.IwGraphics
 			}
 		}
 
-		private static void ParseVerts(TextParser parser, MeshStream<Vector3> vertices)
+		private static void ParseVerts(TextParser parser, ListMeshStream<Vector3> vertices)
 		{
 			for (;;)
 			{

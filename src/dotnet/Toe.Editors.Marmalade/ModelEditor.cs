@@ -245,22 +245,21 @@ namespace Toe.Editors.Marmalade
 					{
 						var mesh = this.context.Resolve<Mesh>();
 						var verts = sourceMesh.Count;
-						for (int i = 0; i < verts;++i )
-						{
-							Vector3 v;
-							sourceMesh.GetVertexAt(i, out v);
-							mesh.Vertices.Add(v);
 
-							if (sourceMesh.IsNormalStreamAvailable)
+						var positions = sourceMesh.GetStreamReader<Vector3>(Streams.Position, 0);
+						var normals = sourceMesh.GetStreamReader<Vector3>(Streams.Normal, 0);
+						var color = sourceMesh.GetStreamReader<Color>(Streams.Color, 0);
+						for (int i = 0; i < verts; ++i)
+						{
+							mesh.Vertices.Add(positions[i]);
+
+							if (normals != null)
 							{
-								sourceMesh.GetNormalAt(i, out v);
-								mesh.Normals.Add(v);
+								mesh.Normals.Add(normals[i]);
 							}
-							if (sourceMesh.IsColorStreamAvailable)
+							if (color != null)
 							{
-								Color col;
-								sourceMesh.GetColorAt(i, out col);
-								mesh.Colors.Add(col);
+								mesh.Colors.Add(color[i]);
 							}
 						}
 						foreach (var submesh in sourceMesh.Submeshes)
@@ -269,7 +268,10 @@ namespace Toe.Editors.Marmalade
 							mesh.Surfaces.Add(surface);
 							foreach (var face in submesh)
 							{
-								surface.Indices.Add(new ComplexIndex() { Vertex = face, Color = sourceMesh.IsColorStreamAvailable?face:0, Normal = sourceMesh.IsNormalStreamAvailable ? face : 0 });
+								surface.Indices.Add(new ComplexIndex() { Vertex = face,
+																		 Color = color != null ? face : 0,
+																		 Normal = normals != null ? face : 0
+								});
 							}
 						}
 						this.Model.Meshes.Add(mesh);

@@ -13,7 +13,7 @@ namespace Toe.Marmalade.IwGraphics
 
 		public static new readonly uint TypeHash = Hash.Get("CIwModelBlockGLPrimBase");
 
-		private readonly MeshStream<int> indices = new MeshStream<int>();
+		private readonly ListMeshStream<int> indices = new ListMeshStream<int>();
 
 		#endregion
 
@@ -36,7 +36,7 @@ namespace Toe.Marmalade.IwGraphics
 			}
 		}
 
-		public MeshStream<int> Indices
+		public ListMeshStream<int> Indices
 		{
 			get
 			{

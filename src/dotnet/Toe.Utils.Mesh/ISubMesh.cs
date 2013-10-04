@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 using OpenTK;
 
 namespace Toe.Utils.Mesh
@@ -28,6 +30,14 @@ namespace Toe.Utils.Mesh
 		#region Public Methods and Operators
 
 		void InvalidateBounds();
+
+		/// <summary>
+		/// Get number of indices.
+		/// Each stream should have same number of indices.
+		/// </summary>
+		int Count { get; }
+
+		IList<int> GetIndexReader(string key, int channel);
 
 		#endregion
 	}

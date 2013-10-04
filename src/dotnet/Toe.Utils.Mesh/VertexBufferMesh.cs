@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 
@@ -11,13 +12,13 @@ namespace Toe.Utils.Mesh
 	/// The implemenation is not efficient!
 	/// Please use it in content pipeline only! It is NOT recommended to use it in production.
 	/// </summary>
-	public class VertexBufferMesh : SceneItem, IMesh
+	public class VertexBufferMesh<TVertex> : SceneItem, IMesh
 	{
 		#region Constants and Fields
 
 		private readonly List<ISubMesh> submeshes = new List<ISubMesh>();
 
-		private readonly OptimizedList<Vertex> vertexBuffer = new OptimizedList<Vertex>();
+		private readonly DictionaryMeshStream<TVertex> vertexBuffer = new DictionaryMeshStream<TVertex>();
 
 		private bool areBoundsValid;
 
@@ -77,25 +78,23 @@ namespace Toe.Utils.Mesh
 			}
 		}
 
-		public bool IsBinormalStreamAvailable { get; set; }
-
-		public bool IsColorStreamAvailable { get; set; }
-
-		public bool IsNormalStreamAvailable { get; set; }
-
-		public bool IsTangentStreamAvailable { get; set; }
-
-		public bool IsUV0StreamAvailable { get; set; }
-
-		public bool IsUV1StreamAvailable { get; set; }
-
-		public bool IsVertexStreamAvailable
+		/// <summary>
+		/// Gets mesh stream reader if available.
+		/// </summary>
+		/// <typeparam name="T">Type of stream element.</typeparam>
+		/// <param name="key">Stream key.</param>
+		/// <param name="channel">Stream channel.</param>
+		/// <returns>Stream reader if available, null if not.</returns>
+		public IList<T> GetStreamReader<T>(string key, int channel)
 		{
-			get
-			{
-				return true;
-			}
+			throw new NotImplementedException();
 		}
+
+		public bool HasStream(string key, int channel)
+		{
+			throw new NotImplementedException();
+		}
+
 
 		public object RenderData { get; set; }
 
@@ -107,7 +106,7 @@ namespace Toe.Utils.Mesh
 			}
 		}
 
-		public OptimizedList<Vertex> VertexBuffer
+		public DictionaryMeshStream<TVertex> VertexBuffer
 		{
 			get
 			{
@@ -133,50 +132,9 @@ namespace Toe.Utils.Mesh
 
 		public ISubMesh CreateSubmesh()
 		{
-			var streamSubmesh = new VertexBufferSubmesh(this);
+			var streamSubmesh = new VertexBufferSubmesh<TVertex>(this);
 			this.Submeshes.Add(streamSubmesh);
 			return streamSubmesh;
-		}
-
-		/// <summary>
-		/// Get vertex color by index.
-		/// </summary>
-		/// <param name="index">Vertex index.</param>
-		/// <param name="color">Vertex color.</param>
-		public void GetColorAt(int index, out Color color)
-		{
-			color = this.VertexBuffer[index].Color;
-		}
-
-		/// <summary>
-		/// Get normal position by index.
-		/// </summary>
-		/// <param name="index">Vertex index.</param>
-		/// <param name="vector">Vertex normal.</param>
-		public void GetNormalAt(int index, out Vector3 vector)
-		{
-			vector = this.VertexBuffer[index].Normal;
-		}
-
-		/// <summary>
-		/// Get vertex texture coords by index.
-		/// </summary>
-		/// <param name="index">Vertex index.</param>
-		/// <param name="channel">Texture channel.</param>
-		/// <param name="uv">Vertex UV.</param>
-		public void GetUV3At(int index, int channel, out Vector3 uv)
-		{
-			this.VertexBuffer[index].GetUV(channel, out uv);
-		}
-
-		/// <summary>
-		/// Get vertex position by index.
-		/// </summary>
-		/// <param name="index">Vertex index.</param>
-		/// <param name="vector">Vertex position.</param>
-		public void GetVertexAt(int index, out Vector3 vector)
-		{
-			vector = this.VertexBuffer[index].Position;
 		}
 
 		public void InvalidateBounds()
@@ -184,23 +142,7 @@ namespace Toe.Utils.Mesh
 			this.areBoundsValid = false;
 		}
 
-		public void VisitBinormals(Vector3VisitorCallback callback)
-		{
-			foreach (var vertex in this.VertexBuffer)
-			{
-				var v = vertex.Binormal;
-				callback(ref v);
-			}
-		}
-
-		public void VisitTangents(Vector3VisitorCallback callback)
-		{
-			foreach (var vertex in this.VertexBuffer)
-			{
-				var v = vertex.Tangent;
-				callback(ref v);
-			}
-		}
+	
 
 		#endregion
 
@@ -216,9 +158,8 @@ namespace Toe.Utils.Mesh
 
 			this.boundingBoxMin = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
 			this.boundingBoxMax = new Vector3(float.MinValue, float.MinValue, float.MinValue);
-			for (int index = 0; index < this.VertexBuffer.Count; index++)
+			foreach (var position in GetStreamReader<Vector3>(Streams.Position, 0))
 			{
-				var position = this.VertexBuffer[index].Position;
 				if (this.boundingBoxMax.X < position.X)
 				{
 					this.boundingBoxMax.X = position.X;

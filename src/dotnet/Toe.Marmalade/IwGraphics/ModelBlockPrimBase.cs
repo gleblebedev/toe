@@ -16,7 +16,7 @@ namespace Toe.Marmalade.IwGraphics
 
 		public static new readonly uint TypeHash = Hash.Get("CIwModelBlockPrimBase");
 
-		private MeshStream<ComplexIndex> indices = new MeshStream<ComplexIndex>();
+		private ListMeshStream<ComplexIndex> indices = new ListMeshStream<ComplexIndex>();
 
 		#endregion
 
@@ -47,7 +47,7 @@ namespace Toe.Marmalade.IwGraphics
 			}
 		}
 
-		public MeshStream<ComplexIndex> Indices
+		public ListMeshStream<ComplexIndex> Indices
 		{
 			get
 			{
@@ -113,9 +113,9 @@ namespace Toe.Marmalade.IwGraphics
 				Vector3 v1 = p1 - p0;
 				Vector3 v2 = p2 - p0;
 
-				var pu0 = this.Mesh.UV0[this.indices[i].UV0];
-				var pu1 = this.Mesh.UV0[this.indices[i + 1].UV0];
-				var pu2 = this.Mesh.UV0[this.indices[i + 2].UV0];
+				var pu0 = this.Mesh.IsUV0StreamAvailable?this.Mesh.UV0[this.indices[i].UV0]:Vector2.Zero;
+				var pu1 = this.Mesh.IsUV0StreamAvailable?this.Mesh.UV0[this.indices[i + 1].UV0]:Vector2.Zero;
+				var pu2 = this.Mesh.IsUV0StreamAvailable ? this.Mesh.UV0[this.indices[i + 2].UV0] : Vector2.Zero;
 
 				var u1 = pu1 - pu0;
 				var u2 = pu2 - pu0;

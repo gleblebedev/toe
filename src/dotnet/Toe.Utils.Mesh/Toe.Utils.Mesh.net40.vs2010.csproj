@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ArrayMeshStream.cs" />
     <Compile Include="BaseSubmesh.cs" />
     <Compile Include="BoneCollection.cs" />
     <Compile Include="BoundingBox.cs" />
@@ -66,6 +67,7 @@
     <Compile Include="IMaterial.cs" />
     <Compile Include="IMaterialBinding.cs" />
     <Compile Include="IMesh.cs" />
+    <Compile Include="IMeshStream.cs" />
     <Compile Include="INodeSkin.cs" />
     <Compile Include="ISceneFileFormat.cs" />
     <Compile Include="ISceneReader.cs" />
@@ -76,6 +78,7 @@
     <Compile Include="IScene.cs" />
     <Compile Include="ISceneItem.cs" />
     <Compile Include="ISceneReaderErrorHandler.cs" />
+    <Compile Include="IStreamConverterFactory.cs" />
     <Compile Include="ISubMesh.cs" />
     <Compile Include="IVertexIndexSource.cs" />
     <Compile Include="IVertexStreamSource.cs" />
@@ -83,18 +86,24 @@
     <Compile Include="Material.cs" />
     <Compile Include="MaterialBinding.cs" />
     <Compile Include="MeshBone.cs" />
-    <Compile Include="MeshStream.cs" />
+    <Compile Include="ListMeshStream.cs" />
+    <Compile Include="MeshStreamAttribute.cs" />
+    <Compile Include="ModifyAtFunc.cs" />
     <Compile Include="Node.cs" />
     <Compile Include="NodeSkin.cs" />
-    <Compile Include="OptimizedList.cs" />
+    <Compile Include="DictionaryMeshStream.cs" />
     <Compile Include="Scene.cs" />
     <Compile Include="SceneEffect.cs" />
     <Compile Include="SceneItem.cs" />
     <Compile Include="SceneReaderErrorHandler.cs" />
     <Compile Include="SceneReaderException.cs" />
     <Compile Include="SolidColorSource.cs" />
+    <Compile Include="StreamConverter.cs" />
+    <Compile Include="StreamConverterFactory.cs" />
+    <Compile Include="StreamKey.cs" />
+    <Compile Include="Streams.cs" />
     <Compile Include="StreamsMesh.cs" />
-    <Compile Include="StreamSubmesh.cs" />
+    <Compile Include="SeparateStreamsSubmesh.cs" />
     <Compile Include="StreamSubmeshQuad.cs" />
     <Compile Include="StreamSubmeshIndexes.cs" />
     <Compile Include="Vector3VisitorCallback.cs" />

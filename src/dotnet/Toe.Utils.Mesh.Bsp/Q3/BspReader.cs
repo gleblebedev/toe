@@ -29,16 +29,9 @@ namespace Toe.Utils.Mesh.Bsp.Q3
 		{
 			var maxTextures = this.textures.Length;
 
-			var streamMesh = new VertexBufferMesh
-				{
-					IsNormalStreamAvailable = true,
-					IsUV0StreamAvailable = true,
-					IsUV1StreamAvailable = true,
-					IsColorStreamAvailable = true,
-					IsBinormalStreamAvailable = false,
-					IsTangentStreamAvailable = false,
-				};
-			VertexBufferSubmesh[] submeshes = new VertexBufferSubmesh[maxTextures];
+			var streamMesh = new SeparateStreamsMesh();
+
+			SeparateStreamsSubmesh[] submeshes = new SeparateStreamsSubmesh[maxTextures];
 
 			this.BuildSubmeshes(maxTextures, submeshes, streamMesh);
 
@@ -217,7 +210,7 @@ namespace Toe.Utils.Mesh.Bsp.Q3
 			this.AssertStreamPossition(this.header.vertexes.size + this.header.vertexes.offset);
 		}
 
-		private static void AddVertexToMesh(ref Quake3Vertex vertex, VertexBufferSubmesh subMesh, VertexBufferMesh streamMesh)
+		private static void AddVertexToMesh(ref Quake3Vertex vertex, SeparateStreamsSubmesh subMesh, SeparateStreamsMesh streamMesh)
 		{
 			var v = new Vertex
 				{
@@ -229,7 +222,7 @@ namespace Toe.Utils.Mesh.Bsp.Q3
 			subMesh.Add(streamMesh.VertexBuffer.Add(v));
 		}
 
-		private void BuildPatch(Quake3Face quake3Face, VertexBufferMesh streamMesh, VertexBufferSubmesh subMesh)
+		private void BuildPatch(Quake3Face quake3Face, SeparateStreamsMesh streamMesh, SeparateStreamsSubmesh subMesh)
 		{
 			var width = quake3Face.sizeX;
 			var height = quake3Face.sizeY;
@@ -252,7 +245,7 @@ namespace Toe.Utils.Mesh.Bsp.Q3
 			}
 		}
 
-		private void BuildSubmeshes(int maxTextures, VertexBufferSubmesh[] submeshes, VertexBufferMesh streamMesh)
+		private void BuildSubmeshes(int maxTextures, SeparateStreamsSubmesh[] submeshes, SeparateStreamsMesh streamMesh)
 		{
 			int[] textureToMaterial = new int[maxTextures];
 			foreach (var quake3Face in this.faces)
@@ -263,7 +256,7 @@ namespace Toe.Utils.Mesh.Bsp.Q3
 			{
 				if (textureToMaterial[i] > 0)
 				{
-					submeshes[i] = streamMesh.CreateSubmesh() as VertexBufferSubmesh;
+					submeshes[i] = streamMesh.CreateSubmesh();
 
 					int index = this.Scene.Materials.Count;
 					var baseFileName = Path.Combine(this.GameRootPath, this.textures[i].name);

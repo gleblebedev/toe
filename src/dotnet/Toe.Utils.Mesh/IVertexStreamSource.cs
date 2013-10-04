@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Drawing;
 
 using OpenTK;
@@ -18,77 +19,16 @@ namespace Toe.Utils.Mesh
 		int Count { get; }
 
 		/// <summary>
-		/// Is binormal (bitangent) stream available.
+		/// Gets mesh stream reader if available.
 		/// </summary>
-		bool IsBinormalStreamAvailable { get; }
-
-		/// <summary>
-		/// Is color stream available.
-		/// </summary>
-		bool IsColorStreamAvailable { get; }
-
-		/// <summary>
-		/// Is normal stream available.
-		/// </summary>
-		bool IsNormalStreamAvailable { get; }
-
-		/// <summary>
-		/// Is tangent stream available.
-		/// </summary>
-		bool IsTangentStreamAvailable { get; }
-
-		/// <summary>
-		/// Is texture coordinates 0 stream available.
-		/// </summary>
-		bool IsUV0StreamAvailable { get; }
-
-		/// <summary>
-		/// Is texture coordinates 1 stream available.
-		/// </summary>
-		bool IsUV1StreamAvailable { get; }
-
-		/// <summary>
-		/// Is position stream available. Acutally it should be always true.
-		/// </summary>
-		bool IsVertexStreamAvailable { get; }
+		/// <typeparam name="T">Type of stream element.</typeparam>
+		/// <param name="key">Stream key.</param>
+		/// <param name="channel">Stream channel.</param>
+		/// <returns>Read-only list if stream is available, null if not.</returns>
+		IList<T> GetStreamReader<T>(string key, int channel);
 
 		#endregion
 
-		#region Public Methods and Operators
-
-		/// <summary>
-		/// Get vertex color by index.
-		/// </summary>
-		/// <param name="index">Vertex index.</param>
-		/// <param name="color">Vertex color.</param>
-		void GetColorAt(int index, out Color color);
-
-		/// <summary>
-		/// Get normal position by index.
-		/// </summary>
-		/// <param name="index">Vertex index.</param>
-		/// <param name="vector">Vertex normal.</param>
-		void GetNormalAt(int index, out Vector3 vector);
-
-		/// <summary>
-		/// Get vertex texture coords by index.
-		/// </summary>
-		/// <param name="index">Vertex index.</param>
-		/// <param name="channel">Texture channel.</param>
-		/// <param name="uv">Vertex UV.</param>
-		void GetUV3At(int index, int channel, out Vector3 uv);
-
-		/// <summary>
-		/// Get vertex position by index.
-		/// </summary>
-		/// <param name="index">Vertex index.</param>
-		/// <param name="vector">Vertex position.</param>
-		void GetVertexAt(int index, out Vector3 vector);
-
-		void VisitBinormals(Vector3VisitorCallback action);
-
-		void VisitTangents(Vector3VisitorCallback action);
-
-		#endregion
+		bool HasStream(string key, int channel);
 	}
 }

@@ -65,7 +65,7 @@ namespace Toe.Utils.Mesh
 			}
 		}
 
-		public abstract int Count { get; }
+		public abstract IList<int> GetIndexReader(string key, int channel);
 
 		public IMaterial Material
 		{
@@ -81,6 +81,7 @@ namespace Toe.Utils.Mesh
 				}
 			}
 		}
+
 
 		public string Name
 		{
@@ -115,35 +116,23 @@ namespace Toe.Utils.Mesh
 
 		#region Public Methods and Operators
 
-		/// <summary>
-		/// Returns an enumerator that iterates through the collection.
-		/// </summary>
-		/// <returns>
-		/// A <see cref="T:System.Collections.Generic.IEnumerator`1"/> that can be used to iterate through the collection.
-		/// </returns>
-		/// <filterpriority>1</filterpriority>
-		public abstract IEnumerator<int> GetEnumerator();
+
 
 		public void InvalidateBounds()
 		{
 			this.areBoundsValid = false;
 		}
 
+		/// <summary>
+		/// Get number of indices.
+		/// Each stream should have same number of indices.
+		/// </summary>
+		public abstract int Count { get;  }
+
 		#endregion
 
 		#region Explicit Interface Methods
 
-		/// <summary>
-		/// Returns an enumerator that iterates through a collection.
-		/// </summary>
-		/// <returns>
-		/// An <see cref="T:System.Collections.IEnumerator"/> object that can be used to iterate through the collection.
-		/// </returns>
-		/// <filterpriority>2</filterpriority>
-		IEnumerator IEnumerable.GetEnumerator()
-		{
-			return this.GetEnumerator();
-		}
 
 		#endregion
 

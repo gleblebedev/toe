@@ -393,7 +393,7 @@ namespace Toe.Gx
 				{
 					BITANGENT_STREAM = false,
 					//mesh.IsBinormalStreamAvailable,
-					COL_STREAM = mesh.IsColorStreamAvailable,
+					COL_STREAM = mesh.HasStream(Streams.Color, 0),
 					FAST_FOG = false,
 					FOG = false,
 					//!material.NoFog,
@@ -405,19 +405,19 @@ namespace Toe.Gx
 						this.lighting && this.light.Enabled
 						&& this.IsNotDisabledColor(this.light.Specular),
 					LIGHT_EMISSIVE = this.lighting && this.light.Enabled,
-					NORM_STREAM = mesh.IsNormalStreamAvailable,
+					NORM_STREAM = mesh.HasStream(Streams.Normal, 0),
 					SKIN_MAJOR_BONE = false,
 					SKINWEIGHT_STREAM = false,
 					SKIN_NORMALS = false,
 					TANGENT_STREAM = false,
 					//mesh.IsTangentStreamAvailable,
-					UV0_STREAM = mesh.IsUV0StreamAvailable && this.isTextureSet[0],
-					UV1_STREAM = mesh.IsUV1StreamAvailable && this.isTextureSet[1]
+					UV0_STREAM = mesh.HasStream(Streams.TexCoord, 0) && this.isTextureSet[0],
+					UV1_STREAM = mesh.HasStream(Streams.TexCoord, 1) && this.isTextureSet[1]
 				};
 
 			var fso = new DefaultFragmentShaderOptions
 				{
-					COL_STREAM = mesh.IsColorStreamAvailable,
+					COL_STREAM = mesh.HasStream(Streams.Color, 0),
 					FAST_FOG = false,
 					FOG = false,
 					//!material.NoFog,
@@ -425,8 +425,8 @@ namespace Toe.Gx
 					LIGHT_DIFFUSE = this.lighting && this.light.Enabled && this.IsNotDisabledColor(this.light.Diffuse),
 					LIGHT_SPECULAR = this.lighting && this.light.Enabled && this.IsNotDisabledColor(this.light.Specular),
 					LIGHT_EMISSIVE = this.lighting && this.light.Enabled,
-					UV0_STREAM = mesh.IsUV0StreamAvailable,
-					UV1_STREAM = mesh.IsUV1StreamAvailable,
+					UV0_STREAM = mesh.HasStream(Streams.TexCoord, 0),
+					UV1_STREAM = mesh.HasStream(Streams.TexCoord,1),
 					ALPHA_BLEND = (int)AlphaMode.DEFAULT,
 					ALPHA_TEST = (int)AlphaTestMode.DISABLED,
 					BLEND = (int)BlendMode.MODULATE,
@@ -520,8 +520,8 @@ namespace Toe.Gx
 
 			var vso = new DefaultVertexShaderOptions
 				{
-					BITANGENT_STREAM = mesh.IsBinormalStreamAvailable,
-					COL_STREAM = mesh.IsColorStreamAvailable,
+					BITANGENT_STREAM = mesh.HasStream(Streams.Binormal, 0),
+					COL_STREAM = mesh.HasStream(Streams.Color, 0),
 					FAST_FOG = false,
 					FOG = false,
 					//!material.NoFog,
@@ -529,18 +529,18 @@ namespace Toe.Gx
 					LIGHT_DIFFUSE = this.lighting && this.light.Enabled && this.IsNotDisabledColor(this.light.Diffuse),
 					LIGHT_SPECULAR = this.lighting && this.light.Enabled && this.IsNotDisabledColor(this.light.Specular),
 					LIGHT_EMISSIVE = this.lighting && this.light.Enabled,
-					NORM_STREAM = mesh.IsNormalStreamAvailable,
+					NORM_STREAM = mesh.HasStream(Streams.Normal, 0),
 					SKIN_MAJOR_BONE = false,
 					SKINWEIGHT_STREAM = false,
 					SKIN_NORMALS = false,
-					TANGENT_STREAM = mesh.IsTangentStreamAvailable,
-					UV0_STREAM = mesh.IsUV0StreamAvailable,
-					UV1_STREAM = mesh.IsUV1StreamAvailable
+					TANGENT_STREAM = mesh.HasStream(Streams.Tangent, 0),
+					UV0_STREAM = mesh.HasStream(Streams.TexCoord, 0),
+					UV1_STREAM = mesh.HasStream(Streams.TexCoord, 1)
 				};
 
 			var fso = new DefaultFragmentShaderOptions
 				{
-					COL_STREAM = mesh.IsColorStreamAvailable,
+					COL_STREAM = mesh.HasStream(Streams.Color, 0),
 					FAST_FOG = false,
 					FOG = false,
 					//!material.NoFog,
@@ -548,8 +548,8 @@ namespace Toe.Gx
 					LIGHT_DIFFUSE = this.lighting && this.light.Enabled && this.IsNotDisabledColor(this.light.Diffuse),
 					LIGHT_SPECULAR = this.lighting && this.light.Enabled && this.IsNotDisabledColor(this.light.Specular),
 					LIGHT_EMISSIVE = this.lighting && this.light.Enabled,
-					UV0_STREAM = mesh.IsUV0StreamAvailable,
-					UV1_STREAM = mesh.IsUV1StreamAvailable,
+					UV0_STREAM = mesh.HasStream(Streams.TexCoord, 0),
+					UV1_STREAM = mesh.HasStream(Streams.TexCoord, 1),
 					ALPHA_BLEND = (int)this.material.AlphaMode,
 					ALPHA_TEST = (int)this.material.AlphaTestMode,
 					BLEND = (int)this.material.BlendMode,

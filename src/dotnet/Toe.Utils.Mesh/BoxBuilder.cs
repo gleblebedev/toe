@@ -35,16 +35,9 @@ namespace Toe.Utils.Mesh
 					new Vector3(0.0f, 1.0f, 0.0f),
 				};
 
-			var res = new VertexBufferMesh
-				{
-					IsNormalStreamAvailable = true,
-					IsUV0StreamAvailable = true,
-					IsUV1StreamAvailable = true,
-					IsColorStreamAvailable = true,
-					IsBinormalStreamAvailable = true,
-					IsTangentStreamAvailable = true,
-				};
-			var s = res.CreateSubmesh() as VertexBufferSubmesh;
+			var res = new VertexBufferMesh<Vertex>();
+
+			var s = res.CreateSubmesh() as VertexBufferSubmesh<Vertex>;
 			s.VertexSourceType = VertexSourceType.QuadList;
 			Vertex vertex;
 

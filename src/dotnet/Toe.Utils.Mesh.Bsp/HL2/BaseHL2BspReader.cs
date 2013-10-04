@@ -101,7 +101,7 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 
 			if (this.buildBsp)
 			{
-				var streamMesh = new VertexBufferMesh
+				var streamMesh = new VertexBufferMesh<Vertex>
 					{
 						IsNormalStreamAvailable = true,
 						IsUV0StreamAvailable = true,
@@ -186,7 +186,7 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 						int lightmapIndex = 0; //this.faces[faceIndex].lightmap;
 
 						int meshIndex;
-						VertexBufferSubmesh subMesh =
+						VertexBufferSubmesh<Vertex> subMesh =
 							meshBuilder.EnsureSubMesh(new BspSubmeshKey(index, new BspMaterialKey(texIndex, lightmapIndex)), out meshIndex);
 						if (!uniqueSubmeshes.ContainsKey(meshIndex))
 						{
@@ -610,7 +610,7 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 			}
 		}
 
-		private void BuildFace(ref SourceFace face, VertexBufferSubmesh submesh, VertexBufferMesh streamMesh)
+		private void BuildFace(ref SourceFace face, VertexBufferSubmesh<Vertex> submesh, VertexBufferMesh<Vertex> streamMesh)
 		{
 			Vertex[] faceVertices = new Vertex[face.numedges];
 
@@ -723,7 +723,7 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 
 		private void BuildModelAsNode(ref SourceModel sourceModel)
 		{
-			var streamMesh2 = new VertexBufferMesh
+			var streamMesh2 = new VertexBufferMesh<Vertex>
 				{
 					IsNormalStreamAvailable = true,
 					IsUV0StreamAvailable = true,
@@ -740,7 +740,7 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 				//if (!usedFaces[index])
 				{
 					int meshIndex;
-					VertexBufferSubmesh subMesh2 = meshBuilder2.EnsureSubMesh(
+					VertexBufferSubmesh<Vertex> subMesh2 = meshBuilder2.EnsureSubMesh(
 						new BspSubmeshKey(0, new BspMaterialKey(0, 0)), out meshIndex);
 					this.BuildFace(ref this.faces[index], subMesh2, streamMesh2);
 					//Trace.WriteLine(string.Format("Face {0} is not references from leaves", index));

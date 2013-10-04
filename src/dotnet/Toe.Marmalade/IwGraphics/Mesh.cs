@@ -26,21 +26,21 @@ namespace Toe.Marmalade.IwGraphics
 
 		protected static PropertyEventArgs UseGroupEventArgs = Expr.PropertyEventArgs<Mesh>(x => x.UseGroup);
 
-		private readonly MeshStream<Vector3> binormals = new MeshStream<Vector3>();
+		private readonly ListMeshStream<Vector3> binormals = new ListMeshStream<Vector3>();
 
-		private readonly MeshStream<Color> colors = new MeshStream<Color>();
+		private readonly ListMeshStream<Color> colors = new ListMeshStream<Color>();
 
-		private readonly MeshStream<Vector3> normals = new MeshStream<Vector3>();
+		private readonly ListMeshStream<Vector3> normals = new ListMeshStream<Vector3>();
 
 		private readonly IList<Surface> surfaces = new List<Surface>();
 
-		private readonly MeshStream<Vector3> tangents = new MeshStream<Vector3>();
+		private readonly ListMeshStream<Vector3> tangents = new ListMeshStream<Vector3>();
 
-		private readonly MeshStream<Vector2> uv0 = new MeshStream<Vector2>();
+		private readonly ListMeshStream<Vector2> uv0 = new ListMeshStream<Vector2>();
 
-		private readonly MeshStream<Vector2> uv1 = new MeshStream<Vector2>();
+		private readonly ListMeshStream<Vector2> uv1 = new ListMeshStream<Vector2>();
 
-		private readonly MeshStream<Vector3> vertices = new MeshStream<Vector3>();
+		private readonly ListMeshStream<Vector3> vertices = new ListMeshStream<Vector3>();
 
 		private string baseName;
 
@@ -82,7 +82,7 @@ namespace Toe.Marmalade.IwGraphics
 			}
 		}
 
-		public MeshStream<Vector3> BiTangents
+		public ListMeshStream<Vector3> BiTangents
 		{
 			get
 			{
@@ -98,7 +98,7 @@ namespace Toe.Marmalade.IwGraphics
 			}
 		}
 
-		public MeshStream<Color> Colors
+		public ListMeshStream<Color> Colors
 		{
 			get
 			{
@@ -112,6 +112,23 @@ namespace Toe.Marmalade.IwGraphics
 			{
 				return this.surfaces.Sum(submesh => submesh.Count);
 			}
+		}
+
+		/// <summary>
+		/// Gets mesh stream reader if available.
+		/// </summary>
+		/// <typeparam name="T">Type of stream element.</typeparam>
+		/// <param name="key">Stream key.</param>
+		/// <param name="channel">Stream channel.</param>
+		/// <returns>Stream reader if available, null if not.</returns>
+		public IList<T> GetStreamReader<T>(string key, int channel)
+		{
+			throw new NotImplementedException();
+		}
+
+		public bool HasStream(string key, int channel)
+		{
+			throw new NotImplementedException();
 		}
 
 		public bool IsBinormalStreamAvailable
@@ -170,7 +187,7 @@ namespace Toe.Marmalade.IwGraphics
 			}
 		}
 
-		public MeshStream<Vector3> Normals
+		public ListMeshStream<Vector3> Normals
 		{
 			get
 			{
@@ -203,7 +220,7 @@ namespace Toe.Marmalade.IwGraphics
 			}
 		}
 
-		public MeshStream<Vector3> Tangents
+		public ListMeshStream<Vector3> Tangents
 		{
 			get
 			{
@@ -211,7 +228,7 @@ namespace Toe.Marmalade.IwGraphics
 			}
 		}
 
-		public MeshStream<Vector2> UV0
+		public ListMeshStream<Vector2> UV0
 		{
 			get
 			{
@@ -219,7 +236,7 @@ namespace Toe.Marmalade.IwGraphics
 			}
 		}
 
-		public MeshStream<Vector2> UV1
+		public ListMeshStream<Vector2> UV1
 		{
 			get
 			{
@@ -273,7 +290,7 @@ namespace Toe.Marmalade.IwGraphics
 			}
 		}
 
-		public MeshStream<Vector3> Vertices
+		public ListMeshStream<Vector3> Vertices
 		{
 			get
 			{
@@ -394,15 +411,15 @@ namespace Toe.Marmalade.IwGraphics
 		/// <param name="uv">Vertex UV.</param>
 		public void GetUV3At(int index, int channel, out Vector3 uv)
 		{
-			MeshStream<Vector2> meshStream = null;
+			ListMeshStream<Vector2> listMeshStream = null;
 
 			switch (channel)
 			{
 				case 0:
-					meshStream = this.uv0;
+					listMeshStream = this.uv0;
 					break;
 				case 1:
-					meshStream = this.uv1;
+					listMeshStream = this.uv1;
 					break;
 			}
 			foreach (var surface in this.surfaces)
@@ -412,7 +429,7 @@ namespace Toe.Marmalade.IwGraphics
 				{
 					if (index < gl.Indices.Count)
 					{
-						var a = meshStream[gl.Indices[index]];
+						var a = listMeshStream[gl.Indices[index]];
 						uv = new Vector3(a.X, a.Y, 0);
 						return;
 					}
@@ -425,7 +442,7 @@ namespace Toe.Marmalade.IwGraphics
 					{
 						if (index < prim.Indices.Count)
 						{
-							var a = meshStream[prim.Indices[index].GetUV(channel)];
+							var a = listMeshStream[prim.Indices[index].GetUV(channel)];
 							uv = new Vector3(a.X, a.Y, 0);
 							return;
 						}

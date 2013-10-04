@@ -1,20 +1,22 @@
 using System.Collections.Generic;
 
+using OpenTK;
+
 namespace Toe.Utils.Mesh
 {
-	public class VertexBufferSubmesh : BaseSubmesh, ISubMesh
+	public class VertexBufferSubmesh<TVertex> : BaseSubmesh, ISubMesh
 	{
 		#region Constants and Fields
 
 		private readonly List<int> indices = new List<int>();
 
-		private readonly VertexBufferMesh mesh;
+		private readonly VertexBufferMesh<TVertex> mesh;
 
 		#endregion
 
 		#region Constructors and Destructors
 
-		public VertexBufferSubmesh(VertexBufferMesh mesh)
+		public VertexBufferSubmesh(VertexBufferMesh<TVertex> mesh)
 		{
 			this.mesh = mesh;
 			this.VertexSourceType = VertexSourceType.TrianleList;
@@ -24,13 +26,6 @@ namespace Toe.Utils.Mesh
 
 		#region Public Properties
 
-		public override int Count
-		{
-			get
-			{
-				return this.indices.Count;
-			}
-		}
 
 		#endregion
 
@@ -41,35 +36,40 @@ namespace Toe.Utils.Mesh
 			this.indices.Add(i);
 		}
 
-		public void Add(ref Vertex v)
+		public void Add(ref TVertex v)
 		{
 			this.Add(this.mesh.VertexBuffer.Add(v));
 		}
 
-		/// <summary>
-		/// Returns an enumerator that iterates through the collection.
-		/// </summary>
-		/// <returns>
-		/// A <see cref="T:System.Collections.Generic.IEnumerator`1"/> that can be used to iterate through the collection.
-		/// </returns>
-		/// <filterpriority>1</filterpriority>
-		public override IEnumerator<int> GetEnumerator()
-		{
-			foreach (var i in this.indices)
-			{
-				yield return i;
-			}
-		}
-
+	
+		
 		#endregion
 
 		#region Methods
 
+		/// <summary>
+		/// Get number of indices.
+		/// Each stream should have same number of indices.
+		/// </summary>
+		public override int Count
+		{
+			get
+			{
+				throw new System.NotImplementedException();
+			}
+		}
+
+		public override IList<int> GetIndexReader(string key, int channel)
+		{
+			throw new System.NotImplementedException();
+		}
+
 		protected override void CalculateActualBounds()
 		{
+			var positions = this.mesh.GetStreamReader<Vector3>(Streams.Position, 0);
 			foreach (var index in this.indices)
 			{
-				var position = this.mesh.VertexBuffer[index].Position;
+				var position = positions[index];
 				if (this.boundingBoxMax.X < position.X)
 				{
 					this.boundingBoxMax.X = position.X;

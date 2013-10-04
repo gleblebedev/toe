@@ -47,6 +47,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{37593ED1
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toe.Utils.ToeMath", "NuGet\Toe.Utils.ToeMath\Toe.Utils.ToeMath.csproj", "{C138CBF1-49EB-4761-ACB4-D254A0F7A02B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toe.Utils.Mesh.Dae.Tests", "Toe.Utils.Mesh.Dae.Tests\Toe.Utils.Mesh.Dae.Tests.csproj", "{829599E1-0183-4335-83C6-0A9C4C4BD496}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toe.Utils.Mesh.Ase.Tests", "Toe.Utils.Mesh.Ase.Tests\Toe.Utils.Mesh.Ase.Tests.csproj", "{6E57D429-4FE2-4B06-980F-8279CA2ABAB4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -257,11 +261,33 @@ Global
 		{C138CBF1-49EB-4761-ACB4-D254A0F7A02B}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{C138CBF1-49EB-4761-ACB4-D254A0F7A02B}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{C138CBF1-49EB-4761-ACB4-D254A0F7A02B}.Release|x86.ActiveCfg = Release|Any CPU
+		{829599E1-0183-4335-83C6-0A9C4C4BD496}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{829599E1-0183-4335-83C6-0A9C4C4BD496}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{829599E1-0183-4335-83C6-0A9C4C4BD496}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{829599E1-0183-4335-83C6-0A9C4C4BD496}.Debug|x86.ActiveCfg = Debug|x86
+		{829599E1-0183-4335-83C6-0A9C4C4BD496}.Debug|x86.Build.0 = Debug|x86
+		{829599E1-0183-4335-83C6-0A9C4C4BD496}.Release|Any CPU.ActiveCfg = Release|x86
+		{829599E1-0183-4335-83C6-0A9C4C4BD496}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{829599E1-0183-4335-83C6-0A9C4C4BD496}.Release|Mixed Platforms.Build.0 = Release|x86
+		{829599E1-0183-4335-83C6-0A9C4C4BD496}.Release|x86.ActiveCfg = Release|x86
+		{829599E1-0183-4335-83C6-0A9C4C4BD496}.Release|x86.Build.0 = Release|x86
+		{6E57D429-4FE2-4B06-980F-8279CA2ABAB4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E57D429-4FE2-4B06-980F-8279CA2ABAB4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E57D429-4FE2-4B06-980F-8279CA2ABAB4}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{6E57D429-4FE2-4B06-980F-8279CA2ABAB4}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{6E57D429-4FE2-4B06-980F-8279CA2ABAB4}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6E57D429-4FE2-4B06-980F-8279CA2ABAB4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E57D429-4FE2-4B06-980F-8279CA2ABAB4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E57D429-4FE2-4B06-980F-8279CA2ABAB4}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{6E57D429-4FE2-4B06-980F-8279CA2ABAB4}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{6E57D429-4FE2-4B06-980F-8279CA2ABAB4}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{29717F16-3219-4AE5-A7F4-618E65908DA7} = {F6A23CD6-BB95-4C80-B72F-46978E4071DE}
+		{829599E1-0183-4335-83C6-0A9C4C4BD496} = {37593ED1-3FFA-497D-842B-FD66FA39AB37}
+		{6E57D429-4FE2-4B06-980F-8279CA2ABAB4} = {37593ED1-3FFA-497D-842B-FD66FA39AB37}
 	EndGlobalSection
 EndGlobal

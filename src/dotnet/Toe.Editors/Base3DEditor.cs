@@ -605,12 +605,12 @@ namespace Toe.Editors
 
 		private void RenderMeshNormals(IMesh mesh)
 		{
-			var streamMesh = mesh as StreamMesh;
+			var streamMesh = mesh as SeparateStreamsMesh;
 			if (streamMesh != null)
 			{
 				return;
 			}
-			var vbMesh = mesh as VertexBufferMesh;
+			var vbMesh = mesh as VertexBufferMesh<Vertex>;
 			var normalColor = Color.White;
 			if (vbMesh != null)
 			{
@@ -632,10 +632,10 @@ namespace Toe.Editors
 			var vertices = new List<Vector3>(vb.Count);
 			Vector3 pos;
 			Vector3 buf;
-
+			var position = mesh.GetStreamReader<Vector3>(Streams.Position,0);
 			for (int i = 0; i < mesh.Count; ++i)
 			{
-				mesh.GetVertexAt(i, out pos);
+				pos = position[i];
 				this.graphicsContext.ModelToWorld(ref pos, out buf);
 				vertices.Add(buf);
 			}

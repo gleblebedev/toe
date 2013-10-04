@@ -6,19 +6,16 @@ namespace Toe.Utils.Mesh
 	/// Vertex index source.
 	/// This is suitable to building vertex buffers.
 	/// </summary>
-	public interface IVertexIndexSource : IEnumerable<int>
+	public interface IVertexIndexSource
 	{
 		#region Public Properties
-
-		/// <summary>
-		/// Number of indices.
-		/// </summary>
-		int Count { get; }
 
 		/// <summary>
 		/// Type of items.
 		/// </summary>
 		VertexSourceType VertexSourceType { get; }
+
+		IList<int> GetIndexReader(string key, int channel);
 
 		#endregion
 	}

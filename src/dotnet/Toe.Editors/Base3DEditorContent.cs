@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 
 using OpenTK;
 
@@ -39,7 +40,7 @@ namespace Toe.Editors
 				}
 				//this.cubeTex = new Toe.Marmalade.IwGx.Texture ();
 				//cubeTex.Image = new Toe.Marmalade.IwGx.Image (Toe.Editors.Properties.Resources.xyzcube1);
-				this.cube.Submeshes[0].Material = new SceneMaterial
+				this.cube.Submeshes.First().Material = new SceneMaterial
 					{
 						Effect =
 							new SceneEffect

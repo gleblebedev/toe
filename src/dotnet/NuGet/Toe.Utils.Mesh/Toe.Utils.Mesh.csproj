@@ -39,7 +39,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IStreamAdapter.cs" />
+    <Compile Include="IStreamAdapterProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SeparateBuffers.cs" />
+    <Compile Include="SingleBuffer.cs" />
     <Compile Include="StreamBinding.cs" />
     <Compile Include="StreamInfo.cs" />
   </ItemGroup>

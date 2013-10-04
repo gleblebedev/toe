@@ -35,6 +35,7 @@ namespace Toe.Utils.Mesh.Dae
 		public XName effectName;
 
 		public XName floatArrayName;
+		public XName nameArrayName;
 
 		public XName geometryName;
 
@@ -156,6 +157,12 @@ namespace Toe.Utils.Mesh.Dae
 
 		private static ColladaSchema schema15;
 
+		public XName IDREFArrayName;
+
+		public XName boolArrayName;
+
+		public XName intArrayName;
+
 		#endregion
 
 		#region Constructors and Destructors
@@ -175,6 +182,10 @@ namespace Toe.Utils.Mesh.Dae
 			this.sourceName = XName.Get("source", this.colladaSchema);
 			this.sourceAttributeName = XName.Get("source", "");
 			this.floatArrayName = XName.Get("float_array", this.colladaSchema);
+			this.nameArrayName = XName.Get("Name_array", this.colladaSchema);
+			this.IDREFArrayName = XName.Get("IDREF_array", this.colladaSchema);
+			this.boolArrayName = XName.Get("bool_array", this.colladaSchema);
+			this.intArrayName = XName.Get("int_array", this.colladaSchema);
 			this.techniqueCommonName = XName.Get("technique_common", this.colladaSchema);
 			this.accessorName = XName.Get("accessor", this.colladaSchema);
 			this.paramName = XName.Get("param", this.colladaSchema);

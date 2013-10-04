@@ -30,8 +30,6 @@ namespace Toe.Utils.Mesh
 
 		#region Public Methods and Operators
 
-		ISubMesh CreateSubmesh();
-
 		void InvalidateBounds();
 
 		#endregion

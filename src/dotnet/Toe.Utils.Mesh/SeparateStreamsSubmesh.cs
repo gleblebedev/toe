@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 
+using OpenTK;
+
 #if WINDOWS_PHONE
 using Microsoft.Xna.Framework;
 #else
@@ -14,23 +16,13 @@ namespace Toe.Utils.Mesh
 	/// The implemenation is not efficient!
 	/// Please use it in content pipeline only! It is NOT recommended to use it in production.
 	/// </summary>
-	public class StreamSubmesh : BaseSubmesh, ISubMesh
+	public class SeparateStreamsSubmesh : BaseSubmesh, ISubMesh
 	{
-		private readonly StreamMesh mesh;
+		private readonly SeparateStreamsMesh mesh;
 
-		internal StreamSubmesh(StreamMesh mesh)
+		internal SeparateStreamsSubmesh(SeparateStreamsMesh mesh)
 		{
 			this.mesh = mesh;
-		}
-
-		private readonly List<StreamSubmeshIndexes> indices = new List<StreamSubmeshIndexes>();
-
-		public List<StreamSubmeshIndexes> Indices
-		{
-			get
-			{
-				return this.indices;
-			}
 		}
 
 		#region Implementation of ISubMesh
@@ -50,28 +42,16 @@ namespace Toe.Utils.Mesh
 		//    GL.End();
 		//}
 
-		/// <summary>
-		/// Returns an enumerator that iterates through the collection.
-		/// </summary>
-		/// <returns>
-		/// A <see cref="T:System.Collections.Generic.IEnumerator`1"/> that can be used to iterate through the collection.
-		/// </returns>
-		/// <filterpriority>1</filterpriority>
-		public override IEnumerator<int> GetEnumerator()
-		{
-			int j = 0;
-			foreach (var i in this.Indices)
-			{
-				yield return j;
-				++j;
-			}
-		}
+
+	
 
 		protected override void CalculateActualBounds()
 		{
-			foreach (var index in this.indices)
+			var positions = this.mesh.GetStreamReader<Vector3>(Streams.Position, 0);
+			foreach (var index in this.GetIndexReader(Streams.Position,0))
 			{
-				var position = this.mesh.Vertices[index.Vertex];
+
+				var position = positions[index];
 				if (this.boundingBoxMax.X < position.X)
 				{
 					this.boundingBoxMax.X = position.X;
@@ -101,19 +81,22 @@ namespace Toe.Utils.Mesh
 			this.boundingSphereR = (this.boundingBoxMax - this.boundingBoxMin).Length * 0.5f;
 		}
 
-		public override int Count
-		{
-			get
-			{
-				return this.Indices.Count;
-			}
-		}
+	
 
 		public override VertexSourceType VertexSourceType
 		{
 			get
 			{
 				return VertexSourceType.TrianleList;
+			}
+		}
+
+		public override int Count
+		{
+			get
+			{
+				IList<int> r;
+				return (r = this.GetIndexReader(Streams.Position, 0)) == null ? 0 : r.Count;
 			}
 		}
 
@@ -151,5 +134,18 @@ namespace Toe.Utils.Mesh
 #endif
 
 		#endregion
+
+		Dictionary<StreamKey,IList<int>> streams = new Dictionary<StreamKey, IList<int>>();
+
+		public void SetIndexStream(string key, int channel, IList<int> stream)
+		{
+			streams[new StreamKey(key, channel)] = stream;
+		}
+
+		public override IList<int> GetIndexReader(string key, int channel)
+		{
+			IList<int> streamReader;
+			return !this.streams.TryGetValue(new StreamKey(key, channel), out streamReader) ? null : streamReader;
+		}
 	}
 }

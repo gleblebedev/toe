@@ -38,36 +38,7 @@ namespace Toe.Utils.Mesh.Ase
 
 		#region Methods
 
-		private static Vertex BuildVertex(Vector3[] vertices, int index0, FaceNormal[] normals, 
-			int faceIndex, int vertexAtFace, AseTFace[] tfaces, Color[] c, Vector3[] tvertices, Tuple<int, int, int>[] colFaces, Vector3 uv)
-		{
-			Vertex v = new Vertex { Position = vertices[index0] };
-			if (normals != null)
-			{
-				v.Normal = normals[faceIndex].GetNormal(index0);
-			}
-			if (colFaces != null)
-			{
-				switch (vertexAtFace)
-				{
-					case 0:
-						v.Color = c[colFaces[faceIndex].Item1];
-						break;
-					case 1:
-						v.Color = c[colFaces[faceIndex].Item2];
-						break;
-					case 2:
-						v.Color = c[colFaces[faceIndex].Item3];
-						break;
-				}
-			}
-			else
-			{
-				v.Color = Color.FromArgb(255, 255, 255, 255);
-			}
-			v.UV1 = v.UV0 = new Vector3(uv.X, 1.0f - uv.Y, uv.Z);
-			return v;
-		}
+	
 
 		private static Color ParseColor(AseParser parser)
 		{
@@ -126,7 +97,7 @@ namespace Toe.Utils.Mesh.Ase
 			return (byte)(255.0f * a);
 		}
 
-		private void ParsMeshAnimation(AseParser parser, Node node)
+		private void ParsMeshAnimation(AseParser parser, Scene scene, Node node)
 		{
 			parser.Consume("{");
 			for (;;)
@@ -138,7 +109,7 @@ namespace Toe.Utils.Mesh.Ase
 				}
 				if (0 == string.Compare(attr, "*MESH", StringComparison.InvariantCultureIgnoreCase))
 				{
-					ParsSubMesh(parser, node);
+					ParsSubMesh(parser, scene, node);
 					continue;
 				}
 				parser.UnknownLexemError();
@@ -333,12 +304,12 @@ namespace Toe.Utils.Mesh.Ase
 				
 				if (0 == string.Compare(attr, "*MESH", StringComparison.InvariantCultureIgnoreCase))
 				{
-					ParsSubMesh(parser, node);
+					ParsSubMesh(parser, scene, node);
 					return;
 				}
 				if (0 == string.Compare(attr, "*MESH_ANIMATION", StringComparison.InvariantCultureIgnoreCase))
 				{
-					this.ParsMeshAnimation(parser, node);
+					this.ParsMeshAnimation(parser, scene, node);
 					return;
 				}
 				if (0 == string.Compare(attr, "*PROP_MOTIONBLUR", StringComparison.InvariantCultureIgnoreCase))
@@ -385,16 +356,18 @@ namespace Toe.Utils.Mesh.Ase
 			
 		}
 
-		private void ParsSubMesh(AseParser parser, Node node)
+		private void ParsSubMesh(AseParser parser, Scene scene, Node node)
 		{
-			var mesh = new VertexBufferMesh();
-			var submesh = (VertexBufferSubmesh)mesh.CreateSubmesh();
+			var mesh = new SeparateStreamsMesh();
+			var submesh = mesh.CreateSubmesh();
 			node.Mesh = mesh;
+			scene.Geometries.Add(mesh);
 
-			Vector3[] vertices = null;
+			ArrayMeshStream<Vector3> vertices = null;
+			ListMeshStream<Vector3> normalStream = null;
 			FaceNormal[] normals = null;
-			Vector3[] tvertices = null;
-			Color[] cols = null;
+			ArrayMeshStream<Vector3> tvertices = null;
+			ArrayMeshStream<Color> cols = null;
 			AseFace[] faces = null;
 			AseTFace[] tfaces = null;
 			Tuple<int, int, int>[] colFaces = null;
@@ -414,7 +387,8 @@ namespace Toe.Utils.Mesh.Ase
 				}
 				if (0 == string.Compare(attr, "*MESH_NUMVERTEX", StringComparison.InvariantCultureIgnoreCase))
 				{
-					vertices = new Vector3[parser.ConsumeInt()];
+					vertices = new ArrayMeshStream<Vector3>(parser.ConsumeInt());
+					mesh.SetStream(Streams.Position, 0, vertices);
 					continue;
 				}
 				if (0 == string.Compare(attr, "*MESH_VERTEX_LIST", StringComparison.InvariantCultureIgnoreCase))
@@ -422,20 +396,11 @@ namespace Toe.Utils.Mesh.Ase
 					this.ParseVertexList(parser, vertices);
 					continue;
 				}
-				if (0 == string.Compare(attr, "*MESH_NUMFACES", StringComparison.InvariantCultureIgnoreCase))
-				{
-					faces = new AseFace[parser.ConsumeInt()];
-					continue;
-				}
-
-				if (0 == string.Compare(attr, "*MESH_FACE_LIST", StringComparison.InvariantCultureIgnoreCase))
-				{
-					this.ParseFaceList(parser, faces);
-					continue;
-				}
+				
 				if (0 == string.Compare(attr, "*MESH_NUMTVERTEX", StringComparison.InvariantCultureIgnoreCase))
 				{
-					tvertices = new Vector3[parser.ConsumeInt()];
+					tvertices = new ArrayMeshStream<Vector3>(parser.ConsumeInt());
+					mesh.SetStream(Streams.TexCoord, 0, tvertices);
 					continue;
 				}
 				if (0 == string.Compare(attr, "*MESH_TVERTLIST", StringComparison.InvariantCultureIgnoreCase))
@@ -455,8 +420,8 @@ namespace Toe.Utils.Mesh.Ase
 				}
 				if (0 == string.Compare(attr, "*MESH_NUMCVERTEX", StringComparison.InvariantCultureIgnoreCase))
 				{
-					var numCVerts = parser.ConsumeInt();
-					cols = new Color[numCVerts];
+					cols = new ArrayMeshStream<Color>(parser.ConsumeInt());
+					mesh.SetStream(Streams.Color, 0, cols);
 					continue;
 				}
 				if (0 == string.Compare(attr, "*MESH_CVERTLIST", StringComparison.InvariantCultureIgnoreCase))
@@ -480,64 +445,135 @@ namespace Toe.Utils.Mesh.Ase
 					this.ParsNormalList(parser, normals);
 					continue;
 				}
+				if (0 == string.Compare(attr, "*MESH_NUMFACES", StringComparison.InvariantCultureIgnoreCase))
+				{
+					faces = new AseFace[parser.ConsumeInt()];
+					continue;
+				}
+
+				if (0 == string.Compare(attr, "*MESH_FACE_LIST", StringComparison.InvariantCultureIgnoreCase))
+				{
+					this.ParseFaceList(parser, faces);
+					continue;
+				}
 				parser.UnknownLexemError();
 			}
-			int i = 0;
-			foreach (var aseFace in faces)
+			ListMeshStream<int> positionIndices = null;
+			if (vertices != null)
 			{
-				Vertex c = BuildVertex(
-					vertices,
-					aseFace.C,
-					normals,
-					i,
-					2,
-					tfaces,
-					cols,
-					tvertices,
-					colFaces,
-					(tfaces != null && tvertices != null) ? tvertices[tfaces[i].C] : Vector3.Zero);
-				Vertex b = BuildVertex(
-					vertices,
-					aseFace.B,
-					normals,
-					i,
-					1,
-					tfaces,
-					cols,
-					tvertices,
-					colFaces,
-					(tfaces != null && tvertices != null) ? tvertices[tfaces[i].B] : Vector3.Zero);
-				Vertex a = BuildVertex(
-					vertices,
-					aseFace.A,
-					normals,
-					i,
-					0,
-					tfaces,
-					cols,
-					tvertices,
-					colFaces,
-					(tfaces != null && tvertices != null) ? tvertices[tfaces[i].A] : Vector3.Zero);
-				this.BuildTangent(ref a, ref b, ref c);
-				submesh.Add(mesh.VertexBuffer.Add(a));
-				submesh.Add(mesh.VertexBuffer.Add(b));
-				submesh.Add(mesh.VertexBuffer.Add(c));
-				++i;
+				positionIndices = new ListMeshStream<int>(faces.Length * 3);
+				submesh.SetIndexStream(Streams.Position, 0, positionIndices);
 			}
-			mesh.IsBinormalStreamAvailable = true;
-			mesh.IsTangentStreamAvailable = true;
-			if (cols != null)
-			{
-				mesh.IsColorStreamAvailable = true;
-			}
+			ListMeshStream<int> normalIndices = null;
 			if (normals != null)
 			{
-				mesh.IsNormalStreamAvailable = true;
+				normalStream = new ListMeshStream<Vector3>(faces.Length * 3);
+				mesh.SetStream(Streams.Normal, 0, normalStream);
+				normalIndices = new ListMeshStream<int>(faces.Length * 3);
+				submesh.SetIndexStream(Streams.Normal, 0, normalIndices);
 			}
-			if (tfaces != null)
+			ListMeshStream<int> colorIndices = null;
+			if (cols != null)
 			{
-				mesh.IsUV0StreamAvailable = true;
+				colorIndices = new ListMeshStream<int>(faces.Length * 3);
+				submesh.SetIndexStream(Streams.Color, 0, colorIndices);
 			}
+			ListMeshStream<int> texCoordIndices = null;
+			if (tvertices != null)
+			{
+				texCoordIndices = new ListMeshStream<int>(faces.Length * 3);
+				submesh.SetIndexStream(Streams.TexCoord, 0, texCoordIndices);
+			}
+			for (int i = 0; i < faces.Length; ++i)
+			{
+				// -------------------------------------------------- //
+				if (positionIndices != null)
+				{
+					positionIndices.Add(faces[i].C);
+				}
+				if (normalIndices != null)
+				{
+					normalIndices.Add(normalStream.Count);
+					normalStream.Add(normals[i].C.Normal);
+				}
+				if (colorIndices != null)
+				{
+					colorIndices.Add(colFaces[i].Item3);
+				}
+				if (texCoordIndices != null)
+				{
+					texCoordIndices.Add(tfaces[i].C);
+				}
+				// -------------------------------------------------- //
+				if (positionIndices != null)
+				{
+					positionIndices.Add(faces[i].B);
+				}
+				if (normalIndices != null)
+				{
+					normalIndices.Add(normalStream.Count);
+					normalStream.Add(normals[i].B.Normal);
+				}
+				if (colorIndices != null)
+				{
+					colorIndices.Add(colFaces[i].Item2);
+				}
+				if (texCoordIndices != null)
+				{
+					texCoordIndices.Add(tfaces[i].B);
+				}
+
+				// -------------------------------------------------- //
+				if (positionIndices != null)
+				{
+					positionIndices.Add(faces[i].A);
+				}
+				if (normalIndices != null)
+				{
+					normalIndices.Add(normalStream.Count);
+					normalStream.Add(normals[i].A.Normal);
+				}
+				if (colorIndices != null)
+				{
+					colorIndices.Add(colFaces[i].Item1);
+				}
+				if (texCoordIndices != null)
+				{
+					texCoordIndices.Add(tfaces[i].A);
+				}
+			}
+
+		}
+
+		private static Vertex BuildVertex(Vector3[] vertices, int index0, FaceNormal[] normals,
+		int faceIndex, int vertexAtFace, AseTFace[] tfaces, Color[] c, Vector3[] tvertices, Tuple<int, int, int>[] colFaces, Vector3 uv)
+		{
+			Vertex v = new Vertex { Position = vertices[index0] };
+			if (normals != null)
+			{
+				v.Normal = normals[faceIndex].GetNormal(index0);
+			}
+			if (colFaces != null)
+			{
+				switch (vertexAtFace)
+				{
+					case 0:
+						v.Color = c[colFaces[faceIndex].Item1];
+						break;
+					case 1:
+						v.Color = c[colFaces[faceIndex].Item2];
+						break;
+					case 2:
+						v.Color = c[colFaces[faceIndex].Item3];
+						break;
+				}
+			}
+			else
+			{
+				v.Color = Color.FromArgb(255, 255, 255, 255);
+			}
+			v.UV1 = v.UV0 = new Vector3(uv.X, 1.0f - uv.Y, uv.Z);
+			return v;
 		}
 
 		private void ParseColFaceList(AseParser parser, Tuple<int, int, int>[] colFaces)
@@ -1051,7 +1087,7 @@ namespace Toe.Utils.Mesh.Ase
 			}
 		}
 
-		private void ParseVertexList(AseParser parser, Vector3[] vertices)
+		private void ParseVertexList(AseParser parser, IList<Vector3> vertices)
 		{
 			parser.Consume("{");
 			for (;;)

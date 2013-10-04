@@ -52,20 +52,10 @@ namespace Toe.Utils.Mesh.Dae
 
 		#region Methods
 
-		private static Vector3 GetVector3(int index, int stride, Input input, int[] poligonArray)
-		{
-			return input.SourceData.GetVector3(poligonArray[index * stride + input.Offset]);
-		}
-
-		private static void SetAvailableStreams(VertexBufferMesh dstMesh, MeshInputMap meshInputs)
-		{
-			dstMesh.IsNormalStreamAvailable |= meshInputs.Normal != null;
-			dstMesh.IsUV0StreamAvailable |= meshInputs.TexCoord0 != null;
-			dstMesh.IsUV1StreamAvailable |= meshInputs.TexCoord1 != null;
-			dstMesh.IsColorStreamAvailable |= meshInputs.Color != null;
-			dstMesh.IsTangentStreamAvailable |= meshInputs.Tangent != null;
-			dstMesh.IsBinormalStreamAvailable |= meshInputs.Binormal != null;
-		}
+		//private static Vector3 GetVector3(int index, int stride, Input input, int[] poligonArray)
+		//{
+		//	return input.SourceData.GetVector3(poligonArray[index * stride + input.Offset]);
+		//}
 
 		private void CopySkin(Scene scene, XElement instance, MeshSkinAndMaterials sam)
 		{
@@ -134,10 +124,10 @@ namespace Toe.Utils.Mesh.Dae
 			return sam;
 		}
 
-		private Color GetColor(int index, int stride, Input input, int[] poligonArray)
-		{
-			return input.SourceData.GetColor(poligonArray[index * stride + input.Offset]);
-		}
+		//private Color GetColor(int index, int stride, Input input, int[] poligonArray)
+		//{
+		//	return input.SourceData.GetColor(poligonArray[index * stride + input.Offset]);
+		//}
 
 		private void ParseAsset(Scene scene, XElement element)
 		{
@@ -270,42 +260,43 @@ namespace Toe.Utils.Mesh.Dae
 			}
 		}
 
-		private void ParseElement(
-			int[] poligonArray, VertexBufferSubmesh subMesh, MeshInputMap meshInputs, ref Vertex vertex, int index)
-		{
-			if (meshInputs.Vertex != null)
-			{
-				vertex.Position = GetVector3(index, meshInputs.Stride, meshInputs.Vertex, poligonArray);
-			}
-			if (meshInputs.Normal != null)
-			{
-				vertex.Normal = GetVector3(index, meshInputs.Stride, meshInputs.Normal, poligonArray);
-			}
-			if (meshInputs.TexCoord0 != null)
-			{
-				var vector3 = GetVector3(index, meshInputs.Stride, meshInputs.TexCoord0, poligonArray);
-				vertex.UV0 = new Vector3(vector3.X, 1.0f - vector3.Y, vector3.Z);
-			}
-			if (meshInputs.TexCoord1 != null)
-			{
-				var vector3 = GetVector3(index, meshInputs.Stride, meshInputs.TexCoord1, poligonArray);
-				vertex.UV1 = new Vector3(vector3.X, 1.0f - vector3.Y, vector3.Z);
-			}
-			if (meshInputs.Color != null)
-			{
-				vertex.Color = this.GetColor(index, meshInputs.Stride, meshInputs.Color, poligonArray);
-			}
-			subMesh.Add(ref vertex);
-		}
+		//private void ParseElement(
+		//	int[] poligonArray, SeparateStreamsSubmesh subMesh, ref Vertex vertex, int index)
+		//{
+		//	if (meshInputs.Vertex != null)
+		//	{
+				
+		//		vertex.Position = GetVector3(index, meshInputs.Stride, meshInputs.Vertex, poligonArray);
+		//	}
+		//	if (meshInputs.Normal != null)
+		//	{
+		//		vertex.Normal = GetVector3(index, meshInputs.Stride, meshInputs.Normal, poligonArray);
+		//	}
+		//	if (meshInputs.TexCoord0 != null)
+		//	{
+		//		var vector3 = GetVector3(index, meshInputs.Stride, meshInputs.TexCoord0, poligonArray);
+		//		vertex.UV0 = new Vector3(vector3.X, 1.0f - vector3.Y, vector3.Z);
+		//	}
+		//	if (meshInputs.TexCoord1 != null)
+		//	{
+		//		var vector3 = GetVector3(index, meshInputs.Stride, meshInputs.TexCoord1, poligonArray);
+		//		vertex.UV1 = new Vector3(vector3.X, 1.0f - vector3.Y, vector3.Z);
+		//	}
+		//	if (meshInputs.Color != null)
+		//	{
+		//		vertex.Color = this.GetColor(index, meshInputs.Stride, meshInputs.Color, poligonArray);
+		//	}
+		//	subMesh.Add(ref vertex);
+		//}
 
-		private void ParseElements(int[] poligonArray, VertexBufferSubmesh subMesh, MeshInputMap meshInputs, int numElements)
-		{
-			Vertex vertex = new Vertex();
-			for (int index = 0; index < numElements; ++index)
-			{
-				this.ParseElement(poligonArray, subMesh, meshInputs, ref vertex, index);
-			}
-		}
+		//private void ParseElements(int[] poligonArray, SeparateStreamsSubmesh subMesh, int numElements)
+		//{
+		//	Vertex vertex = new Vertex();
+		//	for (int index = 0; index < numElements; ++index)
+		//	{
+		//		this.ParseElement(poligonArray, subMesh, ref vertex, index);
+		//	}
+		//}
 
 		private void ParseGeometries(Scene scene, XElement element)
 		{
@@ -325,7 +316,7 @@ namespace Toe.Utils.Mesh.Dae
 
 			var mesh = geometry.Element(this.schema.meshName);
 
-			var dstMesh = new VertexBufferMesh();
+			var dstMesh = new SeparateStreamsMesh();
 			this.ParseIdAndName(geometry, dstMesh);
 			scene.Geometries.Add(dstMesh);
 			if (mesh != null)
@@ -374,57 +365,62 @@ namespace Toe.Utils.Mesh.Dae
 				this.ParseImage(scene, image);
 			}
 		}
-
-		private void ParseInputs(MeshInputMap meshInputs, XElement src, XElement mesh)
+		public static ISource ParseSource(XElement xElement, ColladaSchema schema)
 		{
-			meshInputs.Count = int.Parse(src.AttributeValue(this.schema.countName), CultureInfo.InvariantCulture);
-			foreach (var input in src.Elements(this.schema.inputName))
+			var floatArray = xElement.Element(schema.floatArrayName);
+			if (floatArray != null)
 			{
-				var semantic = input.AttributeValue(this.schema.semanticName);
-				var inputInfo = new Input(input, this.schema, mesh);
-				if (meshInputs.Stride <= inputInfo.Offset)
-				{
-					meshInputs.Stride = inputInfo.Offset + 1;
-				}
-				if (0 == string.Compare(semantic, "VERTEX", StringComparison.InvariantCultureIgnoreCase))
-				{
-					meshInputs.Vertex = inputInfo;
-				}
-				else if (0 == string.Compare(semantic, "NORMAL", StringComparison.InvariantCultureIgnoreCase))
-				{
-					meshInputs.Normal = inputInfo;
-				}
-				else if (0 == string.Compare(semantic, "TEXCOORD", StringComparison.InvariantCultureIgnoreCase))
-				{
-					switch (inputInfo.Set)
-					{
-						case 0:
-							meshInputs.TexCoord0 = inputInfo;
-							break;
-						case 1:
-							meshInputs.TexCoord1 = inputInfo;
-							break;
-					}
-				}
-				else if (0 == string.Compare(semantic, "COLOR", StringComparison.InvariantCultureIgnoreCase))
-				{
-					switch (inputInfo.Set)
-					{
-						case 0:
-							meshInputs.Color = inputInfo;
-							break;
-					}
-				}
-				else if (0 == string.Compare(semantic, "POSITION", StringComparison.InvariantCultureIgnoreCase))
-				{
-					meshInputs.Position = inputInfo;
-				}
-				else
-				{
-					throw new DaeException(string.Format(CultureInfo.InvariantCulture, "Unknown semantic {0}", semantic));
-				}
+				return ParseFloatArraySource(xElement, schema);
 			}
+			var intArray = xElement.Element(schema.intArrayName);
+			if (intArray != null)
+			{
+				return ParseIntArraySource(xElement, schema);
+			}
+			var boolArray = xElement.Element(schema.boolArrayName);
+			if (boolArray != null)
+			{
+				return ParseBoolArraySource(xElement, schema);
+			}
+			var nameArray = xElement.Element(schema.nameArrayName);
+			if (nameArray != null)
+			{
+				return ParseNameArraySource(xElement, schema);
+			}
+			var idrefArray = xElement.Element(schema.boolArrayName);
+			if (idrefArray != null)
+			{
+				return ParseIDREFArraySource(xElement, schema);
+			}
+			throw new DaeException(
+				string.Format(CultureInfo.InvariantCulture, "Unknown source type {0}", xElement.Name));
 		}
+		private static ISource ParseFloatArraySource(XElement xElement, ColladaSchema schema)
+		{
+			var s = new FloatArraySource(xElement, schema);
+			return s;
+		}
+		private static ISource ParseIntArraySource(XElement xElement, ColladaSchema schema)
+		{
+			var s = new IntArraySource(xElement, schema);
+			return s;
+		}
+		private static ISource ParseBoolArraySource(XElement xElement, ColladaSchema schema)
+		{
+			var s = new BoolArraySource(xElement, schema);
+			return s;
+		}
+		private static ISource ParseNameArraySource(XElement xElement, ColladaSchema schema)
+		{
+			var s = new NameArraySource(xElement, schema);
+			return s;
+		}
+		private static ISource ParseIDREFArraySource(XElement xElement, ColladaSchema schema)
+		{
+			var s = new IDREFArraySource(xElement, schema);
+			return s;
+		}
+		
 
 		private void ParseFloatArray(string polygon, float[] poligonArray)
 		{
@@ -437,6 +433,11 @@ namespace Toe.Utils.Mesh.Dae
 			{
 				poligonArray[index] = float.Parse(items[index], CultureInfo.InvariantCulture);
 			}
+		}
+		private IList<int> ParseIntList(string polygon)
+		{
+			var items = polygon.Split(new[] { ' ', '\t', '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
+			return items.Select(x => int.Parse(x, CultureInfo.InvariantCulture)).ToList();
 		}
 		private void ParseIntArray(string polygon, int[] poligonArray)
 		{
@@ -476,13 +477,63 @@ namespace Toe.Utils.Mesh.Dae
 			}
 		}
 
-		private void ParseMesh(Scene scene, XElement mesh, MeshSkinAndMaterials skinAndMaterials, VertexBufferMesh dstMesh)
+		private void ParseMesh(Scene scene, XElement mesh, MeshSkinAndMaterials skinAndMaterials, SeparateStreamsMesh dstMesh)
 		{
+			Dictionary<string, StreamKey> knownStreams = new Dictionary<string, StreamKey>();
+			Dictionary<StreamKey, string> knownSemantics = new Dictionary<StreamKey, string>();
+			foreach (var element in mesh.Elements())
+			{
+				foreach (var subElement in element.Elements().Where(x=>x.Name == this.schema.inputName))
+				{
+					var semanticAttribute = subElement.Attribute(schema.semanticName);
+					var semantic = (semanticAttribute == null)?null:semanticAttribute.Value;
+					var setAttribute = subElement.Attribute(schema.setName);
+					var set = (setAttribute==null)?0:int.Parse(setAttribute.Value, CultureInfo.InvariantCulture);
+					var sourceAttribute = subElement.Attribute(schema.sourceAttributeName);
+					var source = (sourceAttribute == null)?null:sourceAttribute.Value;
+					var key = new StreamKey(semantic, set);
+					StreamKey knownStreamKey;
+					if (!knownStreams.TryGetValue(source, out knownStreamKey))
+					{
+						knownStreams.Add(source,key);
+					}
+					else if (knownStreamKey != key)
+					{
+						throw new NotImplementedException();
+					}
+
+					string knownSemanticsKey;
+					if (!knownSemantics.TryGetValue(key, out knownSemanticsKey))
+					{
+						knownSemantics.Add(key, source);
+					}
+					else if (knownSemanticsKey != source)
+					{
+						throw new NotImplementedException();
+					}
+				}
+			}
+			foreach (var streamName in knownStreams)
+			{
+				var s = mesh.ElementByUrl(streamName.Key);
+				if (s != null)
+				{
+					if (s.Name == schema.verticesName)
+					{
+						
+					}
+					else
+					{
+						var source = ParseSource(s, schema);
+						dstMesh.SetStream(streamName.Value.Key, streamName.Value.Channel, CreateMeshStream(source));
+					}
+				}
+			}
 			foreach (var element in mesh.Elements())
 			{
 				if (element.Name == this.schema.polygonsName)
 				{
-					this.ParsePolygons(mesh, skinAndMaterials, dstMesh, element);
+					this.ParsePolygons(skinAndMaterials, dstMesh, element);
 				}
 				else if (element.Name == this.schema.polylistName)
 				{
@@ -500,6 +551,46 @@ namespace Toe.Utils.Mesh.Dae
 					throw new DaeException(message: "Unknown mesh element " + element.Name.LocalName);
 				}
 			}
+		}
+
+		private IMeshStream CreateMeshStream(ISource source)
+		{
+			var floatArray = source as FloatArraySource;
+			if (floatArray != null)
+			{
+				if (source.GetStride() == 3)
+				{
+					var arrayMeshStream = new ArrayMeshStream<Vector3>(source.GetCount());
+					for (int i = 0; i < arrayMeshStream.Count; ++i)
+					{
+						arrayMeshStream[i] = new Vector3(floatArray[i * 3 + 0], floatArray[i * 3 + 1], floatArray[i * 3 + 2]);
+					}
+					return arrayMeshStream;
+				}
+				else if (source.GetStride() == 2)
+				{
+					var arrayMeshStream = new ArrayMeshStream<Vector2>(source.GetCount());
+					for (int i = 0; i < arrayMeshStream.Count; ++i)
+					{
+						arrayMeshStream[i] = new Vector2(floatArray[i * 2 + 0], floatArray[i * 2 + 1]);
+					}
+					return arrayMeshStream;
+				}
+				else if (source.GetStride() == 4)
+				{
+					var arrayMeshStream = new ArrayMeshStream<Vector4>(source.GetCount());
+					for (int i = 0; i < arrayMeshStream.Count; ++i)
+					{
+						arrayMeshStream[i] = new Vector4(floatArray[i * 4 + 0], floatArray[i * 4 + 1], floatArray[i * 4 + 2], floatArray[i * 4 + 3]);
+					}
+					return arrayMeshStream;
+				}
+			}
+			else
+			{
+				throw new NotImplementedException();
+			}
+			throw new NotImplementedException();
 		}
 
 		private void ParseNode(Scene scene, INodeContainer parent, XElement node)
@@ -553,34 +644,61 @@ namespace Toe.Utils.Mesh.Dae
 			}
 		}
 
-		private void ParsePolygons(
-			XElement mesh, MeshSkinAndMaterials skinAndMaterials, VertexBufferMesh dstMesh, XElement element)
+		private void ParsePolygons( MeshSkinAndMaterials skinAndMaterials, SeparateStreamsMesh dstMesh, XElement element)
 		{
-			var meshInputs = new MeshInputMap();
-			this.ParseInputs(meshInputs, element, mesh);
-
-			var subMesh = (VertexBufferSubmesh)dstMesh.CreateSubmesh();
+			var meshInputs =  this.ParseInputs(element);
+			var subMesh = dstMesh.CreateSubmesh();
 			subMesh.Material = skinAndMaterials.GetAnyMaterialFor(element.AttributeValue(this.schema.materialAttributeName));
 			subMesh.VertexSourceType = VertexSourceType.TrianleList;
 
-			SetAvailableStreams(dstMesh, meshInputs);
-
-			int[] poligonArray = new int[3 * meshInputs.Stride];
-
+			var streamList = StreamListOrderedByOffset(meshInputs, subMesh);
 			foreach (var polygon in element.Elements(this.schema.pName))
 			{
-				this.ParseIntArray(polygon.Value, poligonArray);
+				var list = this.ParseIntList(polygon.Value);
+				int numElements = list.Count / meshInputs.Stride;
 
-				this.ParseElements(poligonArray, subMesh, meshInputs, 3);
+				for (int i=1; i<numElements-1; ++i)
+				{
+					AddVertex(list, 0, streamList, meshInputs.Stride);
+					AddVertex(list, i, streamList, meshInputs.Stride);
+					AddVertex(list, i+1, streamList, meshInputs.Stride);
+				}
 			}
 		}
 
-		private void ParsePolylist(
-			XElement mesh, MeshSkinAndMaterials skinAndMaterials, VertexBufferMesh dstMesh, XElement element)
+		private static List<Tuple<int, ListMeshStream<int>>> StreamListOrderedByOffset(MeshInputs meshInputs, SeparateStreamsSubmesh subMesh)
 		{
-			var meshInputs = new MeshInputMap();
-			this.ParseInputs(meshInputs, element, mesh);
-			SetAvailableStreams(dstMesh, meshInputs);
+			var streamList = new List<Tuple<int, ListMeshStream<int>>>();
+			foreach (var meshInput in meshInputs.Inputs.OrderBy(x => x.Offset))
+			{
+				var listMeshStream = new ListMeshStream<int>(meshInputs.Count);
+				streamList.Add(new Tuple<int, ListMeshStream<int>>(meshInput.Offset, listMeshStream));
+				var key = meshInput.Semantic;
+				if (key == "VERTEX") key = Streams.Position;
+				subMesh.SetIndexStream(key, meshInput.Set, listMeshStream);
+			}
+			return streamList;
+		}
+
+		private void AddVertex(IList<int> list, int i, List<Tuple<int, ListMeshStream<int>>> lists, int stride)
+		{
+			foreach (var stream in lists)
+			{
+				stream.Item2.Add(list[i*stride+stream.Item1]);
+			}
+		}
+
+		private MeshInputs ParseInputs(XElement element)
+		{
+			return new MeshInputs(element,schema);
+		}
+
+		private void ParsePolylist(
+			XElement mesh, MeshSkinAndMaterials skinAndMaterials, SeparateStreamsMesh dstMesh, XElement element)
+		{
+			var meshInputs = this.ParseInputs(element);
+
+			
 			int[] vcount = new int[meshInputs.Count];
 			this.ParseIntArray(element.ElementValue(this.schema.vcountName), vcount);
 			var points = vcount.Sum(a => a);
@@ -590,34 +708,36 @@ namespace Toe.Utils.Mesh.Dae
 			int[] p = new int[points * meshInputs.Stride];
 			this.ParseIntArray(element.ElementValue(this.schema.pName), p);
 
-			var subMesh = (VertexBufferSubmesh)dstMesh.CreateSubmesh();
+			var subMesh = dstMesh.CreateSubmesh();
 			subMesh.Material = skinAndMaterials.GetAnyMaterialFor(element.AttributeValue(this.schema.materialAttributeName));
-			if (isAllTheSame)
-			{
-				if (firstSize == 3)
-				{
-					subMesh.VertexSourceType = VertexSourceType.TrianleList;
-					this.ParseElements(p, subMesh, meshInputs, points);
-					return;
-				}
-				if (firstSize == 4)
-				{
-					subMesh.VertexSourceType = VertexSourceType.QuadList;
-					this.ParseElements(p, subMesh, meshInputs, points);
-					return;
-				}
-			}
 
-			Vertex vertex = new Vertex();
+			var streamList = StreamListOrderedByOffset(meshInputs, subMesh);
+
+			//if (isAllTheSame)
+			//{
+			//	if (firstSize == 3)
+			//	{
+			//		subMesh.VertexSourceType = VertexSourceType.TrianleList;
+			//		this.ParseElements(p, subMesh, meshInputs, points);
+			//		return;
+			//	}
+			//	if (firstSize == 4)
+			//	{
+			//		subMesh.VertexSourceType = VertexSourceType.QuadList;
+			//		this.ParseElements(p, subMesh, meshInputs, points);
+			//		return;
+			//	}
+			//}
+
 			subMesh.VertexSourceType = VertexSourceType.TrianleList;
 			int startIndex = 0;
 			for (int polygonIndex = 0; polygonIndex < vcount.Length; ++polygonIndex)
 			{
 				for (int i = 2; i < vcount[polygonIndex]; i++)
 				{
-					this.ParseElement(p, subMesh, meshInputs, ref vertex, startIndex + 0);
-					this.ParseElement(p, subMesh, meshInputs, ref vertex, startIndex + i - 1);
-					this.ParseElement(p, subMesh, meshInputs, ref vertex, startIndex + i);
+					AddVertex(p, 0, streamList, meshInputs.Stride);
+					AddVertex(p, i-1, streamList, meshInputs.Stride);
+					AddVertex(p, i , streamList, meshInputs.Stride);
 				}
 				startIndex += vcount[polygonIndex];
 			}
@@ -655,19 +775,25 @@ namespace Toe.Utils.Mesh.Dae
 		}
 
 		private void ParseTriangles(
-			XElement mesh, MeshSkinAndMaterials skinAndMaterials, VertexBufferMesh dstMesh, XElement element)
+			XElement mesh, MeshSkinAndMaterials skinAndMaterials, SeparateStreamsMesh dstMesh, XElement element)
 		{
-			var meshInputs = new MeshInputMap();
-			this.ParseInputs(meshInputs, element, mesh);
-			SetAvailableStreams(dstMesh, meshInputs);
+			var meshInputs = this.ParseInputs(element);
+			
 			int[] p = new int[meshInputs.Count * meshInputs.Stride * 3];
 			this.ParseIntArray(element.ElementValue(this.schema.pName), p);
 
-			var subMesh = (VertexBufferSubmesh)dstMesh.CreateSubmesh();
+			var subMesh = dstMesh.CreateSubmesh();
 			subMesh.Material = skinAndMaterials.GetAnyMaterialFor(element.AttributeValue(this.schema.materialAttributeName));
 			subMesh.VertexSourceType = VertexSourceType.TrianleList;
 
-			this.ParseElements(p, subMesh, meshInputs, meshInputs.Count * 3);
+			var streamList = StreamListOrderedByOffset(meshInputs, subMesh);
+
+			for (int polygonIndex = 0; polygonIndex < meshInputs.Count; ++polygonIndex)
+			{
+				AddVertex(p, polygonIndex*3, streamList, meshInputs.Stride);
+				AddVertex(p, polygonIndex * 3+1, streamList, meshInputs.Stride);
+				AddVertex(p, polygonIndex * 3+2, streamList, meshInputs.Stride);
+			}
 		}
 
 		#endregion

@@ -24,32 +24,40 @@ namespace Toe.Utils.Mesh
 		/// <summary>
 		/// Vertex position.
 		/// </summary>
+		[MeshStream(Streams.Position)]
 		public Vector3 Position;
 
 		/// <summary>
 		/// Vertex normal vector.
 		/// </summary>
+		[MeshStream(Streams.Normal)]
 		public Vector3 Normal;
 
 		/// <summary>
 		/// Vertex color.
 		/// </summary>
+		[MeshStream(Streams.Color)]
 		public Color Color;
 
+		[MeshStream(Streams.TexCoord,0)]
 		public Vector3 UV0;
 
+		[MeshStream(Streams.TexCoord, 1)]
 		public Vector3 UV1;
 
 		/// <summary>
 		/// Tangent for UV0.
 		/// </summary>
+		[MeshStream(Streams.Tangent, 0)]
 		public Vector3 Tangent;
 
 		/// <summary>
 		/// Binormal / bitangent for UV0.
 		/// </summary>
+		[MeshStream(Streams.Binormal, 0)]
 		public Vector3 Binormal;
 
+		[MeshStream(Streams.Weight, 0)]
 		public VertexWeights Weights;
 
 		#endregion
@@ -137,19 +145,6 @@ namespace Toe.Utils.Mesh
 
 		#endregion
 
-		public void GetUV(int channel, out Vector3 res)
-		{
-			switch (channel)
-			{
-				case 0:
-					res = this.UV0;
-					return;
-				case 1:
-					res = this.UV1;
-					return;
-				default:
-					throw new ArgumentOutOfRangeException();
-			}
-		}
+	
 	}
 }

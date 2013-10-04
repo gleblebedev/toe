@@ -5,35 +5,35 @@ using OpenTK;
 
 namespace Toe.Utils.Mesh.Dae
 {
-	public class VertexSource : ISource
-	{
-		#region Constants and Fields
+	//public class VertexSource : ISource
+	//{
+	//	#region Constants and Fields
 
-		private readonly Input input;
+	//	private readonly Input input;
 
-		#endregion
+	//	#endregion
 
-		#region Constructors and Destructors
+	//	#region Constructors and Destructors
 
-		public VertexSource(Input input)
-		{
-			this.input = input;
-		}
+	//	public VertexSource(Input input)
+	//	{
+	//		this.input = input;
+	//	}
 
-		#endregion
+	//	#endregion
 
-		#region Public Methods and Operators
+	//	#region Public Methods and Operators
 
-		public Color GetColor(int index)
-		{
-			throw new NotImplementedException();
-		}
+	//	public Color GetColor(int index)
+	//	{
+	//		throw new NotImplementedException();
+	//	}
 
-		public Vector3 GetVector3(int index)
-		{
-			return this.input.SourceData.GetVector3(index);
-		}
+	//	public Vector3 GetVector3(int index)
+	//	{
+	//		return this.input.SourceData.GetVector3(index);
+	//	}
 
-		#endregion
-	}
+	//	#endregion
+	//}
 }

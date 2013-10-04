@@ -1,4 +1,5 @@
 using System.Drawing;
+using System.Linq;
 
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
@@ -33,85 +34,56 @@ namespace Toe.Gx
 
 		public VertexBufferRenderData(IVertexStreamSource mesh)
 		{
+			var position = mesh.GetStreamReader<Vector3>(Streams.Position,0);
+			var normal = mesh.GetStreamReader<Vector3>(Streams.Normal, 0);
+			var tangent = mesh.GetStreamReader<Vector3>(Streams.Tangent, 0);
+			var binormal = mesh.GetStreamReader<Vector3>(Streams.Binormal, 0);
+			var texcoord0 = mesh.GetStreamReader<Vector3>(Streams.TexCoord, 0);
+			var texcoord1 = mesh.GetStreamReader<Vector3>(Streams.TexCoord, 1);
+			var color = mesh.GetStreamReader<Color>(Streams.Color, 0);
 			this.v = null;
-			if (mesh.IsVertexStreamAvailable)
+			if (position != null)
 			{
-				this.v = new Vector3[mesh.Count];
-				for (int i = 0; i < mesh.Count; ++i)
-				{
-					mesh.GetVertexAt(i, out this.v[i]);
-				}
+				this.v = position.ToArray();
 			}
 			this.n = null;
-			if (mesh.IsNormalStreamAvailable)
+			if (normal != null)
 			{
-				this.n = new Vector3[mesh.Count];
-				for (int i = 0; i < mesh.Count; ++i)
-				{
-					mesh.GetNormalAt(i, out this.n[i]);
-				}
+				this.v = normal.ToArray();
 			}
 			this.t = null;
-			if (mesh.IsTangentStreamAvailable)
+			if (tangent != null)
 			{
-				this.t = new Vector3[mesh.Count];
-				int i = 0;
-				mesh.VisitTangents(
-					(ref Vector3 vv) =>
-						{
-							this.t[i] = vv;
-							++i;
-						});
+				this.t = tangent.ToArray();
 			}
 			this.b = null;
-			if (mesh.IsTangentStreamAvailable)
+			if (binormal != null)
 			{
-				this.b = new Vector3[mesh.Count];
-				int i = 0;
-				mesh.VisitBinormals(
-					(ref Vector3 vv) =>
-						{
-							this.b[i] = vv;
-							++i;
-						});
+				this.b = binormal.ToArray();
 			}
-			this.uv0 = null;
-			if (mesh.IsUV0StreamAvailable)
+			this.uv0 = texcoord0 != null ? texcoord0.ToArray() : null;
+			this.uv1 = texcoord1 != null ? texcoord1.ToArray() : null;
+			if (color != null)
 			{
-				this.uv0 = new Vector3[mesh.Count];
-				for (int i = 0; i < mesh.Count; ++i)
+				this.c = new byte[mesh.Count*4];
+				int j = 0;
+				foreach (var col in color)
 				{
-					mesh.GetUV3At(i, 0, out this.uv0[i]);
+					this.c[j] = col.R;
+					++j;
+					this.c[j] = col.G;
+					++j;
+					this.c[j] = col.B;
+					++j;
+					this.c[j] = col.A;
+					++j;
 				}
 			}
-			this.uv1 = null;
-			if (mesh.IsUV1StreamAvailable)
+			else
 			{
-				this.uv1 = new Vector3[mesh.Count];
-				for (int i = 0; i < mesh.Count; ++i)
-				{
-					mesh.GetUV3At(i, 1, out this.uv1[i]);
-				}
+				this.c = null;
 			}
-			this.c = null;
-			if (mesh.IsColorStreamAvailable)
-			{
-				this.c = new byte[mesh.Count * 4];
-				int i = 0;
-				for (int j = 0; j < mesh.Count; ++j)
-				{
-					Color col;
-					mesh.GetColorAt(j, out col);
-					this.c[i] = col.R;
-					++i;
-					this.c[i] = col.G;
-					++i;
-					this.c[i] = col.B;
-					++i;
-					this.c[i] = col.A;
-					++i;
-				}
-			}
+
 		}
 
 		#endregion

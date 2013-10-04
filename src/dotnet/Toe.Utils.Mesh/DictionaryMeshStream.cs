@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Toe.Utils.Mesh
 {
-	public class OptimizedList<T> : IList<T>
+	public class DictionaryMeshStream<T> : IList<T>
 	{
 		#region Constants and Fields
 
