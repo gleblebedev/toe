@@ -64,6 +64,11 @@ namespace Toe.Marmalade.IwGraphics
 			}
 		}
 
+		public IList<int> GetIndexReader(string key, int channel)
+		{
+			throw new NotImplementedException();
+		}
+
 		#endregion
 
 		#region Public Methods and Operators

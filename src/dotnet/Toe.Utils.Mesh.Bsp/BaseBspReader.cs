@@ -774,7 +774,7 @@ namespace Toe.Utils.Mesh.Bsp
 		{
 		}
 
-		protected abstract void ReadVertices();
+		protected abstract void ReadVertices(BspMeshStreams streams);
 
 		protected virtual void ReadVisibilityList()
 		{

@@ -114,7 +114,27 @@ namespace Toe.Utils.Mesh.Bsp
 				throw new BspFormatException(string.Format("Wrong vertex data {{{0}, {1}, {2}}}", v.X, v.Y, v.Z));
 			}
 		}
-
+		public static Vector3 ReadVector3(this Stream stream)
+		{
+			var X = stream.ReadSingle();
+			var Y = stream.ReadSingle();
+			var Z = stream.ReadSingle();
+			if (float.IsInfinity(X) || float.IsInfinity(Y) || float.IsInfinity(Z))
+			{
+				throw new BspFormatException(string.Format("Wrong vertex data {{{0}, {1}, {2}}}", X, Y, Z));
+			}
+			return new Vector3(X, Y, Z);
+		}
+		public static Vector2 ReadVector2(this Stream stream)
+		{
+			var X = stream.ReadSingle();
+			var Y = stream.ReadSingle();
+			if (float.IsInfinity(X) || float.IsInfinity(Y))
+			{
+				throw new BspFormatException(string.Format("Wrong vertex data {{{0}, {1}}}", X, Y));
+			}
+			return new Vector2(X, Y);
+		}
 		#endregion
 
 		[StructLayout(LayoutKind.Explicit)]

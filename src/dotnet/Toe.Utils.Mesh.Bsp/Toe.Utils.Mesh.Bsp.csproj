@@ -61,9 +61,11 @@
     <Compile Include="BaseBspReader.cs" />
     <Compile Include="BspEntity.cs" />
     <Compile Include="BspFormatException.cs" />
+    <Compile Include="BspMeshStreams.cs" />
     <Compile Include="BspVsdTreeCluster.cs" />
     <Compile Include="BspVsdTreeModel.cs" />
     <Compile Include="HL2\SourceModel.cs" />
+    <Compile Include="BspSubmeshStreams.cs" />
     <Compile Include="Utils\BspMaterialKey.cs" />
     <Compile Include="BspReader.cs" />
     <Compile Include="BspSceneFileFormat.cs" />

@@ -101,15 +101,7 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 
 			if (this.buildBsp)
 			{
-				var streamMesh = new VertexBufferMesh<Vertex>
-					{
-						IsNormalStreamAvailable = true,
-						IsUV0StreamAvailable = true,
-						IsUV1StreamAvailable = true,
-						IsColorStreamAvailable = true,
-						IsBinormalStreamAvailable = false,
-						IsTangentStreamAvailable = false,
-					};
+				var streamMesh = new SeparateStreamsMesh();
 				this.Scene.Geometries.Add(streamMesh);
 				var meshBuilder = new MeshBuilder(streamMesh, this);
 				node.Mesh = streamMesh;
@@ -186,7 +178,7 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 						int lightmapIndex = 0; //this.faces[faceIndex].lightmap;
 
 						int meshIndex;
-						VertexBufferSubmesh<Vertex> subMesh =
+						SeparateStreamsSubmesh subMesh =
 							meshBuilder.EnsureSubMesh(new BspSubmeshKey(index, new BspMaterialKey(texIndex, lightmapIndex)), out meshIndex);
 						if (!uniqueSubmeshes.ContainsKey(meshIndex))
 						{
@@ -540,7 +532,7 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 			this.AssertStreamPossition(this.header.Texinfo.size + this.header.Texinfo.offset);
 		}
 
-		protected override void ReadVertices()
+		protected override void ReadVertices(BspMeshStreams streams)
 		{
 			this.SeekEntryAt(this.header.Vertexes.offset);
 			int size = this.EvalNumItems(this.header.Vertexes.size, 12);
@@ -610,7 +602,7 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 			}
 		}
 
-		private void BuildFace(ref SourceFace face, VertexBufferSubmesh<Vertex> submesh, VertexBufferMesh<Vertex> streamMesh)
+		private void BuildFace(ref SourceFace face, BspSubmeshStreams submesh, SeparateStreamsMesh streamMesh)
 		{
 			Vertex[] faceVertices = new Vertex[face.numedges];
 
@@ -715,23 +707,15 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 			}
 			for (int j = 1; j < faceVertices.Length - 1; ++j)
 			{
-				submesh.Add(indices[0]);
-				submesh.Add(indices[j]);
-				submesh.Add(indices[j + 1]);
+				submesh.AddToAllStreams(indices[0]);
+				submesh.AddToAllStreams(indices[j]);
+				submesh.AddToAllStreams(indices[j + 1]);
 			}
 		}
 
 		private void BuildModelAsNode(ref SourceModel sourceModel)
 		{
-			var streamMesh2 = new VertexBufferMesh<Vertex>
-				{
-					IsNormalStreamAvailable = true,
-					IsUV0StreamAvailable = true,
-					IsUV1StreamAvailable = true,
-					IsColorStreamAvailable = true,
-					IsBinormalStreamAvailable = false,
-					IsTangentStreamAvailable = false,
-				};
+			var streamMesh2 = new SeparateStreamsMesh();
 			var meshBuilder2 = new MeshBuilder(streamMesh2, this);
 			var beginModelFace = sourceModel.firstface;
 			var endModelFace = beginModelFace + sourceModel.numfaces;

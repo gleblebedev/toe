@@ -11,7 +11,7 @@ namespace Toe.Utils.Mesh.Bsp.Q2
 			throw new NotImplementedException();
 		}
 
-		protected override void ReadVertices()
+		protected override void ReadVertices(BspMeshStreams streams)
 		{
 			throw new NotImplementedException();
 		}

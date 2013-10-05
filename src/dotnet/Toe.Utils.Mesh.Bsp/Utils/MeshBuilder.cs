@@ -8,7 +8,7 @@ namespace Toe.Utils.Mesh.Bsp.Utils
 
 		public int Index;
 
-		public VertexBufferSubmesh<Vertex> Mesh;
+		public SeparateStreamsSubmesh Mesh;
 
 		#endregion
 	}
@@ -23,13 +23,13 @@ namespace Toe.Utils.Mesh.Bsp.Utils
 
 		private readonly IMaterialProvider materialProvider;
 
-		private readonly VertexBufferMesh<Vertex> streamMesh;
+		private readonly SeparateStreamsMesh streamMesh;
 
 		#endregion
 
 		#region Constructors and Destructors
 
-		public MeshBuilder(VertexBufferMesh<Vertex> streamMesh, IMaterialProvider materialProvider)
+		public MeshBuilder(SeparateStreamsMesh streamMesh, IMaterialProvider materialProvider)
 		{
 			this.streamMesh = streamMesh;
 			this.materialProvider = materialProvider;
@@ -39,7 +39,7 @@ namespace Toe.Utils.Mesh.Bsp.Utils
 
 		#region Public Methods and Operators
 
-		public VertexBufferSubmesh<Vertex> EnsureSubMesh(BspSubmeshKey bspSubmeshKey, out int meshIndex)
+		public SeparateStreamsSubmesh EnsureSubMesh(BspSubmeshKey bspSubmeshKey, out int meshIndex)
 		{
 			MeshBuilderMesh m;
 			if (this.map.TryGetValue(bspSubmeshKey, out m))
@@ -48,7 +48,7 @@ namespace Toe.Utils.Mesh.Bsp.Utils
 				return m.Mesh;
 			}
 			m.Index = this.streamMesh.Submeshes.Count;
-			m.Mesh = (VertexBufferSubmesh<Vertex>)this.streamMesh.CreateSubmesh();
+			m.Mesh = this.streamMesh.CreateSubmesh();
 			this.map[bspSubmeshKey] = m;
 			meshIndex = m.Index;
 

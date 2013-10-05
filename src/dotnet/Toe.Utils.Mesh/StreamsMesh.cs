@@ -54,7 +54,7 @@ namespace Toe.Utils.Mesh
 		}
 
 		
-		public IMeshStream SetStream(string key, int channel, IMeshStream stream)
+		public T SetStream<T>(string key, int channel, T stream) where T:IMeshStream
 		{
 			availableStreams[new StreamKey(key, channel)] = stream;
 			return stream;
@@ -155,7 +155,13 @@ namespace Toe.Utils.Mesh
 			}
 		}
 
-		
+		public IList<SeparateStreamsSubmesh> Submeshes
+		{
+			get
+			{
+				return this.submeshes;
+			}
+		}
 
 		public string useGeo { get; set; }
 

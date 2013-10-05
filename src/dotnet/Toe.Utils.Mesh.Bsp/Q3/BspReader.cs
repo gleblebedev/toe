@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Text;
 
 using OpenTK;
@@ -12,8 +14,6 @@ namespace Toe.Utils.Mesh.Bsp.Q3
 		protected Quake3Face[] faces;
 
 		protected Quake3FileHeader header;
-
-		protected Quake3Vertex[] vertices;
 
 		private Quake3Effects[] effects;
 
@@ -30,10 +30,14 @@ namespace Toe.Utils.Mesh.Bsp.Q3
 			var maxTextures = this.textures.Length;
 
 			var streamMesh = new SeparateStreamsMesh();
-
+			var meshStreams = new BspMeshStreams();
+			meshStreams.Positions = streamMesh.SetStream(Streams.Position, 0, new ListMeshStream<Vector3>());
+			meshStreams.Normals = streamMesh.SetStream(Streams.Normal, 0, new ListMeshStream<Vector3>());
+			meshStreams.TexCoord0 = streamMesh.SetStream(Streams.TexCoord, 0, new ListMeshStream<Vector2>());
+			meshStreams.TexCoord1 = streamMesh.SetStream(Streams.TexCoord, 1, new ListMeshStream<Vector2>());
 			SeparateStreamsSubmesh[] submeshes = new SeparateStreamsSubmesh[maxTextures];
-
-			this.BuildSubmeshes(maxTextures, submeshes, streamMesh);
+			this.BuildSubmeshes(maxTextures, submeshes, streamMesh, meshStreams);
+			var submeshStreams = submeshes.Select(x => new BspSubmeshStreams(x, meshStreams)).ToArray();
 
 			var node = new Node();
 			this.Scene.Nodes.Add(node);
@@ -44,17 +48,15 @@ namespace Toe.Utils.Mesh.Bsp.Q3
 				switch (quake3Face.type)
 				{
 					case 2: //Patch
-						this.BuildPatch(quake3Face, streamMesh, submeshes[quake3Face.texinfo_id]);
+						this.BuildPatch(quake3Face, submeshStreams[quake3Face.texinfo_id]);
 
 						break;
 					case 1: //Polygon
 					case 3: //Mesh
 						for (int i = 0; i < quake3Face.numMeshVerts; ++i)
 						{
-							AddVertexToMesh(
-								ref this.vertices[quake3Face.vertexIndex + this.meshverts[quake3Face.meshVertIndex + i]],
-								submeshes[quake3Face.texinfo_id],
-								streamMesh);
+
+							AddVertexToMesh((int)(quake3Face.vertexIndex + this.meshverts[quake3Face.meshVertIndex + i]),submeshStreams[quake3Face.texinfo_id]);
 						}
 						break;
 					case 4: //Billboard
@@ -166,63 +168,56 @@ namespace Toe.Utils.Mesh.Bsp.Q3
 			this.AssertStreamPossition(this.header.textures.size + this.header.textures.offset);
 		}
 
-		protected void ReadVertex(ref Quake3Vertex vertex)
+		protected void ReadVertex(BspMeshStreams streams)
 		{
-			this.Stream.ReadVector3(out vertex.vPosition);
-			this.Stream.ReadVector2(out vertex.vTextureCoord);
-			this.Stream.ReadVector2(out vertex.vLightmapCoord);
-			if (vertex.vLightmapCoord.X < 0)
+			streams.Positions.Add(this.Stream.ReadVector3());
+			streams.TexCoord0.Add(this.Stream.ReadVector2());
+			var vLightmapCoord = this.Stream.ReadVector2();
+			if (vLightmapCoord.X < 0)
 			{
-				vertex.vLightmapCoord.X = 0;
+				vLightmapCoord.X = 0;
 			}
-			if (vertex.vLightmapCoord.X > 1)
+			if (vLightmapCoord.X > 1)
 			{
-				vertex.vLightmapCoord.X = 1;
+				vLightmapCoord.X = 1;
 			}
-			if (vertex.vLightmapCoord.Y < 0)
+			if (vLightmapCoord.Y < 0)
 			{
-				vertex.vLightmapCoord.Y = 0;
+				vLightmapCoord.Y = 0;
 			}
-			if (vertex.vLightmapCoord.Y > 1)
+			if (vLightmapCoord.Y > 1)
 			{
-				vertex.vLightmapCoord.Y = 1;
+				vLightmapCoord.Y = 1;
 			}
-			this.Stream.ReadVector3(out vertex.vNormal);
+			streams.TexCoord1.Add(vLightmapCoord);
+			var vNormal = this.Stream.ReadVector3();
+			streams.Normals.Add(vNormal);
 
-			var lengthSquared = vertex.vNormal.LengthSquared;
+			var lengthSquared = vNormal.LengthSquared;
 			if (lengthSquared != 0.0f && (lengthSquared < 0.9f || lengthSquared > 1.1f))
 			{
 				throw new BspFormatException("Probably wrong format of vertex");
 			}
-
-			vertex.color = this.Stream.ReadBGRA();
+			streams.Colors.Add(this.Stream.ReadBGRA());
 		}
 
-		protected override void ReadVertices()
+		protected override void ReadVertices(BspMeshStreams streams)
 		{
 			this.SeekEntryAt(this.header.vertexes.offset);
 			int size = this.EvalNumItems(this.header.vertexes.size, 44);
-			this.vertices = new Quake3Vertex[size];
 			for (int i = 0; i < size; ++i)
 			{
-				this.ReadVertex(ref this.vertices[i]);
+				this.ReadVertex(streams);
 			}
 			this.AssertStreamPossition(this.header.vertexes.size + this.header.vertexes.offset);
 		}
 
-		private static void AddVertexToMesh(ref Quake3Vertex vertex, SeparateStreamsSubmesh subMesh, SeparateStreamsMesh streamMesh)
+		private static void AddVertexToMesh(int index, BspSubmeshStreams subMesh)
 		{
-			var v = new Vertex
-				{
-					Position = vertex.vPosition,
-					Normal = vertex.vNormal,
-					Color = vertex.color,
-					UV0 = new Vector3(vertex.vTextureCoord.X, vertex.vTextureCoord.Y, 0.0f)
-				};
-			subMesh.Add(streamMesh.VertexBuffer.Add(v));
+			subMesh.AddToAllStreams(index);
 		}
 
-		private void BuildPatch(Quake3Face quake3Face, SeparateStreamsMesh streamMesh, SeparateStreamsSubmesh subMesh)
+		private void BuildPatch(Quake3Face quake3Face, BspSubmeshStreams submesh)
 		{
 			var width = quake3Face.sizeX;
 			var height = quake3Face.sizeY;
@@ -234,18 +229,18 @@ namespace Toe.Utils.Mesh.Bsp.Q3
 			{
 				for (int j = 0; j < height - 1; j += 1)
 				{
-					AddVertexToMesh(ref this.vertices[quake3Face.vertexIndex + (i) + (j) * width], subMesh, streamMesh);
-					AddVertexToMesh(ref this.vertices[quake3Face.vertexIndex + (i + 1) + (j + 1) * width], subMesh, streamMesh);
-					AddVertexToMesh(ref this.vertices[quake3Face.vertexIndex + (i + 1) + (j) * width], subMesh, streamMesh);
+					AddVertexToMesh(quake3Face.vertexIndex + (i) + (j) * width, submesh);
+					AddVertexToMesh(quake3Face.vertexIndex + (i + 1) + (j + 1) * width, submesh);
+					AddVertexToMesh(quake3Face.vertexIndex + (i + 1) + (j) * width, submesh);
 
-					AddVertexToMesh(ref this.vertices[quake3Face.vertexIndex + (i) + (j) * width], subMesh, streamMesh);
-					AddVertexToMesh(ref this.vertices[quake3Face.vertexIndex + (i) + (j + 1) * width], subMesh, streamMesh);
-					AddVertexToMesh(ref this.vertices[quake3Face.vertexIndex + (i + 1) + (j + 1) * width], subMesh, streamMesh);
+					AddVertexToMesh(quake3Face.vertexIndex + (i) + (j) * width, submesh);
+					AddVertexToMesh(quake3Face.vertexIndex + (i) + (j + 1) * width, submesh);
+					AddVertexToMesh(quake3Face.vertexIndex + (i + 1) + (j + 1) * width, submesh);
 				}
 			}
 		}
 
-		private void BuildSubmeshes(int maxTextures, SeparateStreamsSubmesh[] submeshes, SeparateStreamsMesh streamMesh)
+		private void BuildSubmeshes(int maxTextures, SeparateStreamsSubmesh[] submeshes, SeparateStreamsMesh streamMesh, BspMeshStreams meshStreams)
 		{
 			int[] textureToMaterial = new int[maxTextures];
 			foreach (var quake3Face in this.faces)
@@ -257,7 +252,6 @@ namespace Toe.Utils.Mesh.Bsp.Q3
 				if (textureToMaterial[i] > 0)
 				{
 					submeshes[i] = streamMesh.CreateSubmesh();
-
 					int index = this.Scene.Materials.Count;
 					var baseFileName = Path.Combine(this.GameRootPath, this.textures[i].name);
 					var imagePath = baseFileName;

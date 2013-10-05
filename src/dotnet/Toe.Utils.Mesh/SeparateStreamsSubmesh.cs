@@ -137,9 +137,10 @@ namespace Toe.Utils.Mesh
 
 		Dictionary<StreamKey,IList<int>> streams = new Dictionary<StreamKey, IList<int>>();
 
-		public void SetIndexStream(string key, int channel, IList<int> stream)
+		public T SetIndexStream<T>(string key, int channel, T stream) where T:IList<int>
 		{
-			streams[new StreamKey(key, channel)] = stream;
+			 streams[new StreamKey(key, channel)] = stream;
+			return stream;
 		}
 
 		public override IList<int> GetIndexReader(string key, int channel)
@@ -147,5 +148,6 @@ namespace Toe.Utils.Mesh
 			IList<int> streamReader;
 			return !this.streams.TryGetValue(new StreamKey(key, channel), out streamReader) ? null : streamReader;
 		}
+
 	}
 }
