@@ -249,29 +249,34 @@ namespace Toe.Editors.Marmalade
 						var positions = sourceMesh.GetStreamReader<Vector3>(Streams.Position, 0);
 						var normals = sourceMesh.GetStreamReader<Vector3>(Streams.Normal, 0);
 						var color = sourceMesh.GetStreamReader<Color>(Streams.Color, 0);
-						for (int i = 0; i < verts; ++i)
+						int positionStartIndex = mesh.Vertices.Count;
+						if (positions != null)
 						{
-							mesh.Vertices.Add(positions[i]);
-
-							if (normals != null)
-							{
-								mesh.Normals.Add(normals[i]);
-							}
-							if (color != null)
-							{
-								mesh.Colors.Add(color[i]);
-							}
+							mesh.Vertices.AddRange(positions);
+						}
+						if (normals != null)
+						{
+							mesh.Normals.AddRange(normals);
+						}
+						if (color != null)
+						{
+							mesh.Colors.AddRange(color);
 						}
 						foreach (var submesh in sourceMesh.Submeshes)
 						{
 							var surface = this.context.Resolve<ModelBlockPrimBase>();
 							mesh.Surfaces.Add(surface);
-							foreach (var face in submesh)
+							var positionIndices = positions != null ? submesh.GetIndexReader(Streams.Position, 0) : null;
+							var normalIndices = positions != null ? submesh.GetIndexReader(Streams.Normal, 0) : null;
+							var colorIndices = color != null ? submesh.GetIndexReader(Streams.Color, 0) : null;
+							for (int i = 0; i < submesh.Count; i++)
 							{
-								surface.Indices.Add(new ComplexIndex() { Vertex = face,
-																		 Color = color != null ? face : 0,
-																		 Normal = normals != null ? face : 0
-								});
+								surface.Indices.Add(new ComplexIndex()
+									{
+										Vertex = (positionIndices != null) ? positionStartIndex+positionIndices[i] : -1,
+										Normal = (normalIndices != null)?normalIndices[i]:-1,
+										Color =  (colorIndices != null)?colorIndices[i]:-1,
+									});
 							}
 						}
 						this.Model.Meshes.Add(mesh);

@@ -415,14 +415,14 @@ namespace Toe.Editors
 			// 
 			this.zUpToolStripMenuItem.Image = global::Toe.Editors.Properties.Resources.zup;
 			this.zUpToolStripMenuItem.Name = "zUpToolStripMenuItem";
-			this.zUpToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.zUpToolStripMenuItem.Size = new System.Drawing.Size(101, 22);
 			this.zUpToolStripMenuItem.Text = "Z-Up";
 			// 
 			// yUpToolStripMenuItem
 			// 
 			this.yUpToolStripMenuItem.Image = global::Toe.Editors.Properties.Resources.yup;
 			this.yUpToolStripMenuItem.Name = "yUpToolStripMenuItem";
-			this.yUpToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.yUpToolStripMenuItem.Size = new System.Drawing.Size(101, 22);
 			this.yUpToolStripMenuItem.Text = "Y-Up";
 			// 
 			// lightingButton
@@ -451,12 +451,14 @@ namespace Toe.Editors
 			this.renderWireframeMenuItem.Name = "renderWireframeMenuItem";
 			this.renderWireframeMenuItem.Size = new System.Drawing.Size(169, 22);
 			this.renderWireframeMenuItem.Text = "Render Wireframe";
+			this.renderWireframeMenuItem.Click += new System.EventHandler(this.SelectWireframeOn);
 			// 
 			// hideWireframeMenuItem
 			// 
 			this.hideWireframeMenuItem.Name = "hideWireframeMenuItem";
 			this.hideWireframeMenuItem.Size = new System.Drawing.Size(169, 22);
 			this.hideWireframeMenuItem.Text = "Hide Wireframe";
+			this.hideWireframeMenuItem.Click += new System.EventHandler(this.SelectWireframeOff);
 			// 
 			// renderNormalsButton
 			// 
@@ -469,6 +471,7 @@ namespace Toe.Editors
 			this.renderNormalsButton.Name = "renderNormalsButton";
 			this.renderNormalsButton.Size = new System.Drawing.Size(29, 22);
 			this.renderNormalsButton.Text = "Toggle Normals";
+			this.renderNormalsButton.Click += new System.EventHandler(this.SelectNormalsOn);
 			// 
 			// renderNormalsMenuItem
 			// 
@@ -481,6 +484,7 @@ namespace Toe.Editors
 			this.hideNormalsMenuItem.Name = "hideNormalsMenuItem";
 			this.hideNormalsMenuItem.Size = new System.Drawing.Size(157, 22);
 			this.hideNormalsMenuItem.Text = "Hide normals";
+			this.hideNormalsMenuItem.CheckedChanged += new System.EventHandler(this.SelectNormalsOff);
 			// 
 			// btnScreenShot
 			// 
@@ -605,23 +609,19 @@ namespace Toe.Editors
 
 		private void RenderMeshNormals(IMesh mesh)
 		{
-			var streamMesh = mesh as SeparateStreamsMesh;
-			if (streamMesh != null)
+			Color wireColor = Color.White;
+			foreach (var submesh in mesh.Submeshes)
 			{
-				return;
-			}
-			var vbMesh = mesh as VertexBufferMesh<Vertex>;
-			var normalColor = Color.White;
-			if (vbMesh != null)
-			{
-				foreach (var vertex in vbMesh.VertexBuffer)
+				var pos = submesh.GetIndexReader(Streams.Position, 0);
+				var normal = submesh.GetIndexReader(Streams.Normal, 0);
+				var posStream = mesh.GetStreamReader<Vector3>(Streams.Position, 0);
+				var normalStream = mesh.GetStreamReader<Vector3>(Streams.Normal, 0);
+				if (posStream != null && normalStream != null && pos != null && normal != null)
 				{
-					var p = vertex.Position;
-					var n = p + vertex.Normal * 10.0f;
-					Vector3 a, b;
-					this.graphicsContext.ModelToWorld(ref p, out a);
-					this.graphicsContext.ModelToWorld(ref n, out b);
-					this.graphicsContext.RenderDebugLine(a, b, normalColor);
+					for (int i = 0; i < pos.Count; i++)
+					{
+						this.graphicsContext.RenderDebugLine(posStream[pos[i]], posStream[pos[i]]+normalStream[normal[i]]*10, wireColor);
+					}
 				}
 			}
 		}
@@ -633,7 +633,7 @@ namespace Toe.Editors
 			Vector3 pos;
 			Vector3 buf;
 			var position = mesh.GetStreamReader<Vector3>(Streams.Position,0);
-			for (int i = 0; i < mesh.Count; ++i)
+			for (int i = 0; i < position.Count; ++i)
 			{
 				pos = position[i];
 				this.graphicsContext.ModelToWorld(ref pos, out buf);
@@ -644,10 +644,10 @@ namespace Toe.Editors
 			foreach (var submesh in mesh.Submeshes)
 			{
 				var vi = submesh as IVertexIndexSource;
-				var enumerator = vi.GetEnumerator();
+				var enumerator = vi.GetIndexReader(Streams.Position,0).GetEnumerator();
 				switch (vi.VertexSourceType)
 				{
-					case VertexSourceType.TrianleList:
+					case VertexSourceType.TriangleList:
 						for (;;)
 						{
 							if (!enumerator.MoveNext())
@@ -671,7 +671,7 @@ namespace Toe.Editors
 						}
 
 						break;
-					case VertexSourceType.TrianleStrip:
+					case VertexSourceType.TriangleStrip:
 						break;
 					case VertexSourceType.QuadList:
 						for (;;)
