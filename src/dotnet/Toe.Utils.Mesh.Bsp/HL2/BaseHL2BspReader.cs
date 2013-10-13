@@ -50,6 +50,8 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 
 		private Vector3[] vertices;
 
+		private SeparateStreamsMesh streamMesh;
+
 		#endregion
 
 		#region Public Properties
@@ -91,6 +93,17 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 
 		#region Methods
 
+		protected override void CreateMesh()
+		{
+			this.streamMesh = new SeparateStreamsMesh();
+			this.meshStreams = new BspMeshStreams();
+			meshStreams.Positions = streamMesh.SetStream(Streams.Position, 0, new ListMeshStream<Vector3>());
+			meshStreams.Normals = streamMesh.SetStream(Streams.Normal, 0, new ListMeshStream<Vector3>());
+			meshStreams.TexCoord0 = streamMesh.SetStream(Streams.TexCoord, 0, new ListMeshStream<Vector2>());
+			meshStreams.TexCoord1 = streamMesh.SetStream(Streams.TexCoord, 1, new ListMeshStream<Vector2>());
+			meshStreams.Colors = streamMesh.SetStream(Streams.Color, 0, new ListMeshStream<Color>());
+		}
+
 		protected override void BuildScene()
 		{
 			this.CollectLeafsInCluster();
@@ -101,7 +114,6 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 
 			if (this.buildBsp)
 			{
-				var streamMesh = new SeparateStreamsMesh();
 				this.Scene.Geometries.Add(streamMesh);
 				var meshBuilder = new MeshBuilder(streamMesh, this);
 				node.Mesh = streamMesh;
@@ -185,7 +197,8 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 							visibleMeshesLookup.Add(meshIndex);
 							uniqueSubmeshes[meshIndex] = true;
 						}
-						this.BuildFace(ref this.faces[uniqueFace.Key], subMesh, streamMesh);
+						BspSubmeshStreams submeshStreams= new BspSubmeshStreams(subMesh, meshStreams);
+						this.BuildFace(ref this.faces[uniqueFace.Key], submeshStreams);
 					}
 					vsdClusters[index].VisibleMeshesCount = visibleMeshesLookup.Count - vsdClusters[index].VisibleMeshesOffset;
 				}
@@ -532,7 +545,7 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 			this.AssertStreamPossition(this.header.Texinfo.size + this.header.Texinfo.offset);
 		}
 
-		protected override void ReadVertices(BspMeshStreams streams)
+		protected override void ReadVertices()
 		{
 			this.SeekEntryAt(this.header.Vertexes.offset);
 			int size = this.EvalNumItems(this.header.Vertexes.size, 12);
@@ -602,7 +615,7 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 			}
 		}
 
-		private void BuildFace(ref SourceFace face, BspSubmeshStreams submesh, SeparateStreamsMesh streamMesh)
+		private void BuildFace(ref SourceFace face, BspSubmeshStreams subMesh)
 		{
 			Vertex[] faceVertices = new Vertex[face.numedges];
 
@@ -703,13 +716,17 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 			int[] indices = new int[faceVertices.Length];
 			for (int j = 0; j < faceVertices.Length; ++j)
 			{
-				indices[j] = streamMesh.VertexBuffer.Add(faceVertices[j]);
+				meshStreams.Positions.Add(faceVertices[j].Position);
+				meshStreams.Normals.Add(faceVertices[j].Normal);
+				meshStreams.Colors.Add(faceVertices[j].Color);
+				meshStreams.TexCoord0.Add(new Vector2(faceVertices[j].UV0.X, faceVertices[j].UV0.Y));
+				meshStreams.TexCoord1.Add(new Vector2(faceVertices[j].UV1.X, faceVertices[j].UV1.Y));
 			}
 			for (int j = 1; j < faceVertices.Length - 1; ++j)
 			{
-				submesh.AddToAllStreams(indices[0]);
-				submesh.AddToAllStreams(indices[j]);
-				submesh.AddToAllStreams(indices[j + 1]);
+				subMesh.AddToAllStreams(indices[0]);
+				subMesh.AddToAllStreams(indices[j]);
+				subMesh.AddToAllStreams(indices[j + 1]);
 			}
 		}
 
@@ -724,9 +741,9 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 				//if (!usedFaces[index])
 				{
 					int meshIndex;
-					VertexBufferSubmesh<Vertex> subMesh2 = meshBuilder2.EnsureSubMesh(
+					SeparateStreamsSubmesh subMesh2 = meshBuilder2.EnsureSubMesh(
 						new BspSubmeshKey(0, new BspMaterialKey(0, 0)), out meshIndex);
-					this.BuildFace(ref this.faces[index], subMesh2, streamMesh2);
+					this.BuildFace(ref this.faces[index], new BspSubmeshStreams(subMesh2,meshStreams));
 					//Trace.WriteLine(string.Format("Face {0} is not references from leaves", index));
 				}
 			}

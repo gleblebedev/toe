@@ -36,9 +36,13 @@ namespace Toe.Utils.Mesh
 		{
 			if (typeof(TValue) == typeof(T))
 				return (IList<TValue>)this.AsReadOnly();
+			var resolveConverter = converterFactory.ResolveConverter<T, TValue>(this);
+			if (resolveConverter != null)
+				return resolveConverter;
 			throw new NotImplementedException();
 		}
 
+		private IStreamConverterFactory converterFactory = StreamConverterFactory.Default;
 
 		#endregion
 

@@ -23,7 +23,7 @@ namespace Toe.Utils.Mesh
 
 		private string name;
 
-		private VertexSourceType vertexSourceType = VertexSourceType.TrianleList;
+		private VertexSourceType vertexSourceType = VertexSourceType.TriangleList;
 
 		#endregion
 

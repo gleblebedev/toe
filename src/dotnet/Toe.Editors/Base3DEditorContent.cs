@@ -44,7 +44,10 @@ namespace Toe.Editors
 					{
 						Effect =
 							new SceneEffect
-								{ Diffuse = new ImageColorSource { Image = new EmbeddedImage(Properties.Resources.xyzcube1) { } } }
+								{
+									CullMode = CullMode.Front,
+									Diffuse = new ImageColorSource { Image = new EmbeddedImage(Properties.Resources.xyzcube1) { } }
+								}
 					};
 			}
 		}

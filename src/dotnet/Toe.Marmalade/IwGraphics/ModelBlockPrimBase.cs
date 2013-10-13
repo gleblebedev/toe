@@ -62,16 +62,39 @@ namespace Toe.Marmalade.IwGraphics
 		#endregion
 
 		#region Public Methods and Operators
-
-		public override IEnumerator<int> GetEnumerator()
+		public override IList<int> GetIndexReader(string key, int channel)
 		{
-			int i = 0;
-			foreach (var index in this.indices)
+			if (key == Streams.Position && channel == 0)
 			{
-				yield return i;
-				++i;
+				return new ComplexIndexReader(Indices, x => x.Vertex);
 			}
+			if (key == Streams.Normal && channel == 0)
+			{
+				return new ComplexIndexReader(Indices, x => x.Normal);
+			}
+			if (key == Streams.Binormal && channel == 0)
+			{
+				return new ComplexIndexReader(Indices, x => x.Binormal);
+			}
+			if (key == Streams.Tangent && channel == 0)
+			{
+				return new ComplexIndexReader(Indices, x => x.Tangent);
+			}
+			if (key == Streams.Color && channel == 0)
+			{
+				return new ComplexIndexReader(Indices, x => x.Color);
+			}
+			if (key == Streams.TexCoord && channel == 0)
+			{
+				return new ComplexIndexReader(Indices, x => x.UV0);
+			}
+			if (key == Streams.TexCoord && channel == 1)
+			{
+				return new ComplexIndexReader(Indices, x => x.UV1);
+			}
+			return null;
 		}
+
 
 		#endregion
 
@@ -84,10 +107,10 @@ namespace Toe.Marmalade.IwGraphics
 				case VertexSourceType.QuadList:
 					this.CalculateTangentsQuadList(t, b);
 					return;
-				case VertexSourceType.TrianleList:
+				case VertexSourceType.TriangleList:
 					this.CalculateTangentsTrianleList(t, b);
 					return;
-				case VertexSourceType.TrianleStrip:
+				case VertexSourceType.TriangleStrip:
 					this.CalculateTangentsTrianleStrip(t, b);
 					return;
 			}

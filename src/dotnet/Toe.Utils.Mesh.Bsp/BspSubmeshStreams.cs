@@ -13,15 +13,22 @@ namespace Toe.Utils.Mesh.Bsp
 		public BspSubmeshStreams(SeparateStreamsSubmesh separateStreamsSubmesh, BspMeshStreams meshStreams)
 		{
 			if (meshStreams.Positions != null)
-				PositionIndices = separateStreamsSubmesh.SetIndexStream(Streams.Position,0, new ListMeshStream<int>());
+			{
+				PositionIndices = EnsureStream(separateStreamsSubmesh, Streams.Position, 0);
+			}
 			if (meshStreams.Normals != null)
-				NormalIndices = separateStreamsSubmesh.SetIndexStream(Streams.Normal, 0, new ListMeshStream<int>());
+				NormalIndices = EnsureStream(separateStreamsSubmesh, Streams.Normal, 0);
 			if (meshStreams.TexCoord0 != null)
-				TexCoord0Indices = separateStreamsSubmesh.SetIndexStream(Streams.TexCoord, 0, new ListMeshStream<int>());
+				TexCoord0Indices = EnsureStream(separateStreamsSubmesh, Streams.TexCoord, 0);
 			if (meshStreams.TexCoord1 != null)
-				TexCoord1Indices = separateStreamsSubmesh.SetIndexStream(Streams.TexCoord, 1, new ListMeshStream<int>());
+				TexCoord1Indices = EnsureStream(separateStreamsSubmesh, Streams.TexCoord, 1);
 			if (meshStreams.Colors != null)
-				ColorsIndices = separateStreamsSubmesh.SetIndexStream(Streams.Color, 0, new ListMeshStream<int>());
+				ColorsIndices = EnsureStream(separateStreamsSubmesh, Streams.Color, 0);
+		}
+
+		private static ListMeshStream<int> EnsureStream(SeparateStreamsSubmesh separateStreamsSubmesh, string key, int channel)
+		{
+			return separateStreamsSubmesh.GetIndexStream(key, channel) as ListMeshStream<int> ?? separateStreamsSubmesh.SetIndexStream(key, channel, new ListMeshStream<int>());
 		}
 
 		public void AddToAllStreams(int index)

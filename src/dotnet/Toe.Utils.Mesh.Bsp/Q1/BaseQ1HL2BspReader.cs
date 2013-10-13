@@ -10,6 +10,11 @@ namespace Toe.Utils.Mesh.Bsp.Q1
 
 		#region Methods
 
+		protected override void CreateMesh()
+		{
+			throw new System.NotImplementedException();
+		}
+
 		protected override void ReadHeader()
 		{
 			this.header.version = this.Stream.ReadUInt32();
@@ -60,7 +65,7 @@ namespace Toe.Utils.Mesh.Bsp.Q1
 			this.header.models.size = this.Stream.ReadUInt32();
 		}
 
-		protected override void ReadVertices(BspMeshStreams streams)
+		protected override void ReadVertices()
 		{
 		}
 

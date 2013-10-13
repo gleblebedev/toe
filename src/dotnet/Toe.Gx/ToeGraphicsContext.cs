@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Threading;
 
 using OpenTK;
@@ -208,7 +209,7 @@ namespace Toe.Gx
 			var vertexBufferRenderData = mesh.RenderData as VertexBufferRenderData;
 			if (vertexBufferRenderData == null)
 			{
-				mesh.RenderData = vertexBufferRenderData = new VertexBufferRenderData(mesh);
+				mesh.RenderData = vertexBufferRenderData = new VertexBufferRenderData(mesh, mesh.Submeshes);
 			}
 
 			IEnumerable<ISubMesh> submeshes;
@@ -220,6 +221,7 @@ namespace Toe.Gx
 			{
 				submeshes = mesh.Submeshes;
 			}
+			int index = 0;
 			foreach (var surface in submeshes)
 			{
 				//if (!this.frustum.CheckSphere(surface.BoundingSphereCenter, surface.BoundingSphereR))
@@ -236,7 +238,8 @@ namespace Toe.Gx
 				}
 				vertexBufferRenderData.Enable(p);
 
-				this.Render(mesh, surface);
+				this.Render(vertexBufferRenderData, surface.VertexSourceType, index, surface.Count + index);
+				index += surface.Count;
 			}
 		}
 
@@ -879,16 +882,15 @@ namespace Toe.Gx
 			return true;
 		}
 
-		private void Render(IVertexStreamSource vb, IVertexIndexSource indices)
+		private void Render(VertexBufferRenderData vertexBufferRenderData, VertexSourceType vertexSourceType, int startIndex, int endIndex)
 		{
 			BeginMode mode;
-			int count = 0;
-			switch (indices.VertexSourceType)
+			switch (vertexSourceType)
 			{
-				case VertexSourceType.TrianleList:
+				case VertexSourceType.TriangleList:
 					mode = BeginMode.Triangles;
 					break;
-				case VertexSourceType.TrianleStrip:
+				case VertexSourceType.TriangleStrip:
 					mode = BeginMode.TriangleStrip;
 					break;
 				case VertexSourceType.QuadList:
@@ -898,15 +900,17 @@ namespace Toe.Gx
 					throw new ArgumentOutOfRangeException();
 			}
 
-			count = indices.Count;
-			var ids = new uint[indices.Count];
-			int i = 0;
-			foreach (var index in indices)
+
+			OpenTKHelper.Assert();
+
+			int step = 32678;
+			for (int i = startIndex; i < endIndex; i += step)
 			{
-				ids[i] = (uint)index;
-				++i;
+				var count = endIndex - i;
+				if (count > step) count = step;
+				GL.DrawArrays(mode, startIndex, count);
 			}
-			GL.DrawElements(mode, count, DrawElementsType.UnsignedInt, ids);
+
 			OpenTKHelper.Assert();
 		}
 
@@ -915,9 +919,9 @@ namespace Toe.Gx
 			var vertexBufferRenderData = mesh.ContextData as VertexBufferRenderData;
 			if (vertexBufferRenderData == null)
 			{
-				mesh.ContextData = vertexBufferRenderData = new VertexBufferRenderData(mesh);
+				mesh.ContextData = vertexBufferRenderData = new VertexBufferRenderData(mesh, mesh.Surfaces);
 			}
-
+			int index = 0;
 			foreach (var surface in mesh.Surfaces)
 			{
 				var mtl = surface.Material.Resource as Material;
@@ -932,15 +936,16 @@ namespace Toe.Gx
 
 				var p = this.ApplyMaterialShader(mesh);
 				vertexBufferRenderData.Enable(p);
-				this.Render(mesh, surface);
+				this.Render(vertexBufferRenderData, surface.VertexSourceType, index, index + surface.Count);
+				index += surface.Count;
 				vertexBufferRenderData.Disable(p);
 			}
 		}
 
-		private void RenderSurface(Mesh mesh, Surface surface)
-		{
-			this.Render(mesh, surface);
-		}
+		//private void RenderSurface(Mesh mesh, Surface surface)
+		//{
+		//	this.Render(TODO, TODO, mesh, surface);
+		//}
 
 		private void RenderVertexBuffer()
 		{

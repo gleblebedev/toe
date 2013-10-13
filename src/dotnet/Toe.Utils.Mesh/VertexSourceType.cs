@@ -2,9 +2,9 @@ namespace Toe.Utils.Mesh
 {
 	public enum VertexSourceType
 	{
-		TrianleList,
+		TriangleList,
 
-		TrianleStrip,
+		TriangleStrip,
 
 		QuadList,
 

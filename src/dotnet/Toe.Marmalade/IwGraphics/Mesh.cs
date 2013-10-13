@@ -123,12 +123,94 @@ namespace Toe.Marmalade.IwGraphics
 		/// <returns>Stream reader if available, null if not.</returns>
 		public IList<T> GetStreamReader<T>(string key, int channel)
 		{
-			throw new NotImplementedException();
+			if (key == Streams.Position)
+			{
+				return this.GetStreamReader<T>(this.Vertices);
+			}
+			if (key == Streams.Normal)
+			{
+				return this.GetStreamReader<T>(this.Normals);
+			}
+			if (key == Streams.TexCoord && channel == 0)
+			{
+				return this.GetStreamReader<T>(this.UV0);
+			}
+			if (key == Streams.TexCoord && channel == 1)
+			{
+				return this.GetStreamReader<T>(this.UV1);
+			}
+			if (key == Streams.Binormal && channel == 0)
+			{
+				return this.GetStreamReader<T>(this.BiTangents);
+			}
+			if (key == Streams.Tangent && channel == 0)
+			{
+				return this.GetStreamReader<T>(this.Tangents);
+			}
+			if (key == Streams.Color && channel == 0)
+			{
+				return this.GetStreamReader<T>(this.Colors);
+			}
+			return null;
 		}
 
+		IStreamConverterFactory streamConverterFactory = StreamConverterFactory.Default;
+
+		private IList<T> GetStreamReader<T>(ListMeshStream<Vector3> key)
+		{
+			if (key == null || key.Count == 0) return null;
+			if (typeof(T) == typeof(Vector3)) return (IList<T>)key;
+			var resolveConverter = streamConverterFactory.ResolveConverter<Vector3, T>(key);
+			if (resolveConverter != null) return resolveConverter;
+			throw new NotImplementedException();
+		}
+		private IList<T> GetStreamReader<T>(ListMeshStream<Vector2> key)
+		{
+			if (key == null || key.Count == 0) return null;
+			if (typeof(T) == typeof(Vector2)) return (IList<T>)key;
+			var resolveConverter = streamConverterFactory.ResolveConverter<Vector2, T>(key);
+			if (resolveConverter != null) return resolveConverter;
+			throw new NotImplementedException();
+		}
+		private IList<T> GetStreamReader<T>(ListMeshStream<Color> key)
+		{
+			if (key == null || key.Count == 0) return null;
+			if (typeof(T) == typeof(Color)) return (IList<T>)key;
+			var resolveConverter = streamConverterFactory.ResolveConverter<Color, T>(key);
+			if (resolveConverter != null) return resolveConverter;
+			throw new NotImplementedException();
+		}
 		public bool HasStream(string key, int channel)
 		{
-			throw new NotImplementedException();
+			if (key == Streams.Position)
+			{
+				return this.Vertices != null;
+			}
+			if (key == Streams.Normal)
+			{
+				return this.Normals != null;
+			}
+			if (key == Streams.TexCoord && channel == 0)
+			{
+				return this.UV0 != null;
+			}
+			if (key == Streams.TexCoord && channel == 1)
+			{
+				return this.UV1 != null;
+			}
+			if (key == Streams.Binormal && channel == 0)
+			{
+				return this.BiTangents != null;
+			}
+			if (key == Streams.Tangent && channel == 0)
+			{
+				return this.Tangents != null;
+			}
+			if (key == Streams.Color && channel == 0)
+			{
+				return this.Colors != null;
+			}
+			return false;
 		}
 
 		public bool IsBinormalStreamAvailable
@@ -286,7 +368,7 @@ namespace Toe.Marmalade.IwGraphics
 				{
 					return this.surfaces[0].VertexSourceType;
 				}
-				return VertexSourceType.TrianleList;
+				return VertexSourceType.TriangleList;
 			}
 		}
 

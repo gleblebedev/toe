@@ -19,7 +19,7 @@ namespace Toe.Utils.Mesh
 		public VertexBufferSubmesh(VertexBufferMesh<TVertex> mesh)
 		{
 			this.mesh = mesh;
-			this.VertexSourceType = VertexSourceType.TrianleList;
+			this.VertexSourceType = VertexSourceType.TriangleList;
 		}
 
 		#endregion

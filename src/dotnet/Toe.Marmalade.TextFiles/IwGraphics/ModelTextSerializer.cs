@@ -165,7 +165,7 @@ namespace Toe.Marmalade.TextFiles.IwGraphics
 
 					switch (surface.VertexSourceType)
 					{
-						case VertexSourceType.TrianleList:
+						case VertexSourceType.TriangleList:
 							WriteTriList(parser, surface, mesh);
 							break;
 						//case VertexSourceType.TrianleStrip:
@@ -198,7 +198,24 @@ namespace Toe.Marmalade.TextFiles.IwGraphics
 			parser.WriteAttribute("numTris");
 			parser.WriteIntValue(surface.Count / 3);
 			int tri = 0;
-			foreach (var index in surface)
+
+			var posIndex = surface.GetIndexReader(Streams.Position, 0);
+			var posEnumerator = (posIndex != null)?posIndex.GetEnumerator():null;
+
+			var normalIndex = surface.GetIndexReader(Streams.Normal, 0);
+			var normalEnumerator = (normalIndex != null) ? normalIndex.GetEnumerator() : null;
+
+			var uv0Index = surface.GetIndexReader(Streams.TexCoord, 0);
+			var uv0Enumerator = (uv0Index != null) ? uv0Index.GetEnumerator() : null;
+
+			var uv1Index = surface.GetIndexReader(Streams.TexCoord, 1);
+			var uv1Enumerator = (uv1Index != null) ? uv1Index.GetEnumerator() : null;
+
+
+			var colorIndex = surface.GetIndexReader(Streams.Color, 0);
+			var colorEnumerator = (colorIndex != null) ? colorIndex.GetEnumerator() : null;
+
+			for (int index = 0; index < surface.Count; ++index)
 			{
 				if (tri % 3 == 0)
 				{
@@ -206,15 +223,66 @@ namespace Toe.Marmalade.TextFiles.IwGraphics
 				}
 				++tri;
 				parser.WriteRaw(" {");
-				parser.WriteIntValue(mesh.IsVertexStreamAvailable ? index : -1);
+
+				if (posEnumerator != null)
+				{
+					posEnumerator.MoveNext();
+					parser.WriteIntValue(posEnumerator.Current);
+				}
+				else
+				{
+					parser.WriteIntValue(-1);
+				}
+
 				parser.WriteRaw(",");
-				parser.WriteIntValue(mesh.IsNormalStreamAvailable ? index : -1);
+
+				if (normalEnumerator != null)
+				{
+					normalEnumerator.MoveNext();
+					parser.WriteIntValue(normalEnumerator.Current);
+				}
+				else
+				{
+					parser.WriteIntValue(-1);
+				}
+
+
 				parser.WriteRaw(",");
-				parser.WriteIntValue(mesh.IsUV0StreamAvailable ? index : -1);
+
+				if (uv0Enumerator != null)
+				{
+					uv0Enumerator.MoveNext();
+					parser.WriteIntValue(uv0Enumerator.Current);
+				}
+				else
+				{
+					parser.WriteIntValue(-1);
+				}
+
 				parser.WriteRaw(",");
-				parser.WriteIntValue(mesh.IsUV1StreamAvailable ? index : -1);
+
+				if (uv1Enumerator != null)
+				{
+					uv1Enumerator.MoveNext();
+					parser.WriteIntValue(uv1Enumerator.Current);
+				}
+				else
+				{
+					parser.WriteIntValue(-1);
+				}
+
 				parser.WriteRaw(",");
-				parser.WriteIntValue(mesh.IsColorStreamAvailable ? index : -1);
+
+				if (colorEnumerator != null)
+				{
+					colorEnumerator.MoveNext();
+					parser.WriteIntValue(colorEnumerator.Current);
+				}
+				else
+				{
+					parser.WriteIntValue(-1);
+				}
+
 				parser.WriteRaw(" }");
 			}
 			parser.CloseBlock();

@@ -24,6 +24,11 @@ namespace Toe.Marmalade.IwGraphics
 		{
 		}
 
+		public override System.Collections.Generic.IList<int> GetIndexReader(string key, int channel)
+		{
+			return indices;
+		}
+
 		#endregion
 
 		#region Public Properties

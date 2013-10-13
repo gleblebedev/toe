@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -21,23 +22,32 @@ namespace Toe.Utils.Mesh.Bsp.Q3
 
 		private Quake3Texture[] textures;
 
+		private SeparateStreamsMesh streamMesh;
+
+		
+
 		#endregion
 
 		#region Methods
+
+		protected override void CreateMesh()
+		{
+			this.streamMesh = new SeparateStreamsMesh();
+			this.meshStreams = new BspMeshStreams();
+			meshStreams.Positions = streamMesh.SetStream(Streams.Position, 0, new ListMeshStream<Vector3>());
+			meshStreams.Normals = streamMesh.SetStream(Streams.Normal, 0, new ListMeshStream<Vector3>());
+			meshStreams.Colors = streamMesh.SetStream(Streams.Color, 0, new ListMeshStream<Color>());
+			meshStreams.TexCoord0 = streamMesh.SetStream(Streams.TexCoord, 0, new ListMeshStream<Vector2>());
+			meshStreams.TexCoord1 = streamMesh.SetStream(Streams.TexCoord, 1, new ListMeshStream<Vector2>());
+		}
 
 		protected override void BuildScene()
 		{
 			var maxTextures = this.textures.Length;
 
-			var streamMesh = new SeparateStreamsMesh();
-			var meshStreams = new BspMeshStreams();
-			meshStreams.Positions = streamMesh.SetStream(Streams.Position, 0, new ListMeshStream<Vector3>());
-			meshStreams.Normals = streamMesh.SetStream(Streams.Normal, 0, new ListMeshStream<Vector3>());
-			meshStreams.TexCoord0 = streamMesh.SetStream(Streams.TexCoord, 0, new ListMeshStream<Vector2>());
-			meshStreams.TexCoord1 = streamMesh.SetStream(Streams.TexCoord, 1, new ListMeshStream<Vector2>());
 			SeparateStreamsSubmesh[] submeshes = new SeparateStreamsSubmesh[maxTextures];
 			this.BuildSubmeshes(maxTextures, submeshes, streamMesh, meshStreams);
-			var submeshStreams = submeshes.Select(x => new BspSubmeshStreams(x, meshStreams)).ToArray();
+			var submeshStreams = submeshes.Select(x => (x == null)?null: new BspSubmeshStreams(x, meshStreams)).ToArray();
 
 			var node = new Node();
 			this.Scene.Nodes.Add(node);
@@ -168,10 +178,10 @@ namespace Toe.Utils.Mesh.Bsp.Q3
 			this.AssertStreamPossition(this.header.textures.size + this.header.textures.offset);
 		}
 
-		protected void ReadVertex(BspMeshStreams streams)
+		protected void ReadVertex()
 		{
-			streams.Positions.Add(this.Stream.ReadVector3());
-			streams.TexCoord0.Add(this.Stream.ReadVector2());
+			meshStreams.Positions.Add(this.Stream.ReadVector3());
+			meshStreams.TexCoord0.Add(this.Stream.ReadVector2());
 			var vLightmapCoord = this.Stream.ReadVector2();
 			if (vLightmapCoord.X < 0)
 			{
@@ -189,25 +199,25 @@ namespace Toe.Utils.Mesh.Bsp.Q3
 			{
 				vLightmapCoord.Y = 1;
 			}
-			streams.TexCoord1.Add(vLightmapCoord);
+			meshStreams.TexCoord1.Add(vLightmapCoord);
 			var vNormal = this.Stream.ReadVector3();
-			streams.Normals.Add(vNormal);
+			meshStreams.Normals.Add(vNormal);
 
 			var lengthSquared = vNormal.LengthSquared;
 			if (lengthSquared != 0.0f && (lengthSquared < 0.9f || lengthSquared > 1.1f))
 			{
 				throw new BspFormatException("Probably wrong format of vertex");
 			}
-			streams.Colors.Add(this.Stream.ReadBGRA());
+			meshStreams.Colors.Add(this.Stream.ReadBGRA());
 		}
 
-		protected override void ReadVertices(BspMeshStreams streams)
+		protected override void ReadVertices()
 		{
 			this.SeekEntryAt(this.header.vertexes.offset);
 			int size = this.EvalNumItems(this.header.vertexes.size, 44);
 			for (int i = 0; i < size; ++i)
 			{
-				this.ReadVertex(streams);
+				this.ReadVertex();
 			}
 			this.AssertStreamPossition(this.header.vertexes.size + this.header.vertexes.offset);
 		}
@@ -273,7 +283,7 @@ namespace Toe.Utils.Mesh.Bsp.Q3
 					}
 					var texture = new FileReferenceImage { Path = imagePath };
 					this.Scene.Images.Add(texture);
-					var effect = new SceneEffect { Diffuse = new ImageColorSource { Image = texture } };
+					var effect = new SceneEffect { Diffuse = new ImageColorSource { Image = texture }, CullMode = CullMode.Front};
 					this.Scene.Effects.Add(effect);
 					var sceneMaterial = new SceneMaterial { Effect = effect };
 					this.Scene.Materials.Add(sceneMaterial);

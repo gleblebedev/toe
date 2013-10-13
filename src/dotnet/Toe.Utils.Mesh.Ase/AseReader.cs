@@ -489,6 +489,25 @@ namespace Toe.Utils.Mesh.Ase
 				// -------------------------------------------------- //
 				if (positionIndices != null)
 				{
+					positionIndices.Add(faces[i].A);
+				}
+				if (normalIndices != null)
+				{
+					normalIndices.Add(normalStream.Count);
+					normalStream.Add(normals[i].A.Normal);
+				}
+				if (colorIndices != null)
+				{
+					colorIndices.Add(colFaces[i].Item1);
+				}
+				if (texCoordIndices != null)
+				{
+					texCoordIndices.Add(tfaces[i].A);
+				}
+		
+				// -------------------------------------------------- //
+				if (positionIndices != null)
+				{
 					positionIndices.Add(faces[i].C);
 				}
 				if (normalIndices != null)
@@ -522,25 +541,7 @@ namespace Toe.Utils.Mesh.Ase
 				{
 					texCoordIndices.Add(tfaces[i].B);
 				}
-
 				// -------------------------------------------------- //
-				if (positionIndices != null)
-				{
-					positionIndices.Add(faces[i].A);
-				}
-				if (normalIndices != null)
-				{
-					normalIndices.Add(normalStream.Count);
-					normalStream.Add(normals[i].A.Normal);
-				}
-				if (colorIndices != null)
-				{
-					colorIndices.Add(colFaces[i].Item1);
-				}
-				if (texCoordIndices != null)
-				{
-					texCoordIndices.Add(tfaces[i].A);
-				}
 			}
 
 		}
@@ -790,7 +791,7 @@ namespace Toe.Utils.Mesh.Ase
 
 		private IMaterial ParseMaterial(AseParser parser, Scene scene)
 		{
-			var sceneEffect = new SceneEffect();
+			var sceneEffect = new SceneEffect() {CullMode = CullMode.Front};
 			var m = new SceneMaterial { Effect = sceneEffect };
 			parser.Consume("{");
 			for (;;)
@@ -1077,7 +1078,7 @@ namespace Toe.Utils.Mesh.Ase
 				{
 					var index = parser.ConsumeInt();
 					var x = parser.ConsumeFloat();
-					var y = parser.ConsumeFloat();
+					var y = 1.0f - parser.ConsumeFloat();
 					var z = parser.ConsumeFloat();
 
 					vertices[index] = new Vector3(x, y, z);

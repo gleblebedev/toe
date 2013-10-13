@@ -83,13 +83,6 @@ namespace Toe.Utils.Mesh
 
 	
 
-		public override VertexSourceType VertexSourceType
-		{
-			get
-			{
-				return VertexSourceType.TrianleList;
-			}
-		}
 
 		public override int Count
 		{
@@ -149,5 +142,11 @@ namespace Toe.Utils.Mesh
 			return !this.streams.TryGetValue(new StreamKey(key, channel), out streamReader) ? null : streamReader;
 		}
 
+		public IList<int> GetIndexStream(string key, int channel)
+		{
+			IList<int> streamReader;
+			return !this.streams.TryGetValue(new StreamKey(key, channel), out streamReader) ? null : streamReader;
+			
+		}
 	}
 }

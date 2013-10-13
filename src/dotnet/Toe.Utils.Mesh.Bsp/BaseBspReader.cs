@@ -18,6 +18,8 @@ namespace Toe.Utils.Mesh.Bsp
 
 		private Stream stream;
 
+		protected BspMeshStreams meshStreams;
+
 		#endregion
 
 		#region Public Properties
@@ -68,6 +70,7 @@ namespace Toe.Utils.Mesh.Bsp
 
 			this.ReadHeader();
 			this.ReadModels();
+			this.CreateMesh();
 			this.ReadVertices();
 			this.ReadEdges();
 			this.ReadPlanes();
@@ -83,6 +86,8 @@ namespace Toe.Utils.Mesh.Bsp
 
 			return this.scene;
 		}
+
+		protected abstract void CreateMesh();
 
 		#endregion
 
@@ -774,7 +779,7 @@ namespace Toe.Utils.Mesh.Bsp
 		{
 		}
 
-		protected abstract void ReadVertices(BspMeshStreams streams);
+		protected abstract void ReadVertices();
 
 		protected virtual void ReadVisibilityList()
 		{

@@ -63,6 +63,7 @@
     <Compile Include="IContextData.cs" />
     <Compile Include="IwAnim\AnimBone.cs" />
     <Compile Include="IwGraphics\ComplexIndex.cs" />
+    <Compile Include="IwGraphics\ComplexIndexReader.cs" />
     <Compile Include="IwGraphics\Mesh.cs" />
     <Compile Include="IwGraphics\ModelBlockGLPrimBase.cs" />
     <Compile Include="IwGraphics\ModelBlockGLTriList.cs" />

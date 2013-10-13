@@ -6,12 +6,17 @@ namespace Toe.Utils.Mesh.Bsp.Q2
 	{
 		#region Methods
 
+		protected override void CreateMesh()
+		{
+			throw new NotImplementedException();
+		}
+
 		protected override void ReadHeader()
 		{
 			throw new NotImplementedException();
 		}
 
-		protected override void ReadVertices(BspMeshStreams streams)
+		protected override void ReadVertices()
 		{
 			throw new NotImplementedException();
 		}

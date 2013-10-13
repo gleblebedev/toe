@@ -13,8 +13,10 @@ namespace Toe.Utils.Mesh
 		{
 			Default = new StreamConverterFactory();
 			Default.Register((Color c) => new Vector3(c.R / 255.0f, c.G / 255.0f, c.B / 255.0f));
+			Default.Register((Color c) => new Vector4(c.R / 255.0f, c.G / 255.0f, c.B / 255.0f, c.A / 255.0f));
 			Default.Register((Vector3 c) => Color.FromArgb(255,ClampToByte(c.X * 255), ClampToByte(c.Y * 255), ClampToByte(c.Z * 255)));
-			Default.Register((Vector2 c) => new Vector3(c.X,c.Y,0));
+			Default.Register((Vector4 c) => Color.FromArgb(ClampToByte(c.W * 255), ClampToByte(c.X * 255), ClampToByte(c.Y * 255), ClampToByte(c.Z * 255)));
+			Default.Register((Vector2 c) => new Vector3(c.X, c.Y, 0));
 			Default.Register((Vector2 c) => new Vector4(c.X, c.Y, 0,0));
 			Default.Register((Vector3 c) => new Vector4(c.X, c.Y, c.Z,0));
 			Default.Register((Vector4 c) => new Vector3(c.X, c.Y, c.Z));

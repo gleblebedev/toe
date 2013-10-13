@@ -122,7 +122,7 @@ namespace Toe.Utils.Mesh
 				{
 					return this.submeshes[0].VertexSourceType;
 				}
-				return VertexSourceType.TrianleList;
+				return VertexSourceType.TriangleList;
 			}
 		}
 

@@ -45,7 +45,24 @@ namespace Toe.Utils.Mesh.Dae
 			this.ParseMaterials(scene, this.collada.Element(this.schema.libraryMaterialsName));
 			this.ParseGeometries(scene, this.collada.Element(this.schema.libraryGeometriesName));
 			this.ParseScene(scene, this.collada, this.collada.Element(this.schema.sceneName));
+			this.AssignNullMaterialToDefault(scene);
 			return scene;
+		}
+
+		private void AssignNullMaterialToDefault(Scene scene)
+		{
+			IMaterial defaultMaterial = null;
+			foreach (var geometry in scene.Geometries)
+			{
+				foreach (var submesh in geometry.Submeshes)
+				{
+					if (submesh.Material == null)
+					{
+						submesh.Material = (defaultMaterial = defaultMaterial
+						                  ?? new SceneMaterial() { Effect = new SceneEffect() { CullMode = CullMode.Back } });
+					}
+				}
+			}
 		}
 
 		#endregion
@@ -525,7 +542,7 @@ namespace Toe.Utils.Mesh.Dae
 					else
 					{
 						var source = ParseSource(s, schema);
-						dstMesh.SetStream(streamName.Value.Key, streamName.Value.Channel, CreateMeshStream(source));
+						dstMesh.SetStream(streamName.Value.Key, streamName.Value.Channel, CreateMeshStream(source, streamName.Value.Key));
 					}
 				}
 			}
@@ -553,17 +570,20 @@ namespace Toe.Utils.Mesh.Dae
 			}
 		}
 
-		private IMeshStream CreateMeshStream(ISource source)
+		private IMeshStream CreateMeshStream(ISource source, string semantic)
 		{
 			var floatArray = source as FloatArraySource;
 			if (floatArray != null)
 			{
+				bool swapY = (semantic == Streams.TexCoord);
 				if (source.GetStride() == 3)
 				{
 					var arrayMeshStream = new ArrayMeshStream<Vector3>(source.GetCount());
 					for (int i = 0; i < arrayMeshStream.Count; ++i)
 					{
-						arrayMeshStream[i] = new Vector3(floatArray[i * 3 + 0], floatArray[i * 3 + 1], floatArray[i * 3 + 2]);
+						var y = floatArray[i * 3 + 1];
+						if (swapY) y = 1.0f - y;
+						arrayMeshStream[i] = new Vector3(floatArray[i * 3 + 0], y, floatArray[i * 3 + 2]);
 					}
 					return arrayMeshStream;
 				}
@@ -572,7 +592,9 @@ namespace Toe.Utils.Mesh.Dae
 					var arrayMeshStream = new ArrayMeshStream<Vector2>(source.GetCount());
 					for (int i = 0; i < arrayMeshStream.Count; ++i)
 					{
-						arrayMeshStream[i] = new Vector2(floatArray[i * 2 + 0], floatArray[i * 2 + 1]);
+						var y = floatArray[i * 2 + 1];
+						if (swapY) y = 1.0f - y;
+						arrayMeshStream[i] = new Vector2(floatArray[i * 2 + 0], y);
 					}
 					return arrayMeshStream;
 				}
@@ -581,7 +603,9 @@ namespace Toe.Utils.Mesh.Dae
 					var arrayMeshStream = new ArrayMeshStream<Vector4>(source.GetCount());
 					for (int i = 0; i < arrayMeshStream.Count; ++i)
 					{
-						arrayMeshStream[i] = new Vector4(floatArray[i * 4 + 0], floatArray[i * 4 + 1], floatArray[i * 4 + 2], floatArray[i * 4 + 3]);
+						var y = floatArray[i * 4 + 1];
+						if (swapY) y = 1.0f - y;
+						arrayMeshStream[i] = new Vector4(floatArray[i * 4 + 0], y, floatArray[i * 4 + 2], floatArray[i * 4 + 3]);
 					}
 					return arrayMeshStream;
 				}
@@ -649,7 +673,7 @@ namespace Toe.Utils.Mesh.Dae
 			var meshInputs =  this.ParseInputs(element);
 			var subMesh = dstMesh.CreateSubmesh();
 			subMesh.Material = skinAndMaterials.GetAnyMaterialFor(element.AttributeValue(this.schema.materialAttributeName));
-			subMesh.VertexSourceType = VertexSourceType.TrianleList;
+			subMesh.VertexSourceType = VertexSourceType.TriangleList;
 
 			var streamList = StreamListOrderedByOffset(meshInputs, subMesh);
 			foreach (var polygon in element.Elements(this.schema.pName))
@@ -729,7 +753,7 @@ namespace Toe.Utils.Mesh.Dae
 			//	}
 			//}
 
-			subMesh.VertexSourceType = VertexSourceType.TrianleList;
+			subMesh.VertexSourceType = VertexSourceType.TriangleList;
 			int startIndex = 0;
 			for (int polygonIndex = 0; polygonIndex < vcount.Length; ++polygonIndex)
 			{
@@ -784,7 +808,7 @@ namespace Toe.Utils.Mesh.Dae
 
 			var subMesh = dstMesh.CreateSubmesh();
 			subMesh.Material = skinAndMaterials.GetAnyMaterialFor(element.AttributeValue(this.schema.materialAttributeName));
-			subMesh.VertexSourceType = VertexSourceType.TrianleList;
+			subMesh.VertexSourceType = VertexSourceType.TriangleList;
 
 			var streamList = StreamListOrderedByOffset(meshInputs, subMesh);
 

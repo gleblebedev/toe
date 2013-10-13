@@ -60,11 +60,11 @@ namespace Toe.Marmalade.IwGraphics
 		{
 			get
 			{
-				return VertexSourceType.TrianleList;
+				return VertexSourceType.TriangleList;
 			}
 		}
 
-		public IList<int> GetIndexReader(string key, int channel)
+		public virtual IList<int> GetIndexReader(string key, int channel)
 		{
 			throw new NotImplementedException();
 		}
@@ -72,18 +72,6 @@ namespace Toe.Marmalade.IwGraphics
 		#endregion
 
 		#region Public Methods and Operators
-
-		/// <summary>
-		/// Returns an enumerator that iterates through the collection.
-		/// </summary>
-		/// <returns>
-		/// A <see cref="T:System.Collections.Generic.IEnumerator`1"/> that can be used to iterate through the collection.
-		/// </returns>
-		/// <filterpriority>1</filterpriority>
-		public virtual IEnumerator<int> GetEnumerator()
-		{
-			throw new NotImplementedException();
-		}
 
 		#endregion
 
