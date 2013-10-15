@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using OpenTK;
 
 using Toe.Utils.Mesh;
+using Toe.Utils.ToeMath;
 
 namespace Toe.Editors
 {
@@ -209,7 +210,7 @@ namespace Toe.Editors
 			{
 				var sceneSize = Math.Min(1024*1024,box.Size());
 				this.TargetDistance = sceneSize;
-				this.Camera.LookAt(box.Max * 1.5f, box.Center);
+				this.Camera.LookAt(box.Max.ToVector() * 1.5f, box.Center.ToVector());
 				this.Camera.ZFar = sceneSize * 4f;
 				this.Camera.ZNear = sceneSize * 0.001f;
 			}

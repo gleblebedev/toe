@@ -32,9 +32,9 @@ namespace Toe.Utils.Mesh
 		}
 
 		Dictionary<Tuple<Type, Type>,Delegate> map = new Dictionary<Tuple<Type, Type>, Delegate>();
+
 		public StreamConverterFactory()
 		{
-			
 		}
 		
 		public void Register<Src,Dst>(Func<Src,Dst> converter)

@@ -16,6 +16,7 @@ using Toe.Gx;
 using Toe.Marmalade.IwGraphics;
 using Toe.Resources;
 using Toe.Utils.Mesh;
+using Toe.Utils.ToeMath;
 
 namespace Toe.Editors.Marmalade
 {
@@ -85,7 +86,7 @@ namespace Toe.Editors.Marmalade
 			{
 				foreach (var vertex in mesh.Vertices)
 				{
-					box = box.Union(vertex);
+					box = box.Union(vertex.ToFloat3());
 				}
 			}
 			this.base3DEditor.CameraController.Reset(box);

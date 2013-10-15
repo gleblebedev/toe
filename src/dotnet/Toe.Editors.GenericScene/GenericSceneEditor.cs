@@ -12,6 +12,7 @@ using OpenTK.Graphics.OpenGL;
 using Toe.Editors.Interfaces;
 using Toe.Gx;
 using Toe.Utils.Mesh;
+using Toe.Utils.ToeMath;
 
 namespace Toe.Editors.GenericScene
 {
@@ -231,7 +232,7 @@ namespace Toe.Editors.GenericScene
 			}
 			foreach (var node in nodes)
 			{
-				Matrix4 modelMatrix = parent * node.ModelMatrix;
+				Matrix4 modelMatrix = parent * node.ModelMatrix.ToMatrix();
 				this.RenderNodeAt(ref modelMatrix, node);
 				this.RenderSceneNodes(ref modelMatrix, node.Nodes);
 			}

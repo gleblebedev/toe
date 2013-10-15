@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Toe.Utils.Mesh
 {
-	internal class StreamConverter<T,TRes>:IList<TRes>
+	public class StreamConverter<T,TRes>:IList<TRes>
 	{
 		private readonly Func<T, TRes> converter;
 

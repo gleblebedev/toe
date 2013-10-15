@@ -65,6 +65,14 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\NuGet\Toe.Utils.ToeMath.OpenTK\Toe.Utils.ToeMath.OpenTK.csproj">
+      <Project>{ABAC885C-A61D-49BC-A273-2D8AD0777AC7}</Project>
+      <Name>Toe.Utils.ToeMath.OpenTK</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NuGet\Toe.Utils.ToeMath\Toe.Utils.ToeMath.csproj">
+      <Project>{C138CBF1-49EB-4761-ACB4-D254A0F7A02B}</Project>
+      <Name>Toe.Utils.ToeMath</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Toe.Editors.Interfaces\Toe.Editors.Interfaces.net40.vs2010.csproj">
       <Project>{2B25523C-AA51-43C7-B5F2-41D3F8FBA0AE}</Project>
       <Name>Toe.Editors.Interfaces.net40.vs2010</Name>

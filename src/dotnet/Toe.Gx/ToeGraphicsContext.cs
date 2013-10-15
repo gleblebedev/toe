@@ -15,6 +15,7 @@ using Toe.Resources;
 using Toe.Utils;
 using Toe.Utils.Marmalade.IwGx;
 using Toe.Utils.Mesh;
+using Toe.Utils.ToeMath;
 
 using CullMode = Toe.Utils.Marmalade.IwGx.CullMode;
 using Image = Toe.Marmalade.IwGx.Image;
@@ -201,7 +202,7 @@ namespace Toe.Gx
 				return;
 			}
 
-			if (!this.frustum.CheckSphere(mesh.BoundingSphereCenter, mesh.BoundingSphereR))
+			if (!this.frustum.CheckSphere(mesh.BoundingSphereCenter.ToVector(), mesh.BoundingSphereR))
 			{
 				return;
 			}
@@ -254,9 +255,9 @@ namespace Toe.Gx
 			{
 				this.DropVertextBuffer();
 			}
-			this.vertexBuffer[this.vertexBufferCount] = new Vertex { Position = from, Color = color };
+			this.vertexBuffer[this.vertexBufferCount] = new Vertex { Position = from.ToFloat3(), Color = color };
 			++this.vertexBufferCount;
-			this.vertexBuffer[this.vertexBufferCount] = new Vertex { Position = to, Color = color };
+			this.vertexBuffer[this.vertexBufferCount] = new Vertex { Position = to.ToFloat3(), Color = color };
 			++this.vertexBufferCount;
 		}
 
@@ -973,7 +974,7 @@ namespace Toe.Gx
 			for (int i = 0; i < this.vertexBufferCount; ++i)
 			{
 				GL.Color4(this.vertexBuffer[i].Color);
-				GL.Vertex3(this.vertexBuffer[i].Position);
+				GL.Vertex3(this.vertexBuffer[i].Position.ToVector());
 			}
 			GL.End();
 			this.vertexBufferCount = 0;
@@ -999,7 +1000,7 @@ namespace Toe.Gx
 			Frustum.BuildFrustum(ref this.view, ref this.projection, out this.frustum);
 			if (this.vsdProvider != null)
 			{
-				this.vsdProvider.CameraPosition = this.frustum.CameraPosition;
+				this.vsdProvider.CameraPosition = this.frustum.CameraPosition.ToFloat3();
 			}
 		}
 

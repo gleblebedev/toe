@@ -53,6 +53,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toe.Utils.Mesh.Ase.Tests", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toe.Utils.ToeMath.Tests", "NuGet\Toe.Utils.ToeMath.Tests\Toe.Utils.ToeMath.Tests.csproj", "{BC98C193-4C58-4983-882E-FD732CC64938}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toe.Utils.ToeMath.OpenTK", "NuGet\Toe.Utils.ToeMath.OpenTK\Toe.Utils.ToeMath.OpenTK.csproj", "{ABAC885C-A61D-49BC-A273-2D8AD0777AC7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -293,6 +295,16 @@ Global
 		{BC98C193-4C58-4983-882E-FD732CC64938}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{BC98C193-4C58-4983-882E-FD732CC64938}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{BC98C193-4C58-4983-882E-FD732CC64938}.Release|x86.ActiveCfg = Release|Any CPU
+		{ABAC885C-A61D-49BC-A273-2D8AD0777AC7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ABAC885C-A61D-49BC-A273-2D8AD0777AC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ABAC885C-A61D-49BC-A273-2D8AD0777AC7}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{ABAC885C-A61D-49BC-A273-2D8AD0777AC7}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{ABAC885C-A61D-49BC-A273-2D8AD0777AC7}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{ABAC885C-A61D-49BC-A273-2D8AD0777AC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ABAC885C-A61D-49BC-A273-2D8AD0777AC7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ABAC885C-A61D-49BC-A273-2D8AD0777AC7}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{ABAC885C-A61D-49BC-A273-2D8AD0777AC7}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{ABAC885C-A61D-49BC-A273-2D8AD0777AC7}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

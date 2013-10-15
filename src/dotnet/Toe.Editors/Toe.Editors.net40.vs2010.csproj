@@ -104,6 +104,10 @@
     <None Include="Toe.snk" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\NuGet\Toe.Utils.ToeMath.OpenTK\Toe.Utils.ToeMath.OpenTK.csproj">
+      <Project>{ABAC885C-A61D-49BC-A273-2D8AD0777AC7}</Project>
+      <Name>Toe.Utils.ToeMath.OpenTK</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NuGet\Toe.Utils.ToeMath\Toe.Utils.ToeMath.csproj">
       <Project>{C138CBF1-49EB-4761-ACB4-D254A0F7A02B}</Project>
       <Name>Toe.Utils.ToeMath</Name>

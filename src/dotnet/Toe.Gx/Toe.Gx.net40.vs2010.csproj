@@ -56,6 +56,7 @@
     <Compile Include="Frustum.cs" />
     <Compile Include="LightArgs.cs" />
     <Compile Include="NormalizedPlane.cs" />
+    <Compile Include="OpenTKStreamConverterFactory.cs" />
     <Compile Include="ShaderContext.cs" />
     <Compile Include="TextureContext.cs" />
     <Compile Include="ToeGraphicsContext.cs" />
@@ -69,6 +70,14 @@
     <None Include="Toe.snk" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\NuGet\Toe.Utils.ToeMath.OpenTK\Toe.Utils.ToeMath.OpenTK.csproj">
+      <Project>{abac885c-a61d-49bc-a273-2d8ad0777ac7}</Project>
+      <Name>Toe.Utils.ToeMath.OpenTK</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NuGet\Toe.Utils.ToeMath\Toe.Utils.ToeMath.csproj">
+      <Project>{C138CBF1-49EB-4761-ACB4-D254A0F7A02B}</Project>
+      <Name>Toe.Utils.ToeMath</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Toe.Marmalade\Toe.Marmalade.net40.vs2010.csproj">
       <Project>{2708D020-33C1-4A4A-BDB0-035FB9EEDFFD}</Project>
       <Name>Toe.Marmalade.net40.vs2010</Name>
