@@ -1,6 +1,6 @@
 using System;
 
-using OpenTK;
+using Toe.Utils.ToeMath;
 
 namespace Toe.Utils.Mesh
 {
@@ -52,15 +52,15 @@ namespace Toe.Utils.Mesh
 			return !left.Equals(right);
 		}
 
-		public BoundingBox(Vector3 min,Vector3 max)
+		public BoundingBox(Float3 min, Float3 max)
 		{
 			this.min = min;
 			this.max = max;
 		}
-		private readonly Vector3 min;
-		private readonly Vector3 max;
+		private readonly Float3 min;
+		private readonly Float3 max;
 
-		public Vector3 Min
+		public Float3 Min
 		{
 			get
 			{
@@ -68,7 +68,7 @@ namespace Toe.Utils.Mesh
 			}
 		}
 
-		public Vector3 Max
+		public Float3 Max
 		{
 			get
 			{
@@ -76,15 +76,15 @@ namespace Toe.Utils.Mesh
 			}
 		}
 
-		public readonly static BoundingBox Empty = new BoundingBox(new Vector3(float.MaxValue, float.MaxValue, float.MaxValue), new Vector3(float.MinValue, float.MinValue, float.MinValue));
-		public readonly static BoundingBox Zero = new BoundingBox(Vector3.Zero, Vector3.Zero);
-		public readonly static BoundingBox MaxValue = new BoundingBox(new Vector3(float.MinValue, float.MinValue, float.MinValue), new Vector3(float.MaxValue, float.MaxValue, float.MaxValue));
+		public readonly static BoundingBox Empty = new BoundingBox(new Float3(float.MaxValue, float.MaxValue, float.MaxValue), new Float3(float.MinValue, float.MinValue, float.MinValue));
+		public readonly static BoundingBox Zero = new BoundingBox(Float3.Zero, Float3.Zero);
+		public readonly static BoundingBox MaxValue = new BoundingBox(new Float3(float.MinValue, float.MinValue, float.MinValue), new Float3(float.MaxValue, float.MaxValue, float.MaxValue));
 
 		public BoundingBox Union(BoundingBox box)
 		{
 			return new BoundingBox(
-				new Vector3(Math.Min(min.X, box.Min.X), Math.Min(min.Y, box.Min.Y), Math.Min(min.Z, box.Min.Z)), 
-				new Vector3(Math.Max(max.X, box.Max.X), Math.Max(max.Y, box.Max.Y), Math.Max(max.Z, box.Max.Z))
+				new Float3(Math.Min(min.X, box.Min.X), Math.Min(min.Y, box.Min.Y), Math.Min(min.Z, box.Min.Z)), 
+				new Float3(Math.Max(max.X, box.Max.X), Math.Max(max.Y, box.Max.Y), Math.Max(max.Z, box.Max.Z))
 				);
 
 		}
@@ -108,16 +108,16 @@ namespace Toe.Utils.Mesh
 			
 		}
 
-		public Vector3 Center { get
+		public Float3 Center { get
 		{
 			return (min + max) * 0.5f;
 		} }
 
-		public BoundingBox Union(Vector3 vertex)
+		public BoundingBox Union(Float3 vertex)
 		{
 			return new BoundingBox(
-				new Vector3(Math.Min(min.X, vertex.X), Math.Min(min.Y, vertex.Y), Math.Min(min.Z, vertex.Z)),
-				new Vector3(Math.Max(max.X, vertex.X), Math.Max(max.Y, vertex.Y), Math.Max(max.Z, vertex.Z))
+				new Float3(Math.Min(min.X, vertex.X), Math.Min(min.Y, vertex.Y), Math.Min(min.Z, vertex.Z)),
+				new Float3(Math.Max(max.X, vertex.X), Math.Max(max.Y, vertex.Y), Math.Max(max.Z, vertex.Z))
 				);
 		}
 	}

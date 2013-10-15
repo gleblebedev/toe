@@ -36,9 +36,6 @@
     <AssemblyOriginatorKeyFile>Toe.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="OpenTK">
-      <HintPath>..\packages\OpenTK\OpenTK.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -106,7 +103,6 @@
     <Compile Include="SeparateStreamsSubmesh.cs" />
     <Compile Include="StreamSubmeshQuad.cs" />
     <Compile Include="StreamSubmeshIndexes.cs" />
-    <Compile Include="Vector3VisitorCallback.cs" />
     <Compile Include="Vertex.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VertexBufferMesh.cs" />
@@ -119,6 +115,10 @@
     <None Include="Toe.snk" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\NuGet\Toe.Utils.ToeMath\Toe.Utils.ToeMath.csproj">
+      <Project>{C138CBF1-49EB-4761-ACB4-D254A0F7A02B}</Project>
+      <Name>Toe.Utils.ToeMath</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Toe.Utils\Toe.Utils.csproj">
       <Project>{7F30E400-0F58-4190-8AE9-111CE57F61E4}</Project>
       <Name>Toe.Utils</Name>

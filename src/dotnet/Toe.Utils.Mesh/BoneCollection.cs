@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-using OpenTK;
+using Toe.Utils.ToeMath;
 
 namespace Toe.Utils.Mesh
 {
@@ -113,7 +113,7 @@ namespace Toe.Utils.Mesh
 			var meshBone = this.bones[index];
 			var pos = meshBone.ActualPos;
 			var rot = meshBone.ActualRot;
-			rot = new Quaternion(rot.X, rot.Y, rot.Z, rot.W);
+			rot = new Float4(rot.X, rot.Y, rot.Z, rot.W);
 			if (meshBone.Parent >= 0)
 			{
 				if (index < meshBone.Parent)
@@ -125,8 +125,8 @@ namespace Toe.Utils.Mesh
 				var ppos = parent.AbsolutePos;
 				var prot = parent.AbsoluteRot;
 
-				meshBone.AbsolutePos = Vector3.Transform(pos, prot) + ppos;
-				meshBone.AbsoluteRot = Quaternion.Multiply(prot, rot);
+				meshBone.AbsolutePos = Float3.QuaternionTransform(pos, prot) + ppos;
+				meshBone.AbsoluteRot = Float4.QuaternionMultiply(prot, rot);
 			}
 			else
 			{

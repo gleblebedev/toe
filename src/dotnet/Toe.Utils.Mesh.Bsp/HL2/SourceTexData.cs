@@ -1,4 +1,4 @@
-using OpenTK;
+using Toe.Utils.ToeMath;
 
 namespace Toe.Utils.Mesh.Bsp.HL2
 {
@@ -12,7 +12,7 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 
 		public int nameStringTableID; // index into TexdataStringTable
 
-		public Vector3 reflectivity; // RGB reflectivity 	
+		public Float3 reflectivity; // RGB reflectivity 	
 
 		public int view_height;
 

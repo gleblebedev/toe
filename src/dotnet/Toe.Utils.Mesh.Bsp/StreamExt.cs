@@ -4,7 +4,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 
-using OpenTK;
+using Toe.Utils.ToeMath;
 
 namespace Toe.Utils.Mesh.Bsp
 {
@@ -94,7 +94,7 @@ namespace Toe.Utils.Mesh.Bsp
 			return ((a3 << 24) | (a2 << 16) | (a1 << 8) | (a0));
 		}
 
-		public static void ReadVector2(this Stream stream, out Vector2 v)
+		public static void ReadFloat2(this Stream stream, out Float2 v)
 		{
 			v.X = stream.ReadSingle();
 			v.Y = stream.ReadSingle();
@@ -104,7 +104,7 @@ namespace Toe.Utils.Mesh.Bsp
 			}
 		}
 
-		public static void ReadVector3(this Stream stream, out Vector3 v)
+		public static void ReadFloat3(this Stream stream, out Float3 v)
 		{
 			v.X = stream.ReadSingle();
 			v.Y = stream.ReadSingle();
@@ -114,7 +114,7 @@ namespace Toe.Utils.Mesh.Bsp
 				throw new BspFormatException(string.Format("Wrong vertex data {{{0}, {1}, {2}}}", v.X, v.Y, v.Z));
 			}
 		}
-		public static Vector3 ReadVector3(this Stream stream)
+		public static Float3 ReadFloat3(this Stream stream)
 		{
 			var X = stream.ReadSingle();
 			var Y = stream.ReadSingle();
@@ -123,9 +123,9 @@ namespace Toe.Utils.Mesh.Bsp
 			{
 				throw new BspFormatException(string.Format("Wrong vertex data {{{0}, {1}, {2}}}", X, Y, Z));
 			}
-			return new Vector3(X, Y, Z);
+			return new Float3(X, Y, Z);
 		}
-		public static Vector2 ReadVector2(this Stream stream)
+		public static Float2 ReadFloat2(this Stream stream)
 		{
 			var X = stream.ReadSingle();
 			var Y = stream.ReadSingle();
@@ -133,7 +133,7 @@ namespace Toe.Utils.Mesh.Bsp
 			{
 				throw new BspFormatException(string.Format("Wrong vertex data {{{0}, {1}}}", X, Y));
 			}
-			return new Vector2(X, Y);
+			return new Float2(X, Y);
 		}
 		#endregion
 

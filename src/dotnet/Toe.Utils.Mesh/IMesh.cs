@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-using OpenTK;
+using Toe.Utils.ToeMath;
 
 namespace Toe.Utils.Mesh
 {
@@ -14,11 +14,11 @@ namespace Toe.Utils.Mesh
 	{
 		#region Public Properties
 
-		Vector3 BoundingBoxMax { get; }
+		Float3 BoundingBoxMax { get; }
 
-		Vector3 BoundingBoxMin { get; }
+		Float3 BoundingBoxMin { get; }
 
-		Vector3 BoundingSphereCenter { get; }
+		Float3 BoundingSphereCenter { get; }
 
 		float BoundingSphereR { get; }
 

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-using OpenTK;
+using Toe.Utils.ToeMath;
 
 namespace Toe.Utils.Mesh
 {
@@ -22,11 +22,11 @@ namespace Toe.Utils.Mesh
 
 		private readonly IList<INode> nodes = new ObservableCollection<INode>();
 
-		private Vector3 position = Vector3.Zero;
+		private Float3 position = Float3.Zero;
 
-		private Quaternion rotation = Quaternion.Identity;
+		private Float4 rotation = Float4.QuaternionIdentity;
 
-		private Vector3 scale = new Vector3(1.0f, 1.0f, 1.0f);
+		private Float3 scale = new Float3(1.0f, 1.0f, 1.0f);
 
 		#endregion
 
@@ -34,11 +34,11 @@ namespace Toe.Utils.Mesh
 
 		public IMesh Mesh { get; set; }
 
-		public Matrix4 ModelMatrix
+		public Float4x4 ModelMatrix
 		{
 			get
 			{
-				return Matrix4.Rotate(this.Rotation) * Matrix4.CreateTranslation(this.Position);
+				return Float4x4.Rotate(this.Rotation) * Float4x4.CreateTranslation(this.Position);
 			}
 		}
 
@@ -58,7 +58,7 @@ namespace Toe.Utils.Mesh
 			}
 		}
 
-		public Vector3 Position
+		public Float3 Position
 		{
 			get
 			{
@@ -75,7 +75,7 @@ namespace Toe.Utils.Mesh
 			}
 		}
 
-		public Quaternion Rotation
+		public Float4 Rotation
 		{
 			get
 			{
@@ -92,7 +92,7 @@ namespace Toe.Utils.Mesh
 			}
 		}
 
-		public Vector3 Scale
+		public Float3 Scale
 		{
 			get
 			{

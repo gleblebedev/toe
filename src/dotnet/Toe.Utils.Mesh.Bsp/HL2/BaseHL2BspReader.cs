@@ -4,9 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-using OpenTK;
-
 using Toe.Utils.Mesh.Bsp.Utils;
+using Toe.Utils.ToeMath;
 
 namespace Toe.Utils.Mesh.Bsp.HL2
 {
@@ -48,7 +47,7 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 
 		private uint[] texdataStringTable;
 
-		private Vector3[] vertices;
+		private Float3[] vertices;
 
 		private SeparateStreamsMesh streamMesh;
 
@@ -97,10 +96,10 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 		{
 			this.streamMesh = new SeparateStreamsMesh();
 			this.meshStreams = new BspMeshStreams();
-			meshStreams.Positions = streamMesh.SetStream(Streams.Position, 0, new ListMeshStream<Vector3>());
-			meshStreams.Normals = streamMesh.SetStream(Streams.Normal, 0, new ListMeshStream<Vector3>());
-			meshStreams.TexCoord0 = streamMesh.SetStream(Streams.TexCoord, 0, new ListMeshStream<Vector2>());
-			meshStreams.TexCoord1 = streamMesh.SetStream(Streams.TexCoord, 1, new ListMeshStream<Vector2>());
+			meshStreams.Positions = streamMesh.SetStream(Streams.Position, 0, new ListMeshStream<Float3>());
+			meshStreams.Normals = streamMesh.SetStream(Streams.Normal, 0, new ListMeshStream<Float3>());
+			meshStreams.TexCoord0 = streamMesh.SetStream(Streams.TexCoord, 0, new ListMeshStream<Float2>());
+			meshStreams.TexCoord1 = streamMesh.SetStream(Streams.TexCoord, 1, new ListMeshStream<Float2>());
 			meshStreams.Colors = streamMesh.SetStream(Streams.Color, 0, new ListMeshStream<Color>());
 		}
 
@@ -124,8 +123,8 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 					var sourceNode = this.nodes[index];
 					vsdNodes[index] = new BspVsdTreeNode
 						{
-							Min = new Vector3(sourceNode.box.boxMinX, sourceNode.box.boxMinY, sourceNode.box.boxMinZ),
-							Max = new Vector3(sourceNode.box.boxMaxX, sourceNode.box.boxMaxY, sourceNode.box.boxMaxZ),
+							Min = new Float3(sourceNode.box.boxMinX, sourceNode.box.boxMinY, sourceNode.box.boxMinZ),
+							Max = new Float3(sourceNode.box.boxMaxX, sourceNode.box.boxMaxY, sourceNode.box.boxMaxZ),
 							PositiveNodeIndex = sourceNode.front,
 							NegativeNodeIndex = sourceNode.back,
 							N = this.planes[sourceNode.planenum].normal,
@@ -154,8 +153,8 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 					var sourceLeaf = this.leaves[index];
 					vsdLeaves[index] = new BspVsdTreeLeaf
 						{
-							Min = new Vector3(sourceLeaf.box.boxMinX, sourceLeaf.box.boxMinY, sourceLeaf.box.boxMinZ),
-							Max = new Vector3(sourceLeaf.box.boxMaxX, sourceLeaf.box.boxMaxY, sourceLeaf.box.boxMaxZ),
+							Min = new Float3(sourceLeaf.box.boxMinX, sourceLeaf.box.boxMinY, sourceLeaf.box.boxMinZ),
+							Max = new Float3(sourceLeaf.box.boxMaxX, sourceLeaf.box.boxMaxY, sourceLeaf.box.boxMaxZ),
 							Cluster = sourceLeaf.cluster,
 						};
 				}
@@ -549,10 +548,10 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 		{
 			this.SeekEntryAt(this.header.Vertexes.offset);
 			int size = this.EvalNumItems(this.header.Vertexes.size, 12);
-			this.vertices = new Vector3[size];
+			this.vertices = new Float3[size];
 			for (int i = 0; i < size; ++i)
 			{
-				this.Stream.ReadVector3(out this.vertices[i]);
+				this.Stream.ReadFloat3(out this.vertices[i]);
 			}
 			this.AssertStreamPossition(this.header.Vertexes.size + this.header.Vertexes.offset);
 
@@ -622,9 +621,9 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 			var plane = this.planes[face.planenum];
 			var texture_id = this.texInfo[face.texinfo].texdata;
 
-			Vector2 minUV0 = new Vector2(float.MaxValue, float.MaxValue);
-			Vector2 minUV1 = new Vector2(float.MaxValue, float.MaxValue);
-			Vector2 maxUV1 = new Vector2(float.MinValue, float.MinValue);
+			Float2 minUV0 = new Float2(float.MaxValue, float.MaxValue);
+			Float2 minUV1 = new Float2(float.MaxValue, float.MaxValue);
+			Float2 maxUV1 = new Float2(float.MinValue, float.MinValue);
 			int nextShouldBe = -1;
 			for (int index = 0; index < faceVertices.Length; index++)
 			{
@@ -709,7 +708,7 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 				minUV0.Y = 0;
 				for (int j = 0; j < (int)face.numedges; ++j)
 				{
-					faceVertices[j].UV0 = new Vector3(0, 0, 0);
+					faceVertices[j].UV0 = new Float3(0, 0, 0);
 				}
 			}
 
@@ -719,8 +718,8 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 				meshStreams.Positions.Add(faceVertices[j].Position);
 				meshStreams.Normals.Add(faceVertices[j].Normal);
 				meshStreams.Colors.Add(faceVertices[j].Color);
-				meshStreams.TexCoord0.Add(new Vector2(faceVertices[j].UV0.X, faceVertices[j].UV0.Y));
-				meshStreams.TexCoord1.Add(new Vector2(faceVertices[j].UV1.X, faceVertices[j].UV1.Y));
+				meshStreams.TexCoord0.Add(new Float2(faceVertices[j].UV0.X, faceVertices[j].UV0.Y));
+				meshStreams.TexCoord1.Add(new Float2(faceVertices[j].UV1.X, faceVertices[j].UV1.Y));
 			}
 			for (int j = 1; j < faceVertices.Length - 1; ++j)
 			{
@@ -793,7 +792,7 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 		//                leaves[i].VisibleLeaves.Add(j);
 		//    }
 		//}
-		private void BuildVertex(Vector3 vector3, Vector3 n, SourceFace f, ref SourceTexInfo surf, out Vertex res)
+		private void BuildVertex(Float3 vector3, Float3 n, SourceFace f, ref SourceTexInfo surf, out Vertex res)
 		{
 			res = new Vertex
 				{
@@ -801,12 +800,12 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 					Normal = n,
 					Color = Color.White,
 					UV0 =
-						new Vector3(
-						Vector3.Dot(surf.vectorS, vector3) + surf.distS, Vector3.Dot(surf.vectorT, vector3) + surf.distT, 0.0f),
+						new Float3(
+						Float3.Dot(surf.vectorS, vector3) + surf.distS, Float3.Dot(surf.vectorT, vector3) + surf.distT, 0.0f),
 					UV1 =
-						new Vector3(
-						Vector3.Dot(surf.lm_vectorS, vector3) + surf.lm_distS - f.LightmapTextureMinsInLuxels[0],
-						Vector3.Dot(surf.lm_vectorT, vector3) + surf.lm_distT - f.LightmapTextureMinsInLuxels[1],
+						new Float3(
+						Float3.Dot(surf.lm_vectorS, vector3) + surf.lm_distS - f.LightmapTextureMinsInLuxels[0],
+						Float3.Dot(surf.lm_vectorT, vector3) + surf.lm_distT - f.LightmapTextureMinsInLuxels[1],
 						0.0f)
 				};
 			//if (f.LightmapTextureSizeInLuxels[0] == 0)
@@ -814,7 +813,7 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 			res.UV1.Y = (res.UV1.Y + this.safeOffset) / (f.LightmapTextureSizeInLuxels[1] + 1.0f + this.safeBorderWidth);
 
 			SourceTexData tex = this.textures[surf.texdata];
-			res.UV0 = new Vector3(
+			res.UV0 = new Float3(
 				res.UV0.X / ((tex.width != 0) ? tex.width : 256.0f), res.UV0.Y / ((tex.height != 0) ? tex.height : 256.0f), 0.0f);
 		}
 
@@ -850,15 +849,15 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 			x = this.Stream.ReadSingle();
 			y = this.Stream.ReadSingle();
 			z = this.Stream.ReadSingle();
-			sourceModel.mins = new Vector3(x, y, z);
+			sourceModel.mins = new Float3(x, y, z);
 			x = this.Stream.ReadSingle();
 			y = this.Stream.ReadSingle();
 			z = this.Stream.ReadSingle();
-			sourceModel.maxs = new Vector3(x, y, z);
+			sourceModel.maxs = new Float3(x, y, z);
 			x = this.Stream.ReadSingle();
 			y = this.Stream.ReadSingle();
 			z = this.Stream.ReadSingle();
-			sourceModel.origin = new Vector3(x, y, z);
+			sourceModel.origin = new Float3(x, y, z);
 			sourceModel.headnode = this.Stream.ReadInt32();
 			sourceModel.firstface = this.Stream.ReadInt32();
 			sourceModel.numfaces = this.Stream.ReadInt32();

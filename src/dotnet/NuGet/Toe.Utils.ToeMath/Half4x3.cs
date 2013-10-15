@@ -7,14 +7,32 @@ namespace Toe.Utils.ToeMath
 	[Serializable]
 #endif
 	[StructLayout(LayoutKind.Explicit)]
-	public struct Half4x3: IEquatable<Half4x3>
+	public partial struct Half4x3: IEquatable<Half4x3>
 	{
+
+		/// <summary>
+		/// Constructor of the Half4x3.
+		/// </summary>
+		public Half4x3(half m00, half m01, half m02, half m10, half m11, half m12, half m20, half m21, half m22, half m30, half m31, half m32 )
+		{
+			this.M00 = m00;
+			this.M01 = m01;
+			this.M02 = m02;
+			this.M10 = m10;
+			this.M11 = m11;
+			this.M12 = m12;
+			this.M20 = m20;
+			this.M21 = m21;
+			this.M22 = m22;
+			this.M30 = m30;
+			this.M31 = m31;
+			this.M32 = m32;
+		}
 
 		/// <summary>
 		/// Row of the Half4x3.
 		/// </summary>
-		[FieldOffset(0)]
-		public Half3 Row0;
+		public Half3 Row0 { get { return new Half3(this.M00, this.M01, this.M02); } set {this.M00 = value.X;this.M01 = value.Y;this.M02 = value.Z;} }
 
 		/// <summary>
 		/// Row 0, Column 0 of the Half4x3.
@@ -37,8 +55,7 @@ namespace Toe.Utils.ToeMath
 		/// <summary>
 		/// Row of the Half4x3.
 		/// </summary>
-		[FieldOffset(6)]
-		public Half3 Row1;
+		public Half3 Row1 { get { return new Half3(this.M10, this.M11, this.M12); } set {this.M10 = value.X;this.M11 = value.Y;this.M12 = value.Z;} }
 
 		/// <summary>
 		/// Row 1, Column 0 of the Half4x3.
@@ -61,8 +78,7 @@ namespace Toe.Utils.ToeMath
 		/// <summary>
 		/// Row of the Half4x3.
 		/// </summary>
-		[FieldOffset(12)]
-		public Half3 Row2;
+		public Half3 Row2 { get { return new Half3(this.M20, this.M21, this.M22); } set {this.M20 = value.X;this.M21 = value.Y;this.M22 = value.Z;} }
 
 		/// <summary>
 		/// Row 2, Column 0 of the Half4x3.
@@ -85,8 +101,7 @@ namespace Toe.Utils.ToeMath
 		/// <summary>
 		/// Row of the Half4x3.
 		/// </summary>
-		[FieldOffset(18)]
-		public Half3 Row3;
+		public Half3 Row3 { get { return new Half3(this.M30, this.M31, this.M32); } set {this.M30 = value.X;this.M31 = value.Y;this.M32 = value.Z;} }
 
 		/// <summary>
 		/// Row 3, Column 0 of the Half4x3.
@@ -105,6 +120,8 @@ namespace Toe.Utils.ToeMath
 		/// </summary>
 		[FieldOffset(22)]
 		public half M32;
+
+		public static readonly Half4x3 Identity = new Half4x3(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0);
 		/// <summary>
 		/// Returns the hash code for this instance.
 		/// </summary>

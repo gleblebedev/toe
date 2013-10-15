@@ -7,7 +7,7 @@ namespace Toe.Utils.ToeMath
 	[Serializable]
 #endif
 	[StructLayout(LayoutKind.Explicit)]
-	public struct Int1: IEquatable<Int1>
+	public partial struct Int1: IEquatable<Int1>
 	{
 
 		/// <summary>
@@ -39,6 +39,74 @@ namespace Toe.Utils.ToeMath
 		public static readonly int SizeInBytes = Marshal.SizeOf(new Int1());
 
 		public int Length { get { return (int)Math.Sqrt((this.X * this.X)); } }
+
+		public int LengthSquared { get { return (this.X * this.X); } }
+		public void Normalize()
+		{
+			int len = this.Length;
+			X /= len;
+		}
+
+		public static Int1 Multiply (Int1 left, Int1 right)
+		{
+			return new Int1((left.X * right.X));
+		}
+
+		public static Int1 Multiply (Int1 left, int right)
+		{
+			return new Int1((left.X * right));
+		}
+
+		public static void Multiply (ref Int1 left, ref Int1 right, out Int1 result)
+		{
+			result = new Int1((left.X * right.X));
+		}
+
+		public static void Add (ref Int1 left, ref Int1 right, out Int1 result)
+		{
+			result = new Int1((left.X + right.X));
+		}
+
+		public static void Sub (ref Int1 left, ref Int1 right, out Int1 result)
+		{
+			result = new Int1((left.X - right.X));
+		}
+
+		public static void Multiply (ref Int1 left, int right, out Int1 result)
+		{
+			result = new Int1((left.X * right));
+		}
+
+		public static int Dot (Int1 left, Int1 right)
+		{
+			return (left.X * right.X);
+		}
+
+		public static int Dot (ref Int1 left, ref Int1 right)
+		{
+			return (left.X * right.X);
+		}
+		public static Int1 Normalize(Int1 vec)
+		{
+			int len = vec.Length;
+			vec.X /= len;
+			return vec;
+		}
+		public static Int1 operator -(Int1 left, Int1 right)
+		{
+			left.X -= right.X;
+			return left;
+		}
+		public static Int1 operator +(Int1 left, Int1 right)
+		{
+			left.X += right.X;
+			return left;
+		}
+		public static Int1 operator *(Int1 left, int scale)
+		{
+			left.X *= scale;
+			return left;
+		}
 		/// <summary>
 		/// Returns the hash code for this instance.
 		/// </summary>
@@ -90,29 +158,9 @@ namespace Toe.Utils.ToeMath
 	public static partial class MathHelper
 	{
 
-		public static Int1 Multiply (Int1 left, Int1 right)
-		{
-			return new Int1((left.X * right.X));
-		}
-
-		public static void Multiply (ref Int1 left, ref Int1 right, out Int1 result)
-		{
-			result = new Int1((left.X * right.X));
-		}
-
 		public static Int1 Scale (Int1 left, int scale)
 		{
 			return new Int1((left.X * scale));
-		}
-
-		public static int Dot (Int1 left, Int1 right)
-		{
-			return (left.X * right.X);
-		}
-
-		public static int Dot (ref Int1 left, ref Int1 right)
-		{
-			return (left.X * right.X);
 		}
 
 	}

@@ -7,14 +7,36 @@ namespace Toe.Utils.ToeMath
 	[Serializable]
 #endif
 	[StructLayout(LayoutKind.Explicit)]
-	public struct Int4x4: IEquatable<Int4x4>
+	public partial struct Int4x4: IEquatable<Int4x4>
 	{
+
+		/// <summary>
+		/// Constructor of the Int4x4.
+		/// </summary>
+		public Int4x4(int m00, int m01, int m02, int m03, int m10, int m11, int m12, int m13, int m20, int m21, int m22, int m23, int m30, int m31, int m32, int m33 )
+		{
+			this.M00 = m00;
+			this.M01 = m01;
+			this.M02 = m02;
+			this.M03 = m03;
+			this.M10 = m10;
+			this.M11 = m11;
+			this.M12 = m12;
+			this.M13 = m13;
+			this.M20 = m20;
+			this.M21 = m21;
+			this.M22 = m22;
+			this.M23 = m23;
+			this.M30 = m30;
+			this.M31 = m31;
+			this.M32 = m32;
+			this.M33 = m33;
+		}
 
 		/// <summary>
 		/// Row of the Int4x4.
 		/// </summary>
-		[FieldOffset(0)]
-		public Int4 Row0;
+		public Int4 Row0 { get { return new Int4(this.M00, this.M01, this.M02, this.M03); } set {this.M00 = value.X;this.M01 = value.Y;this.M02 = value.Z;this.M03 = value.W;} }
 
 		/// <summary>
 		/// Row 0, Column 0 of the Int4x4.
@@ -43,8 +65,7 @@ namespace Toe.Utils.ToeMath
 		/// <summary>
 		/// Row of the Int4x4.
 		/// </summary>
-		[FieldOffset(16)]
-		public Int4 Row1;
+		public Int4 Row1 { get { return new Int4(this.M10, this.M11, this.M12, this.M13); } set {this.M10 = value.X;this.M11 = value.Y;this.M12 = value.Z;this.M13 = value.W;} }
 
 		/// <summary>
 		/// Row 1, Column 0 of the Int4x4.
@@ -73,8 +94,7 @@ namespace Toe.Utils.ToeMath
 		/// <summary>
 		/// Row of the Int4x4.
 		/// </summary>
-		[FieldOffset(32)]
-		public Int4 Row2;
+		public Int4 Row2 { get { return new Int4(this.M20, this.M21, this.M22, this.M23); } set {this.M20 = value.X;this.M21 = value.Y;this.M22 = value.Z;this.M23 = value.W;} }
 
 		/// <summary>
 		/// Row 2, Column 0 of the Int4x4.
@@ -103,8 +123,7 @@ namespace Toe.Utils.ToeMath
 		/// <summary>
 		/// Row of the Int4x4.
 		/// </summary>
-		[FieldOffset(48)]
-		public Int4 Row3;
+		public Int4 Row3 { get { return new Int4(this.M30, this.M31, this.M32, this.M33); } set {this.M30 = value.X;this.M31 = value.Y;this.M32 = value.Z;this.M33 = value.W;} }
 
 		/// <summary>
 		/// Row 3, Column 0 of the Int4x4.
@@ -129,6 +148,8 @@ namespace Toe.Utils.ToeMath
 		/// </summary>
 		[FieldOffset(60)]
 		public int M33;
+
+		public static readonly Int4x4 Identity = new Int4x4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
 		/// <summary>
 		/// Returns the hash code for this instance.
 		/// </summary>

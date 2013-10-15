@@ -7,7 +7,7 @@ namespace Toe.Utils.ToeMath
 	[Serializable]
 #endif
 	[StructLayout(LayoutKind.Explicit)]
-	public struct Double3: IEquatable<Double3>
+	public partial struct Double3: IEquatable<Double3>
 	{
 
 		/// <summary>
@@ -18,6 +18,16 @@ namespace Toe.Utils.ToeMath
 			this.X = scale;
 			this.Y = scale;
 			this.Z = scale;
+		}
+
+		/// <summary>
+		/// Constructor of the Double3.
+		/// </summary>
+		public Double3(Double2 vec, double Z)
+		{
+			this.X = vec.X;
+			this.Y = vec.Y;
+			this.Z = Z;
 		}
 
 		/// <summary>
@@ -107,6 +117,84 @@ namespace Toe.Utils.ToeMath
 		public static readonly int SizeInBytes = Marshal.SizeOf(new Double3());
 
 		public double Length { get { return (double)Math.Sqrt((this.X * this.X) + (this.Y * this.Y) + (this.Z * this.Z)); } }
+
+		public double LengthSquared { get { return (this.X * this.X) + (this.Y * this.Y) + (this.Z * this.Z); } }
+		public void Normalize()
+		{
+			double len = this.Length;
+			X /= len;
+			Y /= len;
+			Z /= len;
+		}
+
+		public static Double3 Multiply (Double3 left, Double3 right)
+		{
+			return new Double3((left.X * right.X), (left.Y * right.Y), (left.Z * right.Z));
+		}
+
+		public static Double3 Multiply (Double3 left, double right)
+		{
+			return new Double3((left.X * right), (left.Y * right), (left.Z * right));
+		}
+
+		public static void Multiply (ref Double3 left, ref Double3 right, out Double3 result)
+		{
+			result = new Double3((left.X * right.X), (left.Y * right.Y), (left.Z * right.Z));
+		}
+
+		public static void Add (ref Double3 left, ref Double3 right, out Double3 result)
+		{
+			result = new Double3((left.X + right.X), (left.Y + right.Y), (left.Z + right.Z));
+		}
+
+		public static void Sub (ref Double3 left, ref Double3 right, out Double3 result)
+		{
+			result = new Double3((left.X - right.X), (left.Y - right.Y), (left.Z - right.Z));
+		}
+
+		public static void Multiply (ref Double3 left, double right, out Double3 result)
+		{
+			result = new Double3((left.X * right), (left.Y * right), (left.Z * right));
+		}
+
+		public static double Dot (Double3 left, Double3 right)
+		{
+			return (left.X * right.X) + (left.Y * right.Y) + (left.Z * right.Z);
+		}
+
+		public static double Dot (ref Double3 left, ref Double3 right)
+		{
+			return (left.X * right.X) + (left.Y * right.Y) + (left.Z * right.Z);
+		}
+		public static Double3 Normalize(Double3 vec)
+		{
+			double len = vec.Length;
+			vec.X /= len;
+			vec.Y /= len;
+			vec.Z /= len;
+			return vec;
+		}
+		public static Double3 operator -(Double3 left, Double3 right)
+		{
+			left.X -= right.X;
+			left.Y -= right.Y;
+			left.Z -= right.Z;
+			return left;
+		}
+		public static Double3 operator +(Double3 left, Double3 right)
+		{
+			left.X += right.X;
+			left.Y += right.Y;
+			left.Z += right.Z;
+			return left;
+		}
+		public static Double3 operator *(Double3 left, double scale)
+		{
+			left.X *= scale;
+			left.Y *= scale;
+			left.Z *= scale;
+			return left;
+		}
 		/// <summary>
 		/// Returns the hash code for this instance.
 		/// </summary>
@@ -160,29 +248,9 @@ namespace Toe.Utils.ToeMath
 	public static partial class MathHelper
 	{
 
-		public static Double3 Multiply (Double3 left, Double3 right)
-		{
-			return new Double3((left.X * right.X), (left.Y * right.Y), (left.Z * right.Z));
-		}
-
-		public static void Multiply (ref Double3 left, ref Double3 right, out Double3 result)
-		{
-			result = new Double3((left.X * right.X), (left.Y * right.Y), (left.Z * right.Z));
-		}
-
 		public static Double3 Scale (Double3 left, double scale)
 		{
 			return new Double3((left.X * scale), (left.Y * scale), (left.Z * scale));
-		}
-
-		public static double Dot (Double3 left, Double3 right)
-		{
-			return (left.X * right.X) + (left.Y * right.Y) + (left.Z * right.Z);
-		}
-
-		public static double Dot (ref Double3 left, ref Double3 right)
-		{
-			return (left.X * right.X) + (left.Y * right.Y) + (left.Z * right.Z);
 		}
 
 	}

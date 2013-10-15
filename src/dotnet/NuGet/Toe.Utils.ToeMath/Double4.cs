@@ -7,7 +7,7 @@ namespace Toe.Utils.ToeMath
 	[Serializable]
 #endif
 	[StructLayout(LayoutKind.Explicit)]
-	public struct Double4: IEquatable<Double4>
+	public partial struct Double4: IEquatable<Double4>
 	{
 
 		/// <summary>
@@ -19,6 +19,17 @@ namespace Toe.Utils.ToeMath
 			this.Y = scale;
 			this.Z = scale;
 			this.W = scale;
+		}
+
+		/// <summary>
+		/// Constructor of the Double4.
+		/// </summary>
+		public Double4(Double3 vec, double W)
+		{
+			this.X = vec.X;
+			this.Y = vec.Y;
+			this.Z = vec.Z;
+			this.W = W;
 		}
 
 		/// <summary>
@@ -151,6 +162,89 @@ namespace Toe.Utils.ToeMath
 		public static readonly int SizeInBytes = Marshal.SizeOf(new Double4());
 
 		public double Length { get { return (double)Math.Sqrt((this.X * this.X) + (this.Y * this.Y) + (this.Z * this.Z) + (this.W * this.W)); } }
+
+		public double LengthSquared { get { return (this.X * this.X) + (this.Y * this.Y) + (this.Z * this.Z) + (this.W * this.W); } }
+		public void Normalize()
+		{
+			double len = this.Length;
+			X /= len;
+			Y /= len;
+			Z /= len;
+			W /= len;
+		}
+
+		public static Double4 Multiply (Double4 left, Double4 right)
+		{
+			return new Double4((left.X * right.X), (left.Y * right.Y), (left.Z * right.Z), (left.W * right.W));
+		}
+
+		public static Double4 Multiply (Double4 left, double right)
+		{
+			return new Double4((left.X * right), (left.Y * right), (left.Z * right), (left.W * right));
+		}
+
+		public static void Multiply (ref Double4 left, ref Double4 right, out Double4 result)
+		{
+			result = new Double4((left.X * right.X), (left.Y * right.Y), (left.Z * right.Z), (left.W * right.W));
+		}
+
+		public static void Add (ref Double4 left, ref Double4 right, out Double4 result)
+		{
+			result = new Double4((left.X + right.X), (left.Y + right.Y), (left.Z + right.Z), (left.W + right.W));
+		}
+
+		public static void Sub (ref Double4 left, ref Double4 right, out Double4 result)
+		{
+			result = new Double4((left.X - right.X), (left.Y - right.Y), (left.Z - right.Z), (left.W - right.W));
+		}
+
+		public static void Multiply (ref Double4 left, double right, out Double4 result)
+		{
+			result = new Double4((left.X * right), (left.Y * right), (left.Z * right), (left.W * right));
+		}
+
+		public static double Dot (Double4 left, Double4 right)
+		{
+			return (left.X * right.X) + (left.Y * right.Y) + (left.Z * right.Z) + (left.W * right.W);
+		}
+
+		public static double Dot (ref Double4 left, ref Double4 right)
+		{
+			return (left.X * right.X) + (left.Y * right.Y) + (left.Z * right.Z) + (left.W * right.W);
+		}
+		public static Double4 Normalize(Double4 vec)
+		{
+			double len = vec.Length;
+			vec.X /= len;
+			vec.Y /= len;
+			vec.Z /= len;
+			vec.W /= len;
+			return vec;
+		}
+		public static Double4 operator -(Double4 left, Double4 right)
+		{
+			left.X -= right.X;
+			left.Y -= right.Y;
+			left.Z -= right.Z;
+			left.W -= right.W;
+			return left;
+		}
+		public static Double4 operator +(Double4 left, Double4 right)
+		{
+			left.X += right.X;
+			left.Y += right.Y;
+			left.Z += right.Z;
+			left.W += right.W;
+			return left;
+		}
+		public static Double4 operator *(Double4 left, double scale)
+		{
+			left.X *= scale;
+			left.Y *= scale;
+			left.Z *= scale;
+			left.W *= scale;
+			return left;
+		}
 		/// <summary>
 		/// Returns the hash code for this instance.
 		/// </summary>
@@ -205,29 +299,9 @@ namespace Toe.Utils.ToeMath
 	public static partial class MathHelper
 	{
 
-		public static Double4 Multiply (Double4 left, Double4 right)
-		{
-			return new Double4((left.X * right.X), (left.Y * right.Y), (left.Z * right.Z), (left.W * right.W));
-		}
-
-		public static void Multiply (ref Double4 left, ref Double4 right, out Double4 result)
-		{
-			result = new Double4((left.X * right.X), (left.Y * right.Y), (left.Z * right.Z), (left.W * right.W));
-		}
-
 		public static Double4 Scale (Double4 left, double scale)
 		{
 			return new Double4((left.X * scale), (left.Y * scale), (left.Z * scale), (left.W * scale));
-		}
-
-		public static double Dot (Double4 left, Double4 right)
-		{
-			return (left.X * right.X) + (left.Y * right.Y) + (left.Z * right.Z) + (left.W * right.W);
-		}
-
-		public static double Dot (ref Double4 left, ref Double4 right)
-		{
-			return (left.X * right.X) + (left.Y * right.Y) + (left.Z * right.Z) + (left.W * right.W);
 		}
 
 	}

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-using OpenTK;
+using Toe.Utils.ToeMath;
 
 #if WINDOWS_PHONE
 using Microsoft.Xna.Framework;
@@ -47,7 +47,7 @@ namespace Toe.Utils.Mesh
 
 		protected override void CalculateActualBounds()
 		{
-			var positions = this.mesh.GetStreamReader<Vector3>(Streams.Position, 0);
+			var positions = this.mesh.GetStreamReader<Float3>(Streams.Position, 0);
 			foreach (var index in this.GetIndexReader(Streams.Position,0))
 			{
 

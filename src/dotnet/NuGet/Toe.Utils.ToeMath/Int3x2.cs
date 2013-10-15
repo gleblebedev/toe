@@ -7,14 +7,26 @@ namespace Toe.Utils.ToeMath
 	[Serializable]
 #endif
 	[StructLayout(LayoutKind.Explicit)]
-	public struct Int3x2: IEquatable<Int3x2>
+	public partial struct Int3x2: IEquatable<Int3x2>
 	{
+
+		/// <summary>
+		/// Constructor of the Int3x2.
+		/// </summary>
+		public Int3x2(int m00, int m01, int m10, int m11, int m20, int m21 )
+		{
+			this.M00 = m00;
+			this.M01 = m01;
+			this.M10 = m10;
+			this.M11 = m11;
+			this.M20 = m20;
+			this.M21 = m21;
+		}
 
 		/// <summary>
 		/// Row of the Int3x2.
 		/// </summary>
-		[FieldOffset(0)]
-		public Int2 Row0;
+		public Int2 Row0 { get { return new Int2(this.M00, this.M01); } set {this.M00 = value.X;this.M01 = value.Y;} }
 
 		/// <summary>
 		/// Row 0, Column 0 of the Int3x2.
@@ -31,8 +43,7 @@ namespace Toe.Utils.ToeMath
 		/// <summary>
 		/// Row of the Int3x2.
 		/// </summary>
-		[FieldOffset(8)]
-		public Int2 Row1;
+		public Int2 Row1 { get { return new Int2(this.M10, this.M11); } set {this.M10 = value.X;this.M11 = value.Y;} }
 
 		/// <summary>
 		/// Row 1, Column 0 of the Int3x2.
@@ -49,8 +60,7 @@ namespace Toe.Utils.ToeMath
 		/// <summary>
 		/// Row of the Int3x2.
 		/// </summary>
-		[FieldOffset(16)]
-		public Int2 Row2;
+		public Int2 Row2 { get { return new Int2(this.M20, this.M21); } set {this.M20 = value.X;this.M21 = value.Y;} }
 
 		/// <summary>
 		/// Row 2, Column 0 of the Int3x2.
@@ -63,6 +73,8 @@ namespace Toe.Utils.ToeMath
 		/// </summary>
 		[FieldOffset(20)]
 		public int M21;
+
+		public static readonly Int3x2 Identity = new Int3x2(1, 0, 0, 1, 0, 0);
 		/// <summary>
 		/// Returns the hash code for this instance.
 		/// </summary>

@@ -1,4 +1,4 @@
-using OpenTK;
+using Toe.Utils.ToeMath;
 
 namespace Toe.Utils.Mesh.Bsp.HL2
 {
@@ -10,13 +10,13 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 
 		public int headnode; // index into node array
 
-		public Vector3 maxs; // bounding box
+		public Float3 maxs; // bounding box
 
-		public Vector3 mins; // bounding box
+		public Float3 mins; // bounding box
 
 		public int numfaces; // index into face array
 
-		public Vector3 origin; // for sounds or lights
+		public Float3 origin; // for sounds or lights
 
 		#endregion
 	}

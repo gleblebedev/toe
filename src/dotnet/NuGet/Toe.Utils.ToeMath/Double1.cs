@@ -7,7 +7,7 @@ namespace Toe.Utils.ToeMath
 	[Serializable]
 #endif
 	[StructLayout(LayoutKind.Explicit)]
-	public struct Double1: IEquatable<Double1>
+	public partial struct Double1: IEquatable<Double1>
 	{
 
 		/// <summary>
@@ -39,6 +39,74 @@ namespace Toe.Utils.ToeMath
 		public static readonly int SizeInBytes = Marshal.SizeOf(new Double1());
 
 		public double Length { get { return (double)Math.Sqrt((this.X * this.X)); } }
+
+		public double LengthSquared { get { return (this.X * this.X); } }
+		public void Normalize()
+		{
+			double len = this.Length;
+			X /= len;
+		}
+
+		public static Double1 Multiply (Double1 left, Double1 right)
+		{
+			return new Double1((left.X * right.X));
+		}
+
+		public static Double1 Multiply (Double1 left, double right)
+		{
+			return new Double1((left.X * right));
+		}
+
+		public static void Multiply (ref Double1 left, ref Double1 right, out Double1 result)
+		{
+			result = new Double1((left.X * right.X));
+		}
+
+		public static void Add (ref Double1 left, ref Double1 right, out Double1 result)
+		{
+			result = new Double1((left.X + right.X));
+		}
+
+		public static void Sub (ref Double1 left, ref Double1 right, out Double1 result)
+		{
+			result = new Double1((left.X - right.X));
+		}
+
+		public static void Multiply (ref Double1 left, double right, out Double1 result)
+		{
+			result = new Double1((left.X * right));
+		}
+
+		public static double Dot (Double1 left, Double1 right)
+		{
+			return (left.X * right.X);
+		}
+
+		public static double Dot (ref Double1 left, ref Double1 right)
+		{
+			return (left.X * right.X);
+		}
+		public static Double1 Normalize(Double1 vec)
+		{
+			double len = vec.Length;
+			vec.X /= len;
+			return vec;
+		}
+		public static Double1 operator -(Double1 left, Double1 right)
+		{
+			left.X -= right.X;
+			return left;
+		}
+		public static Double1 operator +(Double1 left, Double1 right)
+		{
+			left.X += right.X;
+			return left;
+		}
+		public static Double1 operator *(Double1 left, double scale)
+		{
+			left.X *= scale;
+			return left;
+		}
 		/// <summary>
 		/// Returns the hash code for this instance.
 		/// </summary>
@@ -90,29 +158,9 @@ namespace Toe.Utils.ToeMath
 	public static partial class MathHelper
 	{
 
-		public static Double1 Multiply (Double1 left, Double1 right)
-		{
-			return new Double1((left.X * right.X));
-		}
-
-		public static void Multiply (ref Double1 left, ref Double1 right, out Double1 result)
-		{
-			result = new Double1((left.X * right.X));
-		}
-
 		public static Double1 Scale (Double1 left, double scale)
 		{
 			return new Double1((left.X * scale));
-		}
-
-		public static double Dot (Double1 left, Double1 right)
-		{
-			return (left.X * right.X);
-		}
-
-		public static double Dot (ref Double1 left, ref Double1 right)
-		{
-			return (left.X * right.X);
 		}
 
 	}

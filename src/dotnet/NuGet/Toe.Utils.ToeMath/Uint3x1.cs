@@ -7,14 +7,23 @@ namespace Toe.Utils.ToeMath
 	[Serializable]
 #endif
 	[StructLayout(LayoutKind.Explicit)]
-	public struct Uint3x1: IEquatable<Uint3x1>
+	public partial struct Uint3x1: IEquatable<Uint3x1>
 	{
+
+		/// <summary>
+		/// Constructor of the Uint3x1.
+		/// </summary>
+		public Uint3x1(uint m00, uint m10, uint m20 )
+		{
+			this.M00 = m00;
+			this.M10 = m10;
+			this.M20 = m20;
+		}
 
 		/// <summary>
 		/// Row of the Uint3x1.
 		/// </summary>
-		[FieldOffset(0)]
-		public Uint1 Row0;
+		public Uint1 Row0 { get { return new Uint1(this.M00); } set {this.M00 = value.X;} }
 
 		/// <summary>
 		/// Row 0, Column 0 of the Uint3x1.
@@ -25,8 +34,7 @@ namespace Toe.Utils.ToeMath
 		/// <summary>
 		/// Row of the Uint3x1.
 		/// </summary>
-		[FieldOffset(4)]
-		public Uint1 Row1;
+		public Uint1 Row1 { get { return new Uint1(this.M10); } set {this.M10 = value.X;} }
 
 		/// <summary>
 		/// Row 1, Column 0 of the Uint3x1.
@@ -37,14 +45,15 @@ namespace Toe.Utils.ToeMath
 		/// <summary>
 		/// Row of the Uint3x1.
 		/// </summary>
-		[FieldOffset(8)]
-		public Uint1 Row2;
+		public Uint1 Row2 { get { return new Uint1(this.M20); } set {this.M20 = value.X;} }
 
 		/// <summary>
 		/// Row 2, Column 0 of the Uint3x1.
 		/// </summary>
 		[FieldOffset(8)]
 		public uint M20;
+
+		public static readonly Uint3x1 Identity = new Uint3x1(1, 0, 0);
 		/// <summary>
 		/// Returns the hash code for this instance.
 		/// </summary>

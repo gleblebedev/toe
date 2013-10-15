@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-using OpenTK;
+using Toe.Utils.ToeMath;
 
 namespace Toe.Utils.Mesh
 {
@@ -14,7 +14,7 @@ namespace Toe.Utils.Mesh
 		/// <summary>
 		/// Camera position.
 		/// </summary>
-		Vector3 CameraPosition { get; set; }
+		Float3 CameraPosition { get; set; }
 
 		/// <summary>
 		/// Main mesh, similar to the level geometry.

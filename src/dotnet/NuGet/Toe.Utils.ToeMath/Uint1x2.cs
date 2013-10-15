@@ -7,14 +7,22 @@ namespace Toe.Utils.ToeMath
 	[Serializable]
 #endif
 	[StructLayout(LayoutKind.Explicit)]
-	public struct Uint1x2: IEquatable<Uint1x2>
+	public partial struct Uint1x2: IEquatable<Uint1x2>
 	{
+
+		/// <summary>
+		/// Constructor of the Uint1x2.
+		/// </summary>
+		public Uint1x2(uint m00, uint m01 )
+		{
+			this.M00 = m00;
+			this.M01 = m01;
+		}
 
 		/// <summary>
 		/// Row of the Uint1x2.
 		/// </summary>
-		[FieldOffset(0)]
-		public Uint2 Row0;
+		public Uint2 Row0 { get { return new Uint2(this.M00, this.M01); } set {this.M00 = value.X;this.M01 = value.Y;} }
 
 		/// <summary>
 		/// Row 0, Column 0 of the Uint1x2.
@@ -27,6 +35,8 @@ namespace Toe.Utils.ToeMath
 		/// </summary>
 		[FieldOffset(4)]
 		public uint M01;
+
+		public static readonly Uint1x2 Identity = new Uint1x2(1, 0);
 		/// <summary>
 		/// Returns the hash code for this instance.
 		/// </summary>

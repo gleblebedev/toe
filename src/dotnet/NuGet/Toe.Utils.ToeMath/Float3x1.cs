@@ -7,14 +7,23 @@ namespace Toe.Utils.ToeMath
 	[Serializable]
 #endif
 	[StructLayout(LayoutKind.Explicit)]
-	public struct Float3x1: IEquatable<Float3x1>
+	public partial struct Float3x1: IEquatable<Float3x1>
 	{
+
+		/// <summary>
+		/// Constructor of the Float3x1.
+		/// </summary>
+		public Float3x1(float m00, float m10, float m20 )
+		{
+			this.M00 = m00;
+			this.M10 = m10;
+			this.M20 = m20;
+		}
 
 		/// <summary>
 		/// Row of the Float3x1.
 		/// </summary>
-		[FieldOffset(0)]
-		public Float1 Row0;
+		public Float1 Row0 { get { return new Float1(this.M00); } set {this.M00 = value.X;} }
 
 		/// <summary>
 		/// Row 0, Column 0 of the Float3x1.
@@ -25,8 +34,7 @@ namespace Toe.Utils.ToeMath
 		/// <summary>
 		/// Row of the Float3x1.
 		/// </summary>
-		[FieldOffset(4)]
-		public Float1 Row1;
+		public Float1 Row1 { get { return new Float1(this.M10); } set {this.M10 = value.X;} }
 
 		/// <summary>
 		/// Row 1, Column 0 of the Float3x1.
@@ -37,14 +45,15 @@ namespace Toe.Utils.ToeMath
 		/// <summary>
 		/// Row of the Float3x1.
 		/// </summary>
-		[FieldOffset(8)]
-		public Float1 Row2;
+		public Float1 Row2 { get { return new Float1(this.M20); } set {this.M20 = value.X;} }
 
 		/// <summary>
 		/// Row 2, Column 0 of the Float3x1.
 		/// </summary>
 		[FieldOffset(8)]
 		public float M20;
+
+		public static readonly Float3x1 Identity = new Float3x1(1, 0, 0);
 		/// <summary>
 		/// Returns the hash code for this instance.
 		/// </summary>

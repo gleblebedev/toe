@@ -7,14 +7,29 @@ namespace Toe.Utils.ToeMath
 	[Serializable]
 #endif
 	[StructLayout(LayoutKind.Explicit)]
-	public struct Double3x3: IEquatable<Double3x3>
+	public partial struct Double3x3: IEquatable<Double3x3>
 	{
+
+		/// <summary>
+		/// Constructor of the Double3x3.
+		/// </summary>
+		public Double3x3(double m00, double m01, double m02, double m10, double m11, double m12, double m20, double m21, double m22 )
+		{
+			this.M00 = m00;
+			this.M01 = m01;
+			this.M02 = m02;
+			this.M10 = m10;
+			this.M11 = m11;
+			this.M12 = m12;
+			this.M20 = m20;
+			this.M21 = m21;
+			this.M22 = m22;
+		}
 
 		/// <summary>
 		/// Row of the Double3x3.
 		/// </summary>
-		[FieldOffset(0)]
-		public Double3 Row0;
+		public Double3 Row0 { get { return new Double3(this.M00, this.M01, this.M02); } set {this.M00 = value.X;this.M01 = value.Y;this.M02 = value.Z;} }
 
 		/// <summary>
 		/// Row 0, Column 0 of the Double3x3.
@@ -37,8 +52,7 @@ namespace Toe.Utils.ToeMath
 		/// <summary>
 		/// Row of the Double3x3.
 		/// </summary>
-		[FieldOffset(24)]
-		public Double3 Row1;
+		public Double3 Row1 { get { return new Double3(this.M10, this.M11, this.M12); } set {this.M10 = value.X;this.M11 = value.Y;this.M12 = value.Z;} }
 
 		/// <summary>
 		/// Row 1, Column 0 of the Double3x3.
@@ -61,8 +75,7 @@ namespace Toe.Utils.ToeMath
 		/// <summary>
 		/// Row of the Double3x3.
 		/// </summary>
-		[FieldOffset(48)]
-		public Double3 Row2;
+		public Double3 Row2 { get { return new Double3(this.M20, this.M21, this.M22); } set {this.M20 = value.X;this.M21 = value.Y;this.M22 = value.Z;} }
 
 		/// <summary>
 		/// Row 2, Column 0 of the Double3x3.
@@ -81,6 +94,8 @@ namespace Toe.Utils.ToeMath
 		/// </summary>
 		[FieldOffset(64)]
 		public double M22;
+
+		public static readonly Double3x3 Identity = new Double3x3(1, 0, 0, 0, 1, 0, 0, 0, 1);
 		/// <summary>
 		/// Returns the hash code for this instance.
 		/// </summary>

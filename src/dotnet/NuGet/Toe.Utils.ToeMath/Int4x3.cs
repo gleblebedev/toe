@@ -7,14 +7,32 @@ namespace Toe.Utils.ToeMath
 	[Serializable]
 #endif
 	[StructLayout(LayoutKind.Explicit)]
-	public struct Int4x3: IEquatable<Int4x3>
+	public partial struct Int4x3: IEquatable<Int4x3>
 	{
+
+		/// <summary>
+		/// Constructor of the Int4x3.
+		/// </summary>
+		public Int4x3(int m00, int m01, int m02, int m10, int m11, int m12, int m20, int m21, int m22, int m30, int m31, int m32 )
+		{
+			this.M00 = m00;
+			this.M01 = m01;
+			this.M02 = m02;
+			this.M10 = m10;
+			this.M11 = m11;
+			this.M12 = m12;
+			this.M20 = m20;
+			this.M21 = m21;
+			this.M22 = m22;
+			this.M30 = m30;
+			this.M31 = m31;
+			this.M32 = m32;
+		}
 
 		/// <summary>
 		/// Row of the Int4x3.
 		/// </summary>
-		[FieldOffset(0)]
-		public Int3 Row0;
+		public Int3 Row0 { get { return new Int3(this.M00, this.M01, this.M02); } set {this.M00 = value.X;this.M01 = value.Y;this.M02 = value.Z;} }
 
 		/// <summary>
 		/// Row 0, Column 0 of the Int4x3.
@@ -37,8 +55,7 @@ namespace Toe.Utils.ToeMath
 		/// <summary>
 		/// Row of the Int4x3.
 		/// </summary>
-		[FieldOffset(12)]
-		public Int3 Row1;
+		public Int3 Row1 { get { return new Int3(this.M10, this.M11, this.M12); } set {this.M10 = value.X;this.M11 = value.Y;this.M12 = value.Z;} }
 
 		/// <summary>
 		/// Row 1, Column 0 of the Int4x3.
@@ -61,8 +78,7 @@ namespace Toe.Utils.ToeMath
 		/// <summary>
 		/// Row of the Int4x3.
 		/// </summary>
-		[FieldOffset(24)]
-		public Int3 Row2;
+		public Int3 Row2 { get { return new Int3(this.M20, this.M21, this.M22); } set {this.M20 = value.X;this.M21 = value.Y;this.M22 = value.Z;} }
 
 		/// <summary>
 		/// Row 2, Column 0 of the Int4x3.
@@ -85,8 +101,7 @@ namespace Toe.Utils.ToeMath
 		/// <summary>
 		/// Row of the Int4x3.
 		/// </summary>
-		[FieldOffset(36)]
-		public Int3 Row3;
+		public Int3 Row3 { get { return new Int3(this.M30, this.M31, this.M32); } set {this.M30 = value.X;this.M31 = value.Y;this.M32 = value.Z;} }
 
 		/// <summary>
 		/// Row 3, Column 0 of the Int4x3.
@@ -105,6 +120,8 @@ namespace Toe.Utils.ToeMath
 		/// </summary>
 		[FieldOffset(44)]
 		public int M32;
+
+		public static readonly Int4x3 Identity = new Int4x3(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0);
 		/// <summary>
 		/// Returns the hash code for this instance.
 		/// </summary>

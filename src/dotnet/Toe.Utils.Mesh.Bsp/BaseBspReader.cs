@@ -4,7 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 
-using OpenTK;
+using Toe.Utils.ToeMath;
 
 namespace Toe.Utils.Mesh.Bsp
 {
@@ -113,7 +113,7 @@ namespace Toe.Utils.Mesh.Bsp
 
 			foreach (dynamic enitity in enitities)
 			{
-				var origin = enitity.origin as Vector3?;
+				var origin = enitity.origin as Float3?;
 				if (origin.HasValue)
 				{
 					var node = new Node { Position = origin.Value };
@@ -799,10 +799,10 @@ namespace Toe.Utils.Mesh.Bsp
 			return Color.FromArgb(255, r, g, b);
 		}
 
-		private Vector3 ParseVec3EntityProperty(string val)
+		private Float3 ParseVec3EntityProperty(string val)
 		{
 			var v = val.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-			Vector3 res = new Vector3();
+			Float3 res = new Float3();
 			res.X = float.Parse(v[0], CultureInfo.InvariantCulture);
 			res.Y = float.Parse(v[1], CultureInfo.InvariantCulture);
 			res.Z = float.Parse(v[2], CultureInfo.InvariantCulture);

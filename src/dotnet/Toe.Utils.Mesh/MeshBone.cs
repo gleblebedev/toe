@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework;
 #else
 
-using OpenTK;
+using Toe.Utils.ToeMath;
 
 #endif
 
@@ -12,17 +12,17 @@ namespace Toe.Utils.Mesh
 	{
 		#region Constants and Fields
 
-		private Vector3 absolutePos = Vector3.Zero;
+		private Float3 absolutePos = Float3.Zero;
 
-		private Quaternion absoluteRot = Quaternion.Identity;
+		private Float4 absoluteRot = Float4.QuaternionIdentity;
 
-		private Vector3? actualPos;
+		private Float3? actualPos;
 
-		private Quaternion? actualRot;
+		private Float4? actualRot;
 
-		private Vector3 bindingPos = Vector3.Zero;
+		private Float3 bindingPos = Float3.Zero;
 
-		private Quaternion bindingRot = Quaternion.Identity;
+		private Float4 bindingRot = Float4.QuaternionIdentity;
 
 		private string name;
 
@@ -32,7 +32,7 @@ namespace Toe.Utils.Mesh
 
 		#region Public Properties
 
-		public Vector3 AbsolutePos
+		public Float3 AbsolutePos
 		{
 			get
 			{
@@ -44,7 +44,7 @@ namespace Toe.Utils.Mesh
 			}
 		}
 
-		public Quaternion AbsoluteRot
+		public Float4 AbsoluteRot
 		{
 			get
 			{
@@ -56,7 +56,7 @@ namespace Toe.Utils.Mesh
 			}
 		}
 
-		public Vector3 ActualPos
+		public Float3 ActualPos
 		{
 			get
 			{
@@ -72,7 +72,7 @@ namespace Toe.Utils.Mesh
 			}
 		}
 
-		public Quaternion ActualRot
+		public Float4 ActualRot
 		{
 			get
 			{
@@ -88,7 +88,7 @@ namespace Toe.Utils.Mesh
 			}
 		}
 
-		public Vector3 BindingPos
+		public Float3 BindingPos
 		{
 			get
 			{
@@ -100,7 +100,7 @@ namespace Toe.Utils.Mesh
 			}
 		}
 
-		public Quaternion BindingRot
+		public Float4 BindingRot
 		{
 			get
 			{

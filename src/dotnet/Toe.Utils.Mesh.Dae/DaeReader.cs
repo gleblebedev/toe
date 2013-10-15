@@ -6,7 +6,8 @@ using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 
-using OpenTK;
+
+using Toe.Utils.ToeMath;
 
 namespace Toe.Utils.Mesh.Dae
 {
@@ -69,9 +70,9 @@ namespace Toe.Utils.Mesh.Dae
 
 		#region Methods
 
-		//private static Vector3 GetVector3(int index, int stride, Input input, int[] poligonArray)
+		//private static Float3 GetFloat3(int index, int stride, Input input, int[] poligonArray)
 		//{
-		//	return input.SourceData.GetVector3(poligonArray[index * stride + input.Offset]);
+		//	return input.SourceData.GetFloat3(poligonArray[index * stride + input.Offset]);
 		//}
 
 		private void CopySkin(Scene scene, XElement instance, MeshSkinAndMaterials sam)
@@ -283,21 +284,21 @@ namespace Toe.Utils.Mesh.Dae
 		//	if (meshInputs.Vertex != null)
 		//	{
 				
-		//		vertex.Position = GetVector3(index, meshInputs.Stride, meshInputs.Vertex, poligonArray);
+		//		vertex.Position = GetFloat3(index, meshInputs.Stride, meshInputs.Vertex, poligonArray);
 		//	}
 		//	if (meshInputs.Normal != null)
 		//	{
-		//		vertex.Normal = GetVector3(index, meshInputs.Stride, meshInputs.Normal, poligonArray);
+		//		vertex.Normal = GetFloat3(index, meshInputs.Stride, meshInputs.Normal, poligonArray);
 		//	}
 		//	if (meshInputs.TexCoord0 != null)
 		//	{
-		//		var vector3 = GetVector3(index, meshInputs.Stride, meshInputs.TexCoord0, poligonArray);
-		//		vertex.UV0 = new Vector3(vector3.X, 1.0f - vector3.Y, vector3.Z);
+		//		var vector3 = GetFloat3(index, meshInputs.Stride, meshInputs.TexCoord0, poligonArray);
+		//		vertex.UV0 = new Float3(vector3.X, 1.0f - vector3.Y, vector3.Z);
 		//	}
 		//	if (meshInputs.TexCoord1 != null)
 		//	{
-		//		var vector3 = GetVector3(index, meshInputs.Stride, meshInputs.TexCoord1, poligonArray);
-		//		vertex.UV1 = new Vector3(vector3.X, 1.0f - vector3.Y, vector3.Z);
+		//		var vector3 = GetFloat3(index, meshInputs.Stride, meshInputs.TexCoord1, poligonArray);
+		//		vertex.UV1 = new Float3(vector3.X, 1.0f - vector3.Y, vector3.Z);
 		//	}
 		//	if (meshInputs.Color != null)
 		//	{
@@ -578,34 +579,34 @@ namespace Toe.Utils.Mesh.Dae
 				bool swapY = (semantic == Streams.TexCoord);
 				if (source.GetStride() == 3)
 				{
-					var arrayMeshStream = new ArrayMeshStream<Vector3>(source.GetCount());
+					var arrayMeshStream = new ArrayMeshStream<Float3>(source.GetCount());
 					for (int i = 0; i < arrayMeshStream.Count; ++i)
 					{
 						var y = floatArray[i * 3 + 1];
 						if (swapY) y = 1.0f - y;
-						arrayMeshStream[i] = new Vector3(floatArray[i * 3 + 0], y, floatArray[i * 3 + 2]);
+						arrayMeshStream[i] = new Float3(floatArray[i * 3 + 0], y, floatArray[i * 3 + 2]);
 					}
 					return arrayMeshStream;
 				}
 				else if (source.GetStride() == 2)
 				{
-					var arrayMeshStream = new ArrayMeshStream<Vector2>(source.GetCount());
+					var arrayMeshStream = new ArrayMeshStream<Float2>(source.GetCount());
 					for (int i = 0; i < arrayMeshStream.Count; ++i)
 					{
 						var y = floatArray[i * 2 + 1];
 						if (swapY) y = 1.0f - y;
-						arrayMeshStream[i] = new Vector2(floatArray[i * 2 + 0], y);
+						arrayMeshStream[i] = new Float2(floatArray[i * 2 + 0], y);
 					}
 					return arrayMeshStream;
 				}
 				else if (source.GetStride() == 4)
 				{
-					var arrayMeshStream = new ArrayMeshStream<Vector4>(source.GetCount());
+					var arrayMeshStream = new ArrayMeshStream<Float4>(source.GetCount());
 					for (int i = 0; i < arrayMeshStream.Count; ++i)
 					{
 						var y = floatArray[i * 4 + 1];
 						if (swapY) y = 1.0f - y;
-						arrayMeshStream[i] = new Vector4(floatArray[i * 4 + 0], y, floatArray[i * 4 + 2], floatArray[i * 4 + 3]);
+						arrayMeshStream[i] = new Float4(floatArray[i * 4 + 0], y, floatArray[i * 4 + 2], floatArray[i * 4 + 3]);
 					}
 					return arrayMeshStream;
 				}
@@ -622,7 +623,8 @@ namespace Toe.Utils.Mesh.Dae
 			var n = new Node();
 			this.ParseIdAndName(node, n);
 			var mat = this.ParseMatrix(node.Element(this.schema.matrixName));
-			n.Position = new Vector3(mat.M14, mat.M24, mat.M34);
+			//TODO: check if transform is in there!
+			n.Position = new Float3(mat.M03, mat.M13, mat.M23);
 			//n.Rotation = 
 
 			var geo = node.Element(this.schema.instanceGeometryName);
@@ -649,12 +651,12 @@ namespace Toe.Utils.Mesh.Dae
 			parent.Nodes.Add(n);
 		}
 
-		private Matrix4 ParseMatrix(XElement element)
+		private Float4x4 ParseMatrix(XElement element)
 		{
-			if (element == null) return Matrix4.Identity;
+			if (element == null) return Float4x4.Identity;
 			var array = new float[16];
 			this.ParseFloatArray(element.Value, array);
-			return new Matrix4(array[0], array[1], array[2], array[3], 
+			return new Float4x4(array[0], array[1], array[2], array[3], 
 				array[4], array[5], array[6], array[7], 
 				array[8], array[9], array[10], array[11], 
 				array[12], array[13], array[14], array[15] );

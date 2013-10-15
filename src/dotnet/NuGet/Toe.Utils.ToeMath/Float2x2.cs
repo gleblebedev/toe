@@ -7,14 +7,24 @@ namespace Toe.Utils.ToeMath
 	[Serializable]
 #endif
 	[StructLayout(LayoutKind.Explicit)]
-	public struct Float2x2: IEquatable<Float2x2>
+	public partial struct Float2x2: IEquatable<Float2x2>
 	{
+
+		/// <summary>
+		/// Constructor of the Float2x2.
+		/// </summary>
+		public Float2x2(float m00, float m01, float m10, float m11 )
+		{
+			this.M00 = m00;
+			this.M01 = m01;
+			this.M10 = m10;
+			this.M11 = m11;
+		}
 
 		/// <summary>
 		/// Row of the Float2x2.
 		/// </summary>
-		[FieldOffset(0)]
-		public Float2 Row0;
+		public Float2 Row0 { get { return new Float2(this.M00, this.M01); } set {this.M00 = value.X;this.M01 = value.Y;} }
 
 		/// <summary>
 		/// Row 0, Column 0 of the Float2x2.
@@ -31,8 +41,7 @@ namespace Toe.Utils.ToeMath
 		/// <summary>
 		/// Row of the Float2x2.
 		/// </summary>
-		[FieldOffset(8)]
-		public Float2 Row1;
+		public Float2 Row1 { get { return new Float2(this.M10, this.M11); } set {this.M10 = value.X;this.M11 = value.Y;} }
 
 		/// <summary>
 		/// Row 1, Column 0 of the Float2x2.
@@ -45,6 +54,8 @@ namespace Toe.Utils.ToeMath
 		/// </summary>
 		[FieldOffset(12)]
 		public float M11;
+
+		public static readonly Float2x2 Identity = new Float2x2(1, 0, 0, 1);
 		/// <summary>
 		/// Returns the hash code for this instance.
 		/// </summary>

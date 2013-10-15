@@ -1,4 +1,4 @@
-using OpenTK;
+using Toe.Utils.ToeMath;
 
 namespace Toe.Utils.Mesh.Bsp
 {
@@ -12,12 +12,12 @@ namespace Toe.Utils.Mesh.Bsp
 
 		public float D;
 
-		public Vector3 Max;
+		public Float3 Max;
 
-		public Vector3 Min;
+		public Float3 Min;
 
 		// Plane normal
-		public Vector3 N;
+		public Float3 N;
 
 		// Plane D
 

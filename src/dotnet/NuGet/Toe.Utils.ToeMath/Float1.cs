@@ -7,7 +7,7 @@ namespace Toe.Utils.ToeMath
 	[Serializable]
 #endif
 	[StructLayout(LayoutKind.Explicit)]
-	public struct Float1: IEquatable<Float1>
+	public partial struct Float1: IEquatable<Float1>
 	{
 
 		/// <summary>
@@ -39,6 +39,74 @@ namespace Toe.Utils.ToeMath
 		public static readonly int SizeInBytes = Marshal.SizeOf(new Float1());
 
 		public float Length { get { return (float)Math.Sqrt((this.X * this.X)); } }
+
+		public float LengthSquared { get { return (this.X * this.X); } }
+		public void Normalize()
+		{
+			float scale = 1.0f/this.Length;
+			X *= scale;
+		}
+
+		public static Float1 Multiply (Float1 left, Float1 right)
+		{
+			return new Float1((left.X * right.X));
+		}
+
+		public static Float1 Multiply (Float1 left, float right)
+		{
+			return new Float1((left.X * right));
+		}
+
+		public static void Multiply (ref Float1 left, ref Float1 right, out Float1 result)
+		{
+			result = new Float1((left.X * right.X));
+		}
+
+		public static void Add (ref Float1 left, ref Float1 right, out Float1 result)
+		{
+			result = new Float1((left.X + right.X));
+		}
+
+		public static void Sub (ref Float1 left, ref Float1 right, out Float1 result)
+		{
+			result = new Float1((left.X - right.X));
+		}
+
+		public static void Multiply (ref Float1 left, float right, out Float1 result)
+		{
+			result = new Float1((left.X * right));
+		}
+
+		public static float Dot (Float1 left, Float1 right)
+		{
+			return (left.X * right.X);
+		}
+
+		public static float Dot (ref Float1 left, ref Float1 right)
+		{
+			return (left.X * right.X);
+		}
+		public static Float1 Normalize(Float1 vec)
+		{
+			float scale = 1.0f/vec.Length;
+			vec.X *= scale;
+			return vec;
+		}
+		public static Float1 operator -(Float1 left, Float1 right)
+		{
+			left.X -= right.X;
+			return left;
+		}
+		public static Float1 operator +(Float1 left, Float1 right)
+		{
+			left.X += right.X;
+			return left;
+		}
+		public static Float1 operator *(Float1 left, float scale)
+		{
+			left.X *= scale;
+			return left;
+		}
 		/// <summary>
 		/// Returns the hash code for this instance.
 		/// </summary>
@@ -90,29 +158,9 @@ namespace Toe.Utils.ToeMath
 	public static partial class MathHelper
 	{
 
-		public static Float1 Multiply (Float1 left, Float1 right)
-		{
-			return new Float1((left.X * right.X));
-		}
-
-		public static void Multiply (ref Float1 left, ref Float1 right, out Float1 result)
-		{
-			result = new Float1((left.X * right.X));
-		}
-
 		public static Float1 Scale (Float1 left, float scale)
 		{
 			return new Float1((left.X * scale));
-		}
-
-		public static float Dot (Float1 left, Float1 right)
-		{
-			return (left.X * right.X);
-		}
-
-		public static float Dot (ref Float1 left, ref Float1 right)
-		{
-			return (left.X * right.X);
 		}
 
 	}

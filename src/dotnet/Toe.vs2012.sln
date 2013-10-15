@@ -51,6 +51,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toe.Utils.Mesh.Dae.Tests", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toe.Utils.Mesh.Ase.Tests", "Toe.Utils.Mesh.Ase.Tests\Toe.Utils.Mesh.Ase.Tests.csproj", "{6E57D429-4FE2-4B06-980F-8279CA2ABAB4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toe.Utils.ToeMath.Tests", "NuGet\Toe.Utils.ToeMath.Tests\Toe.Utils.ToeMath.Tests.csproj", "{BC98C193-4C58-4983-882E-FD732CC64938}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -281,6 +283,16 @@ Global
 		{6E57D429-4FE2-4B06-980F-8279CA2ABAB4}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{6E57D429-4FE2-4B06-980F-8279CA2ABAB4}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{6E57D429-4FE2-4B06-980F-8279CA2ABAB4}.Release|x86.ActiveCfg = Release|Any CPU
+		{BC98C193-4C58-4983-882E-FD732CC64938}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC98C193-4C58-4983-882E-FD732CC64938}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BC98C193-4C58-4983-882E-FD732CC64938}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{BC98C193-4C58-4983-882E-FD732CC64938}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{BC98C193-4C58-4983-882E-FD732CC64938}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{BC98C193-4C58-4983-882E-FD732CC64938}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BC98C193-4C58-4983-882E-FD732CC64938}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BC98C193-4C58-4983-882E-FD732CC64938}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{BC98C193-4C58-4983-882E-FD732CC64938}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{BC98C193-4C58-4983-882E-FD732CC64938}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -289,5 +301,6 @@ Global
 		{29717F16-3219-4AE5-A7F4-618E65908DA7} = {F6A23CD6-BB95-4C80-B72F-46978E4071DE}
 		{829599E1-0183-4335-83C6-0A9C4C4BD496} = {37593ED1-3FFA-497D-842B-FD66FA39AB37}
 		{6E57D429-4FE2-4B06-980F-8279CA2ABAB4} = {37593ED1-3FFA-497D-842B-FD66FA39AB37}
+		{BC98C193-4C58-4983-882E-FD732CC64938} = {37593ED1-3FFA-497D-842B-FD66FA39AB37}
 	EndGlobalSection
 EndGlobal

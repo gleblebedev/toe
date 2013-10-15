@@ -1,7 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 
-using OpenTK;
+
+using Toe.Utils.ToeMath;
 
 namespace Toe.Utils.Mesh
 {
@@ -9,11 +10,11 @@ namespace Toe.Utils.Mesh
 	{
 		#region Constants and Fields
 
-		protected Vector3 boundingBoxMax;
+		protected Float3 boundingBoxMax;
 
-		protected Vector3 boundingBoxMin;
+		protected Float3 boundingBoxMin;
 
-		protected Vector3 boundingSphereCenter;
+		protected Float3 boundingSphereCenter;
 
 		protected float boundingSphereR;
 
@@ -29,7 +30,7 @@ namespace Toe.Utils.Mesh
 
 		#region Public Properties
 
-		public Vector3 BoundingBoxMax
+		public Float3 BoundingBoxMax
 		{
 			get
 			{
@@ -38,7 +39,7 @@ namespace Toe.Utils.Mesh
 			}
 		}
 
-		public Vector3 BoundingBoxMin
+		public Float3 BoundingBoxMin
 		{
 			get
 			{
@@ -47,7 +48,7 @@ namespace Toe.Utils.Mesh
 			}
 		}
 
-		public Vector3 BoundingSphereCenter
+		public Float3 BoundingSphereCenter
 		{
 			get
 			{

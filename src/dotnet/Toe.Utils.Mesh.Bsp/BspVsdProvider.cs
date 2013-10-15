@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-using OpenTK;
+using Toe.Utils.ToeMath;
 
 namespace Toe.Utils.Mesh.Bsp
 {
@@ -17,7 +17,7 @@ namespace Toe.Utils.Mesh.Bsp
 
 		private int[] cameraLeaf;
 
-		private Vector3 cameraPosition;
+		private Float3 cameraPosition;
 
 		private BspVsdTreeCluster[] clusters;
 
@@ -25,7 +25,7 @@ namespace Toe.Utils.Mesh.Bsp
 
 		#region Public Properties
 
-		public Vector3 CameraPosition
+		public Float3 CameraPosition
 		{
 			get
 			{
@@ -74,15 +74,14 @@ namespace Toe.Utils.Mesh.Bsp
 
 		#region Public Methods and Operators
 
-		public int GetLeaf(ref Vector3 pos, int model)
+		public int GetLeaf(ref Float3 pos, int model)
 		{
 			int nodeId = this.Models[model].RootNode;
 
 			float side;
 			for (; nodeId >= 0;)
 			{
-				Vector3.Dot(ref pos, ref this.Nodes[nodeId].N, out side);
-				side -= this.Nodes[nodeId].D;
+				side = Float3.Dot(ref pos, ref this.Nodes[nodeId].N) - this.Nodes[nodeId].D;
 				if (side > 0)
 				{
 					nodeId = this.Nodes[nodeId].PositiveNodeIndex;

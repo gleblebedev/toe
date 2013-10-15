@@ -7,7 +7,7 @@ namespace Toe.Utils.ToeMath
 	[Serializable]
 #endif
 	[StructLayout(LayoutKind.Explicit)]
-	public struct Float2: IEquatable<Float2>
+	public partial struct Float2: IEquatable<Float2>
 	{
 
 		/// <summary>
@@ -17,6 +17,15 @@ namespace Toe.Utils.ToeMath
 		{
 			this.X = scale;
 			this.Y = scale;
+		}
+
+		/// <summary>
+		/// Constructor of the Float2.
+		/// </summary>
+		public Float2(Float1 vec, float Y)
+		{
+			this.X = vec.X;
+			this.Y = Y;
 		}
 
 		/// <summary>
@@ -67,6 +76,79 @@ namespace Toe.Utils.ToeMath
 		public static readonly int SizeInBytes = Marshal.SizeOf(new Float2());
 
 		public float Length { get { return (float)Math.Sqrt((this.X * this.X) + (this.Y * this.Y)); } }
+
+		public float LengthSquared { get { return (this.X * this.X) + (this.Y * this.Y); } }
+		public void Normalize()
+		{
+			float scale = 1.0f/this.Length;
+			X *= scale;
+			Y *= scale;
+		}
+
+		public static Float2 Multiply (Float2 left, Float2 right)
+		{
+			return new Float2((left.X * right.X), (left.Y * right.Y));
+		}
+
+		public static Float2 Multiply (Float2 left, float right)
+		{
+			return new Float2((left.X * right), (left.Y * right));
+		}
+
+		public static void Multiply (ref Float2 left, ref Float2 right, out Float2 result)
+		{
+			result = new Float2((left.X * right.X), (left.Y * right.Y));
+		}
+
+		public static void Add (ref Float2 left, ref Float2 right, out Float2 result)
+		{
+			result = new Float2((left.X + right.X), (left.Y + right.Y));
+		}
+
+		public static void Sub (ref Float2 left, ref Float2 right, out Float2 result)
+		{
+			result = new Float2((left.X - right.X), (left.Y - right.Y));
+		}
+
+		public static void Multiply (ref Float2 left, float right, out Float2 result)
+		{
+			result = new Float2((left.X * right), (left.Y * right));
+		}
+
+		public static float Dot (Float2 left, Float2 right)
+		{
+			return (left.X * right.X) + (left.Y * right.Y);
+		}
+
+		public static float Dot (ref Float2 left, ref Float2 right)
+		{
+			return (left.X * right.X) + (left.Y * right.Y);
+		}
+		public static Float2 Normalize(Float2 vec)
+		{
+			float scale = 1.0f/vec.Length;
+			vec.X *= scale;
+			vec.Y *= scale;
+			return vec;
+		}
+		public static Float2 operator -(Float2 left, Float2 right)
+		{
+			left.X -= right.X;
+			left.Y -= right.Y;
+			return left;
+		}
+		public static Float2 operator +(Float2 left, Float2 right)
+		{
+			left.X += right.X;
+			left.Y += right.Y;
+			return left;
+		}
+		public static Float2 operator *(Float2 left, float scale)
+		{
+			left.X *= scale;
+			left.Y *= scale;
+			return left;
+		}
 		/// <summary>
 		/// Returns the hash code for this instance.
 		/// </summary>
@@ -119,29 +201,9 @@ namespace Toe.Utils.ToeMath
 	public static partial class MathHelper
 	{
 
-		public static Float2 Multiply (Float2 left, Float2 right)
-		{
-			return new Float2((left.X * right.X), (left.Y * right.Y));
-		}
-
-		public static void Multiply (ref Float2 left, ref Float2 right, out Float2 result)
-		{
-			result = new Float2((left.X * right.X), (left.Y * right.Y));
-		}
-
 		public static Float2 Scale (Float2 left, float scale)
 		{
 			return new Float2((left.X * scale), (left.Y * scale));
-		}
-
-		public static float Dot (Float2 left, Float2 right)
-		{
-			return (left.X * right.X) + (left.Y * right.Y);
-		}
-
-		public static float Dot (ref Float2 left, ref Float2 right)
-		{
-			return (left.X * right.X) + (left.Y * right.Y);
 		}
 
 	}

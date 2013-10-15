@@ -7,20 +7,29 @@ namespace Toe.Utils.ToeMath
 	[Serializable]
 #endif
 	[StructLayout(LayoutKind.Explicit)]
-	public struct Double1x1: IEquatable<Double1x1>
+	public partial struct Double1x1: IEquatable<Double1x1>
 	{
+
+		/// <summary>
+		/// Constructor of the Double1x1.
+		/// </summary>
+		public Double1x1(double m00 )
+		{
+			this.M00 = m00;
+		}
 
 		/// <summary>
 		/// Row of the Double1x1.
 		/// </summary>
-		[FieldOffset(0)]
-		public Double1 Row0;
+		public Double1 Row0 { get { return new Double1(this.M00); } set {this.M00 = value.X;} }
 
 		/// <summary>
 		/// Row 0, Column 0 of the Double1x1.
 		/// </summary>
 		[FieldOffset(0)]
 		public double M00;
+
+		public static readonly Double1x1 Identity = new Double1x1(1);
 		/// <summary>
 		/// Returns the hash code for this instance.
 		/// </summary>

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-using OpenTK;
+using Toe.Utils.ToeMath;
 
 namespace Toe.Utils.Mesh
 {
@@ -40,8 +40,8 @@ namespace Toe.Utils.Mesh
 		{
 			if (node.Mesh == null) return BoundingBox.Empty;
 			return new BoundingBox(
-				Vector3.Multiply(node.Mesh.BoundingBoxMin, node.Scale) + node.Position,
-				Vector3.Multiply(node.Mesh.BoundingBoxMax, node.Scale) + node.Position);
+				Float3.Multiply(node.Mesh.BoundingBoxMin, node.Scale) + node.Position,
+				Float3.Multiply(node.Mesh.BoundingBoxMax, node.Scale) + node.Position);
 
 		}
 		public static BoundingBox GetBoundingBox(this IScene scene)

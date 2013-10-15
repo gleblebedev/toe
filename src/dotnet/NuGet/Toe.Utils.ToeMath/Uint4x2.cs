@@ -7,14 +7,28 @@ namespace Toe.Utils.ToeMath
 	[Serializable]
 #endif
 	[StructLayout(LayoutKind.Explicit)]
-	public struct Uint4x2: IEquatable<Uint4x2>
+	public partial struct Uint4x2: IEquatable<Uint4x2>
 	{
+
+		/// <summary>
+		/// Constructor of the Uint4x2.
+		/// </summary>
+		public Uint4x2(uint m00, uint m01, uint m10, uint m11, uint m20, uint m21, uint m30, uint m31 )
+		{
+			this.M00 = m00;
+			this.M01 = m01;
+			this.M10 = m10;
+			this.M11 = m11;
+			this.M20 = m20;
+			this.M21 = m21;
+			this.M30 = m30;
+			this.M31 = m31;
+		}
 
 		/// <summary>
 		/// Row of the Uint4x2.
 		/// </summary>
-		[FieldOffset(0)]
-		public Uint2 Row0;
+		public Uint2 Row0 { get { return new Uint2(this.M00, this.M01); } set {this.M00 = value.X;this.M01 = value.Y;} }
 
 		/// <summary>
 		/// Row 0, Column 0 of the Uint4x2.
@@ -31,8 +45,7 @@ namespace Toe.Utils.ToeMath
 		/// <summary>
 		/// Row of the Uint4x2.
 		/// </summary>
-		[FieldOffset(8)]
-		public Uint2 Row1;
+		public Uint2 Row1 { get { return new Uint2(this.M10, this.M11); } set {this.M10 = value.X;this.M11 = value.Y;} }
 
 		/// <summary>
 		/// Row 1, Column 0 of the Uint4x2.
@@ -49,8 +62,7 @@ namespace Toe.Utils.ToeMath
 		/// <summary>
 		/// Row of the Uint4x2.
 		/// </summary>
-		[FieldOffset(16)]
-		public Uint2 Row2;
+		public Uint2 Row2 { get { return new Uint2(this.M20, this.M21); } set {this.M20 = value.X;this.M21 = value.Y;} }
 
 		/// <summary>
 		/// Row 2, Column 0 of the Uint4x2.
@@ -67,8 +79,7 @@ namespace Toe.Utils.ToeMath
 		/// <summary>
 		/// Row of the Uint4x2.
 		/// </summary>
-		[FieldOffset(24)]
-		public Uint2 Row3;
+		public Uint2 Row3 { get { return new Uint2(this.M30, this.M31); } set {this.M30 = value.X;this.M31 = value.Y;} }
 
 		/// <summary>
 		/// Row 3, Column 0 of the Uint4x2.
@@ -81,6 +92,8 @@ namespace Toe.Utils.ToeMath
 		/// </summary>
 		[FieldOffset(28)]
 		public uint M31;
+
+		public static readonly Uint4x2 Identity = new Uint4x2(1, 0, 0, 1, 0, 0, 0, 0);
 		/// <summary>
 		/// Returns the hash code for this instance.
 		/// </summary>

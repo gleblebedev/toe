@@ -7,14 +7,32 @@ namespace Toe.Utils.ToeMath
 	[Serializable]
 #endif
 	[StructLayout(LayoutKind.Explicit)]
-	public struct Double3x4: IEquatable<Double3x4>
+	public partial struct Double3x4: IEquatable<Double3x4>
 	{
+
+		/// <summary>
+		/// Constructor of the Double3x4.
+		/// </summary>
+		public Double3x4(double m00, double m01, double m02, double m03, double m10, double m11, double m12, double m13, double m20, double m21, double m22, double m23 )
+		{
+			this.M00 = m00;
+			this.M01 = m01;
+			this.M02 = m02;
+			this.M03 = m03;
+			this.M10 = m10;
+			this.M11 = m11;
+			this.M12 = m12;
+			this.M13 = m13;
+			this.M20 = m20;
+			this.M21 = m21;
+			this.M22 = m22;
+			this.M23 = m23;
+		}
 
 		/// <summary>
 		/// Row of the Double3x4.
 		/// </summary>
-		[FieldOffset(0)]
-		public Double4 Row0;
+		public Double4 Row0 { get { return new Double4(this.M00, this.M01, this.M02, this.M03); } set {this.M00 = value.X;this.M01 = value.Y;this.M02 = value.Z;this.M03 = value.W;} }
 
 		/// <summary>
 		/// Row 0, Column 0 of the Double3x4.
@@ -43,8 +61,7 @@ namespace Toe.Utils.ToeMath
 		/// <summary>
 		/// Row of the Double3x4.
 		/// </summary>
-		[FieldOffset(32)]
-		public Double4 Row1;
+		public Double4 Row1 { get { return new Double4(this.M10, this.M11, this.M12, this.M13); } set {this.M10 = value.X;this.M11 = value.Y;this.M12 = value.Z;this.M13 = value.W;} }
 
 		/// <summary>
 		/// Row 1, Column 0 of the Double3x4.
@@ -73,8 +90,7 @@ namespace Toe.Utils.ToeMath
 		/// <summary>
 		/// Row of the Double3x4.
 		/// </summary>
-		[FieldOffset(64)]
-		public Double4 Row2;
+		public Double4 Row2 { get { return new Double4(this.M20, this.M21, this.M22, this.M23); } set {this.M20 = value.X;this.M21 = value.Y;this.M22 = value.Z;this.M23 = value.W;} }
 
 		/// <summary>
 		/// Row 2, Column 0 of the Double3x4.
@@ -99,6 +115,8 @@ namespace Toe.Utils.ToeMath
 		/// </summary>
 		[FieldOffset(88)]
 		public double M23;
+
+		public static readonly Double3x4 Identity = new Double3x4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0);
 		/// <summary>
 		/// Returns the hash code for this instance.
 		/// </summary>

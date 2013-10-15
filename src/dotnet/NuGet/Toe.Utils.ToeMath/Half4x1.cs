@@ -7,14 +7,24 @@ namespace Toe.Utils.ToeMath
 	[Serializable]
 #endif
 	[StructLayout(LayoutKind.Explicit)]
-	public struct Half4x1: IEquatable<Half4x1>
+	public partial struct Half4x1: IEquatable<Half4x1>
 	{
+
+		/// <summary>
+		/// Constructor of the Half4x1.
+		/// </summary>
+		public Half4x1(half m00, half m10, half m20, half m30 )
+		{
+			this.M00 = m00;
+			this.M10 = m10;
+			this.M20 = m20;
+			this.M30 = m30;
+		}
 
 		/// <summary>
 		/// Row of the Half4x1.
 		/// </summary>
-		[FieldOffset(0)]
-		public Half1 Row0;
+		public Half1 Row0 { get { return new Half1(this.M00); } set {this.M00 = value.X;} }
 
 		/// <summary>
 		/// Row 0, Column 0 of the Half4x1.
@@ -25,8 +35,7 @@ namespace Toe.Utils.ToeMath
 		/// <summary>
 		/// Row of the Half4x1.
 		/// </summary>
-		[FieldOffset(2)]
-		public Half1 Row1;
+		public Half1 Row1 { get { return new Half1(this.M10); } set {this.M10 = value.X;} }
 
 		/// <summary>
 		/// Row 1, Column 0 of the Half4x1.
@@ -37,8 +46,7 @@ namespace Toe.Utils.ToeMath
 		/// <summary>
 		/// Row of the Half4x1.
 		/// </summary>
-		[FieldOffset(4)]
-		public Half1 Row2;
+		public Half1 Row2 { get { return new Half1(this.M20); } set {this.M20 = value.X;} }
 
 		/// <summary>
 		/// Row 2, Column 0 of the Half4x1.
@@ -49,14 +57,15 @@ namespace Toe.Utils.ToeMath
 		/// <summary>
 		/// Row of the Half4x1.
 		/// </summary>
-		[FieldOffset(6)]
-		public Half1 Row3;
+		public Half1 Row3 { get { return new Half1(this.M30); } set {this.M30 = value.X;} }
 
 		/// <summary>
 		/// Row 3, Column 0 of the Half4x1.
 		/// </summary>
 		[FieldOffset(6)]
 		public half M30;
+
+		public static readonly Half4x1 Identity = new Half4x1(1, 0, 0, 0);
 		/// <summary>
 		/// Returns the hash code for this instance.
 		/// </summary>

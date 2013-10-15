@@ -1,4 +1,4 @@
-using OpenTK;
+using Toe.Utils.ToeMath;
 
 namespace Toe.Utils.Mesh.Bsp.HL2
 {
@@ -8,7 +8,7 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 
 		public float dist; // distance from origin
 
-		public Vector3 normal; // normal vector
+		public Float3 normal; // normal vector
 
 		public int type; // plane axis identifier
 

@@ -7,7 +7,7 @@ namespace Toe.Utils.ToeMath
 	[Serializable]
 #endif
 	[StructLayout(LayoutKind.Explicit)]
-	public struct Half4: IEquatable<Half4>
+	public partial struct Half4: IEquatable<Half4>
 	{
 
 		/// <summary>
@@ -19,6 +19,17 @@ namespace Toe.Utils.ToeMath
 			this.Y = scale;
 			this.Z = scale;
 			this.W = scale;
+		}
+
+		/// <summary>
+		/// Constructor of the Half4.
+		/// </summary>
+		public Half4(Half3 vec, half W)
+		{
+			this.X = vec.X;
+			this.Y = vec.Y;
+			this.Z = vec.Z;
+			this.W = W;
 		}
 
 		/// <summary>
@@ -151,6 +162,89 @@ namespace Toe.Utils.ToeMath
 		public static readonly int SizeInBytes = Marshal.SizeOf(new Half4());
 
 		public half Length { get { return (half)Math.Sqrt((this.X * this.X) + (this.Y * this.Y) + (this.Z * this.Z) + (this.W * this.W)); } }
+
+		public half LengthSquared { get { return (this.X * this.X) + (this.Y * this.Y) + (this.Z * this.Z) + (this.W * this.W); } }
+		public void Normalize()
+		{
+			half len = this.Length;
+			X /= len;
+			Y /= len;
+			Z /= len;
+			W /= len;
+		}
+
+		public static Half4 Multiply (Half4 left, Half4 right)
+		{
+			return new Half4((left.X * right.X), (left.Y * right.Y), (left.Z * right.Z), (left.W * right.W));
+		}
+
+		public static Half4 Multiply (Half4 left, half right)
+		{
+			return new Half4((left.X * right), (left.Y * right), (left.Z * right), (left.W * right));
+		}
+
+		public static void Multiply (ref Half4 left, ref Half4 right, out Half4 result)
+		{
+			result = new Half4((left.X * right.X), (left.Y * right.Y), (left.Z * right.Z), (left.W * right.W));
+		}
+
+		public static void Add (ref Half4 left, ref Half4 right, out Half4 result)
+		{
+			result = new Half4((left.X + right.X), (left.Y + right.Y), (left.Z + right.Z), (left.W + right.W));
+		}
+
+		public static void Sub (ref Half4 left, ref Half4 right, out Half4 result)
+		{
+			result = new Half4((left.X - right.X), (left.Y - right.Y), (left.Z - right.Z), (left.W - right.W));
+		}
+
+		public static void Multiply (ref Half4 left, half right, out Half4 result)
+		{
+			result = new Half4((left.X * right), (left.Y * right), (left.Z * right), (left.W * right));
+		}
+
+		public static half Dot (Half4 left, Half4 right)
+		{
+			return (left.X * right.X) + (left.Y * right.Y) + (left.Z * right.Z) + (left.W * right.W);
+		}
+
+		public static half Dot (ref Half4 left, ref Half4 right)
+		{
+			return (left.X * right.X) + (left.Y * right.Y) + (left.Z * right.Z) + (left.W * right.W);
+		}
+		public static Half4 Normalize(Half4 vec)
+		{
+			half len = vec.Length;
+			vec.X /= len;
+			vec.Y /= len;
+			vec.Z /= len;
+			vec.W /= len;
+			return vec;
+		}
+		public static Half4 operator -(Half4 left, Half4 right)
+		{
+			left.X -= right.X;
+			left.Y -= right.Y;
+			left.Z -= right.Z;
+			left.W -= right.W;
+			return left;
+		}
+		public static Half4 operator +(Half4 left, Half4 right)
+		{
+			left.X += right.X;
+			left.Y += right.Y;
+			left.Z += right.Z;
+			left.W += right.W;
+			return left;
+		}
+		public static Half4 operator *(Half4 left, half scale)
+		{
+			left.X *= scale;
+			left.Y *= scale;
+			left.Z *= scale;
+			left.W *= scale;
+			return left;
+		}
 		/// <summary>
 		/// Returns the hash code for this instance.
 		/// </summary>
@@ -205,29 +299,9 @@ namespace Toe.Utils.ToeMath
 	public static partial class MathHelper
 	{
 
-		public static Half4 Multiply (Half4 left, Half4 right)
-		{
-			return new Half4((left.X * right.X), (left.Y * right.Y), (left.Z * right.Z), (left.W * right.W));
-		}
-
-		public static void Multiply (ref Half4 left, ref Half4 right, out Half4 result)
-		{
-			result = new Half4((left.X * right.X), (left.Y * right.Y), (left.Z * right.Z), (left.W * right.W));
-		}
-
 		public static Half4 Scale (Half4 left, half scale)
 		{
 			return new Half4((left.X * scale), (left.Y * scale), (left.Z * scale), (left.W * scale));
-		}
-
-		public static half Dot (Half4 left, Half4 right)
-		{
-			return (left.X * right.X) + (left.Y * right.Y) + (left.Z * right.Z) + (left.W * right.W);
-		}
-
-		public static half Dot (ref Half4 left, ref Half4 right)
-		{
-			return (left.X * right.X) + (left.Y * right.Y) + (left.Z * right.Z) + (left.W * right.W);
 		}
 
 	}

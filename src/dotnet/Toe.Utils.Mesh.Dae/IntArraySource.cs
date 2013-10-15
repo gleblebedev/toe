@@ -3,8 +3,6 @@ using System.Drawing;
 using System.Globalization;
 using System.Xml.Linq;
 
-using OpenTK;
-
 namespace Toe.Utils.Mesh.Dae
 {
 	public class IntArraySource : BaseArraySource<int>, ISource

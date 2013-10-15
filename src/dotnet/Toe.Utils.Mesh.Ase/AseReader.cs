@@ -4,7 +4,8 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 
-using OpenTK;
+
+using Toe.Utils.ToeMath;
 
 namespace Toe.Utils.Mesh.Ase
 {
@@ -49,40 +50,40 @@ namespace Toe.Utils.Mesh.Ase
 			return fromArgb;
 		}
 
-		private void BuildTangent(ref Vertex p0, ref Vertex p1, ref Vertex p2)
-		{
-			var v1x = p1.Position.X - p0.Position.X;
-			var v1y = p1.Position.Y - p0.Position.Y;
-			var v1z = p1.Position.Z - p0.Position.Z;
+		//private void BuildTangent(ref Vertex p0, ref Vertex p1, ref Vertex p2)
+		//{
+		//	var v1x = p1.Position.X - p0.Position.X;
+		//	var v1y = p1.Position.Y - p0.Position.Y;
+		//	var v1z = p1.Position.Z - p0.Position.Z;
 
-			var v2x = p2.Position.X - p0.Position.X;
-			var v2y = p2.Position.Y - p0.Position.Y;
-			var v2z = p2.Position.Z - p0.Position.Z;
+		//	var v2x = p2.Position.X - p0.Position.X;
+		//	var v2y = p2.Position.Y - p0.Position.Y;
+		//	var v2z = p2.Position.Z - p0.Position.Z;
 
-			var u1x = p1.UV0.X - p0.UV0.X;
-			var u1y = p1.UV0.Y - p0.UV0.Y;
+		//	var u1x = p1.UV0.X - p0.UV0.X;
+		//	var u1y = p1.UV0.Y - p0.UV0.Y;
 
-			var u2x = p2.UV0.X - p0.UV0.X;
-			var u2y = p2.UV0.Y - p0.UV0.Y;
+		//	var u2x = p2.UV0.X - p0.UV0.X;
+		//	var u2y = p2.UV0.Y - p0.UV0.Y;
 
-			var det = u1x * u2y - u2x * u1y;
-			if (det == 0)
-			{
-				det = 1;
-			}
-			det = 1 / det;
+		//	var det = u1x * u2y - u2x * u1y;
+		//	if (det == 0)
+		//	{
+		//		det = 1;
+		//	}
+		//	det = 1 / det;
 
-			p0.Tangent =
-				p1.Tangent =
-				p2.Tangent =
-				Vector3.Normalize(
-					new Vector3((v1x * u2y - v2x * u1y) * det, (v1y * u2y - v2y * u1y) * det, (v1z * u2y - v2z * u1y) * det));
-			p0.Binormal =
-				p1.Binormal =
-				p2.Binormal =
-				Vector3.Normalize(
-					new Vector3((-v1x * u2x + v2x * u1x) * det, (-v1y * u2x + v2y * u1x) * det, (-v1z * u2x + v2z * u1x) * det));
-		}
+		//	p0.Tangent =
+		//		p1.Tangent =
+		//		p2.Tangent =
+		//		Float3.Normalize(
+		//			new Float3((v1x * u2y - v2x * u1y) * det, (v1y * u2y - v2y * u1y) * det, (v1z * u2y - v2z * u1y) * det));
+		//	p0.Binormal =
+		//		p1.Binormal =
+		//		p2.Binormal =
+		//		Float3.Normalize(
+		//			new Float3((-v1x * u2x + v2x * u1x) * det, (-v1y * u2x + v2y * u1x) * det, (-v1z * u2x + v2z * u1x) * det));
+		//}
 
 		private byte ClampCol(float a)
 		{
@@ -135,7 +136,7 @@ namespace Toe.Utils.Mesh.Ase
 					var y = parser.ConsumeFloat();
 					var z = parser.ConsumeFloat();
 					normals[faceIndex].A.Normal =
-						normals[faceIndex].B.Normal = normals[faceIndex].C.Normal = normals[faceIndex].Normal = new Vector3(x, y, z);
+						normals[faceIndex].B.Normal = normals[faceIndex].C.Normal = normals[faceIndex].Normal = new Float3(x, y, z);
 					faceVertexIndex = 0;
 					continue;
 				}
@@ -145,7 +146,7 @@ namespace Toe.Utils.Mesh.Ase
 					var x = parser.ConsumeFloat();
 					var y = parser.ConsumeFloat();
 					var z = parser.ConsumeFloat();
-					Vector3 v = new Vector3(x, y, z);
+					Float3 v = new Float3(x, y, z);
 					switch (faceVertexIndex)
 					{
 						case 0:
@@ -363,10 +364,10 @@ namespace Toe.Utils.Mesh.Ase
 			node.Mesh = mesh;
 			scene.Geometries.Add(mesh);
 
-			ArrayMeshStream<Vector3> vertices = null;
-			ListMeshStream<Vector3> normalStream = null;
+			ArrayMeshStream<Float3> vertices = null;
+			ListMeshStream<Float3> normalStream = null;
 			FaceNormal[] normals = null;
-			ArrayMeshStream<Vector3> tvertices = null;
+			ArrayMeshStream<Float3> tvertices = null;
 			ArrayMeshStream<Color> cols = null;
 			AseFace[] faces = null;
 			AseTFace[] tfaces = null;
@@ -387,7 +388,7 @@ namespace Toe.Utils.Mesh.Ase
 				}
 				if (0 == string.Compare(attr, "*MESH_NUMVERTEX", StringComparison.InvariantCultureIgnoreCase))
 				{
-					vertices = new ArrayMeshStream<Vector3>(parser.ConsumeInt());
+					vertices = new ArrayMeshStream<Float3>(parser.ConsumeInt());
 					mesh.SetStream(Streams.Position, 0, vertices);
 					continue;
 				}
@@ -399,7 +400,7 @@ namespace Toe.Utils.Mesh.Ase
 				
 				if (0 == string.Compare(attr, "*MESH_NUMTVERTEX", StringComparison.InvariantCultureIgnoreCase))
 				{
-					tvertices = new ArrayMeshStream<Vector3>(parser.ConsumeInt());
+					tvertices = new ArrayMeshStream<Float3>(parser.ConsumeInt());
 					mesh.SetStream(Streams.TexCoord, 0, tvertices);
 					continue;
 				}
@@ -467,7 +468,7 @@ namespace Toe.Utils.Mesh.Ase
 			ListMeshStream<int> normalIndices = null;
 			if (normals != null)
 			{
-				normalStream = new ListMeshStream<Vector3>(faces.Length * 3);
+				normalStream = new ListMeshStream<Float3>(faces.Length * 3);
 				mesh.SetStream(Streams.Normal, 0, normalStream);
 				normalIndices = new ListMeshStream<int>(faces.Length * 3);
 				submesh.SetIndexStream(Streams.Normal, 0, normalIndices);
@@ -546,8 +547,8 @@ namespace Toe.Utils.Mesh.Ase
 
 		}
 
-		private static Vertex BuildVertex(Vector3[] vertices, int index0, FaceNormal[] normals,
-		int faceIndex, int vertexAtFace, AseTFace[] tfaces, Color[] c, Vector3[] tvertices, Tuple<int, int, int>[] colFaces, Vector3 uv)
+		private static Vertex BuildVertex(Float3[] vertices, int index0, FaceNormal[] normals,
+		int faceIndex, int vertexAtFace, AseTFace[] tfaces, Color[] c, Float3[] tvertices, Tuple<int, int, int>[] colFaces, Float3 uv)
 		{
 			Vertex v = new Vertex { Position = vertices[index0] };
 			if (normals != null)
@@ -573,7 +574,7 @@ namespace Toe.Utils.Mesh.Ase
 			{
 				v.Color = Color.FromArgb(255, 255, 255, 255);
 			}
-			v.UV1 = v.UV0 = new Vector3(uv.X, 1.0f - uv.Y, uv.Z);
+			v.UV1 = v.UV0 = new Float3(uv.X, 1.0f - uv.Y, uv.Z);
 			return v;
 		}
 
@@ -1064,7 +1065,7 @@ namespace Toe.Utils.Mesh.Ase
 			}
 		}
 
-		private void ParseTVertList(AseParser parser, IList<Vector3> vertices)
+		private void ParseTVertList(AseParser parser, IList<Float3> vertices)
 		{
 			parser.Consume("{");
 			for (;;)
@@ -1081,14 +1082,14 @@ namespace Toe.Utils.Mesh.Ase
 					var y = 1.0f - parser.ConsumeFloat();
 					var z = parser.ConsumeFloat();
 
-					vertices[index] = new Vector3(x, y, z);
+					vertices[index] = new Float3(x, y, z);
 					continue;
 				}
 				parser.UnknownLexemError();
 			}
 		}
 
-		private void ParseVertexList(AseParser parser, IList<Vector3> vertices)
+		private void ParseVertexList(AseParser parser, IList<Float3> vertices)
 		{
 			parser.Consume("{");
 			for (;;)
@@ -1104,7 +1105,7 @@ namespace Toe.Utils.Mesh.Ase
 					var x = parser.ConsumeFloat();
 					var y = parser.ConsumeFloat();
 					var z = parser.ConsumeFloat();
-					vertices[index] = new Vector3(x, y, z);
+					vertices[index] = new Float3(x, y, z);
 					continue;
 				}
 				parser.UnknownLexemError();
@@ -1151,13 +1152,13 @@ namespace Toe.Utils.Mesh.Ase
 
 			internal FaceVertexNormal C;
 
-			internal Vector3 Normal;
+			internal Float3 Normal;
 
 			#endregion
 
 			#region Public Methods and Operators
 
-			public Vector3 GetNormal(int index0)
+			public Float3 GetNormal(int index0)
 			{
 				if (index0 == this.A.Index)
 				{
@@ -1183,7 +1184,7 @@ namespace Toe.Utils.Mesh.Ase
 
 			internal int Index;
 
-			internal Vector3 Normal;
+			internal Float3 Normal;
 
 			#endregion
 		}

@@ -1,4 +1,4 @@
-using OpenTK;
+using Toe.Utils.ToeMath;
 
 namespace Toe.Utils.Mesh.Bsp
 {
@@ -10,9 +10,9 @@ namespace Toe.Utils.Mesh.Bsp
 
 		public int Cluster;
 
-		public Vector3 Max;
+		public Float3 Max;
 
-		public Vector3 Min;
+		public Float3 Min;
 
 		#endregion
 	}

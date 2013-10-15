@@ -7,7 +7,7 @@ namespace Toe.Utils.ToeMath
 	[Serializable]
 #endif
 	[StructLayout(LayoutKind.Explicit)]
-	public struct Float4: IEquatable<Float4>
+	public partial struct Float4: IEquatable<Float4>
 	{
 
 		/// <summary>
@@ -19,6 +19,17 @@ namespace Toe.Utils.ToeMath
 			this.Y = scale;
 			this.Z = scale;
 			this.W = scale;
+		}
+
+		/// <summary>
+		/// Constructor of the Float4.
+		/// </summary>
+		public Float4(Float3 vec, float W)
+		{
+			this.X = vec.X;
+			this.Y = vec.Y;
+			this.Z = vec.Z;
+			this.W = W;
 		}
 
 		/// <summary>
@@ -151,6 +162,89 @@ namespace Toe.Utils.ToeMath
 		public static readonly int SizeInBytes = Marshal.SizeOf(new Float4());
 
 		public float Length { get { return (float)Math.Sqrt((this.X * this.X) + (this.Y * this.Y) + (this.Z * this.Z) + (this.W * this.W)); } }
+
+		public float LengthSquared { get { return (this.X * this.X) + (this.Y * this.Y) + (this.Z * this.Z) + (this.W * this.W); } }
+		public void Normalize()
+		{
+			float scale = 1.0f/this.Length;
+			X *= scale;
+			Y *= scale;
+			Z *= scale;
+			W *= scale;
+		}
+
+		public static Float4 Multiply (Float4 left, Float4 right)
+		{
+			return new Float4((left.X * right.X), (left.Y * right.Y), (left.Z * right.Z), (left.W * right.W));
+		}
+
+		public static Float4 Multiply (Float4 left, float right)
+		{
+			return new Float4((left.X * right), (left.Y * right), (left.Z * right), (left.W * right));
+		}
+
+		public static void Multiply (ref Float4 left, ref Float4 right, out Float4 result)
+		{
+			result = new Float4((left.X * right.X), (left.Y * right.Y), (left.Z * right.Z), (left.W * right.W));
+		}
+
+		public static void Add (ref Float4 left, ref Float4 right, out Float4 result)
+		{
+			result = new Float4((left.X + right.X), (left.Y + right.Y), (left.Z + right.Z), (left.W + right.W));
+		}
+
+		public static void Sub (ref Float4 left, ref Float4 right, out Float4 result)
+		{
+			result = new Float4((left.X - right.X), (left.Y - right.Y), (left.Z - right.Z), (left.W - right.W));
+		}
+
+		public static void Multiply (ref Float4 left, float right, out Float4 result)
+		{
+			result = new Float4((left.X * right), (left.Y * right), (left.Z * right), (left.W * right));
+		}
+
+		public static float Dot (Float4 left, Float4 right)
+		{
+			return (left.X * right.X) + (left.Y * right.Y) + (left.Z * right.Z) + (left.W * right.W);
+		}
+
+		public static float Dot (ref Float4 left, ref Float4 right)
+		{
+			return (left.X * right.X) + (left.Y * right.Y) + (left.Z * right.Z) + (left.W * right.W);
+		}
+		public static Float4 Normalize(Float4 vec)
+		{
+			float scale = 1.0f/vec.Length;
+			vec.X *= scale;
+			vec.Y *= scale;
+			vec.Z *= scale;
+			vec.W *= scale;
+			return vec;
+		}
+		public static Float4 operator -(Float4 left, Float4 right)
+		{
+			left.X -= right.X;
+			left.Y -= right.Y;
+			left.Z -= right.Z;
+			left.W -= right.W;
+			return left;
+		}
+		public static Float4 operator +(Float4 left, Float4 right)
+		{
+			left.X += right.X;
+			left.Y += right.Y;
+			left.Z += right.Z;
+			left.W += right.W;
+			return left;
+		}
+		public static Float4 operator *(Float4 left, float scale)
+		{
+			left.X *= scale;
+			left.Y *= scale;
+			left.Z *= scale;
+			left.W *= scale;
+			return left;
+		}
 		/// <summary>
 		/// Returns the hash code for this instance.
 		/// </summary>
@@ -205,29 +299,9 @@ namespace Toe.Utils.ToeMath
 	public static partial class MathHelper
 	{
 
-		public static Float4 Multiply (Float4 left, Float4 right)
-		{
-			return new Float4((left.X * right.X), (left.Y * right.Y), (left.Z * right.Z), (left.W * right.W));
-		}
-
-		public static void Multiply (ref Float4 left, ref Float4 right, out Float4 result)
-		{
-			result = new Float4((left.X * right.X), (left.Y * right.Y), (left.Z * right.Z), (left.W * right.W));
-		}
-
 		public static Float4 Scale (Float4 left, float scale)
 		{
 			return new Float4((left.X * scale), (left.Y * scale), (left.Z * scale), (left.W * scale));
-		}
-
-		public static float Dot (Float4 left, Float4 right)
-		{
-			return (left.X * right.X) + (left.Y * right.Y) + (left.Z * right.Z) + (left.W * right.W);
-		}
-
-		public static float Dot (ref Float4 left, ref Float4 right)
-		{
-			return (left.X * right.X) + (left.Y * right.Y) + (left.Z * right.Z) + (left.W * right.W);
 		}
 
 	}

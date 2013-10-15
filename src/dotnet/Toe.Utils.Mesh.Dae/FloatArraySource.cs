@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Globalization;
 using System.Xml.Linq;
 
-using OpenTK;
+using Toe.Utils.ToeMath;
 
 namespace Toe.Utils.Mesh.Dae
 {
@@ -46,38 +46,38 @@ namespace Toe.Utils.Mesh.Dae
 				this.ClampColor(index0 + 3), this.ClampColor(index0 + 0), this.ClampColor(index0 + 1), this.ClampColor(index0 + 2));
 		}
 
-		public Vector3 GetVector3(int index)
+		public Float3 GetFloat3(int index)
 		{
 			var s = this.accessor.Stride;
 			var index0 = index * s;
 			if (s <= 1)
 			{
-				return new Vector3(this.data[index0 + 0], 0, 0);
+				return new Float3(this.data[index0 + 0], 0, 0);
 			}
 			if (s <= 2)
 			{
-				return new Vector3(this.data[index0 + 0], this.data[index0 + 1], 0);
+				return new Float3(this.data[index0 + 0], this.data[index0 + 1], 0);
 			}
-			return new Vector3(this.data[index0 + 0], this.data[index0 + 1], this.data[index0 + 2]);
+			return new Float3(this.data[index0 + 0], this.data[index0 + 1], this.data[index0 + 2]);
 		}
 
-		public Vector4 GetVector4(int index)
+		public Float4 GetVector4(int index)
 		{
 			var s = this.accessor.Stride;
 			var index0 = index * s;
 			if (s <= 1)
 			{
-				return new Vector4(this.data[index0 + 0], 0, 0, 0);
+				return new Float4(this.data[index0 + 0], 0, 0, 0);
 			}
 			if (s <= 2)
 			{
-				return new Vector4(this.data[index0 + 0], this.data[index0 + 1], 0, 0);
+				return new Float4(this.data[index0 + 0], this.data[index0 + 1], 0, 0);
 			}
 			if (s <= 3)
 			{
-				return new Vector4(this.data[index0 + 0], this.data[index0 + 1], this.data[index0 + 2], 0);
+				return new Float4(this.data[index0 + 0], this.data[index0 + 1], this.data[index0 + 2], 0);
 			}
-			return new Vector4(this.data[index0 + 0], this.data[index0 + 1], this.data[index0 + 2], this.data[index0 + 3]);
+			return new Float4(this.data[index0 + 0], this.data[index0 + 1], this.data[index0 + 2], this.data[index0 + 3]);
 		}
 
 		#endregion

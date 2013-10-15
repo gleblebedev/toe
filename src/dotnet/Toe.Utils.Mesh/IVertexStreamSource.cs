@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 
-using OpenTK;
-
 namespace Toe.Utils.Mesh
 {
 	/// <summary>

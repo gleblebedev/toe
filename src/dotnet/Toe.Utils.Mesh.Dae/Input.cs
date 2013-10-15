@@ -4,7 +4,6 @@ using System.Globalization;
 using System.Linq;
 using System.Xml.Linq;
 
-using OpenTK;
 
 namespace Toe.Utils.Mesh.Dae
 {
@@ -14,7 +13,7 @@ namespace Toe.Utils.Mesh.Dae
 
 		//Color GetColor(int index);
 
-		//Vector3 GetVector3(int index);
+		//Float3 GetFloat3(int index);
 
 
 		Type GetSourceType();

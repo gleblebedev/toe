@@ -7,7 +7,7 @@ namespace Toe.Utils.ToeMath
 	[Serializable]
 #endif
 	[StructLayout(LayoutKind.Explicit)]
-	public struct Int4: IEquatable<Int4>
+	public partial struct Int4: IEquatable<Int4>
 	{
 
 		/// <summary>
@@ -19,6 +19,17 @@ namespace Toe.Utils.ToeMath
 			this.Y = scale;
 			this.Z = scale;
 			this.W = scale;
+		}
+
+		/// <summary>
+		/// Constructor of the Int4.
+		/// </summary>
+		public Int4(Int3 vec, int W)
+		{
+			this.X = vec.X;
+			this.Y = vec.Y;
+			this.Z = vec.Z;
+			this.W = W;
 		}
 
 		/// <summary>
@@ -151,6 +162,89 @@ namespace Toe.Utils.ToeMath
 		public static readonly int SizeInBytes = Marshal.SizeOf(new Int4());
 
 		public int Length { get { return (int)Math.Sqrt((this.X * this.X) + (this.Y * this.Y) + (this.Z * this.Z) + (this.W * this.W)); } }
+
+		public int LengthSquared { get { return (this.X * this.X) + (this.Y * this.Y) + (this.Z * this.Z) + (this.W * this.W); } }
+		public void Normalize()
+		{
+			int len = this.Length;
+			X /= len;
+			Y /= len;
+			Z /= len;
+			W /= len;
+		}
+
+		public static Int4 Multiply (Int4 left, Int4 right)
+		{
+			return new Int4((left.X * right.X), (left.Y * right.Y), (left.Z * right.Z), (left.W * right.W));
+		}
+
+		public static Int4 Multiply (Int4 left, int right)
+		{
+			return new Int4((left.X * right), (left.Y * right), (left.Z * right), (left.W * right));
+		}
+
+		public static void Multiply (ref Int4 left, ref Int4 right, out Int4 result)
+		{
+			result = new Int4((left.X * right.X), (left.Y * right.Y), (left.Z * right.Z), (left.W * right.W));
+		}
+
+		public static void Add (ref Int4 left, ref Int4 right, out Int4 result)
+		{
+			result = new Int4((left.X + right.X), (left.Y + right.Y), (left.Z + right.Z), (left.W + right.W));
+		}
+
+		public static void Sub (ref Int4 left, ref Int4 right, out Int4 result)
+		{
+			result = new Int4((left.X - right.X), (left.Y - right.Y), (left.Z - right.Z), (left.W - right.W));
+		}
+
+		public static void Multiply (ref Int4 left, int right, out Int4 result)
+		{
+			result = new Int4((left.X * right), (left.Y * right), (left.Z * right), (left.W * right));
+		}
+
+		public static int Dot (Int4 left, Int4 right)
+		{
+			return (left.X * right.X) + (left.Y * right.Y) + (left.Z * right.Z) + (left.W * right.W);
+		}
+
+		public static int Dot (ref Int4 left, ref Int4 right)
+		{
+			return (left.X * right.X) + (left.Y * right.Y) + (left.Z * right.Z) + (left.W * right.W);
+		}
+		public static Int4 Normalize(Int4 vec)
+		{
+			int len = vec.Length;
+			vec.X /= len;
+			vec.Y /= len;
+			vec.Z /= len;
+			vec.W /= len;
+			return vec;
+		}
+		public static Int4 operator -(Int4 left, Int4 right)
+		{
+			left.X -= right.X;
+			left.Y -= right.Y;
+			left.Z -= right.Z;
+			left.W -= right.W;
+			return left;
+		}
+		public static Int4 operator +(Int4 left, Int4 right)
+		{
+			left.X += right.X;
+			left.Y += right.Y;
+			left.Z += right.Z;
+			left.W += right.W;
+			return left;
+		}
+		public static Int4 operator *(Int4 left, int scale)
+		{
+			left.X *= scale;
+			left.Y *= scale;
+			left.Z *= scale;
+			left.W *= scale;
+			return left;
+		}
 		/// <summary>
 		/// Returns the hash code for this instance.
 		/// </summary>
@@ -205,29 +299,9 @@ namespace Toe.Utils.ToeMath
 	public static partial class MathHelper
 	{
 
-		public static Int4 Multiply (Int4 left, Int4 right)
-		{
-			return new Int4((left.X * right.X), (left.Y * right.Y), (left.Z * right.Z), (left.W * right.W));
-		}
-
-		public static void Multiply (ref Int4 left, ref Int4 right, out Int4 result)
-		{
-			result = new Int4((left.X * right.X), (left.Y * right.Y), (left.Z * right.Z), (left.W * right.W));
-		}
-
 		public static Int4 Scale (Int4 left, int scale)
 		{
 			return new Int4((left.X * scale), (left.Y * scale), (left.Z * scale), (left.W * scale));
-		}
-
-		public static int Dot (Int4 left, Int4 right)
-		{
-			return (left.X * right.X) + (left.Y * right.Y) + (left.Z * right.Z) + (left.W * right.W);
-		}
-
-		public static int Dot (ref Int4 left, ref Int4 right)
-		{
-			return (left.X * right.X) + (left.Y * right.Y) + (left.Z * right.Z) + (left.W * right.W);
 		}
 
 	}

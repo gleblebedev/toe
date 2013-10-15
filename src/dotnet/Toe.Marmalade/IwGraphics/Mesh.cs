@@ -571,61 +571,7 @@ namespace Toe.Marmalade.IwGraphics
 			throw new IndexOutOfRangeException();
 		}
 
-		public void VisitBinormals(Vector3VisitorCallback callback)
-		{
-			foreach (var surface in this.surfaces)
-			{
-				var gl = surface as ModelBlockGLPrimBase;
-				if (gl != null)
-				{
-					foreach (var i in gl.Indices)
-					{
-						var v = this.binormals[i];
-						callback(ref v);
-					}
-				}
-				else
-				{
-					var prim = surface as ModelBlockPrimBase;
-					if (prim != null)
-					{
-						foreach (var i in prim.Indices)
-						{
-							var v = this.binormals[i.Binormal];
-							callback(ref v);
-						}
-					}
-				}
-			}
-		}
-
-		public void VisitTangents(Vector3VisitorCallback callback)
-		{
-			foreach (var surface in this.surfaces)
-			{
-				var gl = surface as ModelBlockGLPrimBase;
-				if (gl != null)
-				{
-					foreach (var i in gl.Indices)
-					{
-						var v = this.tangents[i];
-						callback(ref v);
-					}
-				}
-				else
-				{
-					var prim = surface as ModelBlockPrimBase;
-					if (prim != null)
-					{
-						foreach (var i in prim.Indices)
-						{
-							var v = this.tangents[i.Tangent];
-							callback(ref v);
-						}
-					}
-				}
-			}
-		}
+	
 
 		#endregion
 	}

@@ -7,7 +7,7 @@ namespace Toe.Utils.ToeMath
 	[Serializable]
 #endif
 	[StructLayout(LayoutKind.Explicit)]
-	public struct Uint1: IEquatable<Uint1>
+	public partial struct Uint1: IEquatable<Uint1>
 	{
 
 		/// <summary>
@@ -39,6 +39,74 @@ namespace Toe.Utils.ToeMath
 		public static readonly int SizeInBytes = Marshal.SizeOf(new Uint1());
 
 		public uint Length { get { return (uint)Math.Sqrt((this.X * this.X)); } }
+
+		public uint LengthSquared { get { return (this.X * this.X); } }
+		public void Normalize()
+		{
+			uint len = this.Length;
+			X /= len;
+		}
+
+		public static Uint1 Multiply (Uint1 left, Uint1 right)
+		{
+			return new Uint1((left.X * right.X));
+		}
+
+		public static Uint1 Multiply (Uint1 left, uint right)
+		{
+			return new Uint1((left.X * right));
+		}
+
+		public static void Multiply (ref Uint1 left, ref Uint1 right, out Uint1 result)
+		{
+			result = new Uint1((left.X * right.X));
+		}
+
+		public static void Add (ref Uint1 left, ref Uint1 right, out Uint1 result)
+		{
+			result = new Uint1((left.X + right.X));
+		}
+
+		public static void Sub (ref Uint1 left, ref Uint1 right, out Uint1 result)
+		{
+			result = new Uint1((left.X - right.X));
+		}
+
+		public static void Multiply (ref Uint1 left, uint right, out Uint1 result)
+		{
+			result = new Uint1((left.X * right));
+		}
+
+		public static uint Dot (Uint1 left, Uint1 right)
+		{
+			return (left.X * right.X);
+		}
+
+		public static uint Dot (ref Uint1 left, ref Uint1 right)
+		{
+			return (left.X * right.X);
+		}
+		public static Uint1 Normalize(Uint1 vec)
+		{
+			uint len = vec.Length;
+			vec.X /= len;
+			return vec;
+		}
+		public static Uint1 operator -(Uint1 left, Uint1 right)
+		{
+			left.X -= right.X;
+			return left;
+		}
+		public static Uint1 operator +(Uint1 left, Uint1 right)
+		{
+			left.X += right.X;
+			return left;
+		}
+		public static Uint1 operator *(Uint1 left, uint scale)
+		{
+			left.X *= scale;
+			return left;
+		}
 		/// <summary>
 		/// Returns the hash code for this instance.
 		/// </summary>
@@ -90,29 +158,9 @@ namespace Toe.Utils.ToeMath
 	public static partial class MathHelper
 	{
 
-		public static Uint1 Multiply (Uint1 left, Uint1 right)
-		{
-			return new Uint1((left.X * right.X));
-		}
-
-		public static void Multiply (ref Uint1 left, ref Uint1 right, out Uint1 result)
-		{
-			result = new Uint1((left.X * right.X));
-		}
-
 		public static Uint1 Scale (Uint1 left, uint scale)
 		{
 			return new Uint1((left.X * scale));
-		}
-
-		public static uint Dot (Uint1 left, Uint1 right)
-		{
-			return (left.X * right.X);
-		}
-
-		public static uint Dot (ref Uint1 left, ref Uint1 right)
-		{
-			return (left.X * right.X);
 		}
 
 	}

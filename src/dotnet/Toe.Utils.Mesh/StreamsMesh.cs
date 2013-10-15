@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 
-using OpenTK;
+using Toe.Utils.ToeMath;
 
 #if WINDOWS_PHONE
 using Microsoft.Xna.Framework;
@@ -29,11 +29,11 @@ namespace Toe.Utils.Mesh
 
 		private bool areBoundsValid;
 
-		private Vector3 boundingBoxMax;
+		private Float3 boundingBoxMax;
 
-		private Vector3 boundingBoxMin;
+		private Float3 boundingBoxMin;
 
-		private Vector3 boundingSphereCenter;
+		private Float3 boundingSphereCenter;
 
 		private float boundingSphereR;
 
@@ -69,7 +69,7 @@ namespace Toe.Utils.Mesh
 			}
 		}
 
-		public Vector3 BoundingBoxMax
+		public Float3 BoundingBoxMax
 		{
 			get
 			{
@@ -78,7 +78,7 @@ namespace Toe.Utils.Mesh
 			}
 		}
 
-		public Vector3 BoundingBoxMin
+		public Float3 BoundingBoxMin
 		{
 			get
 			{
@@ -87,7 +87,7 @@ namespace Toe.Utils.Mesh
 			}
 		}
 
-		public Vector3 BoundingSphereCenter
+		public Float3 BoundingSphereCenter
 		{
 			get
 			{
@@ -204,9 +204,9 @@ namespace Toe.Utils.Mesh
 				return;
 			}
 			this.areBoundsValid = true;
-			this.boundingBoxMin = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
-			this.boundingBoxMax = new Vector3(float.MinValue, float.MinValue, float.MinValue);
-			var streamReader = this.GetStreamReader<Vector3>(Streams.Position, 0);
+			this.boundingBoxMin = new Float3(float.MaxValue, float.MaxValue, float.MaxValue);
+			this.boundingBoxMax = new Float3(float.MinValue, float.MinValue, float.MinValue);
+			var streamReader = this.GetStreamReader<Float3>(Streams.Position, 0);
 			if (streamReader != null)
 			foreach (var vector3 in streamReader)
 			{

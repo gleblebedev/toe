@@ -1,4 +1,4 @@
-using OpenTK;
+using Toe.Utils.ToeMath;
 
 namespace Toe.Utils.Mesh.Bsp.Q3
 {
@@ -8,15 +8,15 @@ namespace Toe.Utils.Mesh.Bsp.Q3
 
 		public int effect; // The index for the effects (or -1 = n/a) 
 
-		public Vector3 lMapBitsetsS; // The 3D space for s and t unit vectors. 
+		public Float3 lMapBitsetsS; // The 3D space for s and t unit vectors. 
 
-		public Vector3 lMapBitsetsT; // The 3D space for s and t unit vectors. 
+		public Float3 lMapBitsetsT; // The 3D space for s and t unit vectors. 
 
 		public int lMapCornerX; // The face's lightmap corner in the image 
 
 		public int lMapCornerY; // The face's lightmap corner in the image 
 
-		public Vector3 lMapPos; // The 3D origin of lightmap. 
+		public Float3 lMapPos; // The 3D origin of lightmap. 
 
 		public int lMapSizeX; // The size of the lightmap section 
 
@@ -38,7 +38,7 @@ namespace Toe.Utils.Mesh.Bsp.Q3
 
 		public int type; // 1=polygon, 2=patch, 3=mesh, 4=billboard 
 
-		public Vector3 vNormal; // The face normal. 
+		public Float3 vNormal; // The face normal. 
 
 		public int vertexIndex; // The index into this face's first vertex 
 

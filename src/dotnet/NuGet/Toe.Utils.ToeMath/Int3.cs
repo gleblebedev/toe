@@ -7,7 +7,7 @@ namespace Toe.Utils.ToeMath
 	[Serializable]
 #endif
 	[StructLayout(LayoutKind.Explicit)]
-	public struct Int3: IEquatable<Int3>
+	public partial struct Int3: IEquatable<Int3>
 	{
 
 		/// <summary>
@@ -18,6 +18,16 @@ namespace Toe.Utils.ToeMath
 			this.X = scale;
 			this.Y = scale;
 			this.Z = scale;
+		}
+
+		/// <summary>
+		/// Constructor of the Int3.
+		/// </summary>
+		public Int3(Int2 vec, int Z)
+		{
+			this.X = vec.X;
+			this.Y = vec.Y;
+			this.Z = Z;
 		}
 
 		/// <summary>
@@ -107,6 +117,84 @@ namespace Toe.Utils.ToeMath
 		public static readonly int SizeInBytes = Marshal.SizeOf(new Int3());
 
 		public int Length { get { return (int)Math.Sqrt((this.X * this.X) + (this.Y * this.Y) + (this.Z * this.Z)); } }
+
+		public int LengthSquared { get { return (this.X * this.X) + (this.Y * this.Y) + (this.Z * this.Z); } }
+		public void Normalize()
+		{
+			int len = this.Length;
+			X /= len;
+			Y /= len;
+			Z /= len;
+		}
+
+		public static Int3 Multiply (Int3 left, Int3 right)
+		{
+			return new Int3((left.X * right.X), (left.Y * right.Y), (left.Z * right.Z));
+		}
+
+		public static Int3 Multiply (Int3 left, int right)
+		{
+			return new Int3((left.X * right), (left.Y * right), (left.Z * right));
+		}
+
+		public static void Multiply (ref Int3 left, ref Int3 right, out Int3 result)
+		{
+			result = new Int3((left.X * right.X), (left.Y * right.Y), (left.Z * right.Z));
+		}
+
+		public static void Add (ref Int3 left, ref Int3 right, out Int3 result)
+		{
+			result = new Int3((left.X + right.X), (left.Y + right.Y), (left.Z + right.Z));
+		}
+
+		public static void Sub (ref Int3 left, ref Int3 right, out Int3 result)
+		{
+			result = new Int3((left.X - right.X), (left.Y - right.Y), (left.Z - right.Z));
+		}
+
+		public static void Multiply (ref Int3 left, int right, out Int3 result)
+		{
+			result = new Int3((left.X * right), (left.Y * right), (left.Z * right));
+		}
+
+		public static int Dot (Int3 left, Int3 right)
+		{
+			return (left.X * right.X) + (left.Y * right.Y) + (left.Z * right.Z);
+		}
+
+		public static int Dot (ref Int3 left, ref Int3 right)
+		{
+			return (left.X * right.X) + (left.Y * right.Y) + (left.Z * right.Z);
+		}
+		public static Int3 Normalize(Int3 vec)
+		{
+			int len = vec.Length;
+			vec.X /= len;
+			vec.Y /= len;
+			vec.Z /= len;
+			return vec;
+		}
+		public static Int3 operator -(Int3 left, Int3 right)
+		{
+			left.X -= right.X;
+			left.Y -= right.Y;
+			left.Z -= right.Z;
+			return left;
+		}
+		public static Int3 operator +(Int3 left, Int3 right)
+		{
+			left.X += right.X;
+			left.Y += right.Y;
+			left.Z += right.Z;
+			return left;
+		}
+		public static Int3 operator *(Int3 left, int scale)
+		{
+			left.X *= scale;
+			left.Y *= scale;
+			left.Z *= scale;
+			return left;
+		}
 		/// <summary>
 		/// Returns the hash code for this instance.
 		/// </summary>
@@ -160,29 +248,9 @@ namespace Toe.Utils.ToeMath
 	public static partial class MathHelper
 	{
 
-		public static Int3 Multiply (Int3 left, Int3 right)
-		{
-			return new Int3((left.X * right.X), (left.Y * right.Y), (left.Z * right.Z));
-		}
-
-		public static void Multiply (ref Int3 left, ref Int3 right, out Int3 result)
-		{
-			result = new Int3((left.X * right.X), (left.Y * right.Y), (left.Z * right.Z));
-		}
-
 		public static Int3 Scale (Int3 left, int scale)
 		{
 			return new Int3((left.X * scale), (left.Y * scale), (left.Z * scale));
-		}
-
-		public static int Dot (Int3 left, Int3 right)
-		{
-			return (left.X * right.X) + (left.Y * right.Y) + (left.Z * right.Z);
-		}
-
-		public static int Dot (ref Int3 left, ref Int3 right)
-		{
-			return (left.X * right.X) + (left.Y * right.Y) + (left.Z * right.Z);
 		}
 
 	}

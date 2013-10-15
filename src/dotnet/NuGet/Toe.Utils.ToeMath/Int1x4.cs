@@ -7,14 +7,24 @@ namespace Toe.Utils.ToeMath
 	[Serializable]
 #endif
 	[StructLayout(LayoutKind.Explicit)]
-	public struct Int1x4: IEquatable<Int1x4>
+	public partial struct Int1x4: IEquatable<Int1x4>
 	{
+
+		/// <summary>
+		/// Constructor of the Int1x4.
+		/// </summary>
+		public Int1x4(int m00, int m01, int m02, int m03 )
+		{
+			this.M00 = m00;
+			this.M01 = m01;
+			this.M02 = m02;
+			this.M03 = m03;
+		}
 
 		/// <summary>
 		/// Row of the Int1x4.
 		/// </summary>
-		[FieldOffset(0)]
-		public Int4 Row0;
+		public Int4 Row0 { get { return new Int4(this.M00, this.M01, this.M02, this.M03); } set {this.M00 = value.X;this.M01 = value.Y;this.M02 = value.Z;this.M03 = value.W;} }
 
 		/// <summary>
 		/// Row 0, Column 0 of the Int1x4.
@@ -39,6 +49,8 @@ namespace Toe.Utils.ToeMath
 		/// </summary>
 		[FieldOffset(12)]
 		public int M03;
+
+		public static readonly Int1x4 Identity = new Int1x4(1, 0, 0, 0);
 		/// <summary>
 		/// Returns the hash code for this instance.
 		/// </summary>

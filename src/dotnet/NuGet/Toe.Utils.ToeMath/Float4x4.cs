@@ -7,14 +7,36 @@ namespace Toe.Utils.ToeMath
 	[Serializable]
 #endif
 	[StructLayout(LayoutKind.Explicit)]
-	public struct Float4x4: IEquatable<Float4x4>
+	public partial struct Float4x4: IEquatable<Float4x4>
 	{
+
+		/// <summary>
+		/// Constructor of the Float4x4.
+		/// </summary>
+		public Float4x4(float m00, float m01, float m02, float m03, float m10, float m11, float m12, float m13, float m20, float m21, float m22, float m23, float m30, float m31, float m32, float m33 )
+		{
+			this.M00 = m00;
+			this.M01 = m01;
+			this.M02 = m02;
+			this.M03 = m03;
+			this.M10 = m10;
+			this.M11 = m11;
+			this.M12 = m12;
+			this.M13 = m13;
+			this.M20 = m20;
+			this.M21 = m21;
+			this.M22 = m22;
+			this.M23 = m23;
+			this.M30 = m30;
+			this.M31 = m31;
+			this.M32 = m32;
+			this.M33 = m33;
+		}
 
 		/// <summary>
 		/// Row of the Float4x4.
 		/// </summary>
-		[FieldOffset(0)]
-		public Float4 Row0;
+		public Float4 Row0 { get { return new Float4(this.M00, this.M01, this.M02, this.M03); } set {this.M00 = value.X;this.M01 = value.Y;this.M02 = value.Z;this.M03 = value.W;} }
 
 		/// <summary>
 		/// Row 0, Column 0 of the Float4x4.
@@ -43,8 +65,7 @@ namespace Toe.Utils.ToeMath
 		/// <summary>
 		/// Row of the Float4x4.
 		/// </summary>
-		[FieldOffset(16)]
-		public Float4 Row1;
+		public Float4 Row1 { get { return new Float4(this.M10, this.M11, this.M12, this.M13); } set {this.M10 = value.X;this.M11 = value.Y;this.M12 = value.Z;this.M13 = value.W;} }
 
 		/// <summary>
 		/// Row 1, Column 0 of the Float4x4.
@@ -73,8 +94,7 @@ namespace Toe.Utils.ToeMath
 		/// <summary>
 		/// Row of the Float4x4.
 		/// </summary>
-		[FieldOffset(32)]
-		public Float4 Row2;
+		public Float4 Row2 { get { return new Float4(this.M20, this.M21, this.M22, this.M23); } set {this.M20 = value.X;this.M21 = value.Y;this.M22 = value.Z;this.M23 = value.W;} }
 
 		/// <summary>
 		/// Row 2, Column 0 of the Float4x4.
@@ -103,8 +123,7 @@ namespace Toe.Utils.ToeMath
 		/// <summary>
 		/// Row of the Float4x4.
 		/// </summary>
-		[FieldOffset(48)]
-		public Float4 Row3;
+		public Float4 Row3 { get { return new Float4(this.M30, this.M31, this.M32, this.M33); } set {this.M30 = value.X;this.M31 = value.Y;this.M32 = value.Z;this.M33 = value.W;} }
 
 		/// <summary>
 		/// Row 3, Column 0 of the Float4x4.
@@ -129,6 +148,8 @@ namespace Toe.Utils.ToeMath
 		/// </summary>
 		[FieldOffset(60)]
 		public float M33;
+
+		public static readonly Float4x4 Identity = new Float4x4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
 		/// <summary>
 		/// Returns the hash code for this instance.
 		/// </summary>

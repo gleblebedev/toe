@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-using OpenTK;
+using Toe.Utils.ToeMath;
 
 namespace Toe.Utils.Mesh.Bsp.Q3
 {
@@ -34,11 +34,11 @@ namespace Toe.Utils.Mesh.Bsp.Q3
 		{
 			this.streamMesh = new SeparateStreamsMesh();
 			this.meshStreams = new BspMeshStreams();
-			meshStreams.Positions = streamMesh.SetStream(Streams.Position, 0, new ListMeshStream<Vector3>());
-			meshStreams.Normals = streamMesh.SetStream(Streams.Normal, 0, new ListMeshStream<Vector3>());
+			meshStreams.Positions = streamMesh.SetStream(Streams.Position, 0, new ListMeshStream<Float3>());
+			meshStreams.Normals = streamMesh.SetStream(Streams.Normal, 0, new ListMeshStream<Float3>());
 			meshStreams.Colors = streamMesh.SetStream(Streams.Color, 0, new ListMeshStream<Color>());
-			meshStreams.TexCoord0 = streamMesh.SetStream(Streams.TexCoord, 0, new ListMeshStream<Vector2>());
-			meshStreams.TexCoord1 = streamMesh.SetStream(Streams.TexCoord, 1, new ListMeshStream<Vector2>());
+			meshStreams.TexCoord0 = streamMesh.SetStream(Streams.TexCoord, 0, new ListMeshStream<Float2>());
+			meshStreams.TexCoord1 = streamMesh.SetStream(Streams.TexCoord, 1, new ListMeshStream<Float2>());
 		}
 
 		protected override void BuildScene()
@@ -180,9 +180,9 @@ namespace Toe.Utils.Mesh.Bsp.Q3
 
 		protected void ReadVertex()
 		{
-			meshStreams.Positions.Add(this.Stream.ReadVector3());
-			meshStreams.TexCoord0.Add(this.Stream.ReadVector2());
-			var vLightmapCoord = this.Stream.ReadVector2();
+			meshStreams.Positions.Add(this.Stream.ReadFloat3());
+			meshStreams.TexCoord0.Add(this.Stream.ReadFloat2());
+			var vLightmapCoord = this.Stream.ReadFloat2();
 			if (vLightmapCoord.X < 0)
 			{
 				vLightmapCoord.X = 0;
@@ -200,7 +200,7 @@ namespace Toe.Utils.Mesh.Bsp.Q3
 				vLightmapCoord.Y = 1;
 			}
 			meshStreams.TexCoord1.Add(vLightmapCoord);
-			var vNormal = this.Stream.ReadVector3();
+			var vNormal = this.Stream.ReadFloat3();
 			meshStreams.Normals.Add(vNormal);
 
 			var lengthSquared = vNormal.LengthSquared;

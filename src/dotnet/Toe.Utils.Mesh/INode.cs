@@ -1,4 +1,4 @@
-using OpenTK;
+using Toe.Utils.ToeMath;
 
 namespace Toe.Utils.Mesh
 {
@@ -11,15 +11,15 @@ namespace Toe.Utils.Mesh
 
 		IMesh Mesh { get; set; }
 
-		Matrix4 ModelMatrix { get; }
+		Float4x4 ModelMatrix { get; }
 
 		INodeSkin NodeSkin { get; }
 
-		Vector3 Position { get; set; }
+		Float3 Position { get; set; }
 
-		Quaternion Rotation { get; set; }
+		Float4 Rotation { get; set; }
 
-		Vector3 Scale { get; set; }
+		Float3 Scale { get; set; }
 
 		#endregion
 	}

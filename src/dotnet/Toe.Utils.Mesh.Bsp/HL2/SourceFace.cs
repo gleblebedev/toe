@@ -1,4 +1,4 @@
-using OpenTK;
+using Toe.Utils.ToeMath;
 
 namespace Toe.Utils.Mesh.Bsp.HL2
 {
@@ -41,7 +41,7 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 
 		public float smoothingAngle; // lighting smoothing angle
 
-		public Vector3 startPosition; // start position used for orientation
+		public Float3 startPosition; // start position used for orientation
 
 		#endregion
 
@@ -88,7 +88,7 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 
 		public float dist; // Displacement distances.
 
-		public Vector3 vec; // Vector field defining displacement volume.
+		public Float3 vec; // Vector field defining displacement volume.
 
 		#endregion
 	}

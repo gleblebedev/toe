@@ -73,7 +73,7 @@ namespace Toe.Utils.ToeMath.Tests
 			stream.WriteLine("\t\t}");
 		}
 
-		private static void GenMatrixFields(TypeInfo type, StreamWriter stream)
+		private void GenMatrixFields(TypeInfo type, StreamWriter stream)
 		{
 			for (int i = 0; i < type.Rows; ++i)
 			{
@@ -82,8 +82,12 @@ namespace Toe.Utils.ToeMath.Tests
 				stream.WriteLine("\t\t/// Row of the " + type.Name + ".");
 				stream.WriteLine("\t\t/// </summary>");
 				var rowOffset = i * type.ComponentSize * type.Cols;
-				stream.WriteLine("\t\t[FieldOffset(" + rowOffset + ")]");
-				stream.WriteLine("\t\tpublic " + type.BaseName + type.Cols + " Row" + (i) + ";");
+				//stream.WriteLine("\t\t[FieldOffset(" + rowOffset + ")]");
+				//stream.WriteLine("\t\tpublic " + type.BaseName + type.Cols + " Row" + (i) + ";");
+				stream.Write("\t\tpublic " + type.BaseName + type.Cols + " Row" + i + " { get { return new "+type.BaseName+type.Cols+"(");
+
+				for (int j = 0; j < type.Cols; ++j) stream.Write("{2}this.M{0}{1}", i, j, j == 0?"":", ");
+				stream.WriteLine("); } set {"+ new Numbers(0,type.Cols-1).Select(col=> string.Format("this.M{0}{1} = value.{2};",i,col,vectorComponents[col])).StringJoin("")+"} }");
 
 				for (int j = 0; j < type.Cols; ++j)
 				{
@@ -95,6 +99,11 @@ namespace Toe.Utils.ToeMath.Tests
 					stream.WriteLine("\t\tpublic " + type.ClrName + " M" + i + j + ";");
 				}
 			}
+
+				stream.WriteLine("");
+				stream.WriteLine(
+					"\t\tpublic static readonly " + type.Name + " Identity = new " + type.Name + "("
+					+ new Numbers(0, type.Rows - 1).Select(row => new Numbers(0, type.Cols - 1).Select(col=>(col==row)?"1":"0").StringJoin(", ")).StringJoin(", ")+");");
 		}
 
 		private void GenEqualityMembers(TypeInfo type, StreamWriter stream, IEnumerable<string> members)
@@ -141,7 +150,42 @@ namespace Toe.Utils.ToeMath.Tests
 			stream.WriteLine("\t\t}");
 		}
 
-		private void GenScalarCtors(TypeInfo type, StreamWriter stream)
+		private void GenMatrixCtors(TypeInfo type, StreamWriter stream)
+		{
+			stream.WriteLine("");
+			stream.WriteLine("\t\t/// <summary>");
+			stream.WriteLine("\t\t/// Constructor of the " + type.Name + ".");
+			stream.WriteLine("\t\t/// </summary>");
+			stream.Write("\t\tpublic " + type.Name + "(");
+			string sep = "";
+			for (int i = 0; i < type.Rows; ++i )
+				for (int j = 0; j < type.Cols; j++)
+				{
+					stream.Write(sep);
+					stream.Write(type.ClrName);
+					stream.Write(" m");
+					stream.Write(i);
+					stream.Write(j);
+					sep = ", ";
+				}
+					stream.WriteLine(" )");
+			stream.WriteLine("\t\t{");
+			for (int i = 0; i < type.Rows; ++i)
+				for (int j = 0; j < type.Cols; j++)
+				{
+					stream.Write("\t\t\t");
+					stream.Write("this.M");
+					stream.Write(i);
+					stream.Write(j);
+					stream.Write(" = m");
+					stream.Write(i);
+					stream.Write(j);
+					stream.WriteLine(";");
+				}
+			stream.WriteLine("\t\t}");
+		}
+
+		private void GenVectorCtors(TypeInfo type, StreamWriter stream)
 		{
 			stream.WriteLine("");
 			stream.WriteLine("\t\t/// <summary>");
@@ -151,7 +195,22 @@ namespace Toe.Utils.ToeMath.Tests
 			stream.WriteLine("\t\t{");
 			this.vectorComponents.Take(type.Cols).Select(x => "\t\t\tthis." + x + " = scale;").ForEach(stream.WriteLine);
 			stream.WriteLine("\t\t}");
-
+			if (type.Cols > 1)
+			{
+				stream.WriteLine("");
+				stream.WriteLine("\t\t/// <summary>");
+				stream.WriteLine("\t\t/// Constructor of the " + type.Name + ".");
+				stream.WriteLine("\t\t/// </summary>");
+				var vectorComponent = this.vectorComponents[type.Cols - 1];
+				stream.WriteLine(
+					"\t\tpublic " + type.Name + "(" + type.BaseName + (type.Cols - 1) + " vec, " + type.ClrName + " " + vectorComponent
+					+ ")");
+				stream.WriteLine("\t\t{");
+				this.vectorComponents.Take(type.Cols-1).Select(x => "\t\t\tthis." + x + " = vec." + x + ";").ForEach(stream.WriteLine);
+				stream.WriteLine("\t\t\tthis." + vectorComponent + " = " + vectorComponent + ";");
+				stream.WriteLine("\t\t}");
+				
+			}
 			for (int i = 2; i <= type.Cols; ++i)
 			{
 				stream.WriteLine("");
@@ -183,7 +242,164 @@ namespace Toe.Utils.ToeMath.Tests
 			}
 		}
 
-		private void GenScalarFields(TypeInfo type, StreamWriter stream)
+
+		private void GenVectorMethods(TypeInfo type, StreamWriter stream)
+		{
+			stream.WriteLine("\t\tpublic void Normalize()");
+			stream.WriteLine("\t\t{");
+			if (type.ClrName == "float")
+			{
+				stream.WriteLine("\t\t\t"+type.ClrName+" scale = 1.0f/this.Length;");
+				for (int j = 0; j < type.Cols ; ++j)
+				{
+					stream.Write("\t\t\t");
+					stream.Write(this.vectorComponents[j]);
+					stream.WriteLine(" *= scale;");
+				}
+			}
+			else
+			{
+				stream.WriteLine("\t\t\t" + type.ClrName + " len = this.Length;");
+				for (int j = 0; j < type.Cols; ++j)
+				{
+					stream.Write("\t\t\t");
+					stream.Write(this.vectorComponents[j]);
+					stream.WriteLine(" /= len;");
+				}
+			}
+			stream.WriteLine("\t\t}");
+
+
+			stream.WriteLine("");
+			stream.WriteLine("\t\tpublic static " + type.Name + " Multiply (" + type.Name + " left, " + type.Name + " right)");
+			stream.WriteLine("\t\t{");
+			stream.WriteLine("\t\t\treturn new " + type.Name + "(" +
+				vectorComponents.Take(type.Cols).StringFormat("(left.{0} * right.{0})").StringJoin(", ")
+				+ ");");
+			stream.WriteLine("\t\t}");
+
+			stream.WriteLine("");
+			stream.WriteLine("\t\tpublic static " + type.Name + " Multiply (" + type.Name + " left, " + type.ClrName + " right)");
+			stream.WriteLine("\t\t{");
+			stream.WriteLine("\t\t\treturn new " + type.Name + "(" +
+				vectorComponents.Take(type.Cols).StringFormat("(left.{0} * right)").StringJoin(", ")
+				+ ");");
+			stream.WriteLine("\t\t}");
+
+			stream.WriteLine("");
+			stream.WriteLine("\t\tpublic static void Multiply (ref " + type.Name + " left, ref " + type.Name + " right, out " + type.Name + " result)");
+			stream.WriteLine("\t\t{");
+			stream.WriteLine("\t\t\tresult = new " + type.Name + "(" +
+				vectorComponents.Take(type.Cols).StringFormat("(left.{0} * right.{0})").StringJoin(", ")
+				+ ");");
+			stream.WriteLine("\t\t}");
+
+			stream.WriteLine("");
+			stream.WriteLine("\t\tpublic static void Add (ref " + type.Name + " left, ref " + type.Name + " right, out " + type.Name + " result)");
+			stream.WriteLine("\t\t{");
+			stream.WriteLine("\t\t\tresult = new " + type.Name + "(" +
+				vectorComponents.Take(type.Cols).StringFormat("(left.{0} + right.{0})").StringJoin(", ")
+				+ ");");
+			stream.WriteLine("\t\t}");
+
+			stream.WriteLine("");
+			stream.WriteLine("\t\tpublic static void Sub (ref " + type.Name + " left, ref " + type.Name + " right, out " + type.Name + " result)");
+			stream.WriteLine("\t\t{");
+			stream.WriteLine("\t\t\tresult = new " + type.Name + "(" +
+				vectorComponents.Take(type.Cols).StringFormat("(left.{0} - right.{0})").StringJoin(", ")
+				+ ");");
+			stream.WriteLine("\t\t}");
+
+			stream.WriteLine("");
+			stream.WriteLine("\t\tpublic static void Multiply (ref " + type.Name + " left, " + type.ClrName + " right, out " + type.Name + " result)");
+			stream.WriteLine("\t\t{");
+			stream.WriteLine("\t\t\tresult = new " + type.Name + "(" +
+				vectorComponents.Take(type.Cols).StringFormat("(left.{0} * right)").StringJoin(", ")
+				+ ");");
+			stream.WriteLine("\t\t}");
+
+			stream.WriteLine("");
+			stream.WriteLine("\t\tpublic static " + type.ClrName + " Dot (" + type.Name + " left, " + type.Name + " right)");
+			stream.WriteLine("\t\t{");
+			stream.WriteLine("\t\t\treturn " +
+				vectorComponents.Take(type.Cols).StringFormat("(left.{0} * right.{0})").StringJoin(" + ")
+				+ ";");
+			stream.WriteLine("\t\t}");
+
+			stream.WriteLine("");
+			stream.WriteLine("\t\tpublic static " + type.ClrName + " Dot (ref " + type.Name + " left, ref " + type.Name + " right)");
+			stream.WriteLine("\t\t{");
+			stream.WriteLine("\t\t\treturn " +
+				vectorComponents.Take(type.Cols).StringFormat("(left.{0} * right.{0})").StringJoin(" + ")
+				+ ";");
+			stream.WriteLine("\t\t}");
+
+
+			stream.WriteLine("\t\tpublic static " + type.Name + " Normalize(" + type.Name + " vec)");
+			stream.WriteLine("\t\t{");
+			if (type.ClrName == "float")
+			{
+				stream.WriteLine("\t\t\t" + type.ClrName + " scale = 1.0f/vec.Length;");
+				for (int j = 0; j < type.Cols; ++j)
+				{
+					stream.Write("\t\t\tvec.");
+					stream.Write(this.vectorComponents[j]);
+					stream.WriteLine(" *= scale;");
+				}
+				stream.WriteLine("\t\t\treturn vec;");
+			}
+			else
+			{
+				stream.WriteLine("\t\t\t" + type.ClrName + " len = vec.Length;");
+				for (int j = 0; j < type.Cols; ++j)
+				{
+					stream.Write("\t\t\tvec.");
+					stream.Write(this.vectorComponents[j]);
+					stream.WriteLine(" /= len;");
+				}
+				stream.WriteLine("\t\t\treturn vec;");
+			}
+			stream.WriteLine("\t\t}");
+
+			stream.WriteLine("\t\tpublic static " + type.Name + " operator -(" + type.Name + " left, " + type.Name + " right)");
+			stream.WriteLine("\t\t{");
+			for (int j = 0; j < type.Cols; ++j)
+			{
+				stream.Write("\t\t\tleft.");
+				stream.Write(this.vectorComponents[j]);
+				stream.Write(" -= right.");
+				stream.Write(this.vectorComponents[j]);
+				stream.WriteLine(";");
+			}
+			stream.WriteLine("\t\t\treturn left;");
+			stream.WriteLine("\t\t}");
+
+			stream.WriteLine("\t\tpublic static " + type.Name + " operator +(" + type.Name + " left, " + type.Name + " right)");
+			stream.WriteLine("\t\t{");
+			for (int j = 0; j < type.Cols; ++j)
+			{
+				stream.Write("\t\t\tleft.");
+				stream.Write(this.vectorComponents[j]);
+				stream.Write(" += right.");
+				stream.Write(this.vectorComponents[j]);
+				stream.WriteLine(";");
+			}
+			stream.WriteLine("\t\t\treturn left;");
+			stream.WriteLine("\t\t}");
+
+			stream.WriteLine("\t\tpublic static " + type.Name + " operator *(" + type.Name + " left, " + type.ClrName + " scale)");
+			stream.WriteLine("\t\t{");
+			for (int j = 0; j < type.Cols; ++j)
+			{
+				stream.Write("\t\t\tleft.");
+				stream.Write(this.vectorComponents[j]);
+				stream.WriteLine(" *= scale;");
+			}
+			stream.WriteLine("\t\t\treturn left;");
+			stream.WriteLine("\t\t}");
+		}
+
+		private void GenVectorFields(TypeInfo type, StreamWriter stream)
 		{
 			for (int j = 1; j < type.Cols - 1; ++j)
 			{
@@ -235,11 +451,18 @@ namespace Toe.Utils.ToeMath.Tests
 				+ this.vectorComponents.Take(type.Cols).Select(x => "0").StringJoin(", ") + ");");
 			stream.WriteLine("");
 			stream.WriteLine("\t\tpublic static readonly int SizeInBytes = Marshal.SizeOf(new " + type.Name + "());");
+
 			stream.WriteLine("");
 			stream.WriteLine(
 				"\t\tpublic " + type.ClrName + " Length { get { return (" + type.ClrName + ")Math.Sqrt("
 				+ this.vectorComponents.Take(type.Cols).Select(x => "(this." + x + " * this." + x + ")").StringJoin(" + ")
 				+ "); } }");
+
+			stream.WriteLine("");
+			stream.WriteLine(
+				"\t\tpublic " + type.ClrName + " LengthSquared { get { return "
+				+ this.vectorComponents.Take(type.Cols).Select(x => "(this." + x + " * this." + x + ")").StringJoin(" + ")
+				+ "; } }");
 		}
 
 		private void GenSource(string basePath, TypeInfo type)
@@ -258,36 +481,24 @@ namespace Toe.Utils.ToeMath.Tests
 					stream.WriteLine("\t[Serializable]");
 					stream.WriteLine("#endif");
 					stream.WriteLine("\t[StructLayout(LayoutKind.Explicit)]");
-					stream.WriteLine("\tpublic struct " + type.Name + ": IEquatable<" + type.Name + ">");
+					stream.WriteLine("\tpublic partial struct " + type.Name + ": IEquatable<" + type.Name + ">");
 					stream.WriteLine("\t{");
 					if (type.Rows == 0)
 					{
-						this.GenScalarCtors(type, stream);
-						this.GenScalarFields(type, stream);
+						this.GenVectorCtors(type, stream);
+						this.GenVectorFields(type, stream);
+						this.GenVectorMethods(type, stream);
 
 						this.GenEqualityMembers(type, stream, this.vectorComponents.Take(type.Cols).ToArray());
-						this.GetToString(type, stream, this.vectorComponents.Take(type.Cols).ToArray());
+						this.GenToString(type, stream, this.vectorComponents.Take(type.Cols).ToArray());
 
 						stream.WriteLine("\t}");
 
 						stream.WriteLine("\tpublic static partial class MathHelper");
 						stream.WriteLine("\t{");
 
-						stream.WriteLine("");
-						stream.WriteLine("\t\tpublic static " + type.Name + " Multiply (" + type.Name + " left, " + type.Name + " right)");
-						stream.WriteLine("\t\t{");
-						stream.WriteLine("\t\t\treturn new " + type.Name + "("+
-							vectorComponents.Take(type.Cols).StringFormat("(left.{0} * right.{0})").StringJoin(", ")
-							+");");
-						stream.WriteLine("\t\t}");
+					
 
-						stream.WriteLine("");
-						stream.WriteLine("\t\tpublic static void Multiply (ref " + type.Name + " left, ref " + type.Name + " right, out " + type.Name + " result)");
-						stream.WriteLine("\t\t{");
-						stream.WriteLine("\t\t\tresult = new " + type.Name + "(" +
-							vectorComponents.Take(type.Cols).StringFormat("(left.{0} * right.{0})").StringJoin(", ")
-							+ ");");
-						stream.WriteLine("\t\t}");
 
 						stream.WriteLine("");
 						stream.WriteLine("\t\tpublic static " + type.Name + " Scale (" + type.Name + " left, " + type.ClrName + " scale)");
@@ -297,21 +508,7 @@ namespace Toe.Utils.ToeMath.Tests
 							+ ");");
 						stream.WriteLine("\t\t}");
 
-						stream.WriteLine("");
-						stream.WriteLine("\t\tpublic static " + type.ClrName + " Dot (" + type.Name + " left, " + type.Name + " right)");
-						stream.WriteLine("\t\t{");
-						stream.WriteLine("\t\t\treturn " +
-							vectorComponents.Take(type.Cols).StringFormat("(left.{0} * right.{0})").StringJoin(" + ")
-							+ ";");
-						stream.WriteLine("\t\t}");
-
-						stream.WriteLine("");
-						stream.WriteLine("\t\tpublic static " + type.ClrName + " Dot (ref " + type.Name + " left, ref " + type.Name + " right)");
-						stream.WriteLine("\t\t{");
-						stream.WriteLine("\t\t\treturn " +
-							vectorComponents.Take(type.Cols).StringFormat("(left.{0} * right.{0})").StringJoin(" + ")
-							+ ";");
-						stream.WriteLine("\t\t}");
+					
 
 						stream.WriteLine("");
 
@@ -319,9 +516,10 @@ namespace Toe.Utils.ToeMath.Tests
 					}
 					else
 					{
+						GenMatrixCtors(type, stream);
 						GenMatrixFields(type, stream);
 						this.GenEqualityMembers(type, stream, new MatrixEnumerable(type.Rows, type.Cols));
-						this.GetToString(type, stream, (new MatrixEnumerable(type.Rows, type.Cols)).ToArray());
+						this.GenToString(type, stream, (new MatrixEnumerable(type.Rows, type.Cols)).ToArray());
 						stream.WriteLine("\t}");
 
 						stream.WriteLine("\tpublic static partial class MathHelper");
@@ -334,7 +532,7 @@ namespace Toe.Utils.ToeMath.Tests
 			}
 		}
 
-		private void GetToString(TypeInfo type, StreamWriter stream, IList<string> p2)
+		private void GenToString(TypeInfo type, StreamWriter stream, IList<string> p2)
 		{
 			stream.WriteLine("");
 			stream.WriteLine("\t\tpublic override string ToString() { return string.Format(\"("+
