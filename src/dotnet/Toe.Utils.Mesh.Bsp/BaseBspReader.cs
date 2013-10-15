@@ -10,6 +10,12 @@ namespace Toe.Utils.Mesh.Bsp
 {
 	public abstract class BaseBspReader
 	{
+		private IStreamConverterFactory streamConverterFactory;
+
+		public BaseBspReader(IStreamConverterFactory streamConverterFactory)
+		{
+			this.StreamConverterFactory = streamConverterFactory;
+		}
 		#region Constants and Fields
 
 		private IScene scene;
@@ -52,6 +58,18 @@ namespace Toe.Utils.Mesh.Bsp
 			{
 				this.stream = value;
 				this.startOfTheFile = this.stream.Position;
+			}
+		}
+
+		public IStreamConverterFactory StreamConverterFactory
+		{
+			get
+			{
+				return this.streamConverterFactory;
+			}
+			set
+			{
+				this.streamConverterFactory = value;
 			}
 		}
 

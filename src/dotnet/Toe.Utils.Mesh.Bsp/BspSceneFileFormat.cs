@@ -6,6 +6,13 @@ namespace Toe.Utils.Mesh.Bsp
 {
 	public class BspSceneFileFormat : ISceneFileFormat
 	{
+		private readonly IStreamConverterFactory streamConverterFactory;
+
+		public BspSceneFileFormat(IStreamConverterFactory streamConverterFactory)
+		{
+			this.streamConverterFactory = streamConverterFactory;
+		}
+
 		#region Constants and Fields
 
 		/// <summary>
@@ -52,7 +59,7 @@ namespace Toe.Utils.Mesh.Bsp
 
 		public ISceneReader CreateReader()
 		{
-			return new BspReader();
+			return new BspReader(streamConverterFactory);
 		}
 
 		#endregion

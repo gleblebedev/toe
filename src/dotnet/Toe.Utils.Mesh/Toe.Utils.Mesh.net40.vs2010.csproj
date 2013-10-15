@@ -77,6 +77,7 @@
     <Compile Include="ISceneReaderErrorHandler.cs" />
     <Compile Include="IStreamConverterFactory.cs" />
     <Compile Include="ISubMesh.cs" />
+    <Compile Include="IVertexBufferChannel.cs" />
     <Compile Include="IVertexIndexSource.cs" />
     <Compile Include="IVertexStreamSource.cs" />
     <Compile Include="IVsdProvider.cs" />
@@ -105,6 +106,8 @@
     <Compile Include="StreamSubmeshIndexes.cs" />
     <Compile Include="Vertex.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="VertexBufferChannel.cs" />
+    <Compile Include="VertexBufferMapping.cs" />
     <Compile Include="VertexBufferMesh.cs" />
     <Compile Include="VertexBufferSubmesh.cs" />
     <Compile Include="VertexSourceType.cs" />

@@ -8,6 +8,13 @@ namespace Toe.Utils.Mesh.Bsp
 {
 	public class BspReader : ISceneReader
 	{
+		private readonly IStreamConverterFactory streamConverterFactory;
+
+		public BspReader(IStreamConverterFactory streamConverterFactory)
+		{
+			this.streamConverterFactory = streamConverterFactory;
+		}
+
 		#region Public Methods and Operators
 
 		/// <summary>
@@ -24,30 +31,30 @@ namespace Toe.Utils.Mesh.Bsp
 			IBspReader reader = null;
 			if (magic == 0x1D)
 			{
-				reader = new Q1.BspReader();
+				reader = new Q1.BspReader(streamConverterFactory);
 			}
 			else if (magic == 0x1E)
 			{
-				reader = new HL1.BspReader();
+				reader = new HL1.BspReader(streamConverterFactory);
 			}
 			else if (magic == 0x50534256)
 			{
 				magic = stream.ReadUInt32();
 				if (magic == 17)
 				{
-					reader = new BspReader17();
+					reader = new BspReader17(streamConverterFactory);
 				}
 				else if (magic == 19)
 				{
-					reader = new BspReader19();
+					reader = new BspReader19(streamConverterFactory);
 				}
 				else if (magic == 20)
 				{
-					reader = new BspReader20();
+					reader = new BspReader20(streamConverterFactory);
 				}
 				else if (magic == 21)
 				{
-					reader = new BspReader21();
+					reader = new BspReader21(streamConverterFactory);
 				}
 				else
 				{
@@ -59,19 +66,19 @@ namespace Toe.Utils.Mesh.Bsp
 				magic = stream.ReadUInt32();
 				if (magic == 0x26)
 				{
-					reader = new Q2.BspReader();
+					reader = new Q2.BspReader(streamConverterFactory);
 				}
 				else if (magic == 0x2E)
 				{
-					reader = new Q3.BspReader();
+					reader = new Q3.BspReader(streamConverterFactory);
 				}
 				else if (magic == 0x2F)
 				{
-					reader = new QLiveBspReader();
+					reader = new QLiveBspReader(streamConverterFactory);
 				}
 				else
 				{
-					throw new BspFormatException("Unknown Quake 3 BSP: " + magic);
+					throw new BspFormatException(string.Format("Unknown Quake 3 BSP: {0}", magic));
 				}
 			}
 

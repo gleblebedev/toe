@@ -5,6 +5,8 @@ using NUnit.Framework;
 
 using OpenTK;
 
+using Toe.Utils.ToeMath;
+
 namespace Toe.Utils.Mesh.Ase.Tests
 {
 	[TestFixture]
@@ -15,16 +17,16 @@ namespace Toe.Utils.Mesh.Ase.Tests
 		[Test]
 		public void LemarchandsBox()
 		{
-			var r = new AseReader();
+			var r = new AseReader(StreamConverterFactory.Default);
 			using (var s = File.OpenRead("lemarchandsbox.ASE"))
 			{
 				var scene = r.Load(s, null);
 				foreach (var geometry in scene.Geometries)
 				{
-					var reader = geometry.GetStreamReader<Vector3>(Streams.Position, 0);
-					var normalReader = geometry.GetStreamReader<Vector3>(Streams.Normal, 0);
-					var texCoordReader = geometry.GetStreamReader<Vector3>(Streams.TexCoord, 0);
-					var colorReader = geometry.GetStreamReader<Vector3>(Streams.Color, 0);
+					var reader = geometry.GetStreamReader<Float3>(Streams.Position, 0);
+					var normalReader = geometry.GetStreamReader<Float3>(Streams.Normal, 0);
+					var texCoordReader = geometry.GetStreamReader<Float3>(Streams.TexCoord, 0);
+					var colorReader = geometry.GetStreamReader<Float3>(Streams.Color, 0);
 					//for (int i = 0; i < geometry.Count; ++i)
 					//{
 					//	Debug.Write(string.Format("{0} ", reader[i]));

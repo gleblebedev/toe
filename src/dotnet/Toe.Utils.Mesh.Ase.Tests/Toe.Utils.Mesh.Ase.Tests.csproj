@@ -60,6 +60,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\NuGet\Toe.Utils.ToeMath\Toe.Utils.ToeMath.csproj">
+      <Project>{C138CBF1-49EB-4761-ACB4-D254A0F7A02B}</Project>
+      <Name>Toe.Utils.ToeMath</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Toe.Utils.Mesh.Ase\Toe.Utils.Mesh.Ase.csproj">
       <Project>{9D139D7D-CFAD-4B6A-9862-EB856B36A83E}</Project>
       <Name>Toe.Utils.Mesh.Ase</Name>

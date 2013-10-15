@@ -14,11 +14,15 @@ namespace Toe.Utils.Mesh
 	/// </summary>
 	public class VertexBufferMesh<TVertex> : SceneItem, IMesh
 	{
+		public VertexBufferMesh(IMeshStream<TVertex> vertexBuffer, VertexBufferMapping<TVertex> mapping)
+		{
+			this.vertexBuffer = vertexBuffer;
+		}
 		#region Constants and Fields
 
 		private readonly List<ISubMesh> submeshes = new List<ISubMesh>();
 
-		private readonly DictionaryMeshStream<TVertex> vertexBuffer = new DictionaryMeshStream<TVertex>();
+		private readonly IMeshStream<TVertex> vertexBuffer;
 
 		private bool areBoundsValid;
 
@@ -106,7 +110,7 @@ namespace Toe.Utils.Mesh
 			}
 		}
 
-		public DictionaryMeshStream<TVertex> VertexBuffer
+		public IMeshStream<TVertex> VertexBuffer
 		{
 			get
 			{

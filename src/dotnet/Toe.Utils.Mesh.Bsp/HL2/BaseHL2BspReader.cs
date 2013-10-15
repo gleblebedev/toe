@@ -55,6 +55,11 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 
 		#region Public Properties
 
+		public BaseHL2BspReader(IStreamConverterFactory streamConverterFactory)
+			: base(streamConverterFactory)
+		{
+		}
+
 		public override string GameRootPath
 		{
 			get
@@ -96,11 +101,11 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 		{
 			this.streamMesh = new SeparateStreamsMesh();
 			this.meshStreams = new BspMeshStreams();
-			meshStreams.Positions = streamMesh.SetStream(Streams.Position, 0, new ListMeshStream<Float3>());
-			meshStreams.Normals = streamMesh.SetStream(Streams.Normal, 0, new ListMeshStream<Float3>());
-			meshStreams.TexCoord0 = streamMesh.SetStream(Streams.TexCoord, 0, new ListMeshStream<Float2>());
-			meshStreams.TexCoord1 = streamMesh.SetStream(Streams.TexCoord, 1, new ListMeshStream<Float2>());
-			meshStreams.Colors = streamMesh.SetStream(Streams.Color, 0, new ListMeshStream<Color>());
+			meshStreams.Positions = streamMesh.SetStream(Streams.Position, 0, new ListMeshStream<Float3>(StreamConverterFactory));
+			meshStreams.Normals = streamMesh.SetStream(Streams.Normal, 0, new ListMeshStream<Float3>(StreamConverterFactory));
+			meshStreams.TexCoord0 = streamMesh.SetStream(Streams.TexCoord, 0, new ListMeshStream<Float2>(StreamConverterFactory));
+			meshStreams.TexCoord1 = streamMesh.SetStream(Streams.TexCoord, 1, new ListMeshStream<Float2>(StreamConverterFactory));
+			meshStreams.Colors = streamMesh.SetStream(Streams.Color, 0, new ListMeshStream<Color>(StreamConverterFactory));
 		}
 
 		protected override void BuildScene()
@@ -196,7 +201,7 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 							visibleMeshesLookup.Add(meshIndex);
 							uniqueSubmeshes[meshIndex] = true;
 						}
-						BspSubmeshStreams submeshStreams= new BspSubmeshStreams(subMesh, meshStreams);
+						BspSubmeshStreams submeshStreams= new BspSubmeshStreams(subMesh, meshStreams,StreamConverterFactory);
 						this.BuildFace(ref this.faces[uniqueFace.Key], submeshStreams);
 					}
 					vsdClusters[index].VisibleMeshesCount = visibleMeshesLookup.Count - vsdClusters[index].VisibleMeshesOffset;
@@ -742,7 +747,7 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 					int meshIndex;
 					SeparateStreamsSubmesh subMesh2 = meshBuilder2.EnsureSubMesh(
 						new BspSubmeshKey(0, new BspMaterialKey(0, 0)), out meshIndex);
-					this.BuildFace(ref this.faces[index], new BspSubmeshStreams(subMesh2,meshStreams));
+					this.BuildFace(ref this.faces[index], new BspSubmeshStreams(subMesh2,meshStreams,StreamConverterFactory));
 					//Trace.WriteLine(string.Format("Face {0} is not references from leaves", index));
 				}
 			}

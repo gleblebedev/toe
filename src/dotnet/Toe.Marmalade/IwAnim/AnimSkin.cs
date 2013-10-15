@@ -19,7 +19,7 @@ namespace Toe.Marmalade.IwAnim
 
 		private readonly ResourceReference skeletonModel;
 
-		private readonly ListMeshStream<VertexWeights> weights = new ListMeshStream<VertexWeights>();
+		private readonly ListMeshStream<VertexWeights> weights = new ListMeshStream<VertexWeights>(StreamConverterFactory.Default);
 
 		#endregion
 

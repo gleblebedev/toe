@@ -4,6 +4,11 @@
 	{
 		#region Methods
 
+		public BspReader20(IStreamConverterFactory streamConverterFactory)
+			: base(streamConverterFactory)
+		{
+		}
+
 		protected override void ReadLeaf(ref SourceLeaf sourceLeaf)
 		{
 			sourceLeaf.contents = this.Stream.ReadInt32(); // OR of all brushes (not needed?)

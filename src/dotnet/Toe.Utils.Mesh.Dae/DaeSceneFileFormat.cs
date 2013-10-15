@@ -6,6 +6,13 @@ namespace Toe.Utils.Mesh.Dae
 {
 	public class DaeSceneFileFormat : ISceneFileFormat
 	{
+		private readonly IStreamConverterFactory streamConverterFactory;
+
+		public DaeSceneFileFormat(IStreamConverterFactory streamConverterFactory)
+		{
+			this.streamConverterFactory = streamConverterFactory;
+		}
+
 		#region Constants and Fields
 
 		/// <summary>
@@ -52,7 +59,7 @@ namespace Toe.Utils.Mesh.Dae
 
 		public ISceneReader CreateReader()
 		{
-			return new DaeReader();
+			return new DaeReader(streamConverterFactory);
 		}
 
 		#endregion

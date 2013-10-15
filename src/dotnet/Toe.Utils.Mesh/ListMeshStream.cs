@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace Toe.Utils.Mesh
@@ -35,22 +36,39 @@ namespace Toe.Utils.Mesh
 		public IList<TValue> GetReader<TValue>()
 		{
 			if (typeof(TValue) == typeof(T))
-				return (IList<TValue>)this.AsReadOnly();
-			var resolveConverter = converterFactory.ResolveConverter<T, TValue>(this);
-			if (resolveConverter != null)
-				return resolveConverter;
-			throw new NotImplementedException();
+				return new ReadOnlyCollection<TValue>((IList<TValue>)(object)this);
+			if (ConverterFactory != null)
+			{
+				var resolveConverter = ConverterFactory.ResolveConverter<T, TValue>(this);
+				if (resolveConverter != null)
+					return resolveConverter;
+			}
+			throw new NotImplementedException(string.Format("{0} to {1} converter is not defined", typeof(T).FullName, typeof(TValue).FullName));
 		}
 
 		private IStreamConverterFactory converterFactory = StreamConverterFactory.Default;
 
 		#endregion
 
-		public ListMeshStream()
+		public ListMeshStream(IStreamConverterFactory converterFactory)
 		{
+			this.ConverterFactory = converterFactory;
 		}
-		public ListMeshStream(int capacity):base(capacity)
+		public ListMeshStream(int capacity, IStreamConverterFactory converterFactory):base(capacity)
 		{
+			this.ConverterFactory = converterFactory;
+		}
+
+		public IStreamConverterFactory ConverterFactory
+		{
+			get
+			{
+				return this.converterFactory;
+			}
+			set
+			{
+				this.converterFactory = value;
+			}
 		}
 	}
 }

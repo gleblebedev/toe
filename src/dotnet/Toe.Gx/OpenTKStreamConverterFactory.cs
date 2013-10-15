@@ -28,6 +28,14 @@ namespace Toe.Gx
 
 			Default.Register((Vector3 c) => new Float3(c.X, c.Y, c.Z));
 			Default.Register((Float3 c) => new Vector3(c.X, c.Y, c.Z));
+			Default.Register((Vector4 c) => new Float4(c.X, c.Y, c.Z, c.W));
+			Default.Register((Float4 c) => new Vector4(c.X, c.Y, c.Z, c.W));
+			Default.Register((Vector2 c) => new Float2(c.X, c.Y));
+			Default.Register((Float2 c) => new Vector2(c.X, c.Y));
+			Default.Register((Float2 c) => new Vector3(c.X, c.Y, 0));
+			Default.Register((Float3 c) => new Vector4(c.X, c.Y, c.Z, 0));
+			Default.Register((Vector2 c) => new Float3(c.X, c.Y, 0));
+			Default.Register((Vector3 c) => new Float4(c.X, c.Y, c.Z, 0));
 		}
 
 		private static byte ClampToByte(float f)
@@ -39,7 +47,7 @@ namespace Toe.Gx
 
 		Dictionary<Tuple<Type, Type>, Delegate> map = new Dictionary<Tuple<Type, Type>, Delegate>();
 
-		public OpenTkStreamConverterFactory()
+		private OpenTkStreamConverterFactory()
 		{
 		}
 

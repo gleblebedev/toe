@@ -165,6 +165,12 @@
   <ItemGroup>
     <None Include="Resources\xyzcube.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\normal_off.png" />
+    <Content Include="Resources\normal_on.png" />
+    <Content Include="Resources\wireframe_off.png" />
+    <Content Include="Resources\wireframe_on.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

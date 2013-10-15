@@ -4,14 +4,17 @@ namespace Toe.Utils.Mesh.Bsp
 {
 	public class BspSubmeshStreams
 	{
+		private readonly IStreamConverterFactory streamConverterFactory;
+
 		public ListMeshStream<int> PositionIndices;
 		public ListMeshStream<int> NormalIndices;
 		public ListMeshStream<int> TexCoord0Indices;
 		public ListMeshStream<int> TexCoord1Indices;
 		public ListMeshStream<int> ColorsIndices;
 
-		public BspSubmeshStreams(SeparateStreamsSubmesh separateStreamsSubmesh, BspMeshStreams meshStreams)
+		public BspSubmeshStreams(SeparateStreamsSubmesh separateStreamsSubmesh, BspMeshStreams meshStreams,IStreamConverterFactory streamConverterFactory)
 		{
+			this.streamConverterFactory = streamConverterFactory;
 			if (meshStreams.Positions != null)
 			{
 				PositionIndices = EnsureStream(separateStreamsSubmesh, Streams.Position, 0);
@@ -26,9 +29,9 @@ namespace Toe.Utils.Mesh.Bsp
 				ColorsIndices = EnsureStream(separateStreamsSubmesh, Streams.Color, 0);
 		}
 
-		private static ListMeshStream<int> EnsureStream(SeparateStreamsSubmesh separateStreamsSubmesh, string key, int channel)
+		private ListMeshStream<int> EnsureStream(SeparateStreamsSubmesh separateStreamsSubmesh, string key, int channel)
 		{
-			return separateStreamsSubmesh.GetIndexStream(key, channel) as ListMeshStream<int> ?? separateStreamsSubmesh.SetIndexStream(key, channel, new ListMeshStream<int>());
+			return separateStreamsSubmesh.GetIndexStream(key, channel) as ListMeshStream<int> ?? separateStreamsSubmesh.SetIndexStream(key, channel, new ListMeshStream<int>(streamConverterFactory));
 		}
 
 		public void AddToAllStreams(int index)

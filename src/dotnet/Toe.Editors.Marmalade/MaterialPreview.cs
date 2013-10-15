@@ -29,7 +29,8 @@ namespace Toe.Editors.Marmalade
 			ToeGraphicsContext graphicsContext,
 			IComponentContext context,
 			IEditorOptions<Base3DEditorOptions> options,
-			Base3DEditorContent content)
+			Base3DEditorContent content,
+			IStreamConverterFactory streamConverterFactory)
 			: base(context, options, content)
 		{
 			this.editor = editor;
@@ -38,7 +39,7 @@ namespace Toe.Editors.Marmalade
 			this.Camera.ZNear = 16.0f;
 			this.Camera.ZFar = 2048.0f;
 			base.RenderScene += this.RenderMaterialScene;
-			this.box = BoxBuilder.BuildSoftEdgedBox(250);
+			this.box = BoxBuilder.BuildSoftEdgedBox(250, streamConverterFactory);
 		}
 
 		#endregion

@@ -16,7 +16,7 @@ namespace Toe.Marmalade.IwGraphics
 
 		public static new readonly uint TypeHash = Hash.Get("CIwModelBlockPrimBase");
 
-		private ListMeshStream<ComplexIndex> indices = new ListMeshStream<ComplexIndex>();
+		private List<ComplexIndex> indices = new List<ComplexIndex>(16);
 
 		#endregion
 
@@ -47,16 +47,13 @@ namespace Toe.Marmalade.IwGraphics
 			}
 		}
 
-		public ListMeshStream<ComplexIndex> Indices
+		public List<ComplexIndex> Indices
 		{
 			get
 			{
 				return this.indices;
 			}
-			set
-			{
-				this.indices = value;
-			}
+			
 		}
 
 		#endregion
@@ -164,28 +161,22 @@ namespace Toe.Marmalade.IwGraphics
 				var key2 = new TangentKey(p2, pu2);
 
 				{
-					ModifyAtFunc<ComplexIndex> modifyT = (ref ComplexIndex a) =>
-						{
-							a.Tangent = t.Add(key0, ref n0, tangent);
-							a.Binormal = b.Add(key0, ref n0, bitangent);
-						};
-					this.indices.ModifyAt(i, modifyT);
+					var old = this.indices[i]; 
+					old.Tangent = t.Add(key0, ref n0, tangent);
+					old.Binormal = b.Add(key0, ref n0, bitangent);
+					this.indices[i] = old;
 				}
 				{
-					ModifyAtFunc<ComplexIndex> modifyT = (ref ComplexIndex a) =>
-						{
-							a.Tangent = t.Add(key1, ref n1, tangent);
-							a.Binormal = b.Add(key1, ref n1, bitangent);
-						};
-					this.indices.ModifyAt(i + 1, modifyT);
+					var old = this.indices[i+1];
+					old.Tangent = t.Add(key1, ref n1, tangent);
+					old.Binormal = b.Add(key1, ref n1, bitangent);
+					this.indices[i+1] = old;
 				}
 				{
-					ModifyAtFunc<ComplexIndex> modifyT = (ref ComplexIndex a) =>
-						{
-							a.Tangent = t.Add(key2, ref n2, tangent);
-							a.Binormal = b.Add(key2, ref n2, bitangent);
-						};
-					this.indices.ModifyAt(i + 2, modifyT);
+					var old = this.indices[i + 2];
+					old.Tangent = t.Add(key2, ref n2, tangent);
+					old.Binormal = b.Add(key2, ref n2, bitangent);
+					this.indices[i + 2] = old;
 				}
 			}
 		}

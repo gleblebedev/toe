@@ -18,19 +18,22 @@ namespace Toe.Editors
 
 		private readonly ToeGraphicsContext graphicsContext;
 
+		private readonly IStreamConverterFactory streamConverterFactory;
+
 		#endregion
 
 		//private Texture cubeTex;
 
 		#region Constructors and Destructors
 
-		public Base3DEditorContent(ToeGraphicsContext graphicsContext)
+		public Base3DEditorContent(ToeGraphicsContext graphicsContext, IStreamConverterFactory streamConverterFactory)
 		{
 			this.graphicsContext = graphicsContext;
+			this.streamConverterFactory = streamConverterFactory;
 			var cubeBytes = Properties.Resources.xyzcube;
 			if (cubeBytes != null)
 			{
-				IScene scene = (new AseReader()).Load(new MemoryStream(cubeBytes), null);
+				IScene scene = (new AseReader(streamConverterFactory)).Load(new MemoryStream(cubeBytes), null);
 				foreach (var node in scene.Nodes)
 				{
 					if (node.Mesh != null)

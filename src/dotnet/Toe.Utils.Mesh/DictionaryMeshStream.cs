@@ -1,16 +1,23 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace Toe.Utils.Mesh
 {
-	public class DictionaryMeshStream<T> : IList<T>
+	public class DictionaryMeshStream<T> : IList<T>, IMeshStream
 	{
+		public DictionaryMeshStream(IStreamConverterFactory converterFactory)
+		{
+			this.converterFactory = converterFactory;
+		}
 		#region Constants and Fields
 
 		private readonly List<T> list = new List<T>();
 
 		private readonly Dictionary<T, int> map = new Dictionary<T, int>();
+
+		private IStreamConverterFactory converterFactory;
 
 		#endregion
 
@@ -123,6 +130,35 @@ namespace Toe.Utils.Mesh
 		IEnumerator IEnumerable.GetEnumerator()
 		{
 			return this.GetEnumerator();
+		}
+
+		#endregion
+
+		#region Implementation of IMeshStream
+
+		public IList<TValue> GetReader<TValue>()
+		{
+			if (typeof(TValue) == typeof(T))
+				return new ReadOnlyCollection<TValue>((IList<TValue>)(object)this.list);
+			if (ConverterFactory != null)
+			{
+				var resolveConverter = ConverterFactory.ResolveConverter<T, TValue>(this);
+				if (resolveConverter != null)
+					return resolveConverter;
+			}
+			throw new NotImplementedException(string.Format("{0} to {1} converter is not defined", typeof(T).FullName, typeof(TValue).FullName));
+		}
+
+		public IStreamConverterFactory ConverterFactory
+		{
+			get
+			{
+				return this.converterFactory;
+			}
+			set
+			{
+				this.converterFactory = value;
+			}
 		}
 
 		#endregion

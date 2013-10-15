@@ -16,6 +16,7 @@ using Toe.Marmalade.BinaryFiles;
 using Toe.Marmalade.TextFiles;
 using Toe.Marmalade.TextureFiles;
 using Toe.Resources;
+using Toe.Utils.Mesh;
 using Toe.Utils.Mesh.Ase;
 using Toe.Utils.Mesh.Bsp;
 using Toe.Utils.Mesh.Dae;
@@ -65,6 +66,7 @@ namespace Toe.Editor
 			cb.RegisterType<ResourceFileItem>().As<IResourceFileItem>().InstancePerDependency();
 			cb.RegisterType<EditorResourceErrorHandler>().As<IResourceErrorHandler>().SingleInstance();
 			cb.RegisterType<ToeGraphicsContext>().As<ToeGraphicsContext>().SingleInstance();
+			cb.RegisterInstance(OpenTkStreamConverterFactory.Default).As<IStreamConverterFactory>().SingleInstance();
 
 			cb.RegisterType<AddNewItemForm>().InstancePerDependency();
 			cb.RegisterType<MainEditorWindow>().SingleInstance();

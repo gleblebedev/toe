@@ -6,6 +6,13 @@ namespace Toe.Utils.Mesh.Ase
 {
 	public class AseSceneFileFormat : ISceneFileFormat
 	{
+		private readonly IStreamConverterFactory streamConverterFactory;
+
+		public AseSceneFileFormat(IStreamConverterFactory streamConverterFactory)
+		{
+			this.streamConverterFactory = streamConverterFactory;
+		}
+
 		#region Constants and Fields
 
 		/// <summary>
@@ -52,7 +59,7 @@ namespace Toe.Utils.Mesh.Ase
 
 		public ISceneReader CreateReader()
 		{
-			return new AseReader();
+			return new AseReader(streamConverterFactory);
 		}
 
 		#endregion

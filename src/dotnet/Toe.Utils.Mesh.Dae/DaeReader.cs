@@ -13,6 +13,13 @@ namespace Toe.Utils.Mesh.Dae
 {
 	public class DaeReader : ISceneReader
 	{
+		private readonly IStreamConverterFactory streamConverterFactory;
+
+		public DaeReader(IStreamConverterFactory streamConverterFactory)
+		{
+			this.streamConverterFactory = streamConverterFactory;
+		}
+
 		#region Constants and Fields
 
 		private string basePath;
@@ -579,7 +586,7 @@ namespace Toe.Utils.Mesh.Dae
 				bool swapY = (semantic == Streams.TexCoord);
 				if (source.GetStride() == 3)
 				{
-					var arrayMeshStream = new ArrayMeshStream<Float3>(source.GetCount());
+					var arrayMeshStream = new ArrayMeshStream<Float3>(source.GetCount(), streamConverterFactory);
 					for (int i = 0; i < arrayMeshStream.Count; ++i)
 					{
 						var y = floatArray[i * 3 + 1];
@@ -590,7 +597,7 @@ namespace Toe.Utils.Mesh.Dae
 				}
 				else if (source.GetStride() == 2)
 				{
-					var arrayMeshStream = new ArrayMeshStream<Float2>(source.GetCount());
+					var arrayMeshStream = new ArrayMeshStream<Float2>(source.GetCount(), streamConverterFactory);
 					for (int i = 0; i < arrayMeshStream.Count; ++i)
 					{
 						var y = floatArray[i * 2 + 1];
@@ -601,7 +608,7 @@ namespace Toe.Utils.Mesh.Dae
 				}
 				else if (source.GetStride() == 4)
 				{
-					var arrayMeshStream = new ArrayMeshStream<Float4>(source.GetCount());
+					var arrayMeshStream = new ArrayMeshStream<Float4>(source.GetCount(), streamConverterFactory);
 					for (int i = 0; i < arrayMeshStream.Count; ++i)
 					{
 						var y = floatArray[i * 4 + 1];
@@ -692,12 +699,12 @@ namespace Toe.Utils.Mesh.Dae
 			}
 		}
 
-		private static List<Tuple<int, ListMeshStream<int>>> StreamListOrderedByOffset(MeshInputs meshInputs, SeparateStreamsSubmesh subMesh)
+		private List<Tuple<int, ListMeshStream<int>>> StreamListOrderedByOffset(MeshInputs meshInputs, SeparateStreamsSubmesh subMesh)
 		{
 			var streamList = new List<Tuple<int, ListMeshStream<int>>>();
 			foreach (var meshInput in meshInputs.Inputs.OrderBy(x => x.Offset))
 			{
-				var listMeshStream = new ListMeshStream<int>(meshInputs.Count);
+				var listMeshStream = new ListMeshStream<int>(meshInputs.Count, streamConverterFactory);
 				streamList.Add(new Tuple<int, ListMeshStream<int>>(meshInput.Offset, listMeshStream));
 				var key = meshInput.Semantic;
 				if (key == "VERTEX") key = Streams.Position;

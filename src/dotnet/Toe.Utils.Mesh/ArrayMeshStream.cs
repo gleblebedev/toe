@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace Toe.Utils.Mesh
 {
-	public class ArrayMeshStream<T> : IList<T>, IMeshStream
+	public class ArrayMeshStream<T> : IMeshStream<T>
 	{
 		public override string ToString()
 		{
@@ -22,13 +22,15 @@ namespace Toe.Utils.Mesh
 
 		private IStreamConverterFactory converterFactory = StreamConverterFactory.Default;
 
-		public ArrayMeshStream(T[] data)
+		public ArrayMeshStream(T[] data, IStreamConverterFactory converterFactory)
 		{
 			this.data = data;
+			this.converterFactory = converterFactory;
 		}
-		public ArrayMeshStream(int length)
+		public ArrayMeshStream(int length, IStreamConverterFactory converterFactory)
 		{
 			this.data = new T[length];
+			this.converterFactory = converterFactory;
 		}
 		#region Implementation of IEnumerable
 
@@ -200,10 +202,10 @@ namespace Toe.Utils.Mesh
 				if (resolveConverter != null)
 					return resolveConverter;
 			}
-			throw new NotImplementedException();
+			throw new NotImplementedException(string.Format("{0} to {1} converter is not defined", typeof(T).FullName, typeof(TValue).FullName));
 		}
 
-		private IStreamConverterFactory ConverterFactory
+		public IStreamConverterFactory ConverterFactory
 		{
 			get
 			{

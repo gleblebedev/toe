@@ -10,6 +10,11 @@ namespace Toe.Utils.Mesh.Bsp.Q1
 
 		#region Methods
 
+		public BaseQ1HL2BspReader(IStreamConverterFactory streamConverterFactory)
+			: base(streamConverterFactory)
+		{
+		}
+
 		protected override void CreateMesh()
 		{
 			throw new System.NotImplementedException();

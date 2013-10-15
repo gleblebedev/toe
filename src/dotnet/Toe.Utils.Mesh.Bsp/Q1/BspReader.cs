@@ -2,5 +2,9 @@
 {
 	public class BspReader : BaseQ1HL2BspReader, IBspReader
 	{
+		public BspReader(IStreamConverterFactory streamConverterFactory)
+			: base(streamConverterFactory)
+		{
+		}
 	}
 }

@@ -11,6 +11,13 @@ namespace Toe.Utils.Mesh.Ase
 {
 	public class AseReader : ISceneReader
 	{
+		private readonly IStreamConverterFactory converterFactory;
+
+		public AseReader(IStreamConverterFactory converterFactory)
+		{
+			this.converterFactory = converterFactory;
+		}
+
 		#region Constants and Fields
 
 		private string basePath;
@@ -388,7 +395,7 @@ namespace Toe.Utils.Mesh.Ase
 				}
 				if (0 == string.Compare(attr, "*MESH_NUMVERTEX", StringComparison.InvariantCultureIgnoreCase))
 				{
-					vertices = new ArrayMeshStream<Float3>(parser.ConsumeInt());
+					vertices = new ArrayMeshStream<Float3>(parser.ConsumeInt(), converterFactory);
 					mesh.SetStream(Streams.Position, 0, vertices);
 					continue;
 				}
@@ -400,7 +407,7 @@ namespace Toe.Utils.Mesh.Ase
 				
 				if (0 == string.Compare(attr, "*MESH_NUMTVERTEX", StringComparison.InvariantCultureIgnoreCase))
 				{
-					tvertices = new ArrayMeshStream<Float3>(parser.ConsumeInt());
+					tvertices = new ArrayMeshStream<Float3>(parser.ConsumeInt(), converterFactory);
 					mesh.SetStream(Streams.TexCoord, 0, tvertices);
 					continue;
 				}
@@ -421,7 +428,7 @@ namespace Toe.Utils.Mesh.Ase
 				}
 				if (0 == string.Compare(attr, "*MESH_NUMCVERTEX", StringComparison.InvariantCultureIgnoreCase))
 				{
-					cols = new ArrayMeshStream<Color>(parser.ConsumeInt());
+					cols = new ArrayMeshStream<Color>(parser.ConsumeInt(), converterFactory);
 					mesh.SetStream(Streams.Color, 0, cols);
 					continue;
 				}
@@ -462,27 +469,27 @@ namespace Toe.Utils.Mesh.Ase
 			ListMeshStream<int> positionIndices = null;
 			if (vertices != null)
 			{
-				positionIndices = new ListMeshStream<int>(faces.Length * 3);
+				positionIndices = new ListMeshStream<int>(faces.Length * 3,converterFactory);
 				submesh.SetIndexStream(Streams.Position, 0, positionIndices);
 			}
 			ListMeshStream<int> normalIndices = null;
 			if (normals != null)
 			{
-				normalStream = new ListMeshStream<Float3>(faces.Length * 3);
+				normalStream = new ListMeshStream<Float3>(faces.Length * 3, converterFactory);
 				mesh.SetStream(Streams.Normal, 0, normalStream);
-				normalIndices = new ListMeshStream<int>(faces.Length * 3);
+				normalIndices = new ListMeshStream<int>(faces.Length * 3, converterFactory);
 				submesh.SetIndexStream(Streams.Normal, 0, normalIndices);
 			}
 			ListMeshStream<int> colorIndices = null;
 			if (cols != null)
 			{
-				colorIndices = new ListMeshStream<int>(faces.Length * 3);
+				colorIndices = new ListMeshStream<int>(faces.Length * 3, converterFactory);
 				submesh.SetIndexStream(Streams.Color, 0, colorIndices);
 			}
 			ListMeshStream<int> texCoordIndices = null;
 			if (tvertices != null)
 			{
-				texCoordIndices = new ListMeshStream<int>(faces.Length * 3);
+				texCoordIndices = new ListMeshStream<int>(faces.Length * 3, converterFactory);
 				submesh.SetIndexStream(Streams.TexCoord, 0, texCoordIndices);
 			}
 			for (int i = 0; i < faces.Length; ++i)
@@ -622,8 +629,7 @@ namespace Toe.Utils.Mesh.Ase
 					var a = parser.ConsumeFloat();
 					var b = parser.ConsumeFloat();
 					var c = parser.ConsumeFloat();
-					colors[index] = Color.FromArgb(
-						255, this.ClampCol(a), this.ClampCol(b), this.ClampCol(c));
+					colors[index] = Color.FromArgb(255, this.ClampCol(a), this.ClampCol(b), this.ClampCol(c));
 					continue;
 				}
 				parser.UnknownLexemError();

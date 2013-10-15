@@ -13,5 +13,9 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 		//    entry.magic = Stream.ReadUInt32();			
 
 		//}
+		public BspReader21(IStreamConverterFactory streamConverterFactory)
+			: base(streamConverterFactory)
+		{
+		}
 	}
 }

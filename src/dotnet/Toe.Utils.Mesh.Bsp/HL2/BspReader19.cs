@@ -4,6 +4,11 @@ namespace Toe.Utils.Mesh.Bsp.HL2
 	{
 		#region Methods
 
+		public BspReader19(IStreamConverterFactory streamConverterFactory)
+			: base(streamConverterFactory)
+		{
+		}
+
 		protected override void ReadFace(ref SourceFace face)
 		{
 			face.planenum = this.Stream.ReadUInt16(); // the plane number

@@ -26,21 +26,21 @@ namespace Toe.Marmalade.IwGraphics
 
 		protected static PropertyEventArgs UseGroupEventArgs = Expr.PropertyEventArgs<Mesh>(x => x.UseGroup);
 
-		private readonly ListMeshStream<Vector3> binormals = new ListMeshStream<Vector3>();
+		private readonly ListMeshStream<Vector3> binormals;
 
-		private readonly ListMeshStream<Color> colors = new ListMeshStream<Color>();
+		private readonly ListMeshStream<Color> colors;
 
-		private readonly ListMeshStream<Vector3> normals = new ListMeshStream<Vector3>();
+		private readonly ListMeshStream<Vector3> normals;
 
 		private readonly IList<Surface> surfaces = new List<Surface>();
 
-		private readonly ListMeshStream<Vector3> tangents = new ListMeshStream<Vector3>();
+		private readonly ListMeshStream<Vector3> tangents;
 
-		private readonly ListMeshStream<Vector2> uv0 = new ListMeshStream<Vector2>();
+		private readonly ListMeshStream<Vector2> uv0;
 
-		private readonly ListMeshStream<Vector2> uv1 = new ListMeshStream<Vector2>();
+		private readonly ListMeshStream<Vector2> uv1;
 
-		private readonly ListMeshStream<Vector3> vertices = new ListMeshStream<Vector3>();
+		private readonly ListMeshStream<Vector3> vertices;
 
 		private string baseName;
 
@@ -56,9 +56,17 @@ namespace Toe.Marmalade.IwGraphics
 
 		#region Constructors and Destructors
 
-		public Mesh(IResourceManager resourceManager)
+		public Mesh(IResourceManager resourceManager, IStreamConverterFactory streamConverterFactory)
 		{
+			this.vertices = new ListMeshStream<Vector3>(this.streamConverterFactory);
+			this.uv1 = new ListMeshStream<Vector2>(this.streamConverterFactory);
+			this.uv0 = new ListMeshStream<Vector2>(this.streamConverterFactory);
+			this.tangents = new ListMeshStream<Vector3>(this.streamConverterFactory);
+			this.normals = new ListMeshStream<Vector3>(this.streamConverterFactory);
+			this.colors = new ListMeshStream<Color>(this.streamConverterFactory);
+			this.binormals = new ListMeshStream<Vector3>(this.streamConverterFactory);
 			this.resourceManager = resourceManager;
+			this.streamConverterFactory = streamConverterFactory;
 		}
 
 		#endregion

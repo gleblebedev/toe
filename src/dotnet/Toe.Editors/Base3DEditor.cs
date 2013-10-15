@@ -110,6 +110,8 @@ namespace Toe.Editors
 			this.zUpToolStripMenuItem.Click += this.SelectZUp;
 			this.UpdateCoordinateSystemIcon();
 			this.UpdateLighingIcon();
+			this.UpdateWireframeIcon();
+			this.UpdateNormalIcon();
 		}
 
 		#endregion
@@ -230,11 +232,20 @@ namespace Toe.Editors
 
 		protected void SelectNormalsOff(object sender, EventArgs e)
 		{
-			if (this.options.Options.Normals)
+			if (this.options.Options.Normals != false)
 			{
 				this.options.Options.Normals = false;
-				//TODO: update icon
+				UpdateNormalIcon();
 			}
+		}
+		void UpdateWireframeIcon()
+		{
+			this.renderWireButton.Image = this.options.Options.Wireframe != true ? this.hideWireframeMenuItem.Image : this.renderWireframeMenuItem.Image;
+		}
+
+		void UpdateNormalIcon()
+		{
+			this.renderNormalsButton.Image = this.options.Options.Normals != true ? this.hideNormalsMenuItem.Image : this.renderNormalsMenuItem.Image;
 		}
 
 		protected void SelectNormalsOn(object sender, EventArgs e)
@@ -242,7 +253,7 @@ namespace Toe.Editors
 			if (this.options.Options.Normals != true)
 			{
 				this.options.Options.Normals = true;
-				//TODO: update icon
+				UpdateNormalIcon();
 			}
 		}
 
@@ -251,7 +262,7 @@ namespace Toe.Editors
 			if (this.options.Options.Wireframe)
 			{
 				this.options.Options.Wireframe = false;
-				//TODO: update icon
+				this.renderWireButton.Image = this.hideWireframeMenuItem.Image;
 			}
 		}
 
@@ -260,7 +271,8 @@ namespace Toe.Editors
 			if (this.options.Options.Wireframe != true)
 			{
 				this.options.Options.Wireframe = true;
-				//TODO: update icon
+				this.renderWireButton.Image = this.renderWireframeMenuItem.Image;
+				
 			}
 		}
 
@@ -366,10 +378,14 @@ namespace Toe.Editors
 		{
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Base3DEditor));
 			this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+			this.lightingButton = new System.Windows.Forms.ToolStripButton();
+			this.glControl = new OpenTK.GLControl();
+			this.errPanel = new Toe.Editors.Interfaces.Panels.StackPanel();
+			this.errButton = new System.Windows.Forms.Button();
+			this.errMessage = new System.Windows.Forms.Label();
 			this.coordinateSystemButton = new System.Windows.Forms.ToolStripDropDownButton();
 			this.zUpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.yUpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.lightingButton = new System.Windows.Forms.ToolStripButton();
 			this.renderWireButton = new System.Windows.Forms.ToolStripDropDownButton();
 			this.renderWireframeMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.hideWireframeMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -377,10 +393,6 @@ namespace Toe.Editors
 			this.renderNormalsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.hideNormalsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.btnScreenShot = new System.Windows.Forms.ToolStripButton();
-			this.glControl = new OpenTK.GLControl();
-			this.errPanel = new Toe.Editors.Interfaces.Panels.StackPanel();
-			this.errButton = new System.Windows.Forms.Button();
-			this.errMessage = new System.Windows.Forms.Label();
 			this.toolStrip1.SuspendLayout();
 			this.errPanel.SuspendLayout();
 			this.SuspendLayout();
@@ -399,32 +411,6 @@ namespace Toe.Editors
 			this.toolStrip1.TabIndex = 0;
 			this.toolStrip1.Text = "toolStrip1";
 			// 
-			// coordinateSystemButton
-			// 
-			this.coordinateSystemButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.coordinateSystemButton.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.zUpToolStripMenuItem,
-            this.yUpToolStripMenuItem});
-			this.coordinateSystemButton.Image = global::Toe.Editors.Properties.Resources.zup;
-			this.coordinateSystemButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.coordinateSystemButton.Name = "coordinateSystemButton";
-			this.coordinateSystemButton.Size = new System.Drawing.Size(29, 22);
-			this.coordinateSystemButton.Text = "Up";
-			// 
-			// zUpToolStripMenuItem
-			// 
-			this.zUpToolStripMenuItem.Image = global::Toe.Editors.Properties.Resources.zup;
-			this.zUpToolStripMenuItem.Name = "zUpToolStripMenuItem";
-			this.zUpToolStripMenuItem.Size = new System.Drawing.Size(101, 22);
-			this.zUpToolStripMenuItem.Text = "Z-Up";
-			// 
-			// yUpToolStripMenuItem
-			// 
-			this.yUpToolStripMenuItem.Image = global::Toe.Editors.Properties.Resources.yup;
-			this.yUpToolStripMenuItem.Name = "yUpToolStripMenuItem";
-			this.yUpToolStripMenuItem.Size = new System.Drawing.Size(101, 22);
-			this.yUpToolStripMenuItem.Text = "Y-Up";
-			// 
 			// lightingButton
 			// 
 			this.lightingButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -433,67 +419,6 @@ namespace Toe.Editors
 			this.lightingButton.Size = new System.Drawing.Size(23, 22);
 			this.lightingButton.Text = "Toggle Lights";
 			this.lightingButton.Click += new System.EventHandler(this.ToggleLightingClick);
-			// 
-			// renderWireButton
-			// 
-			this.renderWireButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.renderWireButton.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.renderWireframeMenuItem,
-            this.hideWireframeMenuItem});
-			this.renderWireButton.Image = ((System.Drawing.Image)(resources.GetObject("renderWireButton.Image")));
-			this.renderWireButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.renderWireButton.Name = "renderWireButton";
-			this.renderWireButton.Size = new System.Drawing.Size(29, 22);
-			this.renderWireButton.Text = "Toggle Wireframe";
-			// 
-			// renderWireframeMenuItem
-			// 
-			this.renderWireframeMenuItem.Name = "renderWireframeMenuItem";
-			this.renderWireframeMenuItem.Size = new System.Drawing.Size(169, 22);
-			this.renderWireframeMenuItem.Text = "Render Wireframe";
-			this.renderWireframeMenuItem.Click += new System.EventHandler(this.SelectWireframeOn);
-			// 
-			// hideWireframeMenuItem
-			// 
-			this.hideWireframeMenuItem.Name = "hideWireframeMenuItem";
-			this.hideWireframeMenuItem.Size = new System.Drawing.Size(169, 22);
-			this.hideWireframeMenuItem.Text = "Hide Wireframe";
-			this.hideWireframeMenuItem.Click += new System.EventHandler(this.SelectWireframeOff);
-			// 
-			// renderNormalsButton
-			// 
-			this.renderNormalsButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.renderNormalsButton.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.renderNormalsMenuItem,
-            this.hideNormalsMenuItem});
-			this.renderNormalsButton.Image = ((System.Drawing.Image)(resources.GetObject("renderNormalsButton.Image")));
-			this.renderNormalsButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.renderNormalsButton.Name = "renderNormalsButton";
-			this.renderNormalsButton.Size = new System.Drawing.Size(29, 22);
-			this.renderNormalsButton.Text = "Toggle Normals";
-			this.renderNormalsButton.Click += new System.EventHandler(this.SelectNormalsOn);
-			// 
-			// renderNormalsMenuItem
-			// 
-			this.renderNormalsMenuItem.Name = "renderNormalsMenuItem";
-			this.renderNormalsMenuItem.Size = new System.Drawing.Size(157, 22);
-			this.renderNormalsMenuItem.Text = "Render normals";
-			// 
-			// hideNormalsMenuItem
-			// 
-			this.hideNormalsMenuItem.Name = "hideNormalsMenuItem";
-			this.hideNormalsMenuItem.Size = new System.Drawing.Size(157, 22);
-			this.hideNormalsMenuItem.Text = "Hide normals";
-			this.hideNormalsMenuItem.CheckedChanged += new System.EventHandler(this.SelectNormalsOff);
-			// 
-			// btnScreenShot
-			// 
-			this.btnScreenShot.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.btnScreenShot.Image = ((System.Drawing.Image)(resources.GetObject("btnScreenShot.Image")));
-			this.btnScreenShot.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.btnScreenShot.Name = "btnScreenShot";
-			this.btnScreenShot.Size = new System.Drawing.Size(23, 22);
-			this.btnScreenShot.Text = "Take Screenshot";
 			// 
 			// glControl
 			// 
@@ -534,6 +459,99 @@ namespace Toe.Editors
 			this.errMessage.Size = new System.Drawing.Size(550, 13);
 			this.errMessage.TabIndex = 0;
 			this.errMessage.Text = "Render error";
+			// 
+			// coordinateSystemButton
+			// 
+			this.coordinateSystemButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.coordinateSystemButton.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.zUpToolStripMenuItem,
+            this.yUpToolStripMenuItem});
+			this.coordinateSystemButton.Image = global::Toe.Editors.Properties.Resources.zup;
+			this.coordinateSystemButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.coordinateSystemButton.Name = "coordinateSystemButton";
+			this.coordinateSystemButton.Size = new System.Drawing.Size(29, 22);
+			this.coordinateSystemButton.Text = "Up";
+			// 
+			// zUpToolStripMenuItem
+			// 
+			this.zUpToolStripMenuItem.Image = global::Toe.Editors.Properties.Resources.zup;
+			this.zUpToolStripMenuItem.Name = "zUpToolStripMenuItem";
+			this.zUpToolStripMenuItem.Size = new System.Drawing.Size(101, 22);
+			this.zUpToolStripMenuItem.Text = "Z-Up";
+			// 
+			// yUpToolStripMenuItem
+			// 
+			this.yUpToolStripMenuItem.Image = global::Toe.Editors.Properties.Resources.yup;
+			this.yUpToolStripMenuItem.Name = "yUpToolStripMenuItem";
+			this.yUpToolStripMenuItem.Size = new System.Drawing.Size(101, 22);
+			this.yUpToolStripMenuItem.Text = "Y-Up";
+			// 
+			// renderWireButton
+			// 
+			this.renderWireButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.renderWireButton.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.renderWireframeMenuItem,
+            this.hideWireframeMenuItem});
+			this.renderWireButton.Image = global::Toe.Editors.Properties.Resources.wireframe_on;
+			this.renderWireButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.renderWireButton.Name = "renderWireButton";
+			this.renderWireButton.Size = new System.Drawing.Size(29, 22);
+			this.renderWireButton.Text = "Toggle Wireframe";
+			// 
+			// renderWireframeMenuItem
+			// 
+			this.renderWireframeMenuItem.Image = global::Toe.Editors.Properties.Resources.wireframe_on;
+			this.renderWireframeMenuItem.Name = "renderWireframeMenuItem";
+			this.renderWireframeMenuItem.Size = new System.Drawing.Size(169, 22);
+			this.renderWireframeMenuItem.Text = "Render Wireframe";
+			this.renderWireframeMenuItem.Click += new System.EventHandler(this.SelectWireframeOn);
+			// 
+			// hideWireframeMenuItem
+			// 
+			this.hideWireframeMenuItem.Image = global::Toe.Editors.Properties.Resources.wireframe_off;
+			this.hideWireframeMenuItem.Name = "hideWireframeMenuItem";
+			this.hideWireframeMenuItem.Size = new System.Drawing.Size(169, 22);
+			this.hideWireframeMenuItem.Text = "Hide Wireframe";
+			this.hideWireframeMenuItem.Click += new System.EventHandler(this.SelectWireframeOff);
+			// 
+			// renderNormalsButton
+			// 
+			this.renderNormalsButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.renderNormalsButton.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.renderNormalsMenuItem,
+            this.hideNormalsMenuItem});
+			this.renderNormalsButton.Image = global::Toe.Editors.Properties.Resources.normal_on;
+			this.renderNormalsButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.renderNormalsButton.Name = "renderNormalsButton";
+			this.renderNormalsButton.Size = new System.Drawing.Size(29, 22);
+			this.renderNormalsButton.Text = "Toggle Normals";
+			this.renderNormalsButton.Click += new System.EventHandler(this.SelectNormalsOn);
+			// 
+			// renderNormalsMenuItem
+			// 
+			this.renderNormalsMenuItem.Image = global::Toe.Editors.Properties.Resources.normal_on;
+			this.renderNormalsMenuItem.Name = "renderNormalsMenuItem";
+			this.renderNormalsMenuItem.Size = new System.Drawing.Size(157, 22);
+			this.renderNormalsMenuItem.Text = "Render normals";
+			this.renderNormalsMenuItem.Click += new System.EventHandler(this.SelectNormalsOn);
+			// 
+			// hideNormalsMenuItem
+			// 
+			this.hideNormalsMenuItem.Image = global::Toe.Editors.Properties.Resources.normal_off;
+			this.hideNormalsMenuItem.Name = "hideNormalsMenuItem";
+			this.hideNormalsMenuItem.Size = new System.Drawing.Size(157, 22);
+			this.hideNormalsMenuItem.Text = "Hide normals";
+			this.hideNormalsMenuItem.Click += new System.EventHandler(this.SelectNormalsOff);
+			// 
+			// btnScreenShot
+			// 
+			this.btnScreenShot.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.btnScreenShot.Image = ((System.Drawing.Image)(resources.GetObject("btnScreenShot.Image")));
+			this.btnScreenShot.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.btnScreenShot.Name = "btnScreenShot";
+			this.btnScreenShot.Size = new System.Drawing.Size(23, 22);
+			this.btnScreenShot.Text = "Take Screenshot";
+			this.btnScreenShot.Click += new System.EventHandler(this.TakeScreenshot);
 			// 
 			// Base3DEditor
 			// 

@@ -32,7 +32,7 @@ namespace Toe.Utils.Mesh.Dae.Tests
 		}
 		private static void TestFile(string fileName)
 		{
-			var r = new DaeReader();
+			var r = new DaeReader(StreamConverterFactory.Default);
 			using (var s = File.OpenRead(fileName))
 			{
 				var scene = r.Load(s, null);

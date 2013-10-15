@@ -8,12 +8,12 @@ namespace Toe.Utils.Mesh
 	{
 		#region Public Methods and Operators
 
-		public static IMesh BuildSoftEdgedBox(float size)
+		public static IMesh BuildSoftEdgedBox(float size, IStreamConverterFactory converterFactory)
 		{
-			return BuildSoftEdgedBox(size, size, size);
+			return BuildSoftEdgedBox(size, size, size, converterFactory);
 		}
 
-		public static IMesh BuildSoftEdgedBox(float x, float y, float z)
+		public static IMesh BuildSoftEdgedBox(float x, float y, float z, IStreamConverterFactory converterFactory)
 		{
 			Float3[] p = new[]
 				{
@@ -36,11 +36,11 @@ namespace Toe.Utils.Mesh
 				};
 
 			var res = new SeparateStreamsMesh();
-			res.SetStream(Streams.Position, 0, new ArrayMeshStream<Float3>(p));
-			res.SetStream(Streams.Normal, 0, new ArrayMeshStream<Float3>(n));
-			res.SetStream(Streams.TexCoord, 0, new ArrayMeshStream<Float3>(uv));
-			res.SetStream(Streams.TexCoord, 1, new ArrayMeshStream<Float3>(uv));
-			res.SetStream(Streams.Color, 0, new ArrayMeshStream<Color>(new Color[] { Color.FromArgb(255, 255, 255, 255) }));
+			res.SetStream(Streams.Position, 0, new ArrayMeshStream<Float3>(p, converterFactory));
+			res.SetStream(Streams.Normal, 0, new ArrayMeshStream<Float3>(n, converterFactory));
+			res.SetStream(Streams.TexCoord, 0, new ArrayMeshStream<Float3>(uv, converterFactory));
+			res.SetStream(Streams.TexCoord, 1, new ArrayMeshStream<Float3>(uv, converterFactory));
+			res.SetStream(Streams.Color, 0, new ArrayMeshStream<Color>(new Color[] { Color.FromArgb(255, 255, 255, 255) }, converterFactory));
 
 			var t2 = Float3.Normalize(p[7] - p[6]);
 			var b2 = Float3.Cross(Float3.Normalize(n[0] + n[2] + n[3] + n[1]), t2);
@@ -50,19 +50,19 @@ namespace Toe.Utils.Mesh
 			var b4 = Float3.Cross(Float3.Normalize(n[7] + n[3] + n[2] + n[6]), t4);
 			var t5 = Float3.Normalize(p[2] - p[4]);
 			var b5 = Float3.Cross(Float3.Normalize(n[1] + n[5] + n[4] + n[0]), t5);
-			res.SetStream(Streams.Tangent, 0, new ArrayMeshStream<Float3>(new Float3[] { new Float3(1, 0, 0), new Float3(1, 0, 0), t2,t3,t4,t5 }));
-			res.SetStream(Streams.Binormal, 0, new ArrayMeshStream<Float3>(new Float3[] { new Float3(0, 1, 0), new Float3(0, 0, -1), b2,b3,b4,b5 }));
+			res.SetStream(Streams.Tangent, 0, new ArrayMeshStream<Float3>(new Float3[] { new Float3(1, 0, 0), new Float3(1, 0, 0), t2, t3, t4, t5 }, converterFactory));
+			res.SetStream(Streams.Binormal, 0, new ArrayMeshStream<Float3>(new Float3[] { new Float3(0, 1, 0), new Float3(0, 0, -1), b2, b3, b4, b5 }, converterFactory));
 
 			var s = res.CreateSubmesh();
 			s.VertexSourceType = VertexSourceType.QuadList;
 
-			var positionIndices = s.SetIndexStream(Streams.Position, 0, new ListMeshStream<int>(24));
-			var normalIndices = s.SetIndexStream(Streams.Normal, 0, new ListMeshStream<int>(24));
-			var uv0Indices = s.SetIndexStream(Streams.TexCoord, 0, new ListMeshStream<int>(24));
-			var uv1Indices = s.SetIndexStream(Streams.TexCoord, 1, new ListMeshStream<int>(24));
-			var colorIndices = s.SetIndexStream(Streams.Color, 0, new ListMeshStream<int>(24));
-			var tangentIndices = s.SetIndexStream(Streams.Tangent, 0, new ListMeshStream<int>(24));
-			var binormalIndices = s.SetIndexStream(Streams.Binormal, 0, new ListMeshStream<int>(24));
+			var positionIndices = s.SetIndexStream(Streams.Position, 0, new ListMeshStream<int>(24, converterFactory));
+			var normalIndices = s.SetIndexStream(Streams.Normal, 0, new ListMeshStream<int>(24, converterFactory));
+			var uv0Indices = s.SetIndexStream(Streams.TexCoord, 0, new ListMeshStream<int>(24, converterFactory));
+			var uv1Indices = s.SetIndexStream(Streams.TexCoord, 1, new ListMeshStream<int>(24, converterFactory));
+			var colorIndices = s.SetIndexStream(Streams.Color, 0, new ListMeshStream<int>(24, converterFactory));
+			var tangentIndices = s.SetIndexStream(Streams.Tangent, 0, new ListMeshStream<int>(24, converterFactory));
+			var binormalIndices = s.SetIndexStream(Streams.Binormal, 0, new ListMeshStream<int>(24, converterFactory));
 
 			Vertex vertex;
 

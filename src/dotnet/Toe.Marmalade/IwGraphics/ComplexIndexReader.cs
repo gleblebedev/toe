@@ -8,11 +8,11 @@ namespace Toe.Marmalade.IwGraphics
 {
 	public class ComplexIndexReader:IList<int>
 	{
-		private readonly ListMeshStream<ComplexIndex> indices;
+		private readonly IList<ComplexIndex> indices;
 
 		private readonly Func<ComplexIndex, int> func;
 
-		public ComplexIndexReader(ListMeshStream<ComplexIndex> indices, Func<ComplexIndex, int> func)
+		public ComplexIndexReader(IList<ComplexIndex> indices, Func<ComplexIndex, int> func)
 		{
 			this.indices = indices;
 			this.func = func;

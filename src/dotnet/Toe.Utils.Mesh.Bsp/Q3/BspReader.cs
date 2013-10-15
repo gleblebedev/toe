@@ -10,6 +10,8 @@ namespace Toe.Utils.Mesh.Bsp.Q3
 {
 	public class BspReader : BaseBspReader, IBspReader
 	{
+		
+
 		#region Constants and Fields
 
 		protected Quake3Face[] faces;
@@ -30,15 +32,20 @@ namespace Toe.Utils.Mesh.Bsp.Q3
 
 		#region Methods
 
+		public BspReader(IStreamConverterFactory streamConverterFactory)
+			: base(streamConverterFactory)
+		{
+		}
+
 		protected override void CreateMesh()
 		{
 			this.streamMesh = new SeparateStreamsMesh();
 			this.meshStreams = new BspMeshStreams();
-			meshStreams.Positions = streamMesh.SetStream(Streams.Position, 0, new ListMeshStream<Float3>());
-			meshStreams.Normals = streamMesh.SetStream(Streams.Normal, 0, new ListMeshStream<Float3>());
-			meshStreams.Colors = streamMesh.SetStream(Streams.Color, 0, new ListMeshStream<Color>());
-			meshStreams.TexCoord0 = streamMesh.SetStream(Streams.TexCoord, 0, new ListMeshStream<Float2>());
-			meshStreams.TexCoord1 = streamMesh.SetStream(Streams.TexCoord, 1, new ListMeshStream<Float2>());
+			meshStreams.Positions = streamMesh.SetStream(Streams.Position, 0, new ListMeshStream<Float3>(StreamConverterFactory));
+			meshStreams.Normals = streamMesh.SetStream(Streams.Normal, 0, new ListMeshStream<Float3>(StreamConverterFactory));
+			meshStreams.Colors = streamMesh.SetStream(Streams.Color, 0, new ListMeshStream<Color>(StreamConverterFactory));
+			meshStreams.TexCoord0 = streamMesh.SetStream(Streams.TexCoord, 0, new ListMeshStream<Float2>(StreamConverterFactory));
+			meshStreams.TexCoord1 = streamMesh.SetStream(Streams.TexCoord, 1, new ListMeshStream<Float2>(StreamConverterFactory));
 		}
 
 		protected override void BuildScene()
@@ -47,7 +54,7 @@ namespace Toe.Utils.Mesh.Bsp.Q3
 
 			SeparateStreamsSubmesh[] submeshes = new SeparateStreamsSubmesh[maxTextures];
 			this.BuildSubmeshes(maxTextures, submeshes, streamMesh, meshStreams);
-			var submeshStreams = submeshes.Select(x => (x == null)?null: new BspSubmeshStreams(x, meshStreams)).ToArray();
+			var submeshStreams = submeshes.Select(x => (x == null)?null: new BspSubmeshStreams(x, meshStreams,StreamConverterFactory)).ToArray();
 
 			var node = new Node();
 			this.Scene.Nodes.Add(node);

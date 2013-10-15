@@ -38,7 +38,7 @@ namespace Toe.Utils.Mesh
 
 		public void Add(ref TVertex v)
 		{
-			this.Add(this.mesh.VertexBuffer.Add(v));
+			this.mesh.VertexBuffer.Add(v);
 		}
 
 	
